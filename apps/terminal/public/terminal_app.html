@@ -1416,257 +1416,67 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
       </div>
     </div>
     <div class="page" id="page-commodities">
-      <div class="page-header">
-        <div class="page-title">Commodities</div>
-        <div class="page-subtitle">Ratio analysis &amp; historical context</div>
-      </div>
-
-      <!-- GOLD / SILVER RATIO -->
-      <div class="cd-section" id="gsrSection">
-        <div class="cd-section-head">
-          <span class="cd-section-title">⚖️ Gold / Silver Ratio</span>
-          <div class="cd-view-toggle" id="gsrTimeTabs">
-            <button class="cd-vbtn" onclick="setGsrPeriod('ytd',this)">YTD</button>
-            <button class="cd-vbtn active" onclick="setGsrPeriod('1y',this)">1Y</button>
-            <button class="cd-vbtn" onclick="setGsrPeriod('5y',this)">5Y</button>
-            <button class="cd-vbtn" onclick="setGsrPeriod('monthly',this)">Monthly</button>
-          </div>
+      <div class="welcome-wrap" style="max-width:1120px">
+        <div class="page-header" style="margin-bottom:16px">
+          <div class="page-header-tag">Metals · Relative Value</div>
+          <div class="page-header-title">Metals Dashboard</div>
+          <div class="page-header-sub">Gold / Silver Ratio relative to its 10-year historical distribution</div>
         </div>
 
-        <!-- Hero metrics -->
-        <div id="gsrMetrics" style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px">
-          <div class="td-stat" style="text-align:center">
-            <div class="td-stat-label">Current Ratio</div>
-            <div class="td-stat-val" id="gsrCurrent" style="font-size:28px;font-weight:900">—</div>
-            <div class="td-stat-sub" id="gsrCurrentSub"></div>
-          </div>
-          <div class="td-stat" style="text-align:center">
-            <div class="td-stat-label" id="gsrMeanLabel">Historical Mean</div>
-            <div class="td-stat-val" id="gsrMean" style="font-size:22px;font-weight:800">—</div>
-            <div class="td-stat-sub" id="gsrMeanSub"></div>
-          </div>
-          <div class="td-stat" style="text-align:center">
-            <div class="td-stat-label">vs Mean</div>
-            <div class="td-stat-val" id="gsrVsMean" style="font-size:22px;font-weight:800">—</div>
-            <div class="td-stat-sub" id="gsrSignal"></div>
-          </div>
-          <div class="td-stat" style="text-align:center">
-            <div class="td-stat-label">Gold Price</div>
-            <div class="td-stat-val" id="gsrGold" style="font-size:18px;font-weight:800;color:#f59e0b">—</div>
-            <div class="td-stat-sub">per oz</div>
-          </div>
-          <div class="td-stat" style="text-align:center">
-            <div class="td-stat-label">Silver Price</div>
-            <div class="td-stat-val" id="gsrSilver" style="font-size:18px;font-weight:800;color:#94a3b8">—</div>
-            <div class="td-stat-sub">per oz</div>
-          </div>
-        </div>
-
-        <!-- Verdict badge -->
-        <div id="gsrVerdict" style="display:none;margin-bottom:14px;text-align:center"></div>
-
-        <!-- Interpretation banner -->
-        <div id="gsrBanner" style="border-radius:10px;padding:12px 18px;margin-bottom:16px;display:none;font-size:12px;line-height:1.6"></div>
-
-        <!-- Chart -->
-        <div style="position:relative;height:380px">
-          <canvas id="gsrChart"></canvas>
-        </div>
-        <div id="gsrMeta" style="margin-top:8px;font-size:10px;color:#334155;text-align:right"></div>
-      </div>
-
-      <!-- ─── SILVER MACRO STRESS DASHBOARD ─── -->
-      <div class="cd-section" id="smd-wrap" style="border-color:rgba(148,163,184,0.3);margin-bottom:16px">
-
-        <!-- Header -->
-        <div class="cd-section-head">
-          <div>
-            <span class="cd-section-title" style="color:#94a3b8">⚗️ Silver Market Stress Dashboard</span>
-            <div style="font-size:9px;color:#475569;margin-top:2px">Institutional supply-stress monitor · FRED + Yahoo Finance · auto-refreshes every 5 min</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <span id="smdUpdated" style="font-size:9px;color:#334155">Loading…</span>
-            <button onclick="smdRefresh()" style="font-size:9px;padding:4px 10px;border-radius:6px;background:rgba(148,163,184,0.08);border:1px solid rgba(148,163,184,0.25);color:#94a3b8;cursor:pointer;font-family:inherit">↻ Refresh</button>
-          </div>
-        </div>
-
-        <!-- Tab bar -->
-        <div style="display:flex;gap:0;margin-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.06)">
-          <div class="smd-tab smd-active" data-tab="price"   onclick="smdTab('price',this)">Price &amp; Ratio</div>
-          <div class="smd-tab"            data-tab="stress"  onclick="smdTab('stress',this)">Physical Stress</div>
-          <div class="smd-tab"            data-tab="demand"  onclick="smdTab('demand',this)">Demand Signals</div>
-          <div class="smd-tab"            data-tab="alerts"  onclick="smdTab('alerts',this)">Alerts</div>
-        </div>
-
-        <!-- ── TAB 1: Price & Ratio ── -->
-        <div id="smd-price" class="smd-panel">
-          <div id="smdPriceKpis" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px">
-            <div style="background:#0d1117;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 14px">
-              <div style="font-size:9px;font-weight:700;letter-spacing:1.2px;color:#475569;margin-bottom:4px">SILVER SPOT</div>
-              <div id="smdSilverPrice" style="font-size:22px;font-weight:900;color:#94a3b8">—</div>
-              <div id="smdSilverChg" style="font-size:10px;color:#475569;margin-top:2px">—</div>
-            </div>
-            <div style="background:#0d1117;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 14px">
-              <div style="font-size:9px;font-weight:700;letter-spacing:1.2px;color:#475569;margin-bottom:4px">GOLD SPOT</div>
-              <div id="smdGoldPrice" style="font-size:22px;font-weight:900;color:#f59e0b">—</div>
-              <div id="smdGoldChg" style="font-size:10px;color:#475569;margin-top:2px">—</div>
-            </div>
-            <div style="background:#0d1117;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 14px">
-              <div style="font-size:9px;font-weight:700;letter-spacing:1.2px;color:#475569;margin-bottom:4px">GOLD/SILVER RATIO</div>
-              <div id="smdGSR" style="font-size:22px;font-weight:900;color:#e2e8f0">—</div>
-              <div id="smdGSRzone" style="font-size:10px;margin-top:2px">—</div>
-            </div>
-            <div style="background:#0d1117;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 14px">
-              <div style="font-size:9px;font-weight:700;letter-spacing:1.2px;color:#475569;margin-bottom:4px">30-DAY RETURN</div>
-              <div id="smdRet30" style="font-size:22px;font-weight:900;color:#e2e8f0">—</div>
-              <div style="font-size:9px;color:#334155;margin-top:2px">SLV</div>
-            </div>
-            <div style="background:#0d1117;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 14px">
-              <div style="font-size:9px;font-weight:700;letter-spacing:1.2px;color:#475569;margin-bottom:4px">90D ANNLZD VOL</div>
-              <div id="smdVol90" style="font-size:22px;font-weight:900;color:#e2e8f0">—</div>
-              <div id="smdVolSub" style="font-size:9px;color:#334155;margin-top:2px">—</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-            <div>
-              <div style="font-size:9px;font-weight:700;letter-spacing:1.2px;color:#475569;margin-bottom:8px">SLV — 90 DAY PRICE</div>
-              <div style="position:relative;height:180px"><canvas id="smdSlvChart"></canvas></div>
-            </div>
-            <div>
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-                <span style="font-size:9px;font-weight:700;letter-spacing:1.2px;color:#475569">GOLD/SILVER RATIO — 90 DAY</span>
-                <div style="display:flex;gap:8px;font-size:9px;color:#334155">
-                  <span>▬ <span style="color:#ff4444">90+ extreme</span></span>
-                  <span>▬ <span style="color:#ff6b35">80 warning</span></span>
-                  <span>▬ <span style="color:#00ff88">65 target</span></span>
-                </div>
-              </div>
-              <div style="position:relative;height:180px"><canvas id="smdGsrChart"></canvas></div>
-            </div>
-          </div>
-          <div id="smdBackStatus" style="margin-top:12px;display:none;padding:8px 14px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:1px;text-align:center"></div>
-        </div>
-
-        <!-- ── TAB 2: Physical Stress Score ── -->
-        <div id="smd-stress" class="smd-panel" style="display:none">
-          <div style="display:grid;grid-template-columns:280px 1fr;gap:24px;align-items:start">
-            <!-- Gauge -->
-            <div style="text-align:center">
-              <div style="position:relative;width:240px;height:130px;margin:0 auto">
-                <canvas id="smdGauge" width="240" height="130"></canvas>
-                <div style="position:absolute;bottom:4px;left:0;right:0;text-align:center">
-                  <div id="smdScoreVal" style="font-size:36px;font-weight:900;color:#e2e8f0;line-height:1">—</div>
-                  <div id="smdScoreLabel" style="font-size:10px;font-weight:700;letter-spacing:1.5px;margin-top:2px">LOADING</div>
-                </div>
-              </div>
-              <div id="smdScoreInterp" style="margin-top:10px;font-size:11px;color:#64748b;line-height:1.5;padding:0 8px"></div>
-            </div>
-            <!-- Breakdown -->
-            <div>
-              <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#475569;margin-bottom:12px">STRESS COMPONENT BREAKDOWN</div>
-              <div id="smdBreakdown" style="display:flex;flex-direction:column;gap:8px"></div>
-              <div style="margin-top:14px;padding:10px 14px;background:rgba(148,163,184,0.04);border:1px solid rgba(148,163,184,0.1);border-radius:8px;font-size:10px;color:#475569;line-height:1.6">
-                <strong style="color:#64748b">SCORE GUIDE:</strong><br>
-                <span style="color:#00ff88">0–30</span> No Stress &nbsp;·&nbsp;
-                <span style="color:#f59e0b">31–60</span> Watch &nbsp;·&nbsp;
-                <span style="color:#ff6b35">61–80</span> Elevated &nbsp;·&nbsp;
-                <span style="color:#ff4444">81–100</span> Shock Risk
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── TAB 3: Demand Signals ── -->
-        <div id="smd-demand" class="smd-panel" style="display:none">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-            <div>
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-                <span style="font-size:9px;font-weight:700;letter-spacing:1.2px;color:#475569">US INDUSTRIAL PRODUCTION (12M)</span>
-                <span id="smdIndproChg" style="font-size:9px;font-weight:700"></span>
-              </div>
-              <div style="position:relative;height:160px"><canvas id="smdIndproChart"></canvas></div>
-              <div style="font-size:9px;color:#334155;margin-top:4px">FRED INDPRO · Monthly · Declining = demand headwind</div>
-            </div>
-            <div>
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-                <span style="font-size:9px;font-weight:700;letter-spacing:1.2px;color:#475569">COPX — BYPRODUCT SUPPLY PROXY</span>
-                <span style="font-size:9px;color:#334155">~70% silver is byproduct of Cu/Pb/Zn mining</span>
-              </div>
-              <div style="position:relative;height:160px"><canvas id="smdCopxChart"></canvas></div>
-              <div style="font-size:9px;color:#334155;margin-top:4px">COPX ETF · Copper mining exposure · Declining = supply squeeze risk</div>
-            </div>
-          </div>
-          <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px">
-            <div style="background:#0d1117;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:14px 18px">
-              <div style="font-size:9px;font-weight:700;letter-spacing:1.2px;color:#475569;margin-bottom:6px">SILVER ↔ INDPRO CORRELATION</div>
-              <div id="smdCorr" style="font-size:28px;font-weight:900;color:#e2e8f0">—</div>
-              <div id="smdCorrInterp" style="font-size:10px;color:#64748b;margin-top:4px;line-height:1.5"></div>
-            </div>
-            <div style="background:#0d1117;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:14px 18px">
-              <div style="font-size:9px;font-weight:700;letter-spacing:1.2px;color:#475569;margin-bottom:6px">SLV vs 50-DAY MA</div>
-              <div id="smdMAstat" style="font-size:28px;font-weight:900">—</div>
-              <div id="smdMAinterp" style="font-size:10px;color:#64748b;margin-top:4px;line-height:1.5"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── TAB 4: Alerts ── -->
-        <div id="smd-alerts" class="smd-panel" style="display:none">
-          <div id="smdAlertsList" style="display:flex;flex-direction:column;gap:10px">
-            <div style="color:#334155;font-size:11px;padding:20px 0;text-align:center">Loading alerts…</div>
-          </div>
-        </div>
-
-      </div><!-- /smd-wrap -->
-
-      <!-- DEMAND BREAKDOWN -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:0">
-
-        <!-- Gold demand -->
-        <div class="cd-section">
+        <div class="cd-section" id="gsrSection">
           <div class="cd-section-head">
-            <span class="cd-section-title">🥇 Gold Demand by Sector</span>
-            <span style="font-size:9px;color:#334155;font-weight:600">2024 · World Gold Council</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:24px">
-            <div style="position:relative;width:200px;height:200px;flex-shrink:0;overflow:hidden">
-              <canvas id="goldDemandChart" width="200" height="200"></canvas>
-              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
-                <div style="font-size:10px;color:#475569;font-weight:700;letter-spacing:1px">TOTAL</div>
-                <div style="font-size:17px;font-weight:900;color:#f59e0b">4,974t</div>
-                <div style="font-size:9px;color:#334155">tonnes</div>
-              </div>
+            <span class="cd-section-title">⚖️ Gold / Silver Ratio</span>
+            <div class="cd-view-toggle" id="gsrTimeTabs">
+              <button class="cd-vbtn" onclick="setGsrPeriod('ytd',this)">YTD</button>
+              <button class="cd-vbtn" onclick="setGsrPeriod('1y',this)">1Y</button>
+              <button class="cd-vbtn" onclick="setGsrPeriod('5y',this)">5Y</button>
+              <button class="cd-vbtn active" onclick="setGsrPeriod('10y',this)">10Y</button>
             </div>
-            <div id="goldDemandLegend" style="flex:1;display:flex;flex-direction:column;gap:7px"></div>
           </div>
+
+          <div id="gsrMetrics" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:20px">
+            <div class="td-stat" style="text-align:center">
+              <div class="td-stat-label">Current Ratio</div>
+              <div class="td-stat-val" id="gsrCurrent" style="font-size:28px;font-weight:900">—</div>
+              <div class="td-stat-sub" id="gsrCurrentSub"></div>
+            </div>
+            <div class="td-stat" style="text-align:center">
+              <div class="td-stat-label" id="gsrMeanLabel">10Y Mean</div>
+              <div class="td-stat-val" id="gsrMean" style="font-size:22px;font-weight:800">—</div>
+              <div class="td-stat-sub" id="gsrMeanSub"></div>
+            </div>
+            <div class="td-stat" style="text-align:center">
+              <div class="td-stat-label">10Y Percentile</div>
+              <div class="td-stat-val" id="gsrVsMean" style="font-size:22px;font-weight:800">—</div>
+              <div class="td-stat-sub" id="gsrSignal"></div>
+            </div>
+            <div class="td-stat" style="text-align:center">
+              <div class="td-stat-label">Gold Price</div>
+              <div class="td-stat-val" id="gsrGold" style="font-size:18px;font-weight:800;color:#f59e0b">—</div>
+              <div class="td-stat-sub">per oz</div>
+            </div>
+            <div class="td-stat" style="text-align:center">
+              <div class="td-stat-label">Silver Price</div>
+              <div class="td-stat-val" id="gsrSilver" style="font-size:18px;font-weight:800;color:#94a3b8">—</div>
+              <div class="td-stat-sub">per oz</div>
+            </div>
+          </div>
+
+          <div id="gsrVerdict" style="display:none"></div>
+          <div id="gsrBanner" style="border-radius:10px;padding:12px 18px;margin-bottom:16px;display:none;font-size:12px;line-height:1.6"></div>
+
+          <div style="position:relative;height:430px">
+            <canvas id="gsrChart"></canvas>
+          </div>
+          <div id="gsrMeta" style="margin-top:8px;font-size:10px;color:#597895;text-align:right"></div>
         </div>
 
-        <!-- Silver demand -->
-        <div class="cd-section">
-          <div class="cd-section-head">
-            <span class="cd-section-title">🥈 Silver Demand by Sector</span>
-            <span style="font-size:9px;color:#334155;font-weight:600">2024 · Silver Institute</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:24px">
-            <div style="position:relative;width:200px;height:200px;flex-shrink:0;overflow:hidden">
-              <canvas id="silverDemandChart" width="200" height="200"></canvas>
-              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
-                <div style="font-size:10px;color:#475569;font-weight:700;letter-spacing:1px">TOTAL</div>
-                <div style="font-size:17px;font-weight:900;color:#94a3b8">1,160Moz</div>
-                <div style="font-size:9px;color:#334155">million oz</div>
-              </div>
-            </div>
-            <div id="silverDemandLegend" style="flex:1;display:flex;flex-direction:column;gap:7px"></div>
-          </div>
+        <div class="callout" style="margin-top:12px">
+          Relative-value context only. A historically high or low ratio does not by itself imply that the ratio must mean-revert.
         </div>
-
-      <!-- Segment detail panel (shown on pie click) -->
-      <div id="demandDetailPanel" style="display:none;margin-top:0;grid-column:1/-1"></div>
-
+      </div>
     </div>
-    </div><!-- /page-commodities -->
 
-    <!-- ─── HORMUZ OIL DESK PAGE ─── -->
     <div class="page" id="page-hormuz">
       <div class="welcome-wrap" style="max-width:1080px">
         <div class="page-header" style="margin-bottom:16px">
@@ -2746,7 +2556,7 @@ function navigate(page){
   }
 
   if(page === 'crypto') loadCryptoDash();
-  if(page === 'commodities'){ loadCommodities(); setTimeout(smdInit, 300); }
+  if(page === 'commodities'){ loadCommodities(); }
   if(page === 'hormuz')     loadHormuz();
   if(page === 'rates') loadRatesPage();
   if(page === 'macro') loadMacroScanner();
@@ -6185,7 +5995,7 @@ function _renderOnchainLineChart(data){
 // ── COMMODITIES ──────────────────────────────────────────
 var _gsrChart = null;
 var _gsrData  = null;
-var _gsrPeriod = '1y';
+var _gsrPeriod = '10y';
 
 var _goldDemandChart = null, _silverDemandChart = null;
 
@@ -6573,10 +6383,6 @@ async function loadCommodities(){
   var canvas = document.getElementById('gsrChart');
   if(!canvas) return;
 
-  // Build demand charts (static data, always render)
-  if(!_goldDemandChart)   _goldDemandChart   = _buildDemandChart('goldDemandChart',   'goldDemandLegend',   _GOLD_DEMAND,   'gold');
-  if(!_silverDemandChart) _silverDemandChart = _buildDemandChart('silverDemandChart', 'silverDemandLegend', _SILVER_DEMAND, 'silver');
-
   if(_gsrData){
     renderGsrChart(_gsrData);
     return;
@@ -6653,6 +6459,7 @@ function renderGsrChart(d){
   if(_gsrPeriod === 'ytd')      cutoff = new Date(now.getFullYear(), 0, 1);
   else if(_gsrPeriod === '1y')  cutoff = new Date(now.getFullYear()-1, now.getMonth(), 1);
   else if(_gsrPeriod === '5y')  cutoff = new Date(now.getFullYear()-5, now.getMonth(), 1);
+  else if(_gsrPeriod === '10y') cutoff = new Date(now.getFullYear()-10, now.getMonth(), 1);
   else cutoff = new Date('1990-01-01');
 
   var useDailyPeriod = (_gsrPeriod === '1y' || _gsrPeriod === 'ytd') && d.daily_1y && d.daily_1y.length;
