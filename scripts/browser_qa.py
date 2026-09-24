@@ -145,6 +145,7 @@ async def run_viewport(browser, name, width, height):
     # Unified platform shell: Account persistence + University progress.
     await page.goto(BASE + "/account", wait_until="domcontentloaded", timeout=30000)
     await page.locator("#watchList").wait_for(state="visible")
+    await page.wait_for_function("() => typeof WavePlatform === 'object' && typeof WaveCloud === 'object'")
     await page.locator("#watchSymbol").fill("AAPL")
     await page.locator("#watchForm button[type=submit]").click()
     await page.wait_for_function("() => document.querySelector('#watchList').innerText.includes('AAPL')")
@@ -153,6 +154,7 @@ async def run_viewport(browser, name, width, height):
 
     await page.goto(BASE + "/university", wait_until="domcontentloaded", timeout=30000)
     await page.locator("#courseGrid").wait_for(state="visible")
+    await page.wait_for_function("() => typeof WavePlatform === 'object' && typeof WaveCloud === 'object'")
     before = await page.evaluate("() => JSON.parse(localStorage.getItem('wave.platform.v1')).progress.macro_regimes")
     await page.locator("[data-advance='macro_regimes']").click()
     after = await page.evaluate("() => JSON.parse(localStorage.getItem('wave.platform.v1')).progress.macro_regimes")
