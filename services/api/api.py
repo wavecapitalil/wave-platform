@@ -30,10 +30,14 @@ CORS(app, resources={r"/api/*": {"origins": _ALLOWED_ORIGINS}})
 from modules.seasonality import bp as seasonality_bp
 from modules.metals import bp as metals_bp
 from modules.hormuz import bp as hormuz_bp
+from modules.flows import bp as flows_bp
+from modules.confluence import bp as confluence_bp
 
 app.register_blueprint(seasonality_bp)
 app.register_blueprint(metals_bp)
 app.register_blueprint(hormuz_bp)
+app.register_blueprint(flows_bp)
+app.register_blueprint(confluence_bp)
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
@@ -1594,22 +1598,6 @@ def insider_activity():
         return jsonify({'results': rows[:30]})
     except Exception as e:
         return jsonify({'error': str(e), 'results': []})
-
-
-# ── Confluence endpoints ──────────────────────────────────────────────────────
-@app.route('/api/confluence')
-def confluence_results():
-    from confluence import get_results
-    return jsonify(get_results(top_n=20))
-
-@app.route('/api/confluence/run', methods=['POST'])
-def confluence_run():
-    from confluence import run_confluence, _RUNNING
-    if _RUNNING:
-        return jsonify({'status': 'already_running'})
-    import threading
-    threading.Thread(target=run_confluence, daemon=True).start()
-    return jsonify({'status': 'started'})
 
 
 # ── Historical daily closes ───────────────────────────────────────────────────
