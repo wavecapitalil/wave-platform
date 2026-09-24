@@ -1,8 +1,7 @@
 from datetime import datetime, timezone
-import io
-import zipfile
 from core.meta import build_meta
 from services.binance import coinm_positioning
+from services.cftc import get_annual_frame
 
 import pandas as pd
 import requests
@@ -11,8 +10,6 @@ from flask import Blueprint, jsonify, request
 
 bp = Blueprint("flows", __name__)
 
-CFTC_DISAGG_ZIP = "https://www.cftc.gov/files/dea/history/fut_disagg_txt_{year}.zip"
-CFTC_FIN_ZIP = "https://www.cftc.gov/files/dea/history/fut_fin_txt_{year}.zip"
 
 CFTC_MARKETS = {
     "gold": ("disagg", ["GOLD - COMMODITY EXCHANGE INC.", "GOLD"]),
@@ -157,18 +154,6 @@ def short_interest():
         return jsonify({"error": str(exc), "symbol": symbol}), 502
 
 
-def _cftc_frame(report_type, year):
-    url = (CFTC_FIN_ZIP if report_type == "financial" else CFTC_DISAGG_ZIP).format(year=year)
-    r = requests.get(url, timeout=25, headers={"User-Agent": "WaveCapital research@wavecapital.com"})
-    r.raise_for_status()
-    with zipfile.ZipFile(io.BytesIO(r.content)) as z:
-        names = [n for n in z.namelist() if n.lower().endswith((".txt", ".csv"))]
-        if not names:
-            raise ValueError("CFTC archive contains no text report")
-        with z.open(names[0]) as f:
-            return pd.read_csv(f, low_memory=False)
-
-
 def _pick_col(cols, *needles):
     lower = {str(c).lower(): c for c in cols}
     for needle in needles:
@@ -187,7 +172,7 @@ def futures_positioning():
     report_type, aliases = CFTC_MARKETS[asset]
     year = datetime.now(timezone.utc).year
     try:
-        df = _cftc_frame(report_type, year)
+        df = get_annual_frame(report_type, year)
         market_col = _pick_col(df.columns, "market_and_exchange_names", "market and exchange names")
         date_col = _pick_col(df.columns, "report_date_as", "report date")
         if market_col is None or date_col is None:
