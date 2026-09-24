@@ -9,11 +9,11 @@ frontend = html + "\n" + js
 api = Path("services/api/api.py").read_text(encoding="utf-8")
 
 checks = [
-    ("Seasonality uses new contract", "historical_average" in html and "seas-line-chart" in frontend),
+    ("Seasonality uses new contract", "historical_average" in frontend and "seas-line-chart" in frontend),
     ("No legacy seasonality monthly contract", "data.monthly" not in frontend),
-    ("Cross-Asset Flows UI wired", "/api/flows/" in html and "Cross-Asset Flows" in frontend),
+    ("Cross-Asset Flows UI wired", "/api/flows/" in frontend and "Cross-Asset Flows" in frontend),
     ("No legacy Comm Flows API calls", "/api/comm-flows/" not in frontend),
-    ("Confluence v2 UI wired", "/api/confluence?symbol=" in html and "Confluence Monitor" in frontend),
+    ("Confluence v2 UI wired", "/api/confluence?symbol=" in frontend and "Confluence Monitor" in frontend),
     ("No old Insider Buying page loader", "loadInsiderBuying" not in frontend),
     ("Metals removed directional verdict language", "STRONGLY FAVORS" not in frontend),
     ("No dead metal-intel API calls", "/api/commodities/metal-intel" not in frontend),
