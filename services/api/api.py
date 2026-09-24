@@ -893,8 +893,6 @@ _SCHEDULE = [
     # (name, interval_seconds, function)
     # Brief: rescan the portable WAVE_BRIEF_DIR every 60 minutes.
     ('brief_refresh',    3_600,   _load_brief_cache),
-    # Comm. Flows earnings: every 24 hours
-    ('comm_flows_edgar', 86_400,  lambda: _cf.check_and_update()),
 ]
 _schedule_state = {name: {'last_run': None, 'last_status': 'pending'} for name, *_ in _SCHEDULE}
 
@@ -918,13 +916,6 @@ def _master_scheduler():
 
 # Load portable briefing storage at startup
 _load_brief_cache()
-# Run initial comm-flows update at startup
-try:
-    _cf.check_and_update()
-    _schedule_state['comm_flows_edgar']['last_run'] = _time.time()
-    _schedule_state['comm_flows_edgar']['last_status'] = 'ok'
-except Exception:
-    pass
 # Start master scheduler
 _threading.Thread(target=_master_scheduler, daemon=True).start()
 
@@ -2014,81 +2005,6 @@ def peers():
         'sector':    sym_meta['sector'],
         'subsector': sym_meta['subsector'],
         'peers':     results,
-    })
-
-
-# ── Comm. Flows — Digital Ad Intelligence ─────────────────────────────────────
-import sys as _sys
-_sys.path.insert(0, os.path.dirname(__file__))
-import comm_flows as _cf
-_cf.init_db()
-
-@app.route('/api/comm-flows/latest')
-def comm_flows_latest():
-    try:
-        return jsonify(_cf.get_latest_quarter())
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/api/comm-flows/history')
-def comm_flows_history():
-    try:
-        company = request.args.get('company')
-        from_year = int(request.args.get('from_year', 2022))
-        return jsonify({'data': _cf.get_history(company, from_year)})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/api/comm-flows/breakdown')
-def comm_flows_breakdown():
-    try:
-        year    = int(request.args.get('year', 2024))
-        quarter = int(request.args.get('quarter', 4))
-        return jsonify({'data': _cf.get_regional_breakdown(year, quarter)})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/api/comm-flows/trends')
-def comm_flows_trends():
-    try:
-        return jsonify({'signals': _cf.detect_trends()})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/api/comm-flows/update', methods=['POST'])
-def comm_flows_update():
-    """Manually trigger an EDGAR update check."""
-    try:
-        events = _cf.check_and_update()
-        _schedule_state['comm_flows_edgar']['last_run']    = _time.time()
-        _schedule_state['comm_flows_edgar']['last_status'] = 'ok'
-        return jsonify({'events': events, 'count': len(events)})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/api/update-status')
-def update_status():
-    """Return freshness info for all data sources."""
-    import datetime as _dt
-    cf_status = _cf.get_update_status()
-    jobs = []
-    for name, interval, _ in _SCHEDULE:
-        state   = _schedule_state[name]
-        last    = state['last_run']
-        next_in = max(0, round((last + interval - _time.time()) / 60)) if last else 0
-        jobs.append({
-            'name':        name,
-            'interval_h':  round(interval / 3600, 1),
-            'last_run':    _dt.datetime.fromtimestamp(last).isoformat() if last else None,
-            'next_in_min': next_in,
-            'status':      state['last_status'],
-        })
-    return jsonify({
-        'comm_flows':  cf_status,
-        'scheduler':   jobs,
-        'brief_file':  _brief_cache['filename'],
-        'brief_loaded_at': _brief_cache['loaded_at'],
-        'server_time': _dt.datetime.now().isoformat(),
     })
 
 
