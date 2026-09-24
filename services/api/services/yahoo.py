@@ -122,3 +122,33 @@ def daily_history(symbol: str, *, days: int) -> dict[str, list]:
 def vix_history() -> list[float]:
     series = closes("^VIX", period="7d", interval="1d")
     return [float(value) for value in series.tolist()]
+
+
+def ticker_info(symbol: str) -> dict[str, Any]:
+    """Return Yahoo's metadata mapping for a symbol."""
+    info = _ticker(symbol).info or {}
+    if not isinstance(info, dict):
+        raise ValueError("unexpected Yahoo info response")
+    return info
+
+
+def history_frame(symbol: str, *, period: str, interval: str):
+    """Return the provider history DataFrame without route-specific shaping."""
+    frame = _ticker(symbol).history(period=period, interval=interval)
+    if frame is None or frame.empty:
+        raise LookupError("no data")
+    return frame
+
+
+def download_frame(symbols, *, period: str, interval: str = "1d", auto_adjust: bool = True):
+    """Batch-download Yahoo data for internal analytics modules."""
+    frame = yf.download(
+        symbols,
+        period=period,
+        interval=interval,
+        progress=False,
+        auto_adjust=auto_adjust,
+    )
+    if frame is None or frame.empty:
+        raise LookupError("no data")
+    return frame
