@@ -112,7 +112,7 @@ function navigate(page){
 
   // Load scanner data when navigating to scanner page
   if(page === 'scanner'){
-    if(!scannerCache.squeeze || scannerCache.squeeze.length < 2) loadScannerData();
+    if(!scannerData || scannerData.length < 2) loadScannerData();
     else renderScannerTable();
   }
 
