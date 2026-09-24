@@ -24,6 +24,7 @@ PUBLIC_FILES = {
     "terminal.css",
     "terminal.js",
     "terminal-market.js",
+    "terminal-content.js",
     "terminal-flows.js",
     "terminal-hormuz.js",
     "terminal-metals.js",
