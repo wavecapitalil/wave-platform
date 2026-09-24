@@ -1619,39 +1619,6 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
 
       </div><!-- /smd-wrap -->
 
-      <!-- METAL INTEL: What's Moving Gold & Silver Today -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-
-        <!-- Gold Intel -->
-        <div class="cd-section" style="border-color:rgba(245,158,11,0.2)">
-          <div class="cd-section-head" style="margin-bottom:14px">
-            <div>
-              <span class="cd-section-title" style="color:#f59e0b">🥇 What's Moving Gold Today</span>
-              <div style="font-size:9px;color:#475569;margin-top:3px">News + Macro Intel · auto-refreshed every 30 min</div>
-            </div>
-            <button onclick="loadMetalIntel('gold',true)" style="font-size:9px;padding:4px 10px;border-radius:6px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);color:#f59e0b;cursor:pointer">↻ Refresh</button>
-          </div>
-          <div id="goldIntelBody">
-            <div style="color:#334155;font-size:11px;padding:10px 0">Loading…</div>
-          </div>
-        </div>
-
-        <!-- Silver Intel -->
-        <div class="cd-section" style="border-color:rgba(148,163,184,0.2)">
-          <div class="cd-section-head" style="margin-bottom:14px">
-            <div>
-              <span class="cd-section-title" style="color:#94a3b8">🥈 What's Moving Silver Today</span>
-              <div style="font-size:9px;color:#475569;margin-top:3px">News + Macro Intel · auto-refreshed every 30 min</div>
-            </div>
-            <button onclick="loadMetalIntel('silver',true)" style="font-size:9px;padding:4px 10px;border-radius:6px;background:rgba(148,163,184,0.08);border:1px solid rgba(148,163,184,0.2);color:#94a3b8;cursor:pointer">↻ Refresh</button>
-          </div>
-          <div id="silverIntelBody">
-            <div style="color:#334155;font-size:11px;padding:10px 0">Loading…</div>
-          </div>
-        </div>
-
-      </div>
-
       <!-- DEMAND BREAKDOWN -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:0">
 
@@ -7257,10 +7224,6 @@ async function loadCommodities(){
   if(!_goldDemandChart)   _goldDemandChart   = _buildDemandChart('goldDemandChart',   'goldDemandLegend',   _GOLD_DEMAND,   'gold');
   if(!_silverDemandChart) _silverDemandChart = _buildDemandChart('silverDemandChart', 'silverDemandLegend', _SILVER_DEMAND, 'silver');
 
-  // Metal intel (load in background, don't block chart)
-  loadMetalIntel('gold');
-  loadMetalIntel('silver');
-
   if(_gsrData){
     renderGsrChart(_gsrData);
     return;
@@ -7285,85 +7248,44 @@ function setGsrPeriod(period, btn){
 }
 
 function renderGsrMetrics(d){
-  var current = d.current, mean = d.mean, diff = current - mean;
-  var pctDiff = (diff / mean * 100);
-  var aboveBelow = diff > 0 ? 'above' : 'below';
-  var col = diff > 0 ? '#f59e0b' : '#22c55e';
+  var current=d.current, mean=d.mean;
+  var diff=current-mean;
+  var pctDiff=mean ? diff/mean*100 : null;
+  var percentile=d.percentile;
+  var z=d.z_score;
 
-  document.getElementById('gsrCurrent').textContent = current.toFixed(1);
-  document.getElementById('gsrCurrentSub').textContent = d.end_date;
-  document.getElementById('gsrMeanLabel').textContent = d.n_years + 'Y Mean';
-  document.getElementById('gsrMean').textContent = mean.toFixed(1);
-  document.getElementById('gsrMeanSub').textContent = d.start_date.slice(0,4) + '–present';
-  document.getElementById('gsrVsMean').innerHTML = '<span style="color:'+col+'">'+(diff>0?'+':'')+diff.toFixed(1)+'</span>';
-  document.getElementById('gsrSignal').textContent = pctDiff.toFixed(1)+'% '+aboveBelow+' mean';
-  document.getElementById('gsrGold').textContent = '$'+d.gold_price.toLocaleString(undefined,{maximumFractionDigits:0});
-  document.getElementById('gsrSilver').textContent = '$'+d.silver_price.toFixed(2);
+  document.getElementById('gsrCurrent').textContent=current!=null?current.toFixed(1):'—';
+  document.getElementById('gsrCurrentSub').textContent=d.end_date||'';
+  document.getElementById('gsrMeanLabel').textContent=(d.n_years||10)+'Y Mean';
+  document.getElementById('gsrMean').textContent=mean!=null?mean.toFixed(1):'—';
+  document.getElementById('gsrMeanSub').textContent=d.start_date ? d.start_date.slice(0,4)+'–present' : '';
+  document.getElementById('gsrVsMean').textContent=percentile!=null?percentile.toFixed(0)+'th':'—';
+  document.getElementById('gsrSignal').textContent=z!=null ? 'z-score '+(z>=0?'+':'')+z.toFixed(2)+'σ' : '';
+  document.getElementById('gsrGold').textContent=d.gold_price!=null?'$'+d.gold_price.toLocaleString(undefined,{maximumFractionDigits:0}):'—';
+  document.getElementById('gsrSilver').textContent=d.silver_price!=null?'$'+Number(d.silver_price).toFixed(2):'—';
 
-  // Verdict + Interpretation
-  var banner  = document.getElementById('gsrBanner');
-  var verdict = document.getElementById('gsrVerdict');
-  banner.style.display  = 'block';
-  verdict.style.display = 'block';
+  var verdict=document.getElementById('gsrVerdict');
+  if(verdict) verdict.style.display='none';
 
-  var stdFromMean = Math.abs(diff) / d.std;
-  var intensity = stdFromMean >= 1.5 ? 'Extreme' : stdFromMean >= 0.75 ? 'Elevated' : 'Moderate';
+  var banner=document.getElementById('gsrBanner');
+  if(!banner) return;
+  banner.style.display='block';
+  banner.style.background='rgba(85,170,255,.06)';
+  banner.style.border='1px solid rgba(85,170,255,.18)';
+  banner.style.color='#b9d9f4';
 
-  // Gold color = #f59e0b, Silver color = #94a3b8
-  var GOLD = '#f59e0b', SILVER = '#94a3b8';
+  var relation='near the center of its 10-year distribution';
+  if(percentile!=null && percentile>=80) relation='high relative to its 10-year distribution; silver is relatively cheap versus gold compared with most observations in the sample';
+  else if(percentile!=null && percentile<=20) relation='low relative to its 10-year distribution; gold is relatively cheap versus silver compared with most observations in the sample';
 
-  if(diff > 0){
-    // Ratio above mean → silver is cheap relative to gold
-    var strength = stdFromMean >= 1.5 ? 'STRONGLY FAVORS' : stdFromMean >= 0.75 ? 'FAVORS' : 'SLIGHTLY FAVORS';
-    verdict.innerHTML =
-      '<div style="display:inline-flex;align-items:center;gap:14px;'
-      +'background:linear-gradient(135deg,rgba(148,163,184,0.22),rgba(148,163,184,0.08));'
-      +'border:2px solid '+SILVER+';border-radius:14px;padding:14px 28px;'
-      +'box-shadow:0 0 28px rgba(148,163,184,0.18)">'
-      +'<span style="font-size:30px">🥈</span>'
-      +'<div style="text-align:left">'
-      +'<div style="font-size:9px;font-weight:700;letter-spacing:2.5px;color:#64748b;text-transform:uppercase;margin-bottom:3px">Ratio Signal</div>'
-      +'<div style="font-size:20px;font-weight:900;letter-spacing:1px;color:'+SILVER+'">'
-      +strength+' <span style="text-shadow:0 0 12px rgba(148,163,184,0.6)">SILVER</span></div>'
-      +'<div style="font-size:11px;color:#94a3b8;margin-top:4px">'+stdFromMean.toFixed(1)+'σ above the '+d.n_years+'-year mean — ratio is elevated, silver is historically cheap</div>'
-      +'</div>'
-      +'</div>';
-    banner.style.background = 'rgba(148,163,184,0.07)';
-    banner.style.border     = '1px solid rgba(148,163,184,0.22)';
-    banner.style.color      = '#cbd5e1';
-    banner.innerHTML =
-      '<b style="color:'+SILVER+'">Silver is historically cheap vs gold</b> — '
-      +'The ratio sits <b>'+diff.toFixed(1)+' points above</b> the '+d.n_years+'-year mean ('+pctDiff.toFixed(1)+'% premium). '
-      +intensity+' divergence ('+stdFromMean.toFixed(1)+'σ). '
-      +'When the ratio is this elevated, silver has historically outperformed as it reverts toward the mean. '
-      +'For the ratio to revert, silver would need to rally ~<b>'+(((current/mean)-1)*100).toFixed(0)+'%</b> relative to gold.';
-  } else {
-    // Ratio below mean → gold is cheap relative to silver
-    var strength = stdFromMean >= 1.5 ? 'STRONGLY FAVORS' : stdFromMean >= 0.75 ? 'FAVORS' : 'SLIGHTLY FAVORS';
-    verdict.innerHTML =
-      '<div style="display:inline-flex;align-items:center;gap:14px;'
-      +'background:linear-gradient(135deg,rgba(245,158,11,0.22),rgba(245,158,11,0.08));'
-      +'border:2px solid '+GOLD+';border-radius:14px;padding:14px 28px;'
-      +'box-shadow:0 0 28px rgba(245,158,11,0.18)">'
-      +'<span style="font-size:30px">🥇</span>'
-      +'<div style="text-align:left">'
-      +'<div style="font-size:9px;font-weight:700;letter-spacing:2.5px;color:#64748b;text-transform:uppercase;margin-bottom:3px">Ratio Signal</div>'
-      +'<div style="font-size:20px;font-weight:900;letter-spacing:1px;color:'+GOLD+'">'
-      +strength+' <span style="text-shadow:0 0 12px rgba(245,158,11,0.6)">GOLD</span></div>'
-      +'<div style="font-size:11px;color:#d97706;margin-top:4px">'+stdFromMean.toFixed(1)+'σ below the '+d.n_years+'-year mean — ratio is compressed, gold is historically cheap</div>'
-      +'</div>'
-      +'</div>';
-    banner.style.background = 'rgba(245,158,11,0.07)';
-    banner.style.border     = '1px solid rgba(245,158,11,0.22)';
-    banner.style.color      = '#cbd5e1';
-    banner.innerHTML =
-      '<b style="color:'+GOLD+'">Gold is historically cheap vs silver</b> — '
-      +'The ratio sits <b>'+Math.abs(diff).toFixed(1)+' points below</b> the '+d.n_years+'-year mean ('+Math.abs(pctDiff).toFixed(1)+'% discount). '
-      +intensity+' divergence ('+stdFromMean.toFixed(1)+'σ). '
-      +'A compressed ratio suggests gold has room to outperform relative to silver on a mean-reversion basis. '
-      +'For the ratio to revert, it would need to rise ~<b>'+(((mean/current)-1)*100).toFixed(0)+'%</b>.';
-  }
+  var meanText=(pctDiff==null)?'':(' It is '+Math.abs(pctDiff).toFixed(1)+'% '+(pctDiff>=0?'above':'below')+' the 10-year mean.');
+  banner.innerHTML='<b>Historical context:</b> The Gold/Silver Ratio is '+relation+'.'+meanText
+    +' This is descriptive relative-value context, not a mean-reversion or trade signal.';
+
+  var meta=document.getElementById('gsrMeta');
+  if(meta) meta.textContent='Source: '+((d.meta&&d.meta.source)||'Yahoo Finance')+' · 10-year lookback · Updated '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
 }
+
 
 function renderGsrChart(d){
   var canvas = document.getElementById('gsrChart');
