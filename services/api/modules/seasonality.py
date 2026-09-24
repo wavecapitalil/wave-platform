@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask import Blueprint, jsonify, request
 import yfinance as yf
+from core.meta import build_meta
 
 bp = Blueprint("seasonality", __name__)
 
@@ -68,9 +69,9 @@ def seasonality():
         "historical_average": avg,
         "current_year": current_year,
         "current_path": current_points,
-        "meta": {
-            "source": "Yahoo Finance via yfinance",
-            "method": "Adjusted-close cumulative return from first available trading day of each year; prior-year paths averaged by calendar month-day.",
-            "generated_at": datetime.utcnow().isoformat() + "Z",
-        },
+        "meta": build_meta(
+            "Yahoo Finance via yfinance",
+            freshness="historical_daily",
+            method="Adjusted-close cumulative return from first available trading day of each year; prior-year paths averaged by calendar month-day.",
+        ),
     })
