@@ -2,7 +2,6 @@
 
 import email.utils
 import re
-import subprocess
 import time as _time
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
@@ -10,6 +9,7 @@ from datetime import datetime, timezone
 import requests
 import yfinance as yf
 from flask import Blueprint, Response, jsonify, request
+from services.fred import get_series_csv
 
 bp = Blueprint("macro", __name__)
 
@@ -138,41 +138,16 @@ def econ_calendar():
         return jsonify({'error': str(e)}), 502
 
 
-_fred_cache = {}  # series -> {'text': str, 'ts': float}
-
 @bp.route('/api/fred')
 def fred_proxy():
-    # Same CORS problem as econ-calendar: fred.stlouisfed.org's CSV endpoint
-    # sends no Access-Control-Allow-Origin, so the two frontend features that
-    # used to hit it directly (Housing Risk Gauge's hrgFred, and smdFred)
-    # always failed in the browser. Proxied here and cached 1h since these
-    # are daily/weekly-updated macro series.
-    #
-    # Uses curl via subprocess, not `requests`: on this machine, `requests`
-    # (urllib3 on the system's LibreSSL build) reliably hangs to a read
-    # timeout against FRED's Akamai edge specifically, while curl completes
-    # in well under a second. Other hosts (e.g. the econ-calendar source)
-    # are unaffected — this is FRED-specific.
     series = request.args.get('series', '').strip()
     if not series or not re.fullmatch(r'[A-Za-z0-9_]+', series):
         return Response('invalid series', status=400)
-    cached = _fred_cache.get(series)
-    if cached and _time.time() - cached['ts'] < 3600:
-        return Response(cached['text'], mimetype='text/csv')
     try:
-        p = subprocess.run(
-            ['curl', '-s', '-f', '--max-time', '15',
-             'https://fred.stlouisfed.org/graph/fredgraph.csv?id=' + series],
-            capture_output=True, text=True, timeout=20)
-        if p.returncode != 0 or not p.stdout.strip():
-            raise RuntimeError(f'curl failed (rc={p.returncode}): {p.stderr.strip()}')
-        _fred_cache[series] = {'text': p.stdout, 'ts': _time.time()}
-        return Response(p.stdout, mimetype='text/csv')
-    except Exception as e:
-        if cached:
-            return Response(cached['text'], mimetype='text/csv')
-        return Response(str(e), status=502)
-
+        text, _from_cache = get_series_csv(series)
+        return Response(text, mimetype='text/csv')
+    except Exception as exc:
+        return Response(str(exc), status=502)
 
 # ── Rates & Yields ────────────────────────────────────────────────────────────
 @bp.route('/api/yields')
