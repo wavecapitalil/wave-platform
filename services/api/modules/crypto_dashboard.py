@@ -5,6 +5,8 @@ import requests
 import xml.etree.ElementTree as ET
 
 from flask import Blueprint, jsonify, request
+from services.coingecko import global_market as cg_global_market, markets as cg_markets, market_chart as cg_market_chart, coin_detail as cg_coin_detail
+from services.defillama import protocol as llama_protocol, summary as llama_summary, protocols as llama_protocols, overview as llama_overview
 
 bp = Blueprint("crypto_dashboard", __name__)
 
@@ -48,21 +50,14 @@ def crypto_global():
     if _cg_global_cache['data'] and (_t.time() - _cg_global_cache['ts']) < 120:
         return jsonify(_cg_global_cache['data'])
     try:
-        import requests as _req
-        headers = {'User-Agent': 'Mozilla/5.0'}
-        r1 = _req.get('https://api.coingecko.com/api/v3/global', headers=headers, timeout=12)
-        d  = r1.json().get('data', {})
+        d = cg_global_market()
         total_mc  = d.get('total_market_cap', {}).get('usd', 0)
         chg_24h   = round(float(d.get('market_cap_change_percentage_24h_usd', 0)), 2)
         btc_dom   = round(float(d.get('market_cap_percentage', {}).get('btc', 0)), 1)
         eth_dom   = round(float(d.get('market_cap_percentage', {}).get('eth', 0)), 1)
         total_vol = d.get('total_volume', {}).get('usd', 0)
         # 7d change: use BTC+ETH average as proxy
-        r2 = _req.get(
-            'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd'
-            '&ids=bitcoin,ethereum&price_change_percentage=7d',
-            headers=headers, timeout=12)
-        coins = r2.json() or []
+        coins = cg_markets(['bitcoin','ethereum'], price_change_percentage='7d', timeout=12) or []
         chg_7d = round(sum((c.get('price_change_percentage_7d_in_currency') or 0) for c in coins) / max(len(coins), 1), 2)
         result = {
             'total_market_cap': round(total_mc),
@@ -87,7 +82,6 @@ def cohort_performance():
     if _cohort_perf_cache.get(cache_key) and (_t.time() - _cohort_perf_cache.get(cache_key + '_ts', 0)) < 600:
         return jsonify(_cohort_perf_cache[cache_key])
     try:
-        import requests as _req
         field_map = {
             '24h': 'price_change_percentage_24h_in_currency',
             '7d':  'price_change_percentage_7d_in_currency',
@@ -96,11 +90,16 @@ def cohort_performance():
         }
         pct_field = field_map.get(period, field_map['24h'])
         all_ids = list(set(cid for coins in COHORT_COINS.values() for cid in coins))
-        url = ('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd'
-               '&ids=' + ','.join(all_ids) +
-               '&price_change_percentage=24h,7d,30d,1y&per_page=250&order=market_cap_desc')
-        r = _req.get(url, headers={'User-Agent': 'Mozilla/5.0'}, timeout=20)
-        raw = {c['id']: c for c in (r.json() or [])}
+        raw = {
+            item['id']: item
+            for item in cg_markets(
+                all_ids,
+                price_change_percentage='24h,7d,30d,1y',
+                per_page=250,
+                order='market_cap_desc',
+                timeout=20,
+            )
+        }
         result = []
         for cohort, ids in COHORT_COINS.items():
             vals = [raw[i][pct_field] for i in ids if i in raw and raw[i].get(pct_field) is not None]
@@ -137,18 +136,11 @@ def cohort_prices():
     if _cohort_prices_cache.get(cache_key) and (_t.time() - _cohort_prices_cache.get(cache_key + '_ts', 0)) < 1800:
         return jsonify(_cohort_prices_cache[cache_key])
     try:
-        import requests as _req, time as _time
-        headers = {'User-Agent': 'Mozilla/5.0'}
+        import time as _time
         result = {}
         for cohort, rep_id in COHORT_REP.items():
             try:
-                url = (f'https://api.coingecko.com/api/v3/coins/{rep_id}/market_chart'
-                       f'?vs_currency=usd&days={days}&interval=daily')
-                r = _req.get(url, headers=headers, timeout=12)
-                if r.status_code == 429:
-                    _time.sleep(2)
-                    r = _req.get(url, headers=headers, timeout=12)
-                prices_raw = r.json().get('prices', [])
+                prices_raw = cg_market_chart(rep_id, days=days, interval='daily', timeout=12).get('prices', [])
                 if len(prices_raw) < 2:
                     continue
                 base = prices_raw[0][1]
@@ -194,8 +186,6 @@ def onchain_history():
             _t.time() - _onchain_hist_cache.get(cache_key+'_ts', 0) < 1800):
         return jsonify(_onchain_hist_cache[cache_key])
 
-    import requests as _req, time as _time
-    headers = {'User-Agent': 'Mozilla/5.0'}
     cutoff  = int(_t.time()) - days * 86400
 
     if slugs:
@@ -213,23 +203,17 @@ def onchain_history():
         slug, name = slug_name
         try:
             if kpi == 'tvl':
-                r = _req.get(f'https://api.llama.fi/protocol/{slug}',
-                             headers=headers, timeout=12)
-                if r.status_code != 200:
-                    return name, None
+                data = llama_protocol(slug)
                 pts = [(p['date'], p['totalLiquidityUSD'])
-                       for p in r.json().get('tvl', [])
+                       for p in data.get('tvl', [])
                        if p.get('date', 0) >= cutoff]
             else:
                 endpoint  = 'dexs' if kpi == 'dex_volume' else 'fees'
                 data_type = {'dex_volume':'dailyVolume','fees':'dailyFees','revenue':'dailyRevenue'}.get(kpi,'dailyFees')
-                r = _req.get(f'https://api.llama.fi/summary/{endpoint}/{slug}',
-                             headers=headers, timeout=12)
-                if r.status_code != 200:
-                    return name, None
+                data = llama_summary(endpoint, slug)
                 key = 'totalDataChart'
                 pts = [(p[0], p[1])
-                       for p in r.json().get(key, [])
+                       for p in data.get(key, [])
                        if p[0] >= cutoff]
             if len(pts) < 3:
                 return name, None
@@ -264,11 +248,9 @@ def onchain_kpi():
     if _onchain_cache2.get(kpi) and (_t.time() - _onchain_cache2.get(kpi + '_ts', 0)) < 600:
         return jsonify(_onchain_cache2[kpi])
     try:
-        import requests as _req
         result = []
         if kpi == 'tvl':
-            r = _req.get('https://api.llama.fi/protocols', timeout=15)
-            protos = r.json()
+            protos = llama_protocols()
             top = sorted(
                 [p for p in protos if p.get('tvl') and p.get('category') not in ('Chain',)],
                 key=lambda x: x.get('tvl', 0), reverse=True)[:20]
@@ -277,9 +259,7 @@ def onchain_kpi():
                        'change_7d': round(p.get('change_7d') or 0, 2),
                        'category': p.get('category', ''), 'chain': p.get('chain', '')} for p in top]
         elif kpi in ('fees', 'revenue'):
-            r = _req.get('https://api.llama.fi/overview/fees'
-                         '?excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true', timeout=15)
-            protos = r.json().get('protocols', [])
+            protos = llama_overview('fees').get('protocols', [])
             vk = 'total24h'
             rk = 'revenue24h' if kpi == 'revenue' else None
             key = rk if kpi == 'revenue' else vk
@@ -291,9 +271,7 @@ def onchain_kpi():
                        'value_30d': round(p.get('total30d') or 0),
                        'category': p.get('category', '')} for p in top]
         elif kpi == 'dex_volume':
-            r = _req.get('https://api.llama.fi/overview/dexs'
-                         '?excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true', timeout=15)
-            protos = r.json().get('protocols', [])
+            protos = llama_overview('dexs').get('protocols', [])
             top = sorted([p for p in protos if p.get('total24h')],
                          key=lambda x: x.get('total24h', 0) or 0, reverse=True)[:20]
             result = [{'name': p.get('displayName') or p.get('name', ''),
@@ -321,20 +299,9 @@ def token_detail():
         entry = _token_detail_cache[coin_id]
         if now - entry['ts'] < 300:
             return jsonify(entry['data'])
-    headers = {'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json'}
     try:
-        r = requests.get(
-            f'https://api.coingecko.com/api/v3/coins/{coin_id}'
-            '?localization=false&tickers=false&market_data=true'
-            '&community_data=true&developer_data=true&sparkline=false',
-            headers=headers, timeout=12)
-        d = r.json()
-        # 30-day price history
-        hist_r = requests.get(
-            f'https://api.coingecko.com/api/v3/coins/{coin_id}/market_chart'
-            '?vs_currency=usd&days=30&interval=daily',
-            headers=headers, timeout=12)
-        hist = hist_r.json()
+        d = cg_coin_detail(coin_id, timeout=12)
+        hist = cg_market_chart(coin_id, days=30, interval='daily', timeout=12)
         md = d.get('market_data', {})
         links = d.get('links', {})
         result = {
