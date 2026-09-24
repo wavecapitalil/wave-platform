@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WAVE — University</title>
+<link rel="stylesheet" href="platform.css">
+</head>
+<body class="wp-body">
+<header class="wp-topbar">
+  <a class="wp-brand" href="index.html">
+    <svg viewBox="0 0 80 30" fill="none"><path d="M0 20 C10 10,20 10,30 20 C40 30,50 30,60 20 C70 10,80 10,90 20" stroke="#55aaff" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+    <span>Wave Capital</span>
+  </a>
+  <nav class="wp-nav">
+    <a href="terminal_app.html">Terminal</a>
+    <a href="university.html" class="active">University</a>
+    <a href="blog.html">Research</a>
+    <a href="products.html">Products</a>
+    <a href="account.html">Account</a>
+  </nav>
+  <a href="account.html" class="wp-account-chip"><span class="wp-avatar" id="uniAvatar">W</span><span id="uniName">WAVE Member</span></a>
+</header>
+<main class="wp-shell">
+  <section class="wp-hero">
+    <div class="wp-kicker">WAVE University</div>
+    <h1 class="wp-title">Learn the framework. Then use it in the Terminal.</h1>
+    <p class="wp-sub">The academy and the research terminal now share the same product shell. Progress is persistent, each track maps to a real analytical workflow, and the account layer is ready to sync once cloud auth is connected.</p>
+    <div class="wp-status"><span class="wp-status-dot"></span><span id="uniCloudStatus">Progress persistence active locally · Account login enables cloud sync</span></div>
+  </section>
+
+  <section class="wp-card" style="margin-bottom:14px">
+    <div class="wp-card-head">
+      <div><h2 class="wp-card-title">Learning Dashboard</h2><div class="wp-card-sub">A curriculum designed around repeatable research processes, not generic market trivia.</div></div>
+      <a class="wp-btn ghost" href="terminal_app.html">Use Terminal</a>
+    </div>
+    <div class="wp-stat-grid">
+      <div class="wp-stat"><div class="wp-stat-label">Tracks</div><div class="wp-stat-value">6</div><div class="wp-stat-note">Core analytical domains</div></div>
+      <div class="wp-stat"><div class="wp-stat-label">Average progress</div><div class="wp-stat-value" id="uniAvg">0%</div><div class="wp-stat-note">Across all tracks</div></div>
+      <div class="wp-stat"><div class="wp-stat-label">Completed</div><div class="wp-stat-value" id="uniCompleted">0</div><div class="wp-stat-note">Tracks at 100%</div></div>
+      <div class="wp-stat"><div class="wp-stat-label">Workspace</div><div class="wp-stat-value" style="font-size:16px;margin-top:11px">Terminal-linked</div><div class="wp-stat-note">Research → practice loop</div></div>
+    </div>
+  </section>
+
+  <section class="wp-course-grid" id="courseGrid"></section>
+
+  <section class="wp-grid" style="margin-top:14px">
+    <div class="wp-card wp-span-7">
+      <div class="wp-card-head">
+        <div><h2 class="wp-card-title">Research Loop</h2><div class="wp-card-sub">How learning becomes an investable process.</div></div>
+      </div>
+      <div class="wp-list">
+        <div class="wp-row"><div><div class="wp-row-title">1. Learn the framework</div><div class="wp-row-meta">Definitions, causal logic, failure modes and what invalidates the model.</div></div><span class="wp-pill live">UNIVERSITY</span></div>
+        <div class="wp-row"><div><div class="wp-row-title">2. Observe live data</div><div class="wp-row-meta">Move from textbook examples into current regimes, flows, valuation and cross-asset evidence.</div></div><span class="wp-pill live">TERMINAL</span></div>
+        <div class="wp-row"><div><div class="wp-row-title">3. Save evidence</div><div class="wp-row-meta">Collect relevant research, theses and observations into the shared account workspace.</div></div><span class="wp-pill">ACCOUNT</span></div>
+        <div class="wp-row"><div><div class="wp-row-title">4. Test the thesis</div><div class="wp-row-meta">Separate signal from narrative using falsification, robustness and explicit risk limits.</div></div><span class="wp-pill">PROCESS</span></div>
+      </div>
+    </div>
+    <div class="wp-card wp-span-5">
+      <div class="wp-card-head"><div><h2 class="wp-card-title">Next Infrastructure Layer</h2><div class="wp-card-sub">Deliberately separated from the UI.</div></div></div>
+      <div class="wp-list">
+        <div class="wp-row"><div><div class="wp-row-title">Authenticated identity</div><div class="wp-row-meta">Passwordless Supabase Auth with RLS-protected account data.</div></div><span class="wp-pill live">LIVE</span></div>
+        <div class="wp-row"><div><div class="wp-row-title">Cross-device sync</div><div class="wp-row-meta">Progress, watchlists and saved research sync when signed in.</div></div><span class="wp-pill live">LIVE</span></div>
+        <div class="wp-row"><div><div class="wp-row-title">Notification worker</div><div class="wp-row-meta">Server-side alert evaluation and delivery.</div></div><span class="wp-pill preview">NEXT</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1"></script>
+<script src="supabase-config.js"></script>
+<script src="platform.js"></script>
+<script src="platform-cloud.js"></script>
+<script src="platform-search.js"></script>
+<script src="university.js"></script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WAVE — Account</title>
+<link rel="stylesheet" href="platform.css">
+</head>
+<body class="wp-body">
+<header class="wp-topbar">
+  <a class="wp-brand" href="index.html">
+    <svg viewBox="0 0 80 30" fill="none"><path d="M0 20 C10 10,20 10,30 20 C40 30,50 30,60 20 C70 10,80 10,90 20" stroke="#55aaff" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+    <span>Wave Capital</span>
+  </a>
+  <nav class="wp-nav">
+    <a href="terminal_app.html">Terminal</a>
+    <a href="university.html">University</a>
+    <a href="blog.html">Research</a>
+    <a href="products.html">Products</a>
+    <a href="account.html" class="active">Account</a>
+  </nav>
+  <a href="account.html" class="wp-account-chip"><span class="wp-avatar" id="accountAvatar">W</span><span id="accountChipName">WAVE Member</span></a>
+</header>
+<main class="wp-shell">
+  <section class="wp-hero">
+    <div class="wp-kicker">WAVE Account</div>
+    <h1 class="wp-title">Your research workspace, in one place.</h1>
+    <p class="wp-sub">Watchlists, saved research, learning progress and alert rules share one local-first state layer. The interface is already structured for a future cloud account without coupling the product to one database provider.</p>
+    <div class="wp-status"><span class="wp-status-dot"></span><span id="cloudStatusText">Local preview workspace · data stays in this browser</span></div>
+  </section>
+
+  <section class="wp-stat-grid" style="margin-bottom:14px">
+    <div class="wp-stat"><div class="wp-stat-label">Watchlist</div><div class="wp-stat-value" id="statWatch">0</div><div class="wp-stat-note">Tracked symbols</div></div>
+    <div class="wp-stat"><div class="wp-stat-label">Saved</div><div class="wp-stat-value" id="statSaved">0</div><div class="wp-stat-note">Research items</div></div>
+    <div class="wp-stat"><div class="wp-stat-label">Learning</div><div class="wp-stat-value" id="statProgress">0%</div><div class="wp-stat-note">Average completion</div></div>
+    <div class="wp-stat"><div class="wp-stat-label">Alert Rules</div><div class="wp-stat-value" id="statAlerts">0</div><div class="wp-stat-note">Saved, not cloud-monitored yet</div></div>
+  </section>
+
+  <section class="wp-grid">
+    <div class="wp-card wp-span-7">
+      <div class="wp-card-head">
+        <div><h2 class="wp-card-title">Watchlist</h2><div class="wp-card-sub">Live quotes use the same WAVE API as the Terminal.</div></div>
+        <a class="wp-btn ghost" href="terminal_app.html">Open Terminal</a>
+      </div>
+      <form class="wp-form" id="watchForm" style="margin-bottom:12px">
+        <input class="wp-input" id="watchSymbol" autocomplete="off" placeholder="Add symbol — e.g. AAPL, ETH-USD">
+        <button class="wp-btn primary" type="submit">Add symbol</button>
+      </form>
+      <div class="wp-list" id="watchList"></div>
+    </div>
+
+    <div class="wp-card wp-span-5">
+      <div class="wp-card-head">
+        <div><h2 class="wp-card-title">Profile & Workspace</h2><div class="wp-card-sub">Identity shell for the future authenticated account.</div></div>
+        <span class="wp-pill preview" id="profileMode">LOCAL PREVIEW</span>
+      </div>
+      <form id="profileForm" class="wp-form" style="display:block">
+        <label class="wp-row-meta" for="displayName">Display name</label>
+        <input class="wp-input" id="displayName" style="width:100%;margin:6px 0 12px">
+        <label class="wp-row-meta" for="workspaceName">Workspace</label>
+        <input class="wp-input" id="workspaceName" style="width:100%;margin:6px 0 12px">
+        <button class="wp-btn primary" type="submit">Save profile</button>
+      </form>
+      <div style="border-top:1px solid var(--wp-line);margin:18px 0 14px;padding-top:14px">
+        <div class="wp-row-title">Cloud account</div>
+        <div class="wp-row-meta" id="authHint">Sign in to sync this workspace across devices.</div>
+      </div>
+      <form class="wp-form" id="authForm">
+        <input class="wp-input" id="authEmail" type="email" autocomplete="email" placeholder="Email address">
+        <button class="wp-btn primary" id="authSubmit" type="submit">Email sign-in link</button>
+      </form>
+      <div id="authSignedIn" style="display:none">
+        <div class="wp-row" style="margin-bottom:10px"><div><div class="wp-row-title" id="authEmailLabel">Signed in</div><div class="wp-row-meta">Watchlists, saved research and progress sync to Supabase.</div></div><span class="wp-pill live">SYNCED</span></div>
+        <div class="wp-form"><button class="wp-btn" id="syncNow" type="button">Sync now</button><button class="wp-btn ghost" id="authSignOut" type="button">Sign out</button></div>
+      </div>
+      <button class="wp-btn danger" id="resetPreview" type="button" style="margin-top:12px">Reset workspace</button>
+    </div>
+
+    <div class="wp-card wp-span-6">
+      <div class="wp-card-head">
+        <div><h2 class="wp-card-title">Saved Research</h2><div class="wp-card-sub">One collection across research, theses and tools.</div></div>
+        <a class="wp-btn ghost" href="blog.html">Browse Research</a>
+      </div>
+      <div class="wp-list" id="savedList"></div>
+    </div>
+
+    <div class="wp-card wp-span-6">
+      <div class="wp-card-head">
+        <div><h2 class="wp-card-title">Learning Progress</h2><div class="wp-card-sub">Shared with WAVE University.</div></div>
+        <a class="wp-btn ghost" href="university.html">Open University</a>
+      </div>
+      <div class="wp-list" id="progressList"></div>
+    </div>
+
+    <div class="wp-card wp-span-12">
+      <div class="wp-card-head">
+        <div><h2 class="wp-card-title">Alert Rules</h2><div class="wp-card-sub">Rules sync with the account when signed in. Background monitoring and notifications stay explicitly disabled until the worker is connected.</div></div>
+        <span class="wp-pill preview">RULES ONLY</span>
+      </div>
+      <form class="wp-form" id="alertForm" style="margin-bottom:12px">
+        <input class="wp-input" id="alertSymbol" placeholder="Symbol — VIX, BTC-USD, AAPL">
+        <input class="wp-input" id="alertCondition" placeholder="Condition — e.g. above 25, drops 5%, earnings date changes">
+        <button class="wp-btn primary" type="submit">Save rule</button>
+      </form>
+      <div class="wp-list" id="alertList"></div>
+    </div>
+  </section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1"></script>
+<script src="supabase-config.js"></script>
+<script src="platform.js"></script>
+<script src="platform-cloud.js"></script>
+<script src="platform-search.js"></script>
+<script src="account.js"></script>
+</body>
+</html>

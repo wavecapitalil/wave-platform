@@ -327,6 +327,19 @@ function _newsTimeAgo(pubStr){
 
 // ── INIT ─────────────────────────────────────────────────
 window.addEventListener('load', function(){
+  var deep = new URLSearchParams((location.hash||'').replace(/^#/, ''));
+  var deepPage = deep.get('page');
+  if(deepPage && document.getElementById('page-' + deepPage)){
+    navigate(deepPage);
+    var deepSymbol = deep.get('symbol');
+    if(deepSymbol && deepPage === 'mover'){
+      var deepInput = document.getElementById('moverInput');
+      if(deepInput){
+        deepInput.value = deepSymbol;
+        setTimeout(function(){ if(typeof loadMover === 'function') loadMover(); }, 120);
+      }
+    }
+  }
   initHeroWave();
   initTiltCards();
   loadTickerData();
