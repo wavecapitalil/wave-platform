@@ -15,6 +15,12 @@ PUBLIC_DIR = os.path.join(PROJECT_ROOT, "apps", "terminal", "public")
 
 PUBLIC_FILES = {
     "terminal_app.html",
+    "account.html",
+    "account.js",
+    "university.html",
+    "university.js",
+    "platform.css",
+    "platform.js",
     "terminal.html",
     "index.html",
     "blog.html",
@@ -44,6 +50,16 @@ PUBLIC_FILES = {
 @bp.get("/terminal")
 def serve_terminal():
     return send_from_directory(PUBLIC_DIR, "terminal_app.html")
+
+
+@bp.get("/account")
+def serve_account():
+    return send_from_directory(PUBLIC_DIR, "account.html")
+
+
+@bp.get("/university")
+def serve_university():
+    return send_from_directory(PUBLIC_DIR, "university.html")
 
 
 @bp.get("/<path:filename>")
