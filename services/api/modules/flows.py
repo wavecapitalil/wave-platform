@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 import io
 import zipfile
+from core.meta import build_meta
 
 import pandas as pd
 import requests
@@ -78,11 +79,11 @@ def crypto_positioning():
         "period": period,
         "series": out,
         "errors": errors,
-        "meta": {
-            "source": "Binance public futures market-data API",
-            "generated_at": _now(),
-            "note": "These are positioning ratios, not blockchain exchange inflow/outflow data."
-        }
+        "meta": build_meta(
+            "Binance public futures market-data API",
+            freshness="live",
+            note="These are positioning ratios, not blockchain exchange inflow/outflow data.",
+        )
     })
 
 
@@ -126,11 +127,11 @@ def options_positioning():
     try:
         data = _option_snapshot(symbol)
         data["asset_class"] = "options"
-        data["meta"] = {
-            "source": "Yahoo Finance via yfinance",
-            "generated_at": _now(),
-            "note": "Nearest listed expiry snapshot. Open interest is positioning, not directional trade flow."
-        }
+        data["meta"] = build_meta(
+            "Yahoo Finance via yfinance",
+            freshness="snapshot",
+            note="Nearest listed expiry snapshot. Open interest is positioning, not directional trade flow.",
+        )
         return jsonify(data)
     except Exception as exc:
         return jsonify({"error": str(exc), "symbol": symbol}), 502
@@ -157,11 +158,12 @@ def short_interest():
                 if isinstance(shares_short, (int,float)) and isinstance(shares_short_prior, (int,float)) and shares_short_prior
                 else None
             ),
-            "meta": {
-                "source": "Yahoo Finance via yfinance",
-                "generated_at": _now(),
-                "note": "Short-interest data is reported with publication lag and should not be treated as live positioning."
-            }
+            "meta": build_meta(
+                "Yahoo Finance via yfinance",
+                freshness="reported_with_lag",
+                stale=False,
+                note="Short-interest data is reported with publication lag and should not be treated as live positioning.",
+            )
         })
     except Exception as exc:
         return jsonify({"error": str(exc), "symbol": symbol}), 502
@@ -245,11 +247,12 @@ def futures_positioning():
                 if long_v is not None and short_v is not None and (long_v + short_v)
                 else None
             ),
-            "meta": {
-                "source": "CFTC Commitments of Traders annual compressed report",
-                "generated_at": _now(),
-                "note": "Weekly COT positioning; report date differs from release date and is not live flow."
-            }
+            "meta": build_meta(
+                "CFTC Commitments of Traders annual compressed report",
+                source_timestamp=str(row.get(date_col).date()) if pd.notna(row.get(date_col)) else None,
+                freshness="weekly_report",
+                note="Weekly COT positioning; report date differs from release date and is not live flow.",
+            )
         })
     except Exception as exc:
         return jsonify({"error": str(exc), "asset": asset}), 502
@@ -284,8 +287,9 @@ def flows_overview():
                 "live": False,
             },
         ],
-        "meta": {
-            "generated_at": _now(),
-            "principle": "Do not combine heterogeneous positioning and flow measures into a single synthetic money-flow score."
-        }
+        "meta": build_meta(
+            "WAVE configuration",
+            freshness="static",
+            principle="Do not combine heterogeneous positioning and flow measures into a single synthetic money-flow score.",
+        )
     })
