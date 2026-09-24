@@ -130,3 +130,64 @@ def history():
         return jsonify({"closes": closes.tolist(), "dates": dates})
     except Exception as exc:
         return jsonify({"error": str(exc)}), 500
+
+
+BINANCE_SPOT_BASE = "https://api.binance.com/api/v3"
+_ALLOWED_BINANCE_INTERVALS = {"1m","3m","5m","15m","30m","1h","2h","4h","6h","8h","12h","1d","3d","1w"}
+
+
+@bp.get("/api/crypto-market/quote")
+def crypto_market_quote():
+    symbol = request.args.get("symbol", "BTCUSDT").strip().upper()
+    if not symbol.isalnum() or len(symbol) > 20:
+        return jsonify({"error": "invalid symbol"}), 400
+    try:
+        response = requests.get(
+            BINANCE_SPOT_BASE + "/ticker/24hr",
+            params={"symbol": symbol},
+            timeout=10,
+        )
+        response.raise_for_status()
+        data = response.json()
+        return jsonify({
+            "symbol": symbol,
+            "price": float(data["lastPrice"]),
+            "pct": float(data["priceChangePercent"]),
+            "source": "Binance Spot",
+        })
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 502
+
+
+@bp.get("/api/crypto-market/klines")
+def crypto_market_klines():
+    symbol = request.args.get("symbol", "BTCUSDT").strip().upper()
+    interval = request.args.get("interval", "30m").strip()
+    try:
+        limit = int(request.args.get("limit", "48"))
+    except ValueError:
+        return jsonify({"error": "limit must be an integer"}), 400
+
+    if not symbol.isalnum() or len(symbol) > 20:
+        return jsonify({"error": "invalid symbol"}), 400
+    if interval not in _ALLOWED_BINANCE_INTERVALS:
+        return jsonify({"error": "unsupported interval"}), 400
+    limit = max(2, min(limit, 1000))
+
+    try:
+        response = requests.get(
+            BINANCE_SPOT_BASE + "/klines",
+            params={"symbol": symbol, "interval": interval, "limit": limit},
+            timeout=12,
+        )
+        response.raise_for_status()
+        raw = response.json()
+        return jsonify({
+            "symbol": symbol,
+            "interval": interval,
+            "closes": [float(row[4]) for row in raw],
+            "timestamps": [int(row[0]) for row in raw],
+            "source": "Binance Spot",
+        })
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 502
