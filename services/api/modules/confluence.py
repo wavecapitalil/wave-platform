@@ -2,6 +2,7 @@ from datetime import datetime, timedelta, timezone
 import re
 import time
 import xml.etree.ElementTree as ET
+from core.meta import build_meta
 
 import requests
 import yfinance as yf
@@ -274,9 +275,10 @@ def confluence():
         "institutional": institutional,
         "insiders": insiders,
         "analysts": analysts,
-        "meta": {
-            "generated_at": datetime.now(timezone.utc).isoformat(),
-            "method": "Transparent three-way evidence overlap; no opaque 0-100 score.",
-            "note": "13F institutional evidence is quarterly, while insider and analyst evidence use the selected window."
-        }
+        "meta": build_meta(
+            "SEC EDGAR + Yahoo Finance via yfinance",
+            freshness="mixed",
+            note="13F institutional evidence is quarterly, while insider and analyst evidence use the selected window.",
+            method="Transparent three-way evidence overlap; no opaque 0-100 score.",
+        )
     })
