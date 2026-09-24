@@ -10,6 +10,13 @@ domain_js_paths = [
     Path("apps/terminal/public/terminal-metals.js"),
     Path("apps/terminal/public/terminal-confluence.js"),
     Path("apps/terminal/public/terminal-seasonality.js"),
+    Path("apps/terminal/public/terminal-equities.js"),
+    Path("apps/terminal/public/terminal-risk.js"),
+    Path("apps/terminal/public/terminal-crypto.js"),
+    Path("apps/terminal/public/terminal-rates.js"),
+    Path("apps/terminal/public/terminal-industries.js"),
+    Path("apps/terminal/public/terminal-macro.js"),
+    Path("apps/terminal/public/terminal-earnings.js"),
 ]
 domain_js = "\n".join(path.read_text(encoding="utf-8") for path in domain_js_paths)
 css = Path("apps/terminal/public/terminal.css").read_text(encoding="utf-8")
