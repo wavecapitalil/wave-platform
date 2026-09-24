@@ -20,10 +20,13 @@ jobs:
           python-version: "3.12"
 
       - name: Python syntax check
-        run: python -m py_compile services/api/api.py services/api/modules/*.py scripts/*.py
+        run: python -m py_compile services/api/*.py services/api/core/*.py services/api/modules/*.py scripts/*.py
 
       - name: Frontend/API contract checks
         run: python scripts/static_contract_check.py
+
+      - name: Route contract check
+        run: python scripts/route_contract_check.py
 
       - name: Secret-file guard
         run: |
