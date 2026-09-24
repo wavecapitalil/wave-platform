@@ -801,53 +801,63 @@ def crypto_scanner():
 # ── Daily Brief ───────────────────────────────────────────────────────────────
 import threading as _threading
 import re as _re_brief
-_brief_cache = {'content': None, 'filename': None, 'loaded_at': None}
+import datetime as _dt_brief
+
+_brief_cache = {'content': None, 'filename': None, 'loaded_at': None, 'source_path': None}
 _brief_lock  = _threading.Lock()
 
-# Scan these locations for briefing HTML files (recursively for agent outputs)
-_BRIEF_SEARCH_DIRS = [
-    os.path.expanduser('~/Library/Application Support/Claude/local-agent-mode-sessions'),
-    '/Users/danielarad/Library/Mobile Documents/com~apple~CloudDocs/Trading Briefings',
-]
+# Portable storage:
+# - production: point WAVE_BRIEF_DIR at a persistent mounted folder/object-sync target
+# - local dev: defaults to services/api/data/briefs
+_DEFAULT_BRIEF_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'briefs')
+_BRIEF_DIR = os.path.abspath(os.getenv('WAVE_BRIEF_DIR', _DEFAULT_BRIEF_DIR))
 _DATE_PAT = _re_brief.compile(r'(\d{4}-\d{2}-\d{2})')
 
 
-def _load_brief_cache():
-    import datetime, subprocess as _sp
-    now_il = datetime.datetime.utcnow() + datetime.timedelta(hours=3)
-    today  = now_il.strftime('%Y-%m-%d')
-    hour   = now_il.hour
+def _brief_session(now):
+    hour = now.hour
     if hour < 16:
-        session_suffix = 'morning'
-    elif hour < 23 or (hour == 23 and now_il.minute < 30):
-        session_suffix = 'opening'
-    else:
-        session_suffix = 'eod'
+        return 'morning'
+    if hour < 23 or (hour == 23 and now.minute < 30):
+        return 'opening'
+    return 'eod'
 
-    # Collect (date_str, full_path) for every dated .html in outputs/ folders
+
+def _load_brief_cache():
+    """Load the most relevant briefing HTML from portable WAVE_BRIEF_DIR."""
+    now_il = _dt_brief.datetime.utcnow() + _dt_brief.timedelta(hours=3)
+    today = now_il.strftime('%Y-%m-%d')
+    session_suffix = _brief_session(now_il)
+
+    try:
+        os.makedirs(_BRIEF_DIR, exist_ok=True)
+    except Exception:
+        pass
+
     candidates = []
-    for base in _BRIEF_SEARCH_DIRS:
-        try:
-            for root, dirs, files in os.walk(base):
-                # Only look inside */outputs/ subfolders for agent sessions;
-                # for the iCloud dir, accept the top level too
-                in_outputs = root.endswith('/outputs') or root == base
-                if not in_outputs:
+    try:
+        for root, _, files in os.walk(_BRIEF_DIR):
+            for fname in files:
+                if not fname.lower().endswith('.html'):
                     continue
-                for fname in files:
-                    if not fname.endswith('.html'):
-                        continue
-                    m = _DATE_PAT.search(fname)
-                    if m:
-                        candidates.append((m.group(1), fname, os.path.join(root, fname)))
-        except Exception:
-            continue
-
-    if not candidates:
-        print('[brief] no candidate files found', flush=True)
+                m = _DATE_PAT.search(fname)
+                if not m:
+                    continue
+                full_path = os.path.join(root, fname)
+                candidates.append((m.group(1), fname, full_path))
+    except Exception as exc:
+        print(f'[brief] scan failed: {exc}', flush=True)
         return
 
-    # Sort: today+session first, today next, then most recent date
+    if not candidates:
+        with _brief_lock:
+            _brief_cache['content'] = None
+            _brief_cache['filename'] = None
+            _brief_cache['source_path'] = None
+            _brief_cache['loaded_at'] = _dt_brief.datetime.now().isoformat()
+        print(f'[brief] no candidate files in {_BRIEF_DIR}', flush=True)
+        return
+
     def _sort_key(item):
         date_str, fname, _ = item
         pri = 0 if (date_str == today and session_suffix in fname.lower()) else \
@@ -856,29 +866,23 @@ def _load_brief_cache():
 
     candidates.sort(key=_sort_key)
 
-    for date_str, fname, path in candidates:
+    for _, fname, path in candidates:
         try:
-            result = _sp.run(['cat', path], capture_output=True, timeout=10)
-            content = result.stdout.decode('utf-8', errors='replace')
-            if len(content.strip()) < 500:   # skip stubs / empty shells
+            with open(path, 'r', encoding='utf-8', errors='replace') as fh:
+                content = fh.read()
+            if len(content.strip()) < 500:
                 continue
             with _brief_lock:
-                _brief_cache['content']  = content
+                _brief_cache['content'] = content
                 _brief_cache['filename'] = fname
-                _brief_cache['loaded_at'] = datetime.datetime.now().isoformat()
+                _brief_cache['source_path'] = path
+                _brief_cache['loaded_at'] = _dt_brief.datetime.now().isoformat()
             print(f'[brief] loaded: {fname} ({len(content)} chars)', flush=True)
             return
-        except Exception as _e:
-            print(f'[brief] failed {path}: {_e}', flush=True)
-            continue
-    print(f'[brief] no file loaded from {len(candidates)} candidates', flush=True)
+        except Exception as exc:
+            print(f'[brief] failed {path}: {exc}', flush=True)
 
-
-def _brief_refresh_loop():
-    import time
-    while True:
-        time.sleep(600)
-        _load_brief_cache()
+    print(f'[brief] no usable file loaded from {len(candidates)} candidates', flush=True)
 
 
 # ── Master Scheduler ──────────────────────────────────────────────────────────
@@ -958,7 +962,7 @@ _CHART_INJECT = """
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
 (function(){
-  var BASE = 'http://localhost:5001';
+  var BASE = '';
   var TICKERS = [
     {sym:'SPY',  label:'SPY',  color:'#4a9eff'},
     {sym:'QQQ',  label:'QQQ',  color:'#a78bfa'},
@@ -1107,7 +1111,7 @@ def daily_brief_refresh():
         fn = _brief_cache['filename']
         ts = _brief_cache['loaded_at']
     if fn:
-        return jsonify({'status': 'ok', 'file': fn, 'loaded_at': ts})
+        return jsonify({'status': 'ok', 'file': fn, 'loaded_at': ts, 'storage': 'WAVE_BRIEF_DIR'})
     return jsonify({'status': 'not_found'}), 404
 
 
