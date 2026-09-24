@@ -2,7 +2,10 @@
 
 import requests
 
-SPOT_BASE = "https://api.binance.com/api/v3"
+SPOT_BASES = (
+    "https://api.binance.com/api/v3",
+    "https://data-api.binance.vision/api/v3",
+)
 COINM_BASE = "https://dapi.binance.com"
 
 ALLOWED_SPOT_INTERVALS = {
@@ -10,14 +13,27 @@ ALLOWED_SPOT_INTERVALS = {
 }
 
 
+def _spot_get(path, params, *, timeout):
+    """Read public Spot market data with an official market-data fallback."""
+    last_exc = None
+    for base in SPOT_BASES:
+        try:
+            response = requests.get(base + path, params=params, timeout=timeout)
+            response.raise_for_status()
+            return response.json()
+        except Exception as exc:
+            last_exc = exc
+    if last_exc is not None:
+        raise last_exc
+    raise RuntimeError("no Binance Spot endpoint configured")
+
+
 def spot_quote(symbol, *, timeout=10):
-    response = requests.get(
-        SPOT_BASE + "/ticker/24hr",
-        params={"symbol": symbol},
+    data = _spot_get(
+        "/ticker/24hr",
+        {"symbol": symbol},
         timeout=timeout,
     )
-    response.raise_for_status()
-    data = response.json()
     return {
         "symbol": symbol,
         "price": float(data["lastPrice"]),
@@ -28,13 +44,11 @@ def spot_quote(symbol, *, timeout=10):
 def spot_klines(symbol, interval, limit, *, timeout=12):
     if interval not in ALLOWED_SPOT_INTERVALS:
         raise ValueError("unsupported interval")
-    response = requests.get(
-        SPOT_BASE + "/klines",
-        params={"symbol": symbol, "interval": interval, "limit": limit},
+    raw = _spot_get(
+        "/klines",
+        {"symbol": symbol, "interval": interval, "limit": limit},
         timeout=timeout,
     )
-    response.raise_for_status()
-    raw = response.json()
     return {
         "symbol": symbol,
         "interval": interval,
