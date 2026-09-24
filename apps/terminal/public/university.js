@@ -17,7 +17,7 @@
     document.getElementById('uniAvatar').textContent=initials(state.profile.displayName);
     document.getElementById('courseGrid').innerHTML=courses.map(function(c){
       var p=Number(state.progress[c.id]||0),cta=p>=100?'Review track':p>0?'Continue track':'Start track';
-      return '<article class="wp-course"><div class="wp-course-tag">'+c.tag+'</div><h3>'+c.title+'</h3><p>'+c.desc+'</p><div class="wp-progress"><span style="width:'+p+'%"></span></div><div class="wp-course-foot"><span class="wp-course-pct">'+p+'% complete</span><div style="display:flex;gap:7px"><a class="wp-btn ghost" href="'+c.href+'">'+cta+'</a><button class="wp-btn" data-advance="'+c.id+'">+20%</button></div></div></article>';
+      return '<article class="wp-course" data-course="'+c.id+'"><div class="wp-course-tag">'+c.tag+'</div><h3>'+c.title+'</h3><p>'+c.desc+'</p><div class="wp-progress"><span style="width:'+p+'%"></span></div><div class="wp-course-foot"><span class="wp-course-pct">'+p+'% complete</span><div style="display:flex;gap:7px"><a class="wp-btn ghost" href="'+c.href+'">'+cta+'</a><button class="wp-btn" data-advance="'+c.id+'">+20%</button></div></div></article>';
     }).join('');
     document.querySelectorAll('[data-advance]').forEach(function(btn){btn.onclick=function(){WavePlatform.advanceCourse(btn.dataset.advance,20);};});
   }
