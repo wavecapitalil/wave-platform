@@ -5,34 +5,19 @@ centralizing provider-specific market reads behind one blueprint.
 """
 
 from flask import Blueprint, jsonify, request
-import requests
 from services.binance import spot_quote, spot_klines, ALLOWED_SPOT_INTERVALS
 from services.yahoo import quote as yahoo_quote, intraday_closes, daily_history, vix_history as yahoo_vix_history
+from services.cnn import fear_greed_current
 
 bp = Blueprint("market", __name__)
-
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-    "Accept": "application/json, text/html, */*",
-}
 
 
 @bp.get("/api/fear-greed")
 def fear_greed():
     try:
-        r = requests.get(
-            "https://production.dataviz.cnn.io/index/fearandgreed/current",
-            headers={
-                **HEADERS,
-                "Referer": "https://edition.cnn.com/markets/fear-and-greed",
-                "Origin": "https://edition.cnn.com",
-            },
-            timeout=10,
-        )
-        r.raise_for_status()
-        return jsonify(r.json())
+        return jsonify(fear_greed_current())
     except Exception as exc:
-        return jsonify({"error": str(exc)}), 500
+        return jsonify({"error": str(exc)}), 502
 
 
 @bp.get("/api/quote")
