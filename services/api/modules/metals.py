@@ -2,6 +2,7 @@ from datetime import datetime
 from flask import Blueprint, jsonify
 import math
 import yfinance as yf
+from core.meta import build_meta
 
 bp = Blueprint("metals", __name__)
 
@@ -59,11 +60,11 @@ def gold_silver_ratio():
         "silver_price": round(float(joined["silver"].iloc[-1]), 4),
         "monthly": monthly,
         "interpretation": interpretation,
-        "meta": {
-            "source": "Yahoo Finance futures continuous contracts via yfinance",
-            "gold_symbol": "GC=F",
-            "silver_symbol": "SI=F",
-            "generated_at": datetime.utcnow().isoformat() + "Z",
-            "note": "Descriptive relative valuation context, not a trading signal."
-        }
+        "meta": build_meta(
+            "Yahoo Finance futures continuous contracts via yfinance",
+            freshness="historical_monthly",
+            note="Descriptive relative valuation context, not a trading signal.",
+            gold_symbol="GC=F",
+            silver_symbol="SI=F",
+        )
     })
