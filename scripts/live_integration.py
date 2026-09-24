@@ -111,9 +111,39 @@ for case in CASES:
                     meta_missing=sorted(META_KEYS)
             row["missing_keys"]=missing
             row["missing_meta_keys"]=meta_missing
-            row["ok"]=not missing and not meta_missing
+            semantic_errors=[]
+
+            if case["name"] == "seasonality":
+                hist=data.get("historical_average") or []
+                cur=data.get("current_path") or []
+                hist_keys=[x.get("date_key") for x in hist]
+                if len(hist_keys) != len(set(hist_keys)):
+                    semantic_errors.append("duplicate historical date_key values")
+                if not hist or not cur:
+                    semantic_errors.append("empty seasonality series")
+                if cur and hist and len(cur) > len(hist):
+                    semantic_errors.append("current path longer than historical calendar")
+
+            if case["name"] == "hormuz":
+                events=data.get("events") or []
+                published=[x.get("published") or "" for x in events]
+                if published != sorted(published, reverse=True):
+                    semantic_errors.append("events not sorted newest-first")
+                counts=data.get("event_counts") or {}
+                if counts.get("total",0) > counts.get("headline_total",0):
+                    semantic_errors.append("recent event count exceeds headline total")
+
+            if case["name"] == "gold_silver":
+                if data.get("n_years") != 10:
+                    semantic_errors.append("metals default lookback is not 10 years")
+                pct=data.get("percentile")
+                if pct is not None and not (0 <= pct <= 100):
+                    semantic_errors.append("percentile outside 0-100")
+
+            row["semantic_errors"]=semantic_errors
+            row["ok"]=not missing and not meta_missing and not semantic_errors
             if not row["ok"]:
-                row["error"]="schema mismatch"
+                row["error"]="schema/semantic mismatch"
     except Exception as exc:
         row["ok"]=False
         row["error"]=str(exc)
