@@ -2139,94 +2139,32 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
 
     <!-- ─── COMM. FLOWS PAGE ─── -->
     <div class="page" id="page-comm-flows">
-      <div class="welcome-wrap" style="max-width:980px">
-
-        <div class="page-header" style="margin-bottom:20px">
-          <div class="page-header-tag">Equities · Advertising Intelligence</div>
-          <div class="page-header-title">Commercial Flows</div>
-          <div class="page-header-sub">Digital ad market share — Google · Meta · Amazon · TikTok · Quarterly earnings + analyst estimates</div>
+      <div class="welcome-wrap" style="max-width:1120px">
+        <div class="page-header" style="margin-bottom:18px">
+          <div class="page-header-tag">Cross-Asset · Positioning & Flows</div>
+          <div class="page-header-title">Cross-Asset Flows</div>
+          <div class="page-header-sub">Venue positioning, futures, options and short interest — each metric shown with its own units and source</div>
         </div>
 
-        <!-- Period selector + data quality note -->
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
-          <div style="display:flex;gap:6px" id="cfPeriodBtns">
-            <button class="ratio-btn active" onclick="cfSetView('share',this)">Market Share</button>
-            <button class="ratio-btn" onclick="cfSetView('revenue',this)">Revenue Trend</button>
-            <button class="ratio-btn" onclick="cfSetView('growth',this)">Growth Rates</button>
-            <button class="ratio-btn" onclick="cfSetView('geo',this)">Geography</button>
-          <button class="ratio-btn" onclick="cfSetView('engagement',this)">Engagement</button>
-          </div>
-          <div style="font-size:10px;color:#334155">
-            <span style="color:#22c55e">●</span> Earnings confirmed &nbsp;
-            <span style="color:#f59e0b">●</span> Analyst estimate &nbsp;
-            <span style="color:#475569">Latest: <span id="cfLatestPeriod">—</span></span>
+        <div class="mini-section" style="margin-bottom:14px">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <button class="cd-vbtn active" id="flowTabCrypto" onclick="flowSetTab('crypto',this)">Crypto</button>
+            <button class="cd-vbtn" id="flowTabFutures" onclick="flowSetTab('futures',this)">Futures</button>
+            <button class="cd-vbtn" id="flowTabOptions" onclick="flowSetTab('options',this)">Options</button>
+            <button class="cd-vbtn" id="flowTabShort" onclick="flowSetTab('short',this)">Short Interest</button>
+            <div id="flowStatus" style="margin-left:auto;font-size:10px;color:#90a8c2">Select a lens</div>
           </div>
         </div>
 
-        <!-- Data freshness bar -->
-        <div id="cfFreshnessBar" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px;padding:8px 12px;background:rgba(255,255,255,0.02);border:1px solid var(--border2);border-radius:8px">
-          <div id="cfFreshnessBadges" style="display:flex;gap:6px;flex-wrap:wrap;flex:1"></div>
-          <button onclick="cfManualUpdate(this)" style="font-size:10px;padding:3px 10px;border-radius:5px;border:1px solid var(--border2);background:transparent;color:var(--gray);cursor:pointer;flex-shrink:0">↻ Check for updates</button>
+        <div id="flowControls" class="mini-section" style="margin-bottom:14px"></div>
+        <div id="flowContent"></div>
+
+        <div class="callout" style="margin-top:14px">
+          WAVE does not combine these measures into one synthetic “money flow” score. Futures positioning, options open interest, exchange positioning and short interest have different reporting conventions and should be interpreted separately.
         </div>
-
-        <!-- KPI cards row -->
-        <div id="cfCards" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px"></div>
-
-        <!-- Main chart -->
-        <div class="mini-section" style="margin-bottom:16px">
-          <div class="ms-header">
-            <div class="ms-title" id="cfChartTitle">Market Share</div>
-            <div style="display:flex;gap:14px;font-size:10px" id="cfLegend"></div>
-          </div>
-          <div style="position:relative;height:300px;margin-top:12px">
-            <canvas id="cfMainCanvas"></canvas>
-          </div>
-        </div>
-
-        <!-- Two-column: growth table + platform breakdown -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px" id="cfSecondRow">
-          <!-- Growth table -->
-          <div class="mini-section">
-            <div class="ms-header"><div class="ms-title">📈 Growth Rates</div><div style="font-size:10px;color:#475569" id="cfGrowthPeriod"></div></div>
-            <div id="cfGrowthTable" style="margin-top:10px"></div>
-          </div>
-          <!-- Trend signals -->
-          <div class="mini-section">
-            <div class="ms-header"><div class="ms-title">🔭 Trend Signals</div><div style="font-size:10px;color:#475569">YoY acceleration over last 4Q</div></div>
-            <div id="cfTrendSignals" style="margin-top:10px"></div>
-          </div>
-        </div>
-
-        <!-- Platform breakdown -->
-        <div class="mini-section" style="margin-bottom:16px">
-          <div class="ms-header">
-            <div class="ms-title">🗂️ Platform Breakdown <span style="font-size:11px;font-weight:400;color:#475569" id="cfPlatformPeriod"></span></div>
-          </div>
-          <div id="cfPlatformTable" style="margin-top:12px;overflow-x:auto"></div>
-        </div>
-
-        <!-- Engagement section — shown always -->
-        <div class="mini-section" style="margin-bottom:16px" id="cfEngagementSection">
-          <div class="ms-header">
-            <div class="ms-title">👥 Active Users & Monetisation Efficiency</div>
-            <div style="font-size:10px;color:#475569" id="cfEngagePeriod"></div>
-          </div>
-          <div id="cfEngagementTable" style="margin-top:14px"></div>
-        </div>
-
-        <!-- Source transparency -->
-        <div style="font-size:10px;color:#334155;padding:8px 0;border-top:1px solid var(--border);margin-top:4px">
-          <span style="color:#475569;font-weight:600">Data sources:</span>
-          Google · Meta · Amazon — official quarterly earnings releases (10-Q/8-K, Tier 1 confirmed) ·
-          TikTok — analyst estimates only; Insider Intelligence + Bloomberg + Reuters (Tier 2, confidence 0.45–0.55) ·
-          Market totals — GroupM Global Advertising Report ·
-          Geographic split for Amazon is estimated (not reported)
-        </div>
-
       </div>
     </div>
 
-    <!-- ─── FUNDAMENTAL CHART PAGE ─── -->
     <div class="page" id="page-fundchart">
       <div class="welcome-wrap" style="max-width:860px">
 
@@ -2359,24 +2297,34 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
 
     <!-- ─── CONFLUENCE PAGE ─── -->
     <div class="page" id="page-confluence">
-      <div class="welcome-wrap" style="max-width:900px">
-
-        <div class="page-header" style="margin-bottom:8px">
-          <div class="page-header-tag">Equities · Smart Money</div>
-          <div class="page-header-title">Insider Buying</div>
-          <div class="page-header-sub">Major open-market purchases by corporate insiders — executives, directors &amp; beneficial owners buying their own stock</div>
+      <div class="welcome-wrap" style="max-width:1100px">
+        <div class="page-header" style="margin-bottom:16px">
+          <div class="page-header-tag">Equities · Evidence Overlap</div>
+          <div class="page-header-title">Confluence Monitor</div>
+          <div class="page-header-sub">Institutional accumulation + insider buying + analyst upgrades/revisions</div>
         </div>
 
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
-          <div id="ibStatus" style="font-size:12px;color:#475569">Loading...</div>
-          <button onclick="ibRefresh()" style="margin-left:auto;background:transparent;border:1px solid #1e293b;color:#64748b;border-radius:6px;padding:6px 14px;font-size:11px;cursor:pointer">⟳ Refresh</button>
+        <div class="mini-section" style="margin-bottom:14px">
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <input id="confSymbol" value="AAPL" placeholder="Ticker" style="width:120px;text-transform:uppercase">
+            <button class="cd-vbtn" onclick="loadConfluence()">Analyze</button>
+            <div style="display:flex;gap:6px;margin-left:6px" id="confWindowBtns">
+              <button class="cd-vbtn" onclick="confSetWindow(7,this)">7D</button>
+              <button class="cd-vbtn active" onclick="confSetWindow(30,this)">30D</button>
+              <button class="cd-vbtn" onclick="confSetWindow(90,this)">90D</button>
+            </div>
+            <div id="confStatus" style="margin-left:auto;font-size:10px;color:#90a8c2">30-day view</div>
+          </div>
         </div>
 
-        <div id="ibResults"></div>
+        <div id="confResults"></div>
+
+        <div class="callout" style="margin-top:14px">
+          Institutional evidence is based on 13F filings and is therefore quarterly and lagged. The selected 7D / 30D / 90D window applies directly to insider and analyst evidence, not to the filing date of institutional holdings.
+        </div>
       </div>
     </div>
 
-    <!-- ─── EARNINGS PAGE ─── -->
     <div class="page" id="page-earnings">
       <div class="welcome-wrap" style="max-width:1140px">
         <div class="page-header" style="margin-bottom:20px">
@@ -2862,7 +2810,7 @@ function navigate(page){
   if(page === 'hormuz')     loadHormuz();
   if(page === 'rates') loadRatesPage();
   if(page === 'macro') loadMacroScanner();
-  if(page === 'confluence') loadInsiderBuying();
+  if(page === 'confluence') loadConfluence();
   if(page === 'earnings'){ loadEarningsPage(); earnSetTab(_earnTab); }
   if(page === 'correlation' && !window._corrLoadedOnce){ window._corrLoadedOnce = true; runCorrelation(); }
 
@@ -4975,424 +4923,117 @@ function renderInstHoldings(d){
   document.getElementById('instContent').innerHTML = html;
 }
 
-// ── Comm. Flows ───────────────────────────────────────────
-var _cfData   = null;   // full history cache
-var _cfLatest = null;   // latest quarter cache
-var _cfTrends = null;
-var _cfView   = 'share';
-var _cfChart  = null;
+// ── Cross-Asset Flows ──────────────────────────────────────
+var _flowTab='crypto';
 
-var CF_COLORS = {
-  google: '#4a9eff',
-  meta:   '#f59e0b',
-  amazon: '#22c55e',
-  tiktok: '#ef4444',
-};
-var CF_LABELS = {google:'Google', meta:'Meta', amazon:'Amazon', tiktok:'TikTok'};
+function flowFmt(v,d){
+  if(v===null||v===undefined||Number.isNaN(Number(v))) return '—';
+  return Number(v).toLocaleString(undefined,{maximumFractionDigits:d===undefined?2:d});
+}
+function flowPct(v){ return v===null||v===undefined?'—':flowFmt(v,2)+'%'; }
 
-function cfSetView(view, btn){
-  _cfView = view;
-  document.querySelectorAll('#cfPeriodBtns .ratio-btn').forEach(function(b){ b.classList.remove('active'); });
-  btn.classList.add('active');
-  if(_cfData) renderCommFlows();
+function flowSetTab(tab,btn){
+  _flowTab=tab;
+  document.querySelectorAll('#page-comm-flows .cd-vbtn').forEach(function(b){b.classList.remove('active');});
+  if(btn) btn.classList.add('active');
+  flowRenderControls();
+  flowLoad();
 }
 
 function loadCommFlows(){
-  if(_cfData && _cfLatest){ renderCommFlows(); return; }
-  Promise.all([
-    fetch(API + '/api/comm-flows/history').then(function(r){ return r.json(); }),
-    fetch(API + '/api/comm-flows/latest').then(function(r){ return r.json(); }),
-    fetch(API + '/api/comm-flows/trends').then(function(r){ return r.json(); }),
-    fetch(API + '/api/update-status').then(function(r){ return r.json(); }),
-  ]).then(function(results){
-    _cfData   = results[0].data;
-    _cfLatest = results[1];
-    _cfTrends = results[2].signals;
-    renderCommFlows();
-    renderCfFreshness(results[3]);
-  }).catch(function(e){
-    document.getElementById('cfCards').innerHTML = '<div style="color:#ef4444;font-size:12px">Failed to load: ' + e.message + '</div>';
-  });
+  var btn=document.getElementById('flowTabCrypto');
+  flowSetTab(_flowTab||'crypto',btn);
 }
 
-function cfManualUpdate(btn){
-  btn.textContent = '↻ Checking…';
-  btn.disabled = true;
-  fetch(API + '/api/comm-flows/update', {method:'POST'})
-    .then(function(r){ return r.json(); })
-    .then(function(d){
-      btn.textContent = d.count > 0 ? '✓ ' + d.count + ' updated' : '✓ Up to date';
-      btn.style.color = '#22c55e';
-      // Reload data
-      _cfData = null; _cfLatest = null;
-      setTimeout(function(){ loadCommFlows(); btn.textContent='↻ Check for updates'; btn.style.color=''; btn.disabled=false; }, 2000);
-    })
-    .catch(function(){ btn.textContent='Error'; btn.disabled=false; });
-}
-
-function renderCfFreshness(status){
-  if(!status || !status.comm_flows) return;
-  var SRC_LABELS = {
-    'earnings':        {label:'Official',  col:'#22c55e'},
-    'edgar_xbrl':      {label:'EDGAR XBRL', col:'#4a9eff'},
-    'derived_estimate':{label:'~Estimated', col:'#f59e0b'},
-    'analyst_estimate':{label:'~Analyst',   col:'#f59e0b'},
-  };
-  var CO_LABELS = {google:'Google', meta:'Meta', amazon:'Amazon', tiktok:'TikTok'};
-  var html = '';
-  status.comm_flows.forEach(function(c){
-    var src  = SRC_LABELS[c.source] || {label:c.source||'?', col:'#64748b'};
-    var stale = c.stale;
-    var bg   = stale ? 'rgba(239,68,68,0.08)' : 'rgba(255,255,255,0.03)';
-    var bdr  = stale ? '1px solid rgba(239,68,68,0.25)' : '1px solid var(--border2)';
-    html +=
-      '<div style="background:' + bg + ';border:' + bdr + ';border-radius:5px;padding:3px 8px;display:flex;align-items:center;gap:5px">' +
-        '<span style="font-size:11px;font-weight:600;color:' + (CF_COLORS[c.company]||'#e2e8f0') + '">' + CO_LABELS[c.company] + '</span>' +
-        '<span style="font-size:10px;color:#475569">' + (c.latest_q||'?') + '</span>' +
-        '<span style="font-size:9px;color:' + src.col + ';font-weight:600">' + src.label + '</span>' +
-        (stale ? '<span style="font-size:9px;color:#ef4444">⚠ stale</span>' : '') +
-      '</div>';
-  });
-  document.getElementById('cfFreshnessBadges').innerHTML = html;
-}
-
-function renderCommFlows(){
-  var lat = _cfLatest;
-  document.getElementById('cfLatestPeriod').textContent = lat.period;
-
-  renderCfCards(lat);
-  renderCfChart();
-  renderCfGrowthTable(lat);
-  renderCfTrendSignals();
-  renderCfPlatformTable(lat);
-  renderCfEngagementTable(lat);
-}
-
-function renderCfCards(lat){
-  // Compute top-4 share (consistent with chart — no seasonal distortion)
-  var top4total = lat.companies.reduce(function(s, c){ return s + (c.revenue_ads || 0); }, 0);
-  var html = '';
-  var sorted = lat.companies.slice().sort(function(a,b){ return b.revenue_ads - a.revenue_ads; });
-  sorted.forEach(function(c){
-    var col      = CF_COLORS[c.company] || '#e2e8f0';
-    var lbl      = CF_LABELS[c.company] || c.company;
-    var conf     = c.confidence_score >= 0.95 ? '' : '<span style="color:#f59e0b;font-size:9px;margin-left:4px">~est</span>';
-    var top4share = top4total > 0 ? (c.revenue_ads / top4total * 100).toFixed(1) : '—';
-    var yoy      = c.growth_yoy != null ? ((c.growth_yoy > 0 ? '+' : '') + c.growth_yoy.toFixed(1) + '% YoY') : '';
-    var yoyCol   = c.growth_yoy > 0 ? '#22c55e' : '#ef4444';
-    html +=
-      '<div style="background:rgba(255,255,255,0.02);border:1px solid var(--border2);border-radius:8px;padding:12px 16px;flex:1;min-width:150px;border-top:2px solid ' + col + '">' +
-        '<div style="font-size:11px;font-weight:700;color:' + col + ';margin-bottom:6px">' + lbl + conf + '</div>' +
-        '<div style="font-size:22px;font-weight:800;color:#e2e8f0">' + top4share + '%</div>' +
-        '<div style="font-size:10px;color:#475569;margin-top:2px">of top-4 · $' + (c.revenue_ads/1000).toFixed(1) + 'B</div>' +
-        (yoy ? '<div style="font-size:10px;color:' + yoyCol + ';margin-top:3px">' + yoy + '</div>' : '') +
-      '</div>';
-  });
-  document.getElementById('cfCards').innerHTML = html;
-}
-
-function renderCfChart(){
-  var companies = ['google','meta','amazon','tiktok'];
-  // Build sorted unique quarters
-  var quartersSet = {};
-  _cfData.forEach(function(r){ quartersSet[r.date] = {year:r.year, quarter:r.quarter}; });
-  var quarters = Object.keys(quartersSet).sort();
-
-  if(_cfChart){ _cfChart.destroy(); _cfChart = null; }
-
-  var title = '', datasets = [], labels = quarters;
-
-  if(_cfView === 'share'){
-    // Top-4 universe share removes seasonal denominator noise.
-    // Raw market_share swings ~10pp Q1→Q4 purely from seasonality — meaningless.
-    // Top-4 share shows the real structural shift: Google losing share to Meta/Amazon/TikTok.
-    title = 'Share of Top-4 Digital Ad Universe (%)';
-    var top4ByQ = {};
-    quarters.forEach(function(q){
-      var total = 0;
-      companies.forEach(function(co){
-        var row = _cfData.find(function(r){ return r.company===co && r.date===q; });
-        if(row && row.revenue_ads) total += row.revenue_ads;
-      });
-      top4ByQ[q] = total;
-    });
-    companies.forEach(function(co){
-      var vals = quarters.map(function(q){
-        var row = _cfData.find(function(r){ return r.company===co && r.date===q; });
-        var tot = top4ByQ[q];
-        return (row && row.revenue_ads && tot) ? parseFloat((row.revenue_ads / tot * 100).toFixed(1)) : null;
-      });
-      datasets.push({
-        label: CF_LABELS[co],
-        data: vals,
-        borderColor: CF_COLORS[co],
-        backgroundColor: CF_COLORS[co] + '15',
-        tension: 0.3,
-        pointRadius: 3,
-        fill: false,
-      });
-    });
-  } else if(_cfView === 'revenue'){
-    title = 'Ad Revenue ($B per quarter)';
-    companies.forEach(function(co){
-      var vals = quarters.map(function(q){
-        var row = _cfData.find(function(r){ return r.company===co && r.date===q; });
-        return row ? parseFloat((row.revenue_ads/1000).toFixed(2)) : null;
-      });
-      datasets.push({
-        label: CF_LABELS[co],
-        data: vals,
-        borderColor: CF_COLORS[co],
-        backgroundColor: CF_COLORS[co] + '20',
-        tension: 0.3,
-        pointRadius: 3,
-        fill: true,
-      });
-    });
-  } else if(_cfView === 'growth'){
-    title = 'YoY Revenue Growth (%)';
-    companies.forEach(function(co){
-      var vals = quarters.map(function(q){
-        var row = _cfData.find(function(r){ return r.company===co && r.date===q; });
-        return row && row.growth_yoy != null ? parseFloat(row.growth_yoy.toFixed(1)) : null;
-      });
-      datasets.push({
-        label: CF_LABELS[co],
-        data: vals,
-        borderColor: CF_COLORS[co],
-        backgroundColor: 'transparent',
-        tension: 0.3,
-        pointRadius: 3,
-        fill: false,
-      });
-    });
-  } else if(_cfView === 'engagement'){
-    title = 'Revenue Per Active User ($/person/quarter)';
-    var engCos = ['meta','tiktok']; // only these report user metrics
-    engCos.forEach(function(co){
-      var vals = quarters.map(function(q){
-        var row = _cfData.find(function(r){ return r.company===co && r.date===q; });
-        if(!row || !row.engagement || !row.engagement.rev_per_user) return null;
-        return parseFloat(row.engagement.rev_per_user.toFixed(2));
-      });
-      datasets.push({
-        label: CF_LABELS[co] + (co==='tiktok' ? ' (MAU basis)' : ' (DAP)'),
-        data: vals,
-        borderColor: CF_COLORS[co],
-        backgroundColor: CF_COLORS[co] + '15',
-        tension: 0.3,
-        pointRadius: 4,
-        fill: false,
-      });
-    });
-  } else if(_cfView === 'geo'){
-    // Stacked bar: Google US breakdown over time
-    title = 'Google — Geographic Revenue Split ($B)';
-    var co = 'google';
-    var geos = ['US','Europe','APAC','ROW'];
-    var geoKeys = {US:'geo_us', Europe:'geo_europe', APAC:'geo_apac', ROW:'geo_row'};
-    var geoColors = ['#4a9eff','#22c55e','#f59e0b','#a855f7'];
-    geos.forEach(function(g, gi){
-      var vals = quarters.map(function(q){
-        var row = _cfData.find(function(r){ return r.company===co && r.date===q; });
-        if(!row) return null;
-        var v = row.region && row.region[g];
-        return v ? parseFloat((v/1000).toFixed(2)) : null;
-      });
-      datasets.push({
-        label: g,
-        data: vals,
-        backgroundColor: geoColors[gi] + 'cc',
-        borderColor: geoColors[gi],
-        borderWidth: 1,
-      });
-    });
+function flowRenderControls(){
+  var el=document.getElementById('flowControls');
+  if(!el) return;
+  if(_flowTab==='crypto'){
+    el.innerHTML='<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">'
+      +'<label style="font-size:10px;color:#90a8c2">Pair</label><select id="flowCryptoPair"><option>BTCUSD</option><option>ETHUSD</option></select>'
+      +'<label style="font-size:10px;color:#90a8c2">Period</label><select id="flowCryptoPeriod"><option value="1h">1H</option><option value="4h">4H</option><option value="1d">1D</option></select>'
+      +'<button class="cd-vbtn" onclick="flowLoad()">Refresh</button></div>';
+  } else if(_flowTab==='futures'){
+    el.innerHTML='<div style="display:flex;gap:7px;flex-wrap:wrap">'
+      +['gold','silver','oil','natgas','sp500','nasdaq','dow'].map(function(a){return '<button class="cd-vbtn flow-asset-btn" data-asset="'+a+'" onclick="flowSelectFuture(\''+a+'\',this)">'+a.toUpperCase()+'</button>';}).join('')
+      +'</div>';
+    var first=el.querySelector('.flow-asset-btn'); if(first) first.classList.add('active');
+    el.dataset.asset='gold';
+  } else if(_flowTab==='options'){
+    el.innerHTML='<div style="display:flex;gap:10px;align-items:center"><input id="flowOptionSymbol" value="SPY" style="width:120px;text-transform:uppercase"><button class="cd-vbtn" onclick="flowLoad()">Load Options</button></div>';
+  } else {
+    el.innerHTML='<div style="display:flex;gap:10px;align-items:center"><input id="flowShortSymbol" value="AAPL" style="width:120px;text-transform:uppercase"><button class="cd-vbtn" onclick="flowLoad()">Load Short Interest</button></div>';
   }
-
-  document.getElementById('cfChartTitle').textContent = title;
-
-  // Legend
-  var legHtml = '';
-  datasets.forEach(function(ds){
-    legHtml += '<span style="color:' + (ds.borderColor||ds.backgroundColor) + '">● ' + ds.label + '</span>';
-  });
-  document.getElementById('cfLegend').innerHTML = legHtml;
-
-  var ctx = document.getElementById('cfMainCanvas').getContext('2d');
-  _cfChart = new Chart(ctx, {
-    type: _cfView === 'geo' ? 'bar' : 'line',
-    data: { labels: labels, datasets: datasets },
-    options: {
-      responsive: true, maintainAspectRatio: false, animation: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#1e293b',
-          borderColor: 'rgba(255,255,255,0.1)',
-          borderWidth: 1,
-          titleColor: '#94a3b8',
-          bodyColor: '#e2e8f0',
-        }
-      },
-      scales: {
-        x: {
-          grid: { color: 'rgba(255,255,255,0.04)' },
-          ticks: { color: '#475569', font: { size: 10 }, maxRotation: 45 }
-        },
-        y: {
-          stacked: _cfView === 'geo',
-          grid: { color: 'rgba(255,255,255,0.04)' },
-          ticks: { color: '#475569', font: { size: 10 } }
-        }
-      }
-    }
-  });
 }
 
-function renderCfGrowthTable(lat){
-  var html = '<table style="width:100%;border-collapse:collapse;font-size:12px">';
-  html += '<tr><th style="text-align:left;padding:5px 6px;color:#475569;font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)">Company</th>' +
-          '<th style="text-align:right;padding:5px 6px;color:#475569;font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)">QoQ</th>' +
-          '<th style="text-align:right;padding:5px 6px;color:#475569;font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)">YoY</th>' +
-          '<th style="text-align:right;padding:5px 6px;color:#475569;font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)">Rev ($B)</th></tr>';
-
-  var sorted = lat.companies.slice().sort(function(a,b){ return b.revenue_ads - a.revenue_ads; });
-  sorted.forEach(function(c){
-    var col    = CF_COLORS[c.company] || '#e2e8f0';
-    var qoq    = c.growth_qoq != null ? ((c.growth_qoq > 0 ? '+' : '') + c.growth_qoq.toFixed(1) + '%') : '—';
-    var yoy    = c.growth_yoy != null ? ((c.growth_yoy > 0 ? '+' : '') + c.growth_yoy.toFixed(1) + '%') : '—';
-    var qCol   = c.growth_qoq > 0 ? '#22c55e' : (c.growth_qoq < 0 ? '#ef4444' : '#64748b');
-    var yCol   = c.growth_yoy > 0 ? '#22c55e' : (c.growth_yoy < 0 ? '#ef4444' : '#64748b');
-    var srcTag = c.confidence_score >= 0.99 ? '' :
-                 c.confidence_score >= 0.90 ? ' <span style="font-size:8px;color:#4a9eff">xbrl</span>' :
-                 '<span style="font-size:8px;color:#f59e0b;margin-left:3px">~est</span>';
-    var rowOp  = c.confidence_score < 0.80 ? ' style="opacity:0.82"' : '';
-    html += '<tr' + rowOp + '><td style="padding:7px 6px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;color:' + col + '">' + CF_LABELS[c.company] + srcTag + '</td>' +
-            '<td style="text-align:right;padding:7px 6px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:700;color:' + qCol + ';font-family:\'Courier New\',monospace">' + qoq + '</td>' +
-            '<td style="text-align:right;padding:7px 6px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:700;color:' + yCol + ';font-family:\'Courier New\',monospace">' + yoy + '</td>' +
-            '<td style="text-align:right;padding:7px 6px;border-bottom:1px solid rgba(255,255,255,0.04);color:#94a3b8;font-family:\'Courier New\',monospace">$' + (c.revenue_ads/1000).toFixed(1) + 'B</td></tr>';
-  });
-  html += '</table>';
-  document.getElementById('cfGrowthTable').innerHTML = html;
-  document.getElementById('cfGrowthPeriod').textContent = lat.period;
+function flowSelectFuture(asset,btn){
+  var el=document.getElementById('flowControls'); if(el) el.dataset.asset=asset;
+  document.querySelectorAll('.flow-asset-btn').forEach(function(b){b.classList.remove('active');});
+  if(btn) btn.classList.add('active');
+  flowLoad();
 }
 
-function renderCfTrendSignals(){
-  if(!_cfTrends || !_cfTrends.length){
-    document.getElementById('cfTrendSignals').innerHTML = '<div style="color:#334155;font-size:12px">—</div>';
-    return;
-  }
-  var html = '';
-  _cfTrends.forEach(function(s){
-    var col  = s.signal === 'accelerating' ? '#22c55e' : (s.signal === 'decelerating' ? '#ef4444' : '#f59e0b');
-    var icon = s.signal === 'accelerating' ? '↗' : (s.signal === 'decelerating' ? '↘' : '→');
-    var co   = CF_COLORS[s.company] || '#e2e8f0';
-    html +=
-      '<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04)">' +
-        '<span style="font-weight:600;color:' + co + ';font-size:12px">' + CF_LABELS[s.company] + '</span>' +
-        '<div style="display:flex;align-items:center;gap:8px">' +
-          '<span style="font-size:11px;color:#475569">YoY ' + (s.yoy_now > 0 ? '+' : '') + s.yoy_now.toFixed(1) + '%</span>' +
-          '<span style="font-size:12px;font-weight:700;color:' + col + '">' + icon + ' ' + s.signal.toUpperCase() + '</span>' +
-        '</div>' +
-      '</div>';
-  });
-  document.getElementById('cfTrendSignals').innerHTML = html;
+function flowCard(label,value,sub){
+  return '<div class="td-stat"><div class="td-stat-label">'+label+'</div><div class="td-stat-val" style="font-size:22px">'+value+'</div>'+(sub?'<div class="td-stat-sub">'+sub+'</div>':'')+'</div>';
 }
 
-function renderCfEngagementTable(lat){
-  document.getElementById('cfEngagePeriod').textContent = '· ' + lat.period;
-  var html = '<table style="width:100%;border-collapse:collapse;font-size:12px">';
-
-  var thS = 'padding:6px 8px;color:#475569;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;border-bottom:1px solid var(--border)';
-  html += '<tr>' +
-    '<th style="' + thS + ';text-align:left">Platform</th>' +
-    '<th style="' + thS + ';text-align:right">Active Users</th>' +
-    '<th style="' + thS + ';text-align:center">Metric</th>' +
-    '<th style="' + thS + ';text-align:right">Rev / User / Qtr</th>' +
-    '<th style="' + thS + ';text-align:right">Monetisation Gap</th>' +
-    '<th style="' + thS + ';text-align:center">Data Quality</th>' +
-    '</tr>';
-
-  // Compute monetisation gap vs Meta (benchmark)
-  var metaRPU = null;
-  lat.companies.forEach(function(c){ if(c.company==='meta' && c.engagement) metaRPU = c.engagement.rev_per_user; });
-
-  var sorted = lat.companies.slice().sort(function(a,b){ return b.revenue_ads - a.revenue_ads; });
-  sorted.forEach(function(c){
-    var col = CF_COLORS[c.company] || '#e2e8f0';
-    var eng = c.engagement || {};
-    var dau = eng.dau_millions;
-    var rpu = eng.rev_per_user;
-    var dtype = eng.dau_type;
-    var dconf = eng.dau_confidence;
-
-    var dauStr  = dau  ? (dau/1000).toFixed(2)+'B ' + (dtype||'') : '<span style="color:#334155">Not reported</span>';
-    var rpuStr  = rpu  ? '<span style="font-family:\'Courier New\',monospace;font-weight:700;color:#e2e8f0">$' + rpu.toFixed(2) + '</span>' : '<span style="color:#334155">—</span>';
-
-    // Monetisation gap: how far behind Meta's Rev/DAP
-    var gapStr = '—';
-    if(rpu && metaRPU && c.company !== 'meta'){
-      var gap = ((rpu - metaRPU) / metaRPU * 100);
-      var gapCol = gap >= 0 ? '#22c55e' : '#f59e0b';
-      gapStr = '<span style="font-weight:700;color:' + gapCol + '">' + (gap > 0 ? '+' : '') + gap.toFixed(0) + '% vs Meta</span>';
-    } else if(c.company === 'meta'){
-      gapStr = '<span style="color:#4a9eff;font-size:10px">Benchmark</span>';
-    }
-
-    // Data quality badge
-    var qBadge = '';
-    if(!dau){
-      qBadge = '<span style="background:rgba(100,116,139,0.15);color:#64748b;font-size:9px;padding:2px 6px;border-radius:3px">N/A</span>';
-    } else if(dconf >= 0.95){
-      qBadge = '<span style="background:rgba(34,197,94,0.12);color:#22c55e;font-size:9px;padding:2px 6px;border-radius:3px">Official</span>';
+async function flowLoad(){
+  var content=document.getElementById('flowContent');
+  var status=document.getElementById('flowStatus');
+  if(!content) return;
+  content.innerHTML='<div class="mini-section" style="padding:30px;text-align:center;color:#90a8c2">Loading…</div>';
+  if(status) status.textContent='Loading '+_flowTab+' data…';
+  try{
+    if(_flowTab==='crypto'){
+      var pair=(document.getElementById('flowCryptoPair')||{}).value||'BTCUSD';
+      var period=(document.getElementById('flowCryptoPeriod')||{}).value||'1h';
+      var d=await fetch(API+'/api/flows/crypto?pair='+encodeURIComponent(pair)+'&period='+period).then(function(r){return r.json();});
+      if(d.error) throw new Error(d.error);
+      var blocks=[
+        ['Global Accounts',d.series&&d.series.global_accounts],
+        ['Top Trader Accounts',d.series&&d.series.top_accounts],
+        ['Top Trader Positions',d.series&&d.series.top_positions]
+      ];
+      content.innerHTML='<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">'
+        +blocks.map(function(b){var row=b[1]&&b[1].length?b[1][b[1].length-1]:{};return '<div class="mini-section"><div class="ms-title">'+b[0]+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">'+flowCard('Long',flowPct(row.long_pct))+flowCard('Short',flowPct(row.short_pct))+'</div><div style="font-size:10px;color:#90a8c2;margin-top:10px">L/S ratio: '+flowFmt(row.long_short_ratio,3)+'</div></div>';}).join('')
+        +'</div><div style="font-size:10px;color:#597895;margin-top:8px">Source: '+((d.meta&&d.meta.source)||d.venue||'Binance')+' · '+d.pair+' · '+d.period+'</div>';
+    } else if(_flowTab==='futures'){
+      var ctl=document.getElementById('flowControls'); var asset=(ctl&&ctl.dataset.asset)||'gold';
+      var d=await fetch(API+'/api/flows/futures?asset='+asset).then(function(r){return r.json();});
+      if(d.error) throw new Error(d.error);
+      content.innerHTML='<div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px">'
+        +flowCard('Long Contracts',flowFmt(d.long_contracts,0))
+        +flowCard('Short Contracts',flowFmt(d.short_contracts,0))
+        +flowCard('Net Contracts',flowFmt(d.net_contracts,0))
+        +flowCard('Open Interest',flowFmt(d.open_interest,0))
+        +flowCard('Short Share',flowPct(d.short_share_of_group_pct),d.trader_group)
+        +'</div><div class="mini-section" style="margin-top:10px"><div class="ms-title">'+(d.market||asset.toUpperCase())+'</div><div style="font-size:11px;color:#90a8c2;margin-top:8px">Report date: '+(d.report_date||'—')+' · CFTC weekly positioning; not a live flow measure.</div></div>';
+    } else if(_flowTab==='options'){
+      var sym=((document.getElementById('flowOptionSymbol')||{}).value||'SPY').trim().toUpperCase();
+      var d=await fetch(API+'/api/flows/options?symbol='+encodeURIComponent(sym)).then(function(r){return r.json();});
+      if(d.error) throw new Error(d.error);
+      content.innerHTML='<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px">'
+        +flowCard('Call Open Interest',flowFmt(d.call_open_interest,0))
+        +flowCard('Put Open Interest',flowFmt(d.put_open_interest,0))
+        +flowCard('Put/Call OI',flowFmt(d.put_call_oi_ratio,3))
+        +flowCard('Put/Call Volume',flowFmt(d.put_call_volume_ratio,3))
+        +'</div><div style="font-size:10px;color:#597895;margin-top:8px">'+d.symbol+' · nearest expiry '+(d.expiry||'—')+' · '+((d.meta&&d.meta.note)||'')+'</div>';
     } else {
-      qBadge = '<span style="background:rgba(245,158,11,0.12);color:#f59e0b;font-size:9px;padding:2px 6px;border-radius:3px">~Estimate</span>';
+      var sym=((document.getElementById('flowShortSymbol')||{}).value||'AAPL').trim().toUpperCase();
+      var d=await fetch(API+'/api/flows/short-interest?symbol='+encodeURIComponent(sym)).then(function(r){return r.json();});
+      if(d.error) throw new Error(d.error);
+      content.innerHTML='<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px">'
+        +flowCard('Short % Float',flowPct(d.short_float_pct))
+        +flowCard('Short % Shares Out',flowPct(d.short_outstanding_pct))
+        +flowCard('Shares Short',flowFmt(d.shares_short,0))
+        +flowCard('MoM Change',flowPct(d.shares_short_change_pct))
+        +'</div><div style="font-size:10px;color:#597895;margin-top:8px">'+d.symbol+' · '+((d.meta&&d.meta.note)||'')+'</div>';
     }
-
-    html += '<tr onmouseover="this.style.background=\'rgba(255,255,255,0.02)\'" onmouseout="this.style.background=\'transparent\'">' +
-      '<td style="padding:10px 8px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:700;color:' + col + '">' + CF_LABELS[c.company] + '</td>' +
-      '<td style="text-align:right;padding:10px 8px;border-bottom:1px solid rgba(255,255,255,0.04);color:#94a3b8">' + dauStr + '</td>' +
-      '<td style="text-align:center;padding:10px 8px;border-bottom:1px solid rgba(255,255,255,0.04);color:#475569;font-size:11px">' + (dtype || '—') + '</td>' +
-      '<td style="text-align:right;padding:10px 8px;border-bottom:1px solid rgba(255,255,255,0.04)">' + rpuStr + '</td>' +
-      '<td style="text-align:right;padding:10px 8px;border-bottom:1px solid rgba(255,255,255,0.04)">' + gapStr + '</td>' +
-      '<td style="text-align:center;padding:10px 8px;border-bottom:1px solid rgba(255,255,255,0.04)">' + qBadge + '</td>' +
-      '</tr>';
-  });
-  html += '</table>';
-  html += '<div style="font-size:10px;color:#334155;margin-top:8px">DAP = Daily Active People (unique humans, bot-filtered) · MAU = Monthly Active Users · Rev/User = ad revenue ÷ active user count</div>';
-  document.getElementById('cfEngagementTable').innerHTML = html;
-}
-
-function renderCfPlatformTable(lat){
-  document.getElementById('cfPlatformPeriod').textContent = '· ' + lat.period;
-  var html = '<table style="width:100%;border-collapse:collapse;font-size:12px">';
-  html += '<tr>' +
-    '<th style="text-align:left;padding:5px 8px;color:#475569;font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)">Company</th>' +
-    '<th style="text-align:right;padding:5px 8px;color:#4a9eff;font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)">Search</th>' +
-    '<th style="text-align:right;padding:5px 8px;color:#f59e0b;font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)">Social</th>' +
-    '<th style="text-align:right;padding:5px 8px;color:#ef4444;font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)">Video</th>' +
-    '<th style="text-align:right;padding:5px 8px;color:#22c55e;font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)">Retail</th>' +
-    '<th style="text-align:right;padding:5px 8px;color:#a855f7;font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)">Display</th>' +
-    '</tr>';
-
-  function fmtB(v){ return v != null ? '$' + (v/1000).toFixed(1)+'B' : '<span style="color:#334155">—</span>'; }
-
-  var sorted = lat.companies.slice().sort(function(a,b){ return b.revenue_ads - a.revenue_ads; });
-  sorted.forEach(function(c){
-    var col = CF_COLORS[c.company] || '#e2e8f0';
-    var p   = c.platform || {};
-    html += '<tr>' +
-      '<td style="padding:8px 8px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:700;color:' + col + '">' + CF_LABELS[c.company] + '</td>' +
-      '<td style="text-align:right;padding:8px 8px;border-bottom:1px solid rgba(255,255,255,0.04);color:#94a3b8;font-family:\'Courier New\',monospace">' + fmtB(p.search) + '</td>' +
-      '<td style="text-align:right;padding:8px 8px;border-bottom:1px solid rgba(255,255,255,0.04);color:#94a3b8;font-family:\'Courier New\',monospace">' + fmtB(p.social) + '</td>' +
-      '<td style="text-align:right;padding:8px 8px;border-bottom:1px solid rgba(255,255,255,0.04);color:#94a3b8;font-family:\'Courier New\',monospace">' + fmtB(p.video) + '</td>' +
-      '<td style="text-align:right;padding:8px 8px;border-bottom:1px solid rgba(255,255,255,0.04);color:#94a3b8;font-family:\'Courier New\',monospace">' + fmtB(p.retail_media) + '</td>' +
-      '<td style="text-align:right;padding:8px 8px;border-bottom:1px solid rgba(255,255,255,0.04);color:#94a3b8;font-family:\'Courier New\',monospace">' + fmtB(p.display) + '</td>' +
-      '</tr>';
-  });
-  html += '</table>';
-  document.getElementById('cfPlatformTable').innerHTML = html;
+    if(status) status.textContent='Updated '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+  }catch(e){
+    content.innerHTML='<div class="callout red">Could not load '+_flowTab+' data: '+e.message+'</div>';
+    if(status) status.textContent='Data unavailable';
+  }
 }
 
 // ── Company Research page ─────────────────────────────────
@@ -8519,96 +8160,79 @@ function earnSetMinCap(val){
   earnRenderTable();
 }
 
-// ── INSIDER BUYING ────────────────────────────────────────────────────────────
-var _ibPoll = null;
+// ── CONFLUENCE MONITOR ───────────────────────────────────────
+var _confWindow=30;
 
-function loadInsiderBuying(){
-  document.getElementById('ibStatus').textContent = 'Loading...';
-  fetch(API + '/api/insider-buying')
-    .then(function(r){ return r.json(); })
-    .then(function(d){
-      if(d.status === 'loading'){
-        document.getElementById('ibStatus').textContent = 'Scanning insider filings — may take ~2 min first load...';
-        clearInterval(_ibPoll);
-        _ibPoll = setInterval(loadInsiderBuying, 8000);
-        return;
-      }
-      clearInterval(_ibPoll);
-      var ts = d.ts ? new Date(d.ts).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : '';
-      document.getElementById('ibStatus').textContent = 'Updated ' + ts + ' · ' + (d.results||[]).length + ' purchases';
-      if(d.results && d.results.length){
-        ibRenderCards(d.results);
-      } else {
-        document.getElementById('ibResults').innerHTML = '<div style="color:#475569;font-size:13px;padding:40px 0">No insider purchases found.</div>';
-      }
-    }).catch(function(){
-      document.getElementById('ibStatus').textContent = 'Error loading data';
-    });
+function confSetWindow(days,btn){
+  _confWindow=days;
+  document.querySelectorAll('#confWindowBtns .cd-vbtn').forEach(function(b){b.classList.remove('active');});
+  if(btn) btn.classList.add('active');
+  loadConfluence();
 }
 
-function ibRefresh(){
-  fetch(API + '/api/insider-buying/refresh', {method:'POST'}).catch(function(){});
-  document.getElementById('ibStatus').textContent = 'Refreshing...';
-  clearInterval(_ibPoll);
-  _ibPoll = setInterval(loadInsiderBuying, 8000);
+function confEvidenceCard(title,aligned,summary,body){
+  var col=aligned?'#48d18a':'#90a8c2';
+  var label=aligned?'ALIGNED':'NOT ALIGNED';
+  return '<div class="mini-section" style="border-top:2px solid '+col+'!important">'
+    +'<div style="display:flex;justify-content:space-between;gap:10px"><div class="ms-title">'+title+'</div><span style="font-size:9px;font-weight:800;color:'+col+'">'+label+'</span></div>'
+    +'<div style="font-size:20px;font-weight:850;color:#edf6ff;margin-top:10px">'+summary+'</div>'
+    +'<div style="margin-top:10px">'+body+'</div></div>';
 }
 
-function ibFmtVal(v){
-  if(v===null||v===undefined) return '—';
-  if(v >= 1e9) return '$'+(v/1e9).toFixed(2)+'B';
-  if(v >= 1e6) return '$'+(v/1e6).toFixed(1)+'M';
-  if(v >= 1e3) return '$'+(v/1e3).toFixed(0)+'K';
-  return '$'+v;
-}
+async function loadConfluence(){
+  var input=document.getElementById('confSymbol');
+  if(!input) return;
+  var sym=(input.value||'').trim().toUpperCase();
+  if(!sym){input.focus();return;}
+  input.value=sym;
+  var out=document.getElementById('confResults');
+  var status=document.getElementById('confStatus');
+  if(out) out.innerHTML='<div class="mini-section" style="padding:34px;text-align:center;color:#90a8c2">Checking institutional, insider and analyst evidence…</div>';
+  if(status) status.textContent=_confWindow+'-day view · loading…';
 
-function ibRenderCards(results){
-  // Group by ticker, newest date first per group
-  var groups = {};
-  results.forEach(function(r){
-    if(!groups[r.ticker]) groups[r.ticker] = {ticker:r.ticker, buys:[], latestDate:''};
-    groups[r.ticker].buys.push(r);
-    if(r.date > groups[r.ticker].latestDate) groups[r.ticker].latestDate = r.date;
-  });
-  // Sort groups by most recent buy
-  var groupArr = Object.values(groups).sort(function(a,b){ return b.latestDate.localeCompare(a.latestDate); });
+  try{
+    var d=await fetch(API+'/api/confluence?symbol='+encodeURIComponent(sym)+'&window='+_confWindow).then(function(r){return r.json();});
+    if(d.error) throw new Error(d.error);
 
-  var html = '<div style="display:flex;flex-direction:column;gap:10px">';
-  groupArr.forEach(function(g){
-    var buys = g.buys.sort(function(a,b){ return b.date.localeCompare(a.date); });
-    var totalVal = buys.reduce(function(s,r){ return s+(r.value||0); }, 0);
-    var isLarge  = totalVal >= 1e6;
-    var borderCol = isLarge ? '#22c55e' : '#1e293b';
+    var instRows=((d.institutional&&d.institutional.evidence)||[]).filter(function(x){return x.change==='NEW'||x.change==='INCREASED';}).slice(0,8);
+    var insRows=((d.insiders&&d.insiders.evidence)||[]).slice(0,8);
+    var anRows=((d.analysts&&d.analysts.evidence)||[]).slice(0,8);
 
-    html += '<div style="background:#0f1729;border:1px solid '+borderCol+';border-left:3px solid '+borderCol+';border-radius:10px;padding:16px 20px">';
+    function rows(items,render,empty){
+      if(!items.length) return '<div style="font-size:11px;color:#597895">'+empty+'</div>';
+      return '<div style="display:flex;flex-direction:column;gap:7px">'+items.map(render).join('')+'</div>';
+    }
 
-    // Header row: ticker + total + date + research link
-    html += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:'+(buys.length>1?'12':'0')+'px">'
-      + '<div onclick="navigate(\'research\');setTimeout(function(){researchTicker(\''+g.ticker+'\')},300)" style="font-size:18px;font-weight:800;color:#60a5fa;cursor:pointer;text-decoration:underline;text-underline-offset:2px;min-width:64px">'+g.ticker+'</div>'
-      + '<div style="font-size:11px;color:#334155">'+g.latestDate+'</div>'
-      + (buys.length>1 ? '<div style="font-size:10px;color:#475569;background:#0a0f1a;border-radius:4px;padding:2px 7px">'+buys.length+' buys</div>' : '')
-      + '<div style="margin-left:auto;font-size:18px;font-weight:800;color:'+(isLarge?'#22c55e':'#4ade80')+'">'+ibFmtVal(totalVal)+'</div>'
-      + '</div>';
+    var instBody=rows(instRows,function(x){
+      return '<div style="font-size:11px;color:#b9d9f4"><b>'+x.institution+'</b> · '+x.change+(x.change_pct!=null?' '+(x.change_pct>=0?'+':'')+x.change_pct.toFixed(1)+'%':'')+' · filed '+(x.filing_date||'—')+'</div>';
+    },'No positive 13F change found in the tracked institution set.');
 
-    // Each insider row
-    buys.forEach(function(r){
-      html += '<div style="display:flex;align-items:center;gap:12px;padding:'+(buys.length>1?'6':'0')+'px 0;border-top:'+(buys.length>1?'1px solid #1e293b':'none')+'">'
-        + '<div style="flex:1">'
-        +   '<span style="font-size:13px;font-weight:600;color:#e2e8f0">'+r.insider+'</span>'
-        +   '<span style="font-size:11px;color:#475569;margin-left:8px">'+r.title+'</span>'
-        + '</div>'
-        + '<div style="text-align:right;font-size:12px;color:#94a3b8">'
-        +   (r.value ? ibFmtVal(r.value) : '')
-        +   (r.shares ? ' &nbsp;·&nbsp; '+r.shares.toLocaleString()+' sh' : '')
-        +   (r.price  ? ' @ $'+r.price : '')
-        +   '<span style="color:#334155;margin-left:6px">'+r.date+'</span>'
-        + '</div>'
-        + '</div>';
-    });
+    var insBody=rows(insRows,function(x){
+      return '<div style="font-size:11px;color:#b9d9f4"><b>'+(x.name||'Insider')+'</b> · '+(x.shares!=null?Number(x.shares).toLocaleString()+' shares':'purchase')+' · '+(x.date||'—')+'</div>';
+    },'No qualifying open-market insider purchase found in this window.');
 
-    html += '</div>';
-  });
-  html += '</div>';
-  document.getElementById('ibResults').innerHTML = html;
+    var anBody=rows(anRows,function(x){
+      return '<div style="font-size:11px;color:#b9d9f4"><b>'+(x.firm||'Analyst')+'</b> · '+(x.action||'')+' · '+(x.from_grade||'')+' → '+(x.to_grade||'')+' · '+(x.date||'—')+'</div>';
+    },'No recent analyst revision evidence found in this window.');
+
+    var count=d.aligned_count||0;
+    var col=count===3?'#48d18a':count===2?'#ffc857':'#90a8c2';
+
+    out.innerHTML='<div class="hero-card" style="padding:22px;margin-bottom:12px">'
+      +'<div style="display:flex;align-items:end;gap:18px;flex-wrap:wrap"><div><div style="font-size:11px;color:#90a8c2">'+d.company+'</div><div style="font-size:34px;font-weight:900;color:#edf6ff">'+d.symbol+'</div></div>'
+      +'<div style="margin-left:auto;text-align:right"><div style="font-size:10px;color:#90a8c2">Evidence alignment</div><div style="font-size:40px;font-weight:950;color:'+col+'">'+d.label+'</div></div></div>'
+      +'</div>'
+      +'<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">'
+      +confEvidenceCard('Institutional',d.alignment&&d.alignment.institutional,(d.institutional&&d.institutional.positive_count||0)+' positive tracked filings',instBody)
+      +confEvidenceCard('Insiders',d.alignment&&d.alignment.insiders,(d.insiders&&d.insiders.buy_count||0)+' qualifying purchases',insBody)
+      +confEvidenceCard('Analysts',d.alignment&&d.alignment.analysts,(d.analysts&&d.analysts.upgrades||0)+' positive vs '+(d.analysts&&d.analysts.downgrades||0)+' negative',anBody)
+      +'</div>';
+
+    if(status) status.textContent=d.symbol+' · '+_confWindow+'D · updated '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+  }catch(e){
+    if(out) out.innerHTML='<div class="callout red">Confluence data unavailable: '+e.message+'</div>';
+    if(status) status.textContent='Data unavailable';
+  }
 }
 
 // ── Research tab — Insider Activity ───────────────────────────────────────────
