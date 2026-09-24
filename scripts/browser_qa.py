@@ -16,6 +16,16 @@ PAGES=[
     ("hormuz","Hormuz Energy Risk Monitor"),
 ]
 
+# Broad navigation regression coverage. Detailed assertions remain focused on
+# rebuilt research modules, but every page must still activate without an
+# uncaught JavaScript exception after bundle extraction.
+ALL_NAV_PAGES=[
+    "welcome","mover","brief","macro","fx","rates","commodities","hormuz","ev",
+    "crypto","sectors","breadth","research","institutions","comm-flows","fundchart",
+    "confluence","earnings","correlation","btcgold","pcr","scanner","backtest",
+    "ideas","risk","housing","seasonality",
+]
+
 async def assert_no_horizontal_overflow(page, label):
     overflow = await page.evaluate("""() => ({
       sw: document.documentElement.scrollWidth,
@@ -118,6 +128,13 @@ async def run_viewport(browser, name, width, height):
 
         await assert_no_horizontal_overflow(page, f"{name}/{slug}")
         report["pages"].append({"page":slug,"ok":True})
+
+    # Broad page activation regression after JS domain extraction.
+    for slug in ALL_NAV_PAGES:
+        await page.evaluate(f"navigate('{slug}')")
+        await page.locator(f"#page-{slug}").wait_for(state="visible", timeout=10000)
+        await page.wait_for_timeout(120)
+    report["navigation_pages"]=len(ALL_NAV_PAGES)
 
     # Navigation naming checks
     nav_text=await page.locator(".nav-panel").inner_text()
