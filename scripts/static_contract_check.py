@@ -6,6 +6,7 @@ html = Path("apps/terminal/public/terminal_app.html").read_text(encoding="utf-8"
 js = Path("apps/terminal/public/terminal.js").read_text(encoding="utf-8")
 domain_js_paths = [
     Path("apps/terminal/public/terminal-market.js"),
+    Path("apps/terminal/public/terminal-content.js"),
     Path("apps/terminal/public/terminal-flows.js"),
     Path("apps/terminal/public/terminal-hormuz.js"),
     Path("apps/terminal/public/terminal-metals.js"),
