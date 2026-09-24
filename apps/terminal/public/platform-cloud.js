@@ -152,6 +152,11 @@
     signInWithEmail:signInWithEmail,
     signOut:signOut,
     getStatus:function(){return {ready:ready,signedIn:!!user,email:user&&user.email?user.email:'',userId:user&&user.id?user.id:''};},
+    getAccessToken:async function(){
+      if(!client)return null;
+      var result=await client.auth.getSession();
+      return result&&result.data&&result.data.session?result.data.session.access_token:null;
+    },
     syncNow:async function(){if(user){await pull();await pushNow();}}
   };
 
