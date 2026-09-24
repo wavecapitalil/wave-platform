@@ -1,0 +1,21 @@
+:root{
+  --wave-bg:#050c15;
+  --wave-panel:#091827;
+  --wave-panel-2:#0c2035;
+  --wave-line:#173752;
+  --wave-line-2:#244e73;
+  --wave-text:#edf6ff;
+  --wave-muted:#90a8c2;
+  --wave-blue:#55aaff;
+  --wave-blue-2:#9bd1ff;
+  --wave-green:#48d18a;
+  --wave-amber:#ffc857;
+  --wave-red:#ff6f82;
+  --wave-purple:#b99cff;
+  --wave-cyan:#58d7e8;
+  --wave-radius-sm:10px;
+  --wave-radius-md:14px;
+  --wave-radius-lg:18px;
+  --wave-radius-xl:24px;
+  --wave-shadow:0 18px 50px rgba(0,0,0,.22);
+}
