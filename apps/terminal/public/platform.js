@@ -32,7 +32,7 @@
     listeners.forEach(function(fn){try{fn(clone(state));}catch(e){}});
   }
   function cleanSymbol(v){return String(v||'').toUpperCase().trim().replace(/[^A-Z0-9.^=-]/g,'').slice(0,20);}
-  function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+  function uid(){return (window.crypto&&crypto.randomUUID)?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
   function toast(msg){
     var el=document.getElementById('waveToast');
     if(!el){el=document.createElement('div');el.id='waveToast';el.className='wp-toast';document.body.appendChild(el);}
@@ -41,6 +41,16 @@
   var api={
     getState:function(){return clone(state);},
     subscribe:function(fn){listeners.push(fn);return function(){listeners=listeners.filter(function(x){return x!==fn;});};},
+    hydrateCloud:function(patch){
+      patch=patch||{};
+      if(patch.profile)state.profile=Object.assign({},state.profile,patch.profile,{authMode:'supabase'});
+      if(Array.isArray(patch.watchlist))state.watchlist=patch.watchlist.slice(0,30);
+      if(Array.isArray(patch.saved))state.saved=patch.saved.slice(0,100);
+      if(patch.progress)state.progress=Object.assign({},state.progress,patch.progress);
+      if(Array.isArray(patch.alerts))state.alerts=patch.alerts.slice(0,50);
+      persist();
+    },
+    setAuthMode:function(mode){state.profile.authMode=mode||'local_preview';persist();},
     resetPreview:function(){state=clone(defaults);persist();toast('Preview workspace reset');},
     updateProfile:function(patch){state.profile=Object.assign({},state.profile,patch||{});persist();},
     addWatchlist:function(symbol){symbol=cleanSymbol(symbol);if(!symbol)return false;if(state.watchlist.indexOf(symbol)<0){state.watchlist.push(symbol);persist();toast(symbol+' added to watchlist');}return true;},
