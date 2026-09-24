@@ -52,6 +52,7 @@ Branch: `migration/terminal-v2`
 - [x] Content scheduler lifecycle made explicit/idempotent
 - [x] Shared AI provider service introduced
 - [x] Shared SEC provider service introduced
+- [x] Yahoo/yfinance service layer introduced for core quote/history/VIX routes
 
 ### Frontend architecture
 - [x] Inline CSS extracted to `terminal.css`
@@ -70,7 +71,7 @@ The Terminal has moved from stabilization into controlled architecture migration
 
 ## Next
 
-1. Finish provider/service extraction for Yahoo/yfinance, FRED, CFTC, Binance, CoinGecko and DeFiLlama.
+1. Continue provider/service extraction: Yahoo/yfinance core market routes are now centralized; remaining yfinance usage in equities/fundamentals still needs migration. FRED, CFTC, Binance, CoinGecko and DeFiLlama already have service modules but legacy call sites still need consolidation.
 2. Extract remaining large legacy frontend domains from `terminal.js`.
 3. Introduce shared frontend helpers for API calls, loading/error states and data provenance.
 4. Remove provider calls made directly from the browser where a WAVE API route can own them.
