@@ -21,6 +21,12 @@ Branch: `migration/terminal-v2`
 - [x] API map documented
 - [x] Migration plan documented
 
+- [x] Standard provenance metadata contract added to rebuilt research modules
+- [x] Morning Brief moved from user-specific iCloud/Claude paths to portable WAVE_BRIEF_DIR storage
+- [x] Morning Brief embedded charts switched to same-origin API
+- [x] Live integration workflow added and passing against external providers
+- [x] Security smoke, static contract checks and live schema checks passing in GitHub Actions
+
 ## In progress
 
 - [x] Replace legacy Hormuz core with validated macro energy-risk monitor
@@ -35,7 +41,7 @@ Branch: `migration/terminal-v2`
 2. Simplify Metals UI to emphasize ratio / mean / percentile / z-distance.
 3. Build the Cross-Asset Flows UI on top of the new positioning endpoints.
 4. Rebuild Confluence UI around 7D / 30D / 90D institutional + insider + analyst alignment.
-5. Run security and API smoke tests in a networked runtime.
-6. Add consistent response/freshness metadata contract.
-7. Make Morning Brief storage portable.
-8. Continue backend modularization only after stabilization.
+5. Continue migrating legacy endpoints to the shared provenance metadata contract.
+6. Decide production persistence target for WAVE_BRIEF_DIR when deployment infrastructure is selected.
+7. Begin controlled backend modularization.
+8. Add browser-level visual regression testing before merge.
