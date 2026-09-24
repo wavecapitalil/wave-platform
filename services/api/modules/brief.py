@@ -18,7 +18,7 @@ _brief_lock  = threading.Lock()
 # Portable storage:
 # - production: point WAVE_BRIEF_DIR at a persistent mounted folder/object-sync target
 # - local dev: defaults to services/api/data/briefs
-_DEFAULT_BRIEF_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'briefs')
+_DEFAULT_BRIEF_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', 'briefs')
 _BRIEF_DIR = os.path.abspath(os.getenv('WAVE_BRIEF_DIR', _DEFAULT_BRIEF_DIR))
 _DATE_PAT = re.compile(r'(\d{4}-\d{2}-\d{2})')
 
