@@ -8,8 +8,8 @@ import requests
 import yfinance as yf
 from flask import Blueprint, jsonify, request
 
-from modules.equities_core import _edgar_get_cik
-from modules.content import _load_secrets, _call_anthropic, _call_openai
+from services.sec import get_cik
+from services.ai import load_ai_config, call_anthropic, call_openai
 
 bp = Blueprint("ticker_mover", __name__)
 
@@ -99,7 +99,7 @@ def _mover_stocktwits(sym):
 def _mover_8k(sym):
     out = []
     try:
-        cik = _edgar_get_cik(sym)
+        cik = get_cik(sym)
         if not cik:
             return out
         r = requests.get(f'https://data.sec.gov/submissions/CIK{cik}.json',
@@ -140,7 +140,7 @@ def ticker_mover():
     sources += [{'title': f"r/{r['sub']}: {r['title']} (▲{r['score']})", 'url': r['url'], 'source_type': 'reddit', 'date': ''} for r in reddit if r['title']]
     sources += [{'title': f['title'], 'url': f['url'], 'source_type': 'sec_8k', 'date': f.get('date', '')} for f in filings]
 
-    secrets = _load_secrets()
+    secrets = load_ai_config()
     key_anth = secrets.get('ANTHROPIC_API_KEY')
     key_oai  = secrets.get('OPENAI_API_KEY')
     if not key_anth and not key_oai:
@@ -175,9 +175,9 @@ def ticker_mover():
 
     try:
         if key_anth:
-            raw = _call_anthropic(key_anth, secrets.get('ANTHROPIC_MODEL'), prompt)
+            raw = call_anthropic(key_anth, secrets.get('ANTHROPIC_MODEL'), prompt)
         else:
-            raw = _call_openai(key_oai, secrets.get('OPENAI_MODEL'), prompt)
+            raw = call_openai(key_oai, secrets.get('OPENAI_MODEL'), prompt)
     except Exception as e:
         return jsonify({'symbol': sym, 'price': price, 'sources': sources,
                         'sentiment': {'bullish': st['bullish'], 'bearish': st['bearish']},
