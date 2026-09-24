@@ -22,6 +22,9 @@ jobs:
       - name: Python syntax check
         run: python -m py_compile services/api/*.py services/api/core/*.py services/api/modules/*.py scripts/*.py
 
+      - name: Install backend dependencies
+        run: pip install -r services/api/requirements.txt
+
       - name: Frontend/API contract checks
         run: python scripts/static_contract_check.py
 
