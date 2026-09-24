@@ -22,6 +22,8 @@ PUBLIC_FILES = {
     "platform.css",
     "platform.js",
     "platform-cloud.js",
+    "platform-search.js",
+    "research-save.js",
     "supabase-config.js",
     "terminal.html",
     "index.html",
