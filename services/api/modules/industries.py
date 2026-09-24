@@ -2,8 +2,8 @@
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-import yfinance as yf
 from flask import Blueprint, jsonify
+from services.yahoo import ticker_info
 
 bp = Blueprint("industries", __name__)
 
@@ -54,8 +54,8 @@ def ev_market():
     # Live financials for public EV companies
     FX = {}
     try:
-        FX['CNY'] = float(yf.Ticker('CNYUSD=X').info.get('regularMarketPrice', 0.138))
-        FX['EUR'] = float(yf.Ticker('EURUSD=X').info.get('regularMarketPrice', 1.08))
+        FX['CNY'] = float(ticker_info('CNYUSD=X').get('regularMarketPrice', 0.138))
+        FX['EUR'] = float(ticker_info('EURUSD=X').get('regularMarketPrice', 1.08))
     except Exception:
         FX = {'CNY': 0.138, 'EUR': 1.08}
 
@@ -75,7 +75,7 @@ def ev_market():
 
     def fetch_company(meta):
         try:
-            info = yf.Ticker(meta['ticker']).info
+            info = ticker_info(meta['ticker'])
             rev   = info.get('totalRevenue')
             mc    = info.get('marketCap')
             gm    = info.get('grossMargins')
