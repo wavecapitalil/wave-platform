@@ -20,7 +20,13 @@ jobs:
           python-version: "3.12"
 
       - name: Python syntax check
-        run: python -m py_compile services/api/*.py services/api/core/*.py services/api/modules/*.py scripts/*.py
+        run: python -m py_compile services/api/*.py services/api/core/*.py services/api/services/*.py services/api/modules/*.py scripts/*.py
+
+      - name: JavaScript syntax check
+        run: |
+          for f in apps/terminal/public/*.js; do
+            node --check "$f"
+          done
 
       - name: Install backend dependencies
         run: pip install -r services/api/requirements.txt
