@@ -24,6 +24,16 @@ jobs:
       - name: Start WAVE API
         run: |
           mkdir -p services/api/data/briefs
+          cat > services/api/data/briefs/2026-09-24-morning-ci.html <<'EOF'
+          <!doctype html><html><head><title>CI Brief</title></head><body>
+          <div class="section"><div class="section-title">CI Portable Brief</div>
+          <p>This briefing exists only to validate portable WAVE_BRIEF_DIR storage in CI.</p>
+          <p>Portable storage integration test payload with enough content to exceed the loader's minimum-size guard.
+          The Morning Brief service should discover this HTML from its configured application storage rather than any user-specific macOS, iCloud, or Claude session directory.
+          This confirms that a deployed server can mount a persistent directory and serve the latest briefing without depending on Daniel's local machine.
+          Additional filler verifies the production loader path and refresh behavior safely.</p></div>
+          </body></html>
+          EOF
           nohup python services/api/api.py > /tmp/wave-api.log 2>&1 &
           echo $! > /tmp/wave-api.pid
           for i in $(seq 1 30); do
@@ -37,6 +47,12 @@ jobs:
 
       - name: Security smoke
         run: python scripts/security_smoke.py
+
+      - name: Portable Morning Brief integration
+        run: |
+          curl -fsS http://127.0.0.1:5001/api/daily-brief > /tmp/brief.html
+          grep -q "CI Portable Brief" /tmp/brief.html
+          ! grep -q "http://localhost:5001" /tmp/brief.html
 
       - name: Live provider integration + schema checks
         run: python scripts/live_integration.py
