@@ -21,6 +21,8 @@ PUBLIC_FILES = {
     "products.html",
     "i18n.js",
     "wave-university-theme.css",
+    "terminal.css",
+    "terminal.js",
 }
 
 
