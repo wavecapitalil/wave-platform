@@ -4,8 +4,16 @@ import sys
 
 html = Path("apps/terminal/public/terminal_app.html").read_text(encoding="utf-8")
 js = Path("apps/terminal/public/terminal.js").read_text(encoding="utf-8")
+domain_js_paths = [
+    Path("apps/terminal/public/terminal-flows.js"),
+    Path("apps/terminal/public/terminal-hormuz.js"),
+    Path("apps/terminal/public/terminal-metals.js"),
+    Path("apps/terminal/public/terminal-confluence.js"),
+    Path("apps/terminal/public/terminal-seasonality.js"),
+]
+domain_js = "\n".join(path.read_text(encoding="utf-8") for path in domain_js_paths)
 css = Path("apps/terminal/public/terminal.css").read_text(encoding="utf-8")
-frontend = html + "\n" + js
+frontend = html + "\n" + js + "\n" + domain_js
 api = Path("services/api/api.py").read_text(encoding="utf-8")
 factory = Path("services/api/app_factory.py").read_text(encoding="utf-8")
 frontend_server = Path("services/api/modules/frontend.py").read_text(encoding="utf-8")
@@ -26,6 +34,8 @@ checks = [
     ("Theme is loaded", "wave-university-theme.css" in html),
     ("Base Terminal CSS extracted", "terminal.css" in html and len(css) > 10000),
     ("Terminal JS extracted", "terminal.js" in html and len(js) > 100000),
+    ("Domain JS modules loaded", all(path.name in html for path in domain_js_paths)),
+    ("Dead Silver Stress code removed", "smdInit" not in frontend and "SMD_TIMER" not in frontend),
     ("Morning Brief uses portable storage", "WAVE_BRIEF_DIR" in brief_module),
     ("No Daniel-local iCloud path remains", "/Users/danielarad/" not in brief_module),
     ("No Claude local-session dependency remains", "local-agent-mode-sessions" not in brief_module),
