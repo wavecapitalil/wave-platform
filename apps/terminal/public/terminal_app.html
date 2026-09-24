@@ -2246,7 +2246,7 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
 
         <div class="mini-section" style="margin-bottom:14px">
           <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-            <input id="confSymbol" value="AAPL" placeholder="Ticker" style="width:120px;text-transform:uppercase">
+            <input id="confSymbol" value="AAPL" placeholder="Ticker" style="width:120px;text-transform:uppercase" onkeydown="if(event.key==='Enter') loadConfluence()">
             <button class="cd-vbtn" onclick="loadConfluence()">Analyze</button>
             <div style="display:flex;gap:6px;margin-left:6px" id="confWindowBtns">
               <button class="cd-vbtn" onclick="confSetWindow(7,this)">7D</button>
