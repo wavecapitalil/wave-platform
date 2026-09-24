@@ -891,8 +891,7 @@ import time as _time
 
 _SCHEDULE = [
     # (name, interval_seconds, function)
-    # Brief: every 60 min (iCloud TCC works in main thread at startup,
-    #   subsequent refreshes try from the scheduler thread — may fail silently)
+    # Brief: rescan the portable WAVE_BRIEF_DIR every 60 minutes.
     ('brief_refresh',    3_600,   _load_brief_cache),
     # Comm. Flows earnings: every 24 hours
     ('comm_flows_edgar', 86_400,  lambda: _cf.check_and_update()),
@@ -917,7 +916,7 @@ def _master_scheduler():
         _time.sleep(60)  # check every minute
 
 
-# Load at startup from main thread — has terminal TCC permissions for iCloud
+# Load portable briefing storage at startup
 _load_brief_cache()
 # Run initial comm-flows update at startup
 try:
