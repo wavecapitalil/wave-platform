@@ -7,6 +7,7 @@ centralizing provider-specific market reads behind one blueprint.
 from flask import Blueprint, jsonify, request
 import requests
 import yfinance as yf
+from services.binance import spot_quote, spot_klines, ALLOWED_SPOT_INTERVALS
 
 bp = Blueprint("market", __name__)
 
@@ -132,9 +133,6 @@ def history():
         return jsonify({"error": str(exc)}), 500
 
 
-BINANCE_SPOT_BASE = "https://api.binance.com/api/v3"
-_ALLOWED_BINANCE_INTERVALS = {"1m","3m","5m","15m","30m","1h","2h","4h","6h","8h","12h","1d","3d","1w"}
-
 
 @bp.get("/api/crypto-market/quote")
 def crypto_market_quote():
@@ -142,19 +140,8 @@ def crypto_market_quote():
     if not symbol.isalnum() or len(symbol) > 20:
         return jsonify({"error": "invalid symbol"}), 400
     try:
-        response = requests.get(
-            BINANCE_SPOT_BASE + "/ticker/24hr",
-            params={"symbol": symbol},
-            timeout=10,
-        )
-        response.raise_for_status()
-        data = response.json()
-        return jsonify({
-            "symbol": symbol,
-            "price": float(data["lastPrice"]),
-            "pct": float(data["priceChangePercent"]),
-            "source": "Binance Spot",
-        })
+        data = spot_quote(symbol)
+        return jsonify({**data, "source": "Binance Spot"})
     except Exception as exc:
         return jsonify({"error": str(exc)}), 502
 
@@ -170,24 +157,12 @@ def crypto_market_klines():
 
     if not symbol.isalnum() or len(symbol) > 20:
         return jsonify({"error": "invalid symbol"}), 400
-    if interval not in _ALLOWED_BINANCE_INTERVALS:
+    if interval not in ALLOWED_SPOT_INTERVALS:
         return jsonify({"error": "unsupported interval"}), 400
     limit = max(2, min(limit, 1000))
 
     try:
-        response = requests.get(
-            BINANCE_SPOT_BASE + "/klines",
-            params={"symbol": symbol, "interval": interval, "limit": limit},
-            timeout=12,
-        )
-        response.raise_for_status()
-        raw = response.json()
-        return jsonify({
-            "symbol": symbol,
-            "interval": interval,
-            "closes": [float(row[4]) for row in raw],
-            "timestamps": [int(row[0]) for row in raw],
-            "source": "Binance Spot",
-        })
+        data = spot_klines(symbol, interval, limit)
+        return jsonify({**data, "source": "Binance Spot"})
     except Exception as exc:
         return jsonify({"error": str(exc)}), 502
