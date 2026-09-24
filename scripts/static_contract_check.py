@@ -38,6 +38,10 @@ supabase_config_js = Path("apps/terminal/public/supabase-config.js").read_text(e
 platform_search_js = Path("apps/terminal/public/platform-search.js").read_text(encoding="utf-8")
 research_save_js = Path("apps/terminal/public/research-save.js").read_text(encoding="utf-8")
 blog_html = Path("apps/terminal/public/blog.html").read_text(encoding="utf-8")
+ai_tutor_js = Path("apps/terminal/public/ai-tutor.js").read_text(encoding="utf-8")
+ai_tutor_css = Path("apps/terminal/public/ai-tutor.css").read_text(encoding="utf-8")
+index_html = Path("apps/terminal/public/index.html").read_text(encoding="utf-8")
+products_html = Path("apps/terminal/public/products.html").read_text(encoding="utf-8")
 
 checks = [
     ("Seasonality uses new contract", "historical_average" in frontend and "seas-line-chart" in frontend),
@@ -72,6 +76,12 @@ checks = [
     ("Research save bridge wired", "wireArticleSave" in research_save_js and "articleSaveBtn" in blog_html and "research-save.js" in blog_html),
     ("Research uses same-origin API", "var API = 'http://localhost:5001'" not in blog_html and "var API = ''" in blog_html),
     ("Search loaded across product shell", all("platform-search.js" in x for x in [html, account_html, university_html, blog_html])),
+    ("AI Tutor assets allowlisted", "ai-tutor.js" in frontend_server and "ai-tutor.css" in frontend_server),
+    ("AI Tutor client is server-key safe", "OPENAI_API_KEY" not in ai_tutor_js and "sk-" not in ai_tutor_js),
+    ("AI Tutor requires cloud access token", "getAccessToken" in platform_cloud_js and "Bearer " in ai_tutor_js),
+    ("AI Tutor has page context and modes", "pageContext" in ai_tutor_js and all(x in ai_tutor_js for x in ["explain","socratic","quiz","research"])),
+    ("AI Tutor UI loaded across platform", all("ai-tutor.js" in x for x in [html, account_html, university_html, blog_html, index_html, products_html])),
+    ("AI Tutor responsive CSS present", "@media(max-width:720px)" in ai_tutor_css),
     ("Account workspace wired", "WavePlatform" in account_js and "watchList" in account_html and "Alert Rules" in account_html),
     ("University progress wired", "advanceCourse" in university_js and "courseGrid" in university_html),
     ("Local-first state has versioned schema", "wave.platform.v1" in platform_js and "version:1" in platform_js),

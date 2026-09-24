@@ -154,7 +154,11 @@ async def run_viewport(browser, name, width, height):
 
     await page.goto(BASE + "/university", wait_until="domcontentloaded", timeout=30000)
     await page.locator("#courseGrid").wait_for(state="visible")
-    await page.wait_for_function("() => typeof WavePlatform === 'object' && typeof WaveCloud === 'object' && typeof WaveSearch === 'object'")
+    await page.wait_for_function("() => typeof WavePlatform === 'object' && typeof WaveCloud === 'object' && typeof WaveSearch === 'object' && typeof WaveTutor === 'object'")
+    await page.locator("#waveTutorLauncher").click()
+    await page.locator("#waveTutorPanel").wait_for(state="visible")
+    assert "university" in (await page.locator("#wtContext").inner_text()).lower()
+    await page.locator("#wtClose").click()
     await page.keyboard.press("Control+K")
     await page.locator("#waveSearchOverlay").wait_for(state="visible")
     await page.locator("#waveSearchInput").fill("Risk Meter")
