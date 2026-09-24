@@ -685,6 +685,7 @@ _PUBLIC_FILES = {
     'blog.html',
     'products.html',
     'i18n.js',
+    'wave-university-theme.css',
 }
 
 @app.route('/')
