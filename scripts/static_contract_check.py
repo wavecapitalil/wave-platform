@@ -18,6 +18,11 @@ checks = [
     ("Hormuz has no legacy agent start API", "/api/hormuz/agent-start" not in html),
     ("Unsafe static catch-all removed", "return send_from_directory(BASE_DIR, filename)" not in api),
     ("Theme is loaded", "wave-university-theme.css" in html),
+    ("Morning Brief uses portable storage", "WAVE_BRIEF_DIR" in api),
+    ("No Daniel-local iCloud path remains", "/Users/danielarad/" not in api),
+    ("No Claude local-session dependency remains", "local-agent-mode-sessions" not in api),
+    ("Brief charts use same-origin API", "var BASE = 'http://localhost:5001'" not in api),
+    ("Standard metadata helper is wired", "from core.meta import build_meta" in Path("services/api/modules/seasonality.py").read_text(encoding="utf-8")),
 ]
 
 failed = 0
