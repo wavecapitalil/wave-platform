@@ -26,15 +26,15 @@ Branch: `migration/terminal-v2`
 - [x] Replace legacy Hormuz core with validated macro energy-risk monitor
 - [x] Add 10Y Gold/Silver Ratio endpoint aligned to validated metals spec
 - [x] Add 10Y seasonality endpoint with historical-average and current-year paths
-- [ ] Restore full Comm Flows module
-- [ ] Restore Confluence module
+- [x] Replace legacy Comm Flows direction with Cross-Asset Flows v1 API
+- [x] Replace legacy 0-100 Confluence with transparent 3-way evidence overlap API
 
 ## Next
 
 1. Redesign the Seasonality UI around the validated two-line view.
 2. Simplify Metals UI to emphasize ratio / mean / percentile / z-distance.
-3. Build the new Cross-Asset Flows module from scratch; do not restore legacy Digital Ad Comm Flows.
-4. Rebuild Confluence around 7D / 30D / 90D institutional + insider + analyst alignment.
+3. Build the Cross-Asset Flows UI on top of the new positioning endpoints.
+4. Rebuild Confluence UI around 7D / 30D / 90D institutional + insider + analyst alignment.
 5. Run security and API smoke tests in a networked runtime.
 6. Add consistent response/freshness metadata contract.
 7. Make Morning Brief storage portable.
