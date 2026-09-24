@@ -27,6 +27,12 @@ api = Path("services/api/api.py").read_text(encoding="utf-8")
 factory = Path("services/api/app_factory.py").read_text(encoding="utf-8")
 frontend_server = Path("services/api/modules/frontend.py").read_text(encoding="utf-8")
 brief_module = Path("services/api/modules/brief.py").read_text(encoding="utf-8")
+account_html = Path("apps/terminal/public/account.html").read_text(encoding="utf-8")
+account_js = Path("apps/terminal/public/account.js").read_text(encoding="utf-8")
+university_html = Path("apps/terminal/public/university.html").read_text(encoding="utf-8")
+university_js = Path("apps/terminal/public/university.js").read_text(encoding="utf-8")
+platform_js = Path("apps/terminal/public/platform.js").read_text(encoding="utf-8")
+platform_css = Path("apps/terminal/public/platform.css").read_text(encoding="utf-8")
 
 checks = [
     ("Seasonality uses new contract", "historical_average" in frontend and "seas-line-chart" in frontend),
@@ -51,6 +57,13 @@ checks = [
     ("Brief charts use same-origin API", "var BASE = 'http://localhost:5001'" not in brief_module),
     ("API entrypoint uses app factory", "from app_factory import create_app" in api and "BLUEPRINTS" in factory),
     ("Standard metadata helper is wired", "from core.meta import build_meta" in Path("services/api/modules/seasonality.py").read_text(encoding="utf-8")),
+    ("Unified platform routes exposed", "serve_account" in frontend_server and "serve_university" in frontend_server),
+    ("Unified platform assets allowlisted", all(x in frontend_server for x in ["account.html","university.html","platform.js","platform.css"])),
+    ("Account workspace wired", "WavePlatform" in account_js and "watchList" in account_html and "Alert Rules" in account_html),
+    ("University progress wired", "advanceCourse" in university_js and "courseGrid" in university_html),
+    ("Local-first state has versioned schema", "wave.platform.v1" in platform_js and "version:1" in platform_js),
+    ("Platform responsive stylesheet present", "@media(max-width:720px)" in platform_css),
+    ("Terminal links unified platform", "university.html" in html and "account.html" in html),
 ]
 
 failed = 0
