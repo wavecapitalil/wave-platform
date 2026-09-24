@@ -27,6 +27,12 @@ Branch: `migration/terminal-v2`
 - [x] Live integration workflow added and passing against external providers
 - [x] Security smoke, static contract checks and live schema checks passing in GitHub Actions
 
+- [x] Browser-level QA on desktop and iPad
+- [x] No uncaught JS errors on rebuilt research pages
+- [x] Responsive overflow checks passing
+- [x] Seasonality visual/methodology artifacts corrected
+- [x] Legacy Metals stress panel removed from stabilized product view
+
 ## In progress
 
 - [x] Replace legacy Hormuz core with validated macro energy-risk monitor
