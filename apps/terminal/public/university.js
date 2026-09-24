@@ -21,5 +21,11 @@
     }).join('');
     document.querySelectorAll('[data-advance]').forEach(function(btn){btn.onclick=function(){WavePlatform.advanceCourse(btn.dataset.advance,20);};});
   }
+  function cloudStatus(status){
+    var el=document.getElementById('uniCloudStatus');if(!el)return;
+    el.textContent=status&&status.signedIn?'Progress cloud sync active · '+(status.email||'authenticated account'):'Progress persistence active locally · Account login enables cloud sync';
+  }
+  window.addEventListener('wave-cloud-auth',function(e){cloudStatus(e.detail);render(WavePlatform.getState());});
   WavePlatform.subscribe(render);render(WavePlatform.getState());
+  cloudStatus(window.WaveCloud?WaveCloud.getStatus():{signedIn:false});
 })();
