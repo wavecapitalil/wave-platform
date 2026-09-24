@@ -1,0 +1,51 @@
+name: Live Integration
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  live-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install API dependencies
+        run: pip install -r services/api/requirements.txt
+
+      - name: Start WAVE API
+        run: |
+          mkdir -p services/api/data/briefs
+          nohup python services/api/api.py > /tmp/wave-api.log 2>&1 &
+          echo $! > /tmp/wave-api.pid
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:5001/api/health >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/wave-api.log
+          exit 1
+
+      - name: Security smoke
+        run: python scripts/security_smoke.py
+
+      - name: Live provider integration + schema checks
+        run: python scripts/live_integration.py
+
+      - name: Upload integration report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-integration-report
+          path: |
+            live_integration_report.json
+            /tmp/wave-api.log
