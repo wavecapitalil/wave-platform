@@ -24,6 +24,10 @@ CASES = [
     ("seasonality", "/api/seasonality?symbol=SPY&years=10"),
     ("gold_silver", "/api/commodities/gold-silver-ratio"),
     ("hormuz", "/api/hormuz/summary"),
+    ("flows_overview", "/api/flows/overview"),
+    ("flows_options", "/api/flows/options?symbol=SPY"),
+    ("flows_short", "/api/flows/short-interest?symbol=AAPL"),
+    ("confluence", "/api/confluence?symbol=AAPL&window=30"),
 ]
 
 failed = 0
