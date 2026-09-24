@@ -181,10 +181,23 @@ def _analyst_signal(symbol, days):
         rows, ups, downs = [], 0, 0
         for dt, row in recent.iterrows():
             action = str(row.get("Action", "")).lower()
-            if action in {"up","init","reit"}:
+            to_grade = str(row.get("ToGrade", ""))
+            grade = to_grade.lower().strip()
+            positive_terms = ("buy", "outperform", "overweight", "positive", "market outperform", "strong buy", "accumulate")
+            negative_terms = ("sell", "underperform", "underweight", "negative", "market underperform", "reduce")
+            neutral_terms = ("hold", "neutral", "equal-weight", "equal weight", "market perform", "sector perform")
+
+            if action == "up":
                 ups += 1
             elif action == "down":
                 downs += 1
+            elif any(term in grade for term in positive_terms):
+                ups += 1
+            elif any(term in grade for term in negative_terms):
+                downs += 1
+            elif any(term in grade for term in neutral_terms):
+                pass
+
             rows.append({
                 "date": str(dt)[:10],
                 "firm": str(row.get("Firm", "")),
