@@ -3,6 +3,14 @@ var _gsrChart = null;
 var _gsrData = null;
 var _gsrPeriod = '10y';
 
+function setGsrPeriod(period, btn){
+  _gsrPeriod = period || '10y';
+  document.querySelectorAll('#gsrTimeTabs .cd-vbtn').forEach(function(b){
+    b.classList.toggle('active', b === btn);
+  });
+  if(_gsrData) renderGsrChart(_gsrData);
+}
+
 async function loadCommodities(){
   var canvas = document.getElementById('gsrChart');
   if(!canvas) return;
