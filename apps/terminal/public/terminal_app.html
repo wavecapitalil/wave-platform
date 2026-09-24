@@ -2726,72 +2726,45 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
     ════════════════════════════════════════════════════════════ -->
     <div class="page" id="page-seasonality">
       <div class="welcome-wrap">
-
         <div class="page-header" style="margin-bottom:16px">
-          <div class="page-header-tag">Macro · Seasonal Patterns</div>
+          <div class="page-header-tag">Macro · Historical Context</div>
           <div class="page-header-title">Seasonality Scanner</div>
-          <div class="page-header-sub" id="seas-updated">Select an asset to load seasonal patterns</div>
+          <div class="page-header-sub" id="seas-updated">10-year average cumulative path vs current year</div>
         </div>
 
-        <!-- Asset buttons -->
         <div class="seas-asset-bar" id="seas-asset-bar">
-          <button class="seas-asset-btn active" onclick="seasLoad('SPY','S&amp;P 500',this)">SPY</button>
+          <button class="seas-asset-btn active" onclick="seasLoad('SPY','S&P 500',this)">SPY</button>
           <button class="seas-asset-btn" onclick="seasLoad('QQQ','Nasdaq 100',this)">QQQ</button>
           <button class="seas-asset-btn" onclick="seasLoad('GLD','Gold',this)">GLD</button>
           <button class="seas-asset-btn" onclick="seasLoad('BTC-USD','Bitcoin',this)">BTC</button>
           <button class="seas-asset-btn" onclick="seasLoad('IWM','Russell 2000',this)">IWM</button>
           <button class="seas-asset-btn" onclick="seasLoad('TLT','20Y Treasuries',this)">TLT</button>
-          <button class="seas-asset-btn" onclick="seasLoad('USO','Oil (USO)',this)">OIL</button>
-          <button class="seas-asset-btn" onclick="seasLoad('EEM','Emerging Mkts',this)">EEM</button>
+          <button class="seas-asset-btn" onclick="seasLoad('USO','Oil',this)">OIL</button>
+          <button class="seas-asset-btn" onclick="seasLoad('EEM','Emerging Markets',this)">EEM</button>
           <button class="seas-asset-btn" onclick="seasLoad('DX-Y.NYB','US Dollar',this)">DXY</button>
           <button class="seas-asset-btn" onclick="seasLoad('^TNX','10Y Yield',this)">10Y</button>
-          <button class="seas-asset-btn" onclick="seasLoadAll()">📊 Compare All</button>
         </div>
 
-        <!-- Year range -->
-        <div class="seas-year-bar" id="seas-year-bar">
-          <button class="seas-year-btn" onclick="seasSetYears(5,this)">5Y</button>
-          <button class="seas-year-btn active" onclick="seasSetYears(10,this)">10Y</button>
-          <button class="seas-year-btn" onclick="seasSetYears(15,this)">15Y</button>
-          <button class="seas-year-btn" onclick="seasSetYears(20,this)">20Y</button>
-        </div>
-
-        <!-- Single-asset view -->
-        <div id="seas-single">
-          <!-- Bar chart + key stats -->
-          <div class="seas-top-row">
-            <div class="seas-chart-panel">
-              <canvas id="seas-bar-chart"></canvas>
-            </div>
-            <div class="seas-stats-panel" id="seas-stats-panel">
-              <div style="color:#334155;font-size:12px;padding:20px 0;text-align:center">—</div>
-            </div>
+        <div class="mini-section" style="margin-top:14px">
+          <div class="ms-header">
+            <div class="ms-title" id="seasChartTitle">SPY · Current year vs 10Y average</div>
+            <div style="font-size:10px;color:#90a8c2">Cumulative return from first available trading day</div>
           </div>
-
-          <!-- 12 month cards -->
-          <div class="seas-month-cards" id="seas-month-cards"></div>
-
-          <!-- Year-by-year heatmap -->
-          <div class="seas-heatmap">
-            <div class="seas-heatmap-title" id="seas-heatmap-title">Year-by-Year Heatmap</div>
-            <div style="overflow-x:auto;padding:8px 0 12px">
-              <table class="seas-ht" id="seas-heatmap-table">
-                <tbody><tr><td style="padding:20px;color:#334155;font-size:11px">Loading...</td></tr></tbody>
-              </table>
-            </div>
+          <div style="position:relative;height:430px;margin-top:14px">
+            <canvas id="seas-line-chart"></canvas>
           </div>
         </div>
 
-        <!-- Compare all view -->
-        <div id="seas-compare" style="display:none">
-          <div style="font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#334155;margin-bottom:12px">
-            All Assets — Avg Monthly Return (10Y)
-          </div>
-          <div class="seas-compare-grid" id="seas-compare-grid">
-            <div style="color:#334155;font-size:12px;padding:40px 0;text-align:center">Loading all assets...</div>
-          </div>
+        <div id="seas-summary" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px">
+          <div class="td-stat"><div class="td-stat-label">Current Year</div><div class="td-stat-val" id="seasCurrentRet">—</div></div>
+          <div class="td-stat"><div class="td-stat-label">10Y Average at Same Point</div><div class="td-stat-val" id="seasAvgRet">—</div></div>
+          <div class="td-stat"><div class="td-stat-label">Gap vs History</div><div class="td-stat-val" id="seasGap">—</div></div>
+          <div class="td-stat"><div class="td-stat-label">Historical Sample</div><div class="td-stat-val" id="seasSample">—</div><div class="td-stat-sub">completed years</div></div>
         </div>
 
+        <div class="callout" style="margin-top:12px">
+          This view is descriptive context only. It compares the current year's cumulative path with the average path of the prior 10 completed years; it is not a standalone trading signal.
+        </div>
       </div>
     </div>
 
@@ -9283,294 +9256,132 @@ function smdRefresh(){ clearTimeout(SMD_TIMER); smdInit(); }
 // smdInit() is called from navigate() when page === 'commodities'
 
 // ══════════════════════════════════════════════════════════════
-// SEASONALITY SCANNER
+// SEASONALITY SCANNER — 10Y average path vs current year
 // ══════════════════════════════════════════════════════════════
 
-var _seasYears   = 10;
-var _seasSymbol  = 'SPY';
-var _seasLabel   = 'S&P 500';
-var _seasBarChart = null;
-var SEAS_MONTHS  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var _seasSymbol = 'SPY';
+var _seasLabel  = 'S&P 500';
+var _seasLineChart = null;
 
-var SEAS_ASSETS = [
-  {sym:'SPY',   label:'S&P 500'},
-  {sym:'QQQ',   label:'Nasdaq 100'},
-  {sym:'GLD',   label:'Gold'},
-  {sym:'BTC-USD',label:'Bitcoin'},
-  {sym:'IWM',   label:'Russell 2000'},
-  {sym:'TLT',   label:'20Y Bonds'},
-  {sym:'USO',   label:'Oil'},
-  {sym:'EEM',   label:'EM'},
-  {sym:'DX-Y.NYB',label:'DXY'},
-  {sym:'^TNX',  label:'10Y Yield'},
-];
-
-function seasColorPct(pct){
-  // -6% → red, 0 → dim, +6% → green
-  var v = Math.max(-6, Math.min(6, pct));
-  if(v > 0){
-    var g = Math.round(100 + v/6*97);
-    return 'rgba(34,'+g+',94,'+(0.15+v/6*0.55)+')';
-  } else if(v < 0){
-    var r = Math.round(180 + Math.abs(v)/6*75);
-    return 'rgba('+r+',68,68,'+(0.15+Math.abs(v)/6*0.55)+')';
-  }
-  return 'rgba(255,255,255,0.04)';
-}
-
-function seasTextColor(pct){
-  if(pct >  1) return '#22c55e';
-  if(pct >  0) return '#86efac';
-  if(pct < -1) return '#ef4444';
-  if(pct <  0) return '#fca5a5';
-  return '#64748b';
-}
-
-function seasSetYears(y, btn){
-  _seasYears = y;
-  document.querySelectorAll('.seas-year-btn').forEach(function(b){ b.classList.remove('active'); });
-  if(btn) btn.classList.add('active');
-  seasLoad(_seasSymbol, _seasLabel, null);
-}
-
-async function seasFetch(sym, years){
-  var r = await fetch(API + '/api/seasonality?symbol=' + encodeURIComponent(sym) + '&years=' + years);
+async function seasFetch(sym){
+  var r = await fetch(API + '/api/seasonality?symbol=' + encodeURIComponent(sym) + '&years=10');
   return r.json();
 }
 
-function seasRenderBar(monthly){
-  if(_seasBarChart){ _seasBarChart.destroy(); _seasBarChart = null; }
-  var canvas = document.getElementById('seas-bar-chart');
-  if(!canvas) return;
-  var avgs   = SEAS_MONTHS.map(function(_,i){ return (monthly[i+1]||{}).avg||0; });
-  var posP   = SEAS_MONTHS.map(function(_,i){ return (monthly[i+1]||{}).positive_pct||0; });
-  var bgColors = avgs.map(function(v){ return v >= 0 ? 'rgba(34,197,94,0.75)' : 'rgba(239,68,68,0.72)'; });
+function seasFmtLabel(key){
+  var parts=(key||'').split('-');
+  if(parts.length!==2) return key;
+  var d=new Date(2000, parseInt(parts[0],10)-1, parseInt(parts[1],10));
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
 
-  _seasBarChart = new Chart(canvas.getContext('2d'), {
-    type: 'bar',
+function seasRender(data){
+  var hist=data.historical_average||[];
+  var cur=data.current_path||[];
+  var canvas=document.getElementById('seas-line-chart');
+  if(!canvas) return;
+
+  var currentByKey={};
+  cur.forEach(function(p){currentByKey[p.date_key]=p.return_pct;});
+
+  var labels=hist.map(function(p){return p.date_key;});
+  var avgVals=hist.map(function(p){return p.return_pct;});
+  var curVals=labels.map(function(k){return currentByKey[k]!==undefined?currentByKey[k]:null;});
+
+  if(_seasLineChart){_seasLineChart.destroy();_seasLineChart=null;}
+  _seasLineChart=new Chart(canvas.getContext('2d'),{
+    type:'line',
     data:{
-      labels: SEAS_MONTHS,
-      datasets:[{
-        label: 'Avg Monthly Return',
-        data: avgs,
-        backgroundColor: bgColors,
-        borderRadius: 4,
-        borderSkipped: false,
-      }]
+      labels:labels.map(seasFmtLabel),
+      datasets:[
+        {
+          label:'10Y Average',
+          data:avgVals,
+          borderColor:'#90a8c2',
+          backgroundColor:'rgba(144,168,194,.08)',
+          borderWidth:2,
+          pointRadius:0,
+          tension:.2
+        },
+        {
+          label:String(data.current_year||'Current Year'),
+          data:curVals,
+          borderColor:'#55aaff',
+          backgroundColor:'rgba(85,170,255,.10)',
+          borderWidth:3,
+          pointRadius:0,
+          tension:.18,
+          spanGaps:false
+        }
+      ]
     },
     options:{
-      responsive: true, maintainAspectRatio: false,
+      responsive:true,
+      maintainAspectRatio:false,
       interaction:{mode:'index',intersect:false},
       plugins:{
-        legend:{display:false},
+        legend:{labels:{color:'#b9d9f4',boxWidth:12}},
         tooltip:{
-          backgroundColor:'rgba(8,8,16,0.92)', borderColor:'rgba(255,255,255,0.08)', borderWidth:1,
-          titleColor:'#94a3b8', bodyColor:'#e2e8f0', padding:10,
-          callbacks:{
-            label: function(ctx){
-              var m = ctx.dataIndex+1;
-              var md = monthly[m]||{};
-              return [
-                'Avg: '+(ctx.parsed.y>0?'+':'')+ctx.parsed.y.toFixed(2)+'%',
-                'Positive: '+md.positive_pct+'% of years',
-                'Best: +'+(md.best||0)+'%  Worst: '+(md.worst||0)+'%',
-                'Sample: '+md.count+' years',
-              ];
-            }
-          }
-        },
+          backgroundColor:'rgba(5,12,21,.96)',
+          borderColor:'#244e73',
+          borderWidth:1,
+          titleColor:'#9bd1ff',
+          bodyColor:'#edf6ff',
+          callbacks:{label:function(ctx){var v=ctx.parsed.y;return ctx.dataset.label+': '+(v>=0?'+':'')+v.toFixed(2)+'%';}}
+        }
       },
       scales:{
-        x:{ticks:{color:'#475569',font:{size:9,weight:'600'},maxRotation:0},grid:{display:false},border:{color:'rgba(255,255,255,0.06)'}},
-        y:{
-          ticks:{color:'#334155',font:{size:8},callback:function(v){return (v>0?'+':'')+v.toFixed(1)+'%';}},
-          grid:{color:'rgba(255,255,255,0.04)'},border:{color:'rgba(255,255,255,0.06)'},
-          afterDataLimits: function(axis){ var m=Math.max(Math.abs(axis.min),Math.abs(axis.max)); axis.min=-m; axis.max=m; }
+        x:{
+          grid:{display:false},
+          ticks:{color:'#597895',maxTicksLimit:12,maxRotation:0},
+          border:{color:'#173752'}
         },
-      },
-      animation:{duration:500},
-    }
-  });
-}
-
-function seasRenderStats(data){
-  var monthly = data.monthly;
-  var avgs = Object.values(monthly).map(function(m){ return {month:m.month,avg:m.avg,pos:m.positive_pct}; });
-  var best  = avgs.slice().sort(function(a,b){return b.avg-a.avg;})[0];
-  var worst = avgs.slice().sort(function(a,b){return a.avg-b.avg;})[0];
-  var nowM  = new Date().getMonth()+1;
-  var curM  = monthly[nowM]||{};
-  var curColor = (curM.avg||0) >= 0 ? '#22c55e' : '#ef4444';
-
-  var html = '<div class="seas-stat-label">Best Month</div>'
-    +'<div class="seas-stat-val" style="color:#22c55e">'+best.month+' +'+best.avg.toFixed(2)+'%</div>'
-    +'<div class="seas-stat-label">Worst Month</div>'
-    +'<div class="seas-stat-val" style="color:#ef4444">'+worst.month+' '+worst.avg.toFixed(2)+'%</div>'
-    +'<div class="seas-stat-label">Current Month ('+curM.month+')</div>'
-    +'<div class="seas-stat-val" style="color:'+curColor+'">'+(curM.avg>=0?'+':'')+curM.avg.toFixed(2)+'%</div>'
-    +'<div style="font-size:9.5px;color:#475569">'+curM.positive_pct+'% positive rate · '+curM.count+' years</div>';
-
-  // Top 3 + Bottom 3 table
-  var sorted = avgs.slice().sort(function(a,b){return b.avg-a.avg;});
-  html += '<div style="margin-top:14px;border-top:1px solid var(--border);padding-top:12px">';
-  html += '<div class="seas-stat-label" style="margin-bottom:8px">Monthly Ranking</div>';
-  sorted.forEach(function(m,i){
-    var c = m.avg>=0?'#22c55e':'#ef4444';
-    html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">'
-      +'<span style="font-size:10px;color:#475569">'+(i+1)+'. '+m.month+'</span>'
-      +'<span style="font-size:10px;font-weight:700;color:'+c+'">'+(m.avg>=0?'+':'')+m.avg.toFixed(2)+'%</span>'
-      +'</div>';
-  });
-  html += '</div>';
-
-  document.getElementById('seas-stats-panel').innerHTML = html;
-}
-
-function seasRenderMonthCards(monthly){
-  var html = '';
-  SEAS_MONTHS.forEach(function(mn, i){
-    var m = monthly[i+1]||{avg:0,positive_pct:0};
-    var c = seasTextColor(m.avg);
-    var barW = Math.min(100, Math.abs(m.avg)/8*100);
-    var barC = m.avg>=0?'rgba(34,197,94,0.7)':'rgba(239,68,68,0.7)';
-    html += '<div class="seas-month-card">'
-      +'<div class="seas-mc-name">'+mn+'</div>'
-      +'<div class="seas-mc-avg" style="color:'+c+'">'+(m.avg>0?'+':'')+m.avg.toFixed(2)+'%</div>'
-      +'<div class="seas-mc-pos">'+m.positive_pct+'% positive</div>'
-      +'<div class="seas-mc-bar" style="background:rgba(255,255,255,0.05)">'
-        +'<div style="height:100%;width:'+barW+'%;border-radius:1px;background:'+barC+'"></div>'
-      +'</div>'
-      +'</div>';
-  });
-  document.getElementById('seas-month-cards').innerHTML = html;
-}
-
-function seasRenderHeatmap(data){
-  var monthly = data.monthly;
-  var years   = data.all_years || [];
-  var sym     = data.symbol;
-  document.getElementById('seas-heatmap-title').textContent = sym + ' — Year-by-Year Monthly Returns';
-
-  var thead = '<thead><tr><th>Year</th>';
-  SEAS_MONTHS.forEach(function(m){ thead += '<th>'+m+'</th>'; });
-  thead += '<th>YTD</th></tr></thead>';
-
-  var rows = '';
-  years.slice().reverse().forEach(function(yr){
-    var ytd = 0, ytdCount = 0;
-    rows += '<tr><td>'+yr+'</td>';
-    for(var m=1;m<=12;m++){
-      var md = (monthly[m]||{}).years||{};
-      var val = md[yr];
-      if(val === undefined){
-        rows += '<td style="color:#1e293b">—</td>';
-      } else {
-        var bg = seasColorPct(val);
-        var tc = Math.abs(val)>2.5?'#fff':'#e2e8f0';
-        rows += '<td style="background:'+bg+';color:'+tc+'">'+(val>0?'+':'')+val.toFixed(1)+'%</td>';
-        ytd += val; ytdCount++;
+        y:{
+          grid:{color:'rgba(23,55,82,.45)'},
+          ticks:{color:'#597895',callback:function(v){return (v>=0?'+':'')+v+'%';}},
+          border:{color:'#173752'}
+        }
       }
     }
-    if(ytdCount>0){
-      var ytdC = seasTextColor(ytd);
-      rows += '<td style="color:'+ytdC+';font-weight:800">'+(ytd>0?'+':'')+ytd.toFixed(1)+'%</td>';
-    } else {
-      rows += '<td>—</td>';
-    }
-    rows += '</tr>';
   });
 
-  // Average row
-  rows += '<tr style="border-top:1px solid var(--border)">'
-    +'<td style="color:#94a3b8;font-weight:700;font-size:8px">AVG</td>';
-  var totalAvg = 0;
-  for(var m=1;m<=12;m++){
-    var md = monthly[m]||{};
-    var bg = seasColorPct(md.avg||0);
-    var tc = Math.abs(md.avg||0)>2.5?'#fff':'#e2e8f0';
-    rows += '<td style="background:'+bg+';color:'+tc+';font-weight:700">'+(md.avg>0?'+':'')+((md.avg)||0).toFixed(1)+'%</td>';
-    totalAvg += (md.avg||0);
-  }
-  rows += '<td style="color:#94a3b8;font-weight:700">'+(totalAvg>0?'+':'')+totalAvg.toFixed(1)+'%</td></tr>';
+  var latestCur=null,latestKey=null;
+  for(var i=cur.length-1;i>=0;i--){if(cur[i]&&cur[i].return_pct!=null){latestCur=cur[i].return_pct;latestKey=cur[i].date_key;break;}}
+  var avgMap={}; hist.forEach(function(p){avgMap[p.date_key]=p.return_pct;});
+  var latestAvg=latestKey&&avgMap[latestKey]!=null?avgMap[latestKey]:null;
+  var gap=(latestCur!=null&&latestAvg!=null)?latestCur-latestAvg:null;
 
-  document.getElementById('seas-heatmap-table').innerHTML = thead+'<tbody>'+rows+'</tbody>';
+  function put(id,val){
+    var el=document.getElementById(id); if(!el)return;
+    el.textContent=val==null?'—':(val>=0?'+':'')+Number(val).toFixed(2)+'%';
+    if(val!=null) el.style.color=val>=0?'#48d18a':'#ff6f82';
+  }
+  put('seasCurrentRet',latestCur);
+  put('seasAvgRet',latestAvg);
+  put('seasGap',gap);
+  var sm=document.getElementById('seasSample');
+  if(sm) sm.textContent=(data.years_used||[]).length;
 }
 
-async function seasLoad(sym, label, btn){
-  _seasSymbol = sym;
-  _seasLabel  = label || sym;
-
-  // Show single view, hide compare
-  document.getElementById('seas-single').style.display = '';
-  document.getElementById('seas-compare').style.display = 'none';
-
+async function seasLoad(sym,label,btn){
+  _seasSymbol=sym; _seasLabel=label||sym;
   if(btn){
-    document.querySelectorAll('.seas-asset-btn').forEach(function(b){ b.classList.remove('active'); });
+    document.querySelectorAll('.seas-asset-btn').forEach(function(b){b.classList.remove('active');});
     btn.classList.add('active');
   }
-
-  var upd = document.getElementById('seas-updated');
-  if(upd) upd.textContent = 'Loading '+sym+' seasonality...';
-
+  var upd=document.getElementById('seas-updated');
+  var title=document.getElementById('seasChartTitle');
+  if(upd) upd.textContent='Loading '+_seasLabel+'...';
+  if(title) title.textContent=_seasSymbol+' · Current year vs 10Y average';
   try{
-    var data = await seasFetch(sym, _seasYears);
+    var data=await seasFetch(sym);
     if(data.error) throw new Error(data.error);
-    seasRenderBar(data.monthly);
-    seasRenderStats(data);
-    seasRenderMonthCards(data.monthly);
-    seasRenderHeatmap(data);
-    if(upd) upd.textContent = _seasLabel+' · '+_seasYears+'Y seasonality · Updated '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    seasRender(data);
+    if(upd) upd.textContent=_seasLabel+' · 10Y historical average vs '+data.current_year+' · Updated '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
   }catch(e){
     console.error('seasLoad:',e);
-    if(upd) upd.textContent = 'Error: '+e.message;
+    if(upd) upd.textContent='Error: '+e.message;
   }
-}
-
-async function seasLoadAll(){
-  document.getElementById('seas-single').style.display = 'none';
-  document.getElementById('seas-compare').style.display = '';
-  document.querySelectorAll('.seas-asset-btn').forEach(function(b){ b.classList.remove('active'); });
-  // highlight the Compare All button
-  var allBtn = Array.from(document.querySelectorAll('.seas-asset-btn')).find(function(b){ return b.textContent.includes('Compare'); });
-  if(allBtn) allBtn.classList.add('active');
-
-  var grid = document.getElementById('seas-compare-grid');
-  grid.innerHTML = '<div style="color:#334155;font-size:12px;padding:40px 0;text-align:center;grid-column:1/-1">Loading 10 assets...</div>';
-
-  var results = await Promise.allSettled(SEAS_ASSETS.map(function(a){ return seasFetch(a.sym, 10).then(function(d){ return {asset:a,data:d}; }); }));
-
-  var html = '';
-  results.forEach(function(res){
-    if(res.status !== 'fulfilled') return;
-    var a = res.value.asset, monthly = res.value.data.monthly;
-    if(!monthly) return;
-
-    var max = 0;
-    SEAS_MONTHS.forEach(function(_,i){ max = Math.max(max, Math.abs((monthly[i+1]||{}).avg||0)); });
-    if(max < 0.01) max = 5;
-
-    html += '<div class="seas-compare-card">'
-      +'<div class="seas-compare-label">'+a.label+'</div>';
-
-    SEAS_MONTHS.forEach(function(mn, i){
-      var m   = monthly[i+1]||{avg:0};
-      var avg = m.avg||0;
-      var c   = seasTextColor(avg);
-      var barW = Math.abs(avg)/max*100;
-      var barC = avg>=0?'rgba(34,197,94,0.7)':'rgba(239,68,68,0.7)';
-      // positive bar goes right from center, negative goes left
-      var leftPct = avg>=0?50:50-barW/2;
-      html += '<div class="seas-mini-bar-row">'
-        +'<div class="seas-mini-month">'+mn+'</div>'
-        +'<div class="seas-mini-track">'
-          +'<div class="seas-mini-fill" style="width:'+barW/2+'%;background:'+barC+';left:'+(avg>=0?'50%':50-barW/2+'%')+'"></div>'
-        +'</div>'
-        +'<div class="seas-mini-val" style="color:'+c+'">'+(avg>0?'+':'')+avg.toFixed(1)+'%</div>'
-        +'</div>';
-    });
-    html += '</div>';
-  });
-  grid.innerHTML = html || '<div style="color:#ef4444">Failed to load</div>';
 }
 
 // ══════════════════════════════════════════════════════════════
