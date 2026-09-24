@@ -1,13 +1,14 @@
-# WAVE API — stabilization baseline
+# WAVE API
 
-This is the secured working copy of the current Flask backend.
+The WAVE Terminal backend is a modular Flask application.
 
-## Changes from legacy v1
+## Entry points
 
-- Arbitrary catch-all file serving has been removed.
-- Only explicit public frontend files under apps/terminal/public are served.
-- CORS is limited to configured origins.
-- The original v1 snapshot remains unchanged under legacy/terminal-v1.
+- `api.py` — minimal process entrypoint
+- `app_factory.py` — Flask application factory and blueprint registry
+- `modules/` — route/domain modules
+- `services/` — shared external-provider adapters
+- `core/` — cross-cutting helpers
 
 ## Local run
 
@@ -18,14 +19,38 @@ pip install -r services/api/requirements.txt
 python services/api/api.py
 ```
 
-Open http://localhost:5001/
+Open `http://localhost:5001/`.
 
-## Next stabilization work
+## Configuration
 
-- reconcile missing Hormuz endpoints
-- reconcile Commodities endpoints
-- reconcile Seasonality
-- restore Comm Flows
-- restore Confluence
-- add full route smoke tests
-- move Morning Brief away from machine-local filesystem dependencies
+See `.env.example`.
+
+Important runtime settings:
+
+- `WAVE_ALLOWED_ORIGINS`
+- `WAVE_BRIEF_DIR`
+- `WAVE_DATA_DIR`
+- `WAVE_START_BACKGROUND`
+- optional Anthropic/OpenAI credentials/models
+
+Secrets must come from the deployment environment or its secret manager. Do not commit runtime keys.
+
+## Safety / serving model
+
+Frontend files are served only from an explicit allowlist in `modules/frontend.py`.
+Arbitrary project files, databases, environment files and Python source are not publicly served.
+
+## Test gates
+
+The migration branch is guarded by:
+
+- Python syntax check
+- JavaScript syntax check
+- static frontend/API contract check
+- Flask route contract check
+- security smoke
+- core API smoke
+- live provider/schema integration
+- desktop + iPad browser QA
+
+See `docs/TERMINAL_ARCHITECTURE.md` for the current module map.
