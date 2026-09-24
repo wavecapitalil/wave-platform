@@ -1,12 +1,20 @@
 from datetime import datetime
 from flask import Blueprint, jsonify, request
 import yfinance as yf
+import pandas as pd
 from core.meta import build_meta
 
 bp = Blueprint("seasonality", __name__)
 
 
 def _year_series(symbol: str, year: int):
+    """Return a calendar-aligned cumulative-return path for one year.
+
+    Daily calendar alignment is intentional: the product compares month-by-month
+    seasonal paths. Weekends and market holidays carry the last available close,
+    while days before the first trading session are 0%. Feb 29 is omitted so
+    every completed year has the same 365 month-day keys.
+    """
     start = f"{year}-01-01"
     end = f"{year + 1}-01-10"
     df = yf.download(symbol, start=start, end=end, auto_adjust=True, progress=False)
@@ -16,15 +24,25 @@ def _year_series(symbol: str, year: int):
     if hasattr(close, "columns"):
         close = close.iloc[:, 0]
     close = close.dropna()
+    close = close[close.index.year == year]
     if close.empty:
         return []
 
-    base = float(close.iloc[0])
+    cumulative = (close / float(close.iloc[0]) - 1.0) * 100.0
+    last_day = close.index[-1].normalize()
+
+    calendar = cumulative.reindex(
+        pd.date_range(start=f"{year}-01-01", end=last_day, freq="D")
+    )
+    calendar = calendar.ffill().fillna(0.0)
+
     out = []
-    for dt, value in close.items():
+    for dt, value in calendar.items():
+        if dt.strftime("%m-%d") == "02-29":
+            continue
         out.append({
             "date_key": dt.strftime("%m-%d"),
-            "return_pct": (float(value) / base - 1.0) * 100.0,
+            "return_pct": float(value),
         })
     return out
 
@@ -52,31 +70,30 @@ def seasonality():
     if not historical:
         return jsonify({"error": "insufficient historical data", "symbol": symbol}), 404
 
-    # Align by trading-session ordinal rather than calendar date.
-    # This avoids weekend/holiday discontinuities when averaging different years.
-    reference = historical[-1]
-    max_len = max(len(p) for p in historical)
+    # Align completed years by month-day after calendar forward-fill.
+    historical_maps = [
+        {point["date_key"]: point["return_pct"] for point in path}
+        for path in historical
+    ]
+    keys = sorted(set().union(*[set(m.keys()) for m in historical_maps]))
     avg = []
-    for idx in range(max_len):
-        vals = [p[idx]["return_pct"] for p in historical if idx < len(p)]
-        if not vals:
+    for key in keys:
+        vals = [m[key] for m in historical_maps if key in m]
+        if len(vals) < max(3, len(historical_maps) - 1):
             continue
-        label = reference[idx]["date_key"] if idx < len(reference) else f"T{idx+1}"
         avg.append({
-            "date_key": label,
+            "date_key": key,
             "return_pct": round(sum(vals) / len(vals), 4),
             "n": len(vals),
-            "session_index": idx + 1,
         })
 
-    current_points = []
-    for idx, point in enumerate(current):
-        label = reference[idx]["date_key"] if idx < len(reference) else point["date_key"]
-        current_points.append({
-            "date_key": label,
+    current_points = [
+        {
+            "date_key": point["date_key"],
             "return_pct": round(point["return_pct"], 4),
-            "session_index": idx + 1,
-        })
+        }
+        for point in current
+    ]
 
     return jsonify({
         "symbol": symbol,
@@ -88,6 +105,6 @@ def seasonality():
         "meta": build_meta(
             "Yahoo Finance via yfinance",
             freshness="historical_daily",
-            method="Adjusted-close cumulative return from first available trading day; prior completed years aligned by trading-session ordinal and averaged.",
+            method="Adjusted-close cumulative return from first available trading day; each year is aligned by calendar month-day with weekends/holidays forward-filled, then prior completed years are averaged.",
         ),
     })
