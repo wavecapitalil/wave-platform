@@ -19,6 +19,8 @@ REQUIRED = {
     "/api/intraday",
     "/api/vix-history",
     "/api/history",
+    "/api/crypto-market/quote",
+    "/api/crypto-market/klines",
     "/api/sector-detail",
     "/api/fundamentals",
     "/api/stock-info",
