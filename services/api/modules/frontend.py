@@ -23,6 +23,7 @@ PUBLIC_FILES = {
     "wave-university-theme.css",
     "terminal.css",
     "terminal.js",
+    "terminal-flows.js",
 }
 
 
