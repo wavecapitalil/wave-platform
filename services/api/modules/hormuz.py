@@ -60,6 +60,10 @@ def _fetch_news(limit=20):
         elif any(term in text for term in MED_TERMS):
             severity = "MEDIUM"
         out.append({"title": title, "link": link, "published": ts, "severity": severity})
+
+    # Google News RSS can be relevance-ordered. The monitor needs chronological
+    # ordering so the "latest development" and visible feed are actually current.
+    out.sort(key=lambda x: x.get("published") or "", reverse=True)
     return out
 
 
