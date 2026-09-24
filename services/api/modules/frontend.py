@@ -21,6 +21,8 @@ PUBLIC_FILES = {
     "university.js",
     "platform.css",
     "platform.js",
+    "platform-cloud.js",
+    "supabase-config.js",
     "terminal.html",
     "index.html",
     "blog.html",
