@@ -59,8 +59,34 @@
     renderWatchlist(state);renderSaved(state);renderProgress(state);renderAlerts(state);
   }
   document.getElementById('watchForm').onsubmit=function(e){e.preventDefault();if(WavePlatform.addWatchlist(document.getElementById('watchSymbol').value))document.getElementById('watchSymbol').value='';};
-  document.getElementById('profileForm').onsubmit=function(e){e.preventDefault();WavePlatform.updateProfile({displayName:document.getElementById('displayName').value.trim()||'WAVE Member',workspace:document.getElementById('workspaceName').value.trim()||'Personal Research'});WavePlatform.toast('Profile saved locally');};
+  document.getElementById('profileForm').onsubmit=function(e){e.preventDefault();WavePlatform.updateProfile({displayName:document.getElementById('displayName').value.trim()||'WAVE Member',workspace:document.getElementById('workspaceName').value.trim()||'Personal Research'});WavePlatform.toast(WavePlatform.getState().profile.authMode==='supabase'?'Profile queued for cloud sync':'Profile saved locally');};
   document.getElementById('alertForm').onsubmit=function(e){e.preventDefault();if(WavePlatform.addAlert(document.getElementById('alertSymbol').value,document.getElementById('alertCondition').value)){document.getElementById('alertSymbol').value='';document.getElementById('alertCondition').value='';}};
-  document.getElementById('resetPreview').onclick=function(){if(confirm('Reset local WAVE preview data in this browser?'))WavePlatform.resetPreview();};
+  function renderCloudStatus(status){
+    status=status||{ready:true,signedIn:false,email:''};
+    var signedIn=!!status.signedIn;
+    document.getElementById('authForm').style.display=signedIn?'none':'flex';
+    document.getElementById('authSignedIn').style.display=signedIn?'block':'none';
+    document.getElementById('authEmailLabel').textContent=signedIn?(status.email||'Signed in'):'Signed in';
+    document.getElementById('authHint').textContent=signedIn?'Cloud sync is active for this workspace.':'Sign in with a passwordless email link to sync across devices.';
+    var pill=document.getElementById('profileMode');
+    pill.textContent=signedIn?'CLOUD SYNCED':'LOCAL PREVIEW';
+    pill.className='wp-pill '+(signedIn?'live':'preview');
+    document.getElementById('cloudStatusText').textContent=signedIn?'Cloud synced workspace · Supabase RLS protected':'Local preview workspace · sign in to sync across devices';
+  }
+  document.getElementById('authForm').onsubmit=async function(e){
+    e.preventDefault();
+    var email=document.getElementById('authEmail').value.trim();
+    var btn=document.getElementById('authSubmit');
+    if(!window.WaveCloud){WavePlatform.toast('Cloud auth unavailable');return;}
+    btn.disabled=true;btn.textContent='Sending…';
+    try{await WaveCloud.signInWithEmail(email);WavePlatform.toast('Check your email for the secure sign-in link');}
+    catch(err){WavePlatform.toast(err&&err.message?err.message:'Could not send sign-in link');}
+    finally{btn.disabled=false;btn.textContent='Email sign-in link';}
+  };
+  document.getElementById('authSignOut').onclick=async function(){try{await WaveCloud.signOut();WavePlatform.toast('Signed out');}catch(e){WavePlatform.toast('Sign out failed');}};
+  document.getElementById('syncNow').onclick=async function(){try{await WaveCloud.syncNow();WavePlatform.toast('Cloud sync complete');}catch(e){WavePlatform.toast('Cloud sync failed');}};
+  window.addEventListener('wave-cloud-auth',function(e){renderCloudStatus(e.detail);render(WavePlatform.getState());});
+  document.getElementById('resetPreview').onclick=function(){if(confirm('Reset this WAVE workspace? If signed in, the reset will sync to your cloud account.'))WavePlatform.resetPreview();};
   WavePlatform.subscribe(render);render(WavePlatform.getState());
+  renderCloudStatus(window.WaveCloud?WaveCloud.getStatus():{ready:true,signedIn:false});
 })();
