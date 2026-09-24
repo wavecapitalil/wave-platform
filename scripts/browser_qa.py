@@ -154,7 +154,12 @@ async def run_viewport(browser, name, width, height):
 
     await page.goto(BASE + "/university", wait_until="domcontentloaded", timeout=30000)
     await page.locator("#courseGrid").wait_for(state="visible")
-    await page.wait_for_function("() => typeof WavePlatform === 'object' && typeof WaveCloud === 'object'")
+    await page.wait_for_function("() => typeof WavePlatform === 'object' && typeof WaveCloud === 'object' && typeof WaveSearch === 'object'")
+    await page.keyboard.press("Control+K")
+    await page.locator("#waveSearchOverlay").wait_for(state="visible")
+    await page.locator("#waveSearchInput").fill("Risk Meter")
+    assert "Risk Meter" in await page.locator("#waveSearchResults").inner_text()
+    await page.keyboard.press("Escape")
     before = await page.evaluate("() => JSON.parse(localStorage.getItem('wave.platform.v1')).progress.macro_regimes")
     await page.locator("[data-advance='macro_regimes']").click()
     after = await page.evaluate("() => JSON.parse(localStorage.getItem('wave.platform.v1')).progress.macro_regimes")
@@ -162,6 +167,12 @@ async def run_viewport(browser, name, width, height):
     await assert_no_horizontal_overflow(page, f"{name}/university")
     await page.screenshot(path=str(OUT/f"{name}-university.png"), full_page=True)
     report["platform_pages"]=["account","university"]
+
+    await page.goto(BASE + "/terminal_app.html#page=risk", wait_until="domcontentloaded", timeout=60000)
+    await page.wait_for_function("typeof navigate === 'function'")
+    await page.locator("#page-risk").wait_for(state="visible", timeout=15000)
+    assert await page.locator("#page-risk").evaluate("(el) => el.classList.contains('active')")
+    report["deep_link"]="risk"
 
     report["page_errors"]=page_errors
     # Only fail on actual uncaught JS errors, not console warnings.
