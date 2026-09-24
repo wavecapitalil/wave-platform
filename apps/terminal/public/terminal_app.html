@@ -1668,107 +1668,47 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
 
     <!-- ─── HORMUZ OIL DESK PAGE ─── -->
     <div class="page" id="page-hormuz">
-      <div style="max-width:1100px;margin:0 auto">
-
-        <!-- Header -->
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
-          <div>
-            <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#60a5fa;margin-bottom:6px">Geopolitical Risk · Oil Markets</div>
-            <div style="font-size:26px;font-weight:800;color:#fff">🚢 Hormuz Oil Desk</div>
-            <div style="font-size:12px;color:#475569;margin-top:4px">Monitors the Strait of Hormuz 24/7 and shows which stocks move when it does</div>
-          </div>
-          <button onclick="hormuzStartAgent()" style="font-size:11px;font-weight:700;padding:8px 18px;border-radius:10px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:#f59e0b;cursor:pointer;white-space:nowrap">▶ Start Monitoring Agent</button>
+      <div class="welcome-wrap" style="max-width:1080px">
+        <div class="page-header" style="margin-bottom:16px">
+          <div class="page-header-tag">Macro · Energy Supply Risk</div>
+          <div class="page-header-title">Hormuz Energy Risk Monitor</div>
+          <div class="page-header-sub">Recent Strait of Hormuz developments combined with Brent and WTI price confirmation</div>
         </div>
 
-        <!-- HERO THREAT CARD -->
-        <div id="hormuzHero" style="border-radius:16px;padding:24px 28px;margin-bottom:20px;background:var(--surface2);border:1px solid var(--border)">
-          <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
-            <!-- Threat level -->
-            <div id="hormuzThreatBlock" style="text-align:center;min-width:110px">
-              <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:#475569;margin-bottom:6px">THREAT LEVEL</div>
-              <div id="hormuzThreatBig" style="font-size:32px;font-weight:900;letter-spacing:3px;color:#334155">—</div>
-              <div id="hormuzThreatDot" style="width:10px;height:10px;border-radius:50%;background:#334155;margin:6px auto 0"></div>
-            </div>
-            <div style="width:1px;height:60px;background:var(--border)"></div>
-            <!-- Oil prices -->
-            <div>
-              <div style="font-size:10px;font-weight:700;letter-spacing:1px;color:#475569;margin-bottom:8px">CRUDE OIL TODAY</div>
-              <div style="display:flex;gap:24px">
-                <div>
-                  <div style="font-size:10px;color:#64748b">Brent (Global)</div>
-                  <div id="hormuzBrent" style="font-size:20px;font-weight:800;color:#f59e0b">—</div>
-                </div>
-                <div>
-                  <div style="font-size:10px;color:#64748b">WTI (US)</div>
-                  <div id="hormuzWti" style="font-size:20px;font-weight:800;color:#60a5fa">—</div>
-                </div>
+        <div class="hero-card" id="hormuzHero" style="padding:20px;margin-bottom:14px">
+          <div style="display:grid;grid-template-columns:180px 1fr 1fr 1.4fr 100px;gap:12px;align-items:center">
+            <div id="hormuzThreatBlock" style="text-align:center">
+              <div style="font-size:9px;letter-spacing:1.4px;color:#90a8c2">RISK STATE</div>
+              <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:5px">
+                <span id="hormuzThreatDot" style="width:10px;height:10px;border-radius:50%;background:#48d18a"></span>
+                <span id="hormuzThreatBig" style="font-size:28px;font-weight:950;color:#48d18a">—</span>
               </div>
             </div>
-            <div style="width:1px;height:60px;background:var(--border)"></div>
-            <!-- What happened -->
-            <div style="flex:1;min-width:200px">
-              <div style="font-size:10px;font-weight:700;letter-spacing:1px;color:#475569;margin-bottom:6px">LATEST TRIGGER</div>
-              <div id="hormuzLatestTitle" style="font-size:13px;font-weight:600;color:#e2e8f0;line-height:1.4">—</div>
-              <div id="hormuzLatestSummary" style="font-size:11px;color:#64748b;margin-top:5px;line-height:1.5">—</div>
+            <div class="td-stat"><div class="td-stat-label">Brent</div><div class="td-stat-val" id="hormuzBrent">—</div></div>
+            <div class="td-stat"><div class="td-stat-label">WTI</div><div class="td-stat-val" id="hormuzWti">—</div></div>
+            <div>
+              <div style="font-size:9px;color:#90a8c2;letter-spacing:1px">LATEST DEVELOPMENT</div>
+              <div id="hormuzLatestTitle" style="font-size:13px;font-weight:800;color:#edf6ff;margin-top:5px;line-height:1.45">—</div>
+              <div id="hormuzLatestSummary" style="font-size:10px;color:#90a8c2;margin-top:5px;line-height:1.5"></div>
             </div>
-            <div style="text-align:center;min-width:70px">
-              <div style="font-size:10px;color:#475569;font-weight:700;letter-spacing:1px">EVENTS LOGGED</div>
-              <div id="hormuzEventCount" style="font-size:28px;font-weight:900;color:#e2e8f0">—</div>
-            </div>
+            <div style="text-align:center"><div style="font-size:9px;color:#90a8c2">EVENTS</div><div id="hormuzEventCount" style="font-size:28px;font-weight:900">—</div></div>
           </div>
         </div>
 
-        <!-- HOW TO READ THIS -->
-        <div style="background:rgba(96,165,250,0.05);border:1px solid rgba(96,165,250,0.12);border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:11px;color:#64748b;line-height:1.7">
-          <b style="color:#93c5fd">How to read this dashboard:</b>
-          The Strait of Hormuz is a critical energy chokepoint. This monitor combines recent Hormuz-related developments with Brent and WTI price action to assess whether supply-chain risk is escalating.
-          It is designed as a <b style="color:#e2e8f0">macro energy-risk monitor</b>, not a stock-ranking tool.
-          🔴 RED = material incident with market confirmation · 🟡 YELLOW = elevated risk or notable oil move · 🟢 GREEN = no major supply-shock confirmation.
+        <div class="callout" style="margin-bottom:14px">
+          This is a macro supply-chain risk monitor. It does not rank stocks or generate trade recommendations. Risk state combines recent Hormuz-specific developments with Brent/WTI market confirmation.
         </div>
 
-        <!-- Tabs -->
-        <div style="display:flex;gap:8px;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:12px">
-          <button class="cd-vbtn active" id="hTab-watchlist" onclick="hormuzSetTab('watchlist',this)">📈 Stocks to Watch</button>
-          <button class="cd-vbtn" id="hTab-events" onclick="hormuzSetTab('events',this)">📋 What Happened</button>
-          <button class="cd-vbtn" id="hTab-daily" onclick="hormuzSetTab('daily',this)">☀️ Daily Reports</button>
-          <button class="cd-vbtn" id="hTab-log" onclick="hormuzSetTab('log',this)" style="margin-left:auto;opacity:0.5;font-size:9px">⚙ System</button>
-        </div>
-
-        <!-- WATCHLIST PANEL -->
-        <div id="hPanel-watchlist">
-          <div style="font-size:10px;color:#475569;margin-bottom:14px" id="hormuzWatchlistMeta"></div>
-          <div id="hormuzWatchlist">
-            <div style="color:#334155;font-size:13px;padding:30px 0;text-align:center">Loading… click <b>▶ Start Monitoring Agent</b> above if this is your first visit.</div>
+        <div class="mini-section">
+          <div class="ms-header"><div class="ms-title">Supply-Risk Developments</div><div style="font-size:10px;color:#90a8c2">Latest monitored headlines</div></div>
+          <div id="hPanel-events" style="margin-top:12px">
+            <button id="hTab-events" style="display:none"></button>
+            <div id="hormuzEventList"><div style="padding:24px;text-align:center;color:#90a8c2">Loading…</div></div>
           </div>
         </div>
-
-        <!-- EVENTS PANEL -->
-        <div id="hPanel-events" style="display:none">
-          <div style="font-size:11px;color:#475569;margin-bottom:14px">Every time a Hormuz trigger fires, one entry is logged here. Click any event to load its stock rankings.</div>
-          <div id="hormuzEventList"></div>
-        </div>
-
-        <!-- DAILY PANEL -->
-        <div id="hPanel-daily" style="display:none">
-          <div style="font-size:11px;color:#475569;margin-bottom:14px">Every morning at 07:00 the agent writes a "State of the Strait" summary even if nothing triggered overnight.</div>
-          <div id="hormuzDailyList"></div>
-        </div>
-
-        <!-- SYSTEM PANEL -->
-        <div id="hPanel-log" style="display:none">
-          <div class="cd-section">
-            <div class="cd-section-head">
-              <span class="cd-section-title">Agent Activity Log</span>
-              <span style="font-size:9px;color:#334155">Last 100 lines</span>
-            </div>
-            <div id="hormuzAgentLog" style="font-family:monospace;font-size:10px;color:#475569;line-height:1.7;max-height:400px;overflow-y:auto;white-space:pre-wrap"></div>
-          </div>
-        </div>
-
       </div>
     </div>
 
-    <!-- ─── EV INDUSTRY PAGE ─── -->
     <div class="page" id="page-ev">
       <div class="welcome-wrap" style="max-width:960px">
         <div class="page-header" style="margin-bottom:24px">
@@ -6624,236 +6564,8 @@ async function loadHormuz(){
 }
 
 function _hormuzShowEmpty(){
-  var wl = document.getElementById('hormuzWatchlist');
-  if(wl) wl.innerHTML = '<div style="text-align:center;padding:40px 0;color:#334155">'
-    +'<div style="font-size:32px;margin-bottom:12px">🚢</div>'
-    +'<div style="font-size:14px;font-weight:700;color:#475569;margin-bottom:8px">No data yet</div>'
-    +'<div style="font-size:12px;color:#334155">Click <b style="color:#f59e0b">▶ Start Monitoring Agent</b> above.<br>The first scan runs immediately and logs results here.</div>'
-    +'</div>';
-}
-
-function _renderHormuzWatchlist(){
-  var el  = document.getElementById('hormuzWatchlist');
-  var meta = document.getElementById('hormuzWatchlistMeta');
-  if(!el) return;
-  var rows = _hormuzData.watchlist || [];
-  if(!rows.length){ _hormuzShowEmpty(); return; }
-
-  var thr = rows[0] && rows[0].threat_level;
-  var tc  = _THREAT_COLORS[thr] || _THREAT_COLORS.GREEN;
-
-  if(meta && rows[0]){
-    var bc = rows[0].brent_pct||0;
-    meta.innerHTML = 'Showing stocks ranked for: <b style="color:#e2e8f0">'+rows[0].event_title+'</b>'
-      +' &nbsp;·&nbsp; Brent was <b style="color:'+(bc>=0?'#22c55e':'#ef4444')+'">'+(bc>=0?'+':'')+bc.toFixed(1)+'%</b> at time of trigger';
-  }
-
-  // Max beta for bar scaling
-  var maxBeta = Math.max.apply(null, rows.map(function(r){ return Math.abs(r.oil_beta||0); }));
-
-  var html = '<div style="display:flex;flex-direction:column;gap:8px">';
-  rows.forEach(function(r){
-    var sc   = _SECTOR_COLORS[r.sector] || '#64748b';
-    var beta = r.oil_beta || 0;
-    var barW = maxBeta > 0 ? Math.round(Math.abs(beta)/maxBeta*100) : 0;
-    var chg  = r.five_day_pct || 0;
-    var chgCol = chg >= 0 ? '#22c55e' : '#ef4444';
-    // Implied move: if Brent moved bc%, stock would move beta*bc%
-    var brentChg = rows[0].brent_pct || 0;
-    var impliedMove = (beta * brentChg).toFixed(1);
-    var impliedCol = parseFloat(impliedMove) >= 0 ? '#22c55e' : '#ef4444';
-
-    html += '<div style="display:grid;grid-template-columns:36px 1fr;gap:0;background:var(--surface2);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s" '
-      +'onmouseover="this.style.borderColor=\''+sc+'\'" onmouseout="this.style.borderColor=\'var(--border)\'">'
-
-      // Rank column
-      +'<div style="display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.02);border-right:1px solid var(--border)">'
-      +'<span style="font-size:13px;font-weight:900;color:#334155">'+r.rank+'</span>'
-      +'</div>'
-
-      // Main content
-      +'<div style="padding:12px 16px">'
-      +'<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">'
-      // Ticker + company
-      +'<span style="font-size:16px;font-weight:900;color:#e2e8f0">'+r.ticker+'</span>'
-      +'<span style="font-size:11px;color:#64748b">'+r.company+'</span>'
-      // Sector pill
-      +'<span style="font-size:9px;font-weight:700;padding:2px 9px;border-radius:10px;background:rgba(255,255,255,0.04);color:'+sc+';border:1px solid '+sc+'44">'+r.sector+'</span>'
-      // 5-day change
-      +'<span style="margin-left:auto;font-size:12px;font-weight:700;color:'+chgCol+'">'+(chg>=0?'+':'')+chg.toFixed(1)+'% <span style="font-size:9px;font-weight:400;color:#334155">5-day</span></span>'
-      +'<span style="font-size:12px;font-weight:700;color:#94a3b8">$'+r.current_price.toFixed(2)+'</span>'
-      +'</div>'
-
-      // Sensitivity bar
-      +'<div style="margin-bottom:8px">'
-      +'<div style="display:flex;justify-content:space-between;margin-bottom:4px">'
-      +'<span style="font-size:9px;color:#475569;font-weight:600">SENSITIVITY TO OIL — if Brent moves 1%, this stock historically moves <b style="color:#f59e0b">'+Math.abs(beta).toFixed(2)+'%</b></span>'
-      +(brentChg !== 0 ? '<span style="font-size:9px;color:'+impliedCol+';font-weight:700">Implied today: '+(parseFloat(impliedMove)>=0?'+':'')+impliedMove+'%</span>' : '')
-      +'</div>'
-      +'<div style="height:5px;background:rgba(255,255,255,0.05);border-radius:3px">'
-      +'<div style="height:5px;border-radius:3px;width:'+barW+'%;background:linear-gradient(90deg,'+sc+','+sc+'88);transition:width .6s"></div>'
-      +'</div>'
-      +'</div>'
-
-      // Thesis
-      +'<div style="font-size:11px;color:#475569;line-height:1.5">'+r.thesis+'</div>'
-      +'</div>'
-      +'</div>';
-  });
-  html += '</div>';
-  el.innerHTML = html;
-}
-
-async function _renderHormuzEvents(dailyOnly){
-  var url = '/api/hormuz/events?limit=60' + (dailyOnly ? '&daily=1' : '');
-  var panelId = dailyOnly ? 'hormuzDailyList' : 'hormuzEventList';
-  var el = document.getElementById(panelId);
-  if(!el) return;
-  el.innerHTML = '<div style="color:#334155;padding:20px;text-align:center">Loading…</div>';
-  try {
-    var events = await fetch(url).then(function(r){return r.json();});
-    if(!events.length || events.error){
-      el.innerHTML = '<div style="color:#334155;font-size:12px;padding:20px;text-align:center">No entries yet.</div>';
-      return;
-    }
-    var html = '<div style="display:flex;flex-direction:column;gap:8px">';
-    events.forEach(function(ev){
-      var thr = ev.threat_level || 'GREEN';
-      var tc  = _THREAT_COLORS[thr];
-      var dt  = ev.event_date ? ev.event_date.slice(0,16).replace('T',' ') : '';
-      var bc  = ev.brent_pct || 0;
-      html += '<div style="padding:14px 18px;border-radius:12px;cursor:pointer;border:1px solid '+tc.border+';background:'+tc.bg+';transition:opacity .15s" '
-        +'onmouseover="this.style.opacity=\'0.8\'" onmouseout="this.style.opacity=\'1\'" '
-        +'onclick="hormuzLoadGroup(\''+ev.event_group+'\')">'
-        +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">'
-        +'<span style="font-size:10px;font-weight:900;padding:3px 12px;border-radius:20px;background:'+tc.glow+';color:'+tc.text+';border:1px solid '+tc.border+'">'+thr+' · '+(_THREAT_LABEL[thr]||thr)+'</span>'
-        +'<span style="font-size:9px;color:#334155;margin-left:auto">'+dt+'</span>'
-        +'</div>'
-        +'<div style="font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:5px">'+ev.event_title+'</div>'
-        +'<div style="font-size:11px;color:#64748b;line-height:1.5;margin-bottom:8px">'+ev.event_summary+'</div>'
-        +'<div style="font-size:10px;color:#475569">'
-        +'🛢 Brent <b style="color:#f59e0b">$'+ev.brent_price.toFixed(2)+'</b> '
-        +'<span style="color:'+(bc>=0?'#22c55e':'#ef4444')+'">'+(bc>=0?'+':'')+bc.toFixed(1)+'%</span>'
-        +' &nbsp;·&nbsp; <span style="color:'+tc.text+'">Click to load stock rankings for this event →</span>'
-        +'</div>'
-        +'</div>';
-    });
-    html += '</div>';
-    el.innerHTML = html;
-  } catch(e){
-    el.innerHTML = '<div style="color:#ef4444;padding:16px">Error: '+e+'</div>';
-  }
-}
-
-async function hormuzLoadGroup(group){
-  var rows = await fetch('/api/hormuz/watchlist?group='+encodeURIComponent(group))
-    .then(function(r){return r.json();});
-  _hormuzData.watchlist = Array.isArray(rows) ? rows : [];
-  hormuzSetTab('watchlist', document.getElementById('hTab-watchlist'));
-}
-
-async function _loadHormuzLog(){
-  var el = document.getElementById('hormuzAgentLog');
-  if(!el) return;
-  try {
-    var d = await fetch('/api/hormuz/agent-log').then(function(r){return r.json();});
-    el.textContent = (d.lines||[]).join('') || 'No log yet.';
-    el.scrollTop = el.scrollHeight;
-  } catch(e){ el.textContent = 'Start the agent first.'; }
-}
-
-async function hormuzStartAgent(){
-  try {
-    var r = await fetch('/api/hormuz/agent-start',{method:'POST'}).then(function(r){return r.json();});
-    if(r.status==='started'){
-      setTimeout(loadHormuz, 3000);
-    } else {
-      alert('Could not start agent: '+JSON.stringify(r));
-    }
-  } catch(e){ alert('Error: '+e); }
-}
-
-// ── Metal Intel ─────────────────────────────────────────────────────────────
-var _metalIntelCache = {};
-
-async function loadMetalIntel(metal, force){
-  var bodyId = metal === 'gold' ? 'goldIntelBody' : 'silverIntelBody';
-  var el = document.getElementById(bodyId);
-  if(!el) return;
-  var accent = metal === 'gold' ? '#f59e0b' : '#94a3b8';
-  var accentBg = metal === 'gold' ? 'rgba(245,158,11,0.07)' : 'rgba(148,163,184,0.07)';
-
-  // Check 30-min local cache
-  var now = Date.now();
-  if(!force && _metalIntelCache[metal] && now - _metalIntelCache[metal].ts < 1800000){
-    _renderMetalIntel(metal, _metalIntelCache[metal].data, el, accent, accentBg);
-    return;
-  }
-
-  el.innerHTML = '<div style="display:flex;align-items:center;gap:8px;color:#475569;font-size:11px;padding:10px 0">'
-    +'<div style="width:14px;height:14px;border:2px solid '+accent+';border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite"></div>'
-    +'Scanning news and generating summary…</div>';
-
-  try {
-    var d = await fetch('/api/commodities/metal-intel?metal='+metal+'&t='+now).then(function(r){return r.json();});
-    if(d.error && !d.bullets){ el.innerHTML = '<div style="color:#ef4444;font-size:11px">'+d.error+'</div>'; return; }
-    _metalIntelCache[metal] = {ts: now, data: d};
-    _renderMetalIntel(metal, d, el, accent, accentBg);
-  } catch(e){
-    el.innerHTML = '<div style="color:#ef4444;font-size:11px">Failed to load: '+e+'</div>';
-  }
-}
-
-function _renderMetalIntel(metal, d, el, accent, accentBg){
-  var toneColors = {bullish:'#22c55e', bearish:'#ef4444', neutral:'#94a3b8'};
-  var toneEmoji  = {bullish:'📈', bearish:'📉', neutral:'➡️'};
-  var tone       = d.overall_tone || 'neutral';
-  var toneCol    = toneColors[tone] || '#94a3b8';
-
-  var html = '';
-
-  // Sharp move alert
-  if(d.sharp_move && d.sharp_move_reason){
-    html += '<div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:9px 12px;margin-bottom:12px;font-size:11px;color:#fca5a5;line-height:1.5">'
-      +'⚡ <b>Sharp move detected:</b> '+d.sharp_move_reason
-      +'</div>';
-  }
-
-  // Tone pill
-  html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">'
-    +'<span style="font-size:10px;font-weight:700;padding:3px 12px;border-radius:20px;background:'+accentBg+';border:1px solid '+accent+'44;color:'+toneCol+'">'
-    +toneEmoji[tone]+' Tone: '+tone.charAt(0).toUpperCase()+tone.slice(1)+'</span>'
-    +(d.updated_at ? '<span style="font-size:9px;color:#334155">Updated '+d.updated_at+'</span>' : '')
-    +'</div>';
-
-  // 5 bullets — each clickable, opens article reader
-  html += '<div style="display:flex;flex-direction:column;gap:8px">';
-  (d.bullets||[]).forEach(function(b, i){
-    var text   = typeof b === 'string' ? b : b.text;
-    var url    = typeof b === 'object' ? (b.url||'') : '';
-    var title  = typeof b === 'object' ? (b.title||text) : text;
-    var source = typeof b === 'object' ? (b.source||'News') : 'News';
-    var story  = JSON.stringify({title:title, url:url, source:source, category:'MARKETS', image_query: metal+' gold silver market'});
-    var clickable = url ? 'cursor:pointer;' : '';
-    var hoverStyle = url ? 'onmouseover="this.style.background=\'rgba(255,255,255,0.04)\';this.style.borderRadius=\'8px\'" onmouseout="this.style.background=\'transparent\'"' : '';
-    var onclick = url ? 'onclick="openArticleFromStory('+story.replace(/"/g,'&quot;')+')"' : '';
-    html += '<div style="display:flex;gap:10px;align-items:flex-start;padding:5px 6px;transition:background .15s;'+clickable+'" '+hoverStyle+' '+onclick+'>'
-      +'<div style="min-width:20px;height:20px;border-radius:50%;background:'+accentBg+';border:1px solid '+accent+'55;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:'+accent+';flex-shrink:0;margin-top:1px">'+(i+1)+'</div>'
-      +'<div style="font-size:12px;color:#cbd5e1;line-height:1.6">'
-      +text
-      +(url ? ' <span style="font-size:9px;color:'+accent+';opacity:0.7">→ read article</span>' : '')
-      +'</div>'
-      +'</div>';
-  });
-  html += '</div>';
-
-  // Source note
-  html += '<div style="margin-top:12px;font-size:9px;color:#1e293b">'
-    +'Based on '+(d.n_headlines||'—')+' live headlines · Reuters, CNBC, Google News'
-    +(d.fallback ? ' · <span style="color:#f59e0b">Claude offline — showing raw headlines</span>' : ' · Summarized by Claude')
-    +'</div>';
-
-  el.innerHTML = html;
+  var list=document.getElementById('hormuzEventList');
+  if(list) list.innerHTML='<div class="callout red">Hormuz risk data is currently unavailable.</div>';
 }
 
 // ── Commodities ─────────────────────────────────────────────────────────────
