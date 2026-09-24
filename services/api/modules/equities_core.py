@@ -5,6 +5,7 @@ import requests
 import yfinance as yf
 import xml.etree.ElementTree as ET
 from flask import Blueprint, jsonify, request
+from services.sec import get_cik as _edgar_get_cik, get_company_facts as _edgar_get_facts
 
 bp = Blueprint("equities_core", __name__)
 
@@ -135,35 +136,7 @@ def sector_detail():
 
 # ── Fundamental charting — historical financials ──────────────────────────────
 
-# EDGAR helpers — gives quarterly data back to 2010+
-_edgar_cik_cache  = {}   # ticker → cik
-_edgar_facts_cache = {}  # cik → (timestamp, facts_dict)
-_EDGAR_CACHE_TTL  = 86400  # 24 hours
-
-def _edgar_get_cik(ticker):
-    if ticker in _edgar_cik_cache:
-        return _edgar_cik_cache[ticker]
-    import time as _t
-    headers = {'User-Agent': 'WaveCapital contact@wavecapital.com'}
-    r = requests.get('https://www.sec.gov/files/company_tickers.json', headers=headers, timeout=10)
-    mapping = r.json()
-    for v in mapping.values():
-        _edgar_cik_cache[v['ticker'].upper()] = str(v['cik_str']).zfill(10)
-    return _edgar_cik_cache.get(ticker)
-
-def _edgar_get_facts(cik):
-    import time as _t
-    now = _t.time()
-    if cik in _edgar_facts_cache:
-        ts, facts = _edgar_facts_cache[cik]
-        if now - ts < _EDGAR_CACHE_TTL:
-            return facts
-    headers = {'User-Agent': 'WaveCapital contact@wavecapital.com'}
-    r = requests.get(f'https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json',
-                     headers=headers, timeout=30)
-    facts = r.json().get('facts', {}).get('us-gaap', {})
-    _edgar_facts_cache[cik] = (now, facts)
-    return facts
+# Shared EDGAR provider helpers live in services/sec.py.
 
 def _edgar_extract(facts, concepts, form, min_days=60, max_days=100):
     """Extract standalone period values for a metric. Tries concepts in order."""
