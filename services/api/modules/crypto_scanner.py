@@ -1,6 +1,8 @@
 """Crypto network scanner routes."""
 
 import requests
+from services.coingecko import markets as cg_markets
+from services.defillama import chains as llama_chains, stablecoins as llama_stablecoins
 from flask import Blueprint, jsonify
 
 bp = Blueprint("crypto_scanner", __name__)
@@ -24,14 +26,13 @@ def crypto_scanner():
     # 1. CoinGecko — price, market cap, volume, 24h%, 7d%, FDV
     try:
         cg_ids = ','.join(c['cg'] for c in SCANNER_CHAINS if c['cg'])
-        r = requests.get(
-            'https://api.coingecko.com/api/v3/coins/markets'
-            '?vs_currency=usd&ids=' + cg_ids +
-            '&order=market_cap_desc&per_page=20&sparkline=false'
-            '&price_change_percentage=7d',
-            timeout=12
-        )
-        for coin in r.json():
+        for coin in cg_markets(
+            cg_ids,
+            price_change_percentage="7d",
+            per_page=20,
+            order="market_cap_desc",
+            timeout=12,
+        ):
             for c in SCANNER_CHAINS:
                 if c['cg'] == coin['id']:
                     result[c['name']].update({
@@ -47,8 +48,7 @@ def crypto_scanner():
 
     # 2. DeFiLlama — TVL per chain
     try:
-        r = requests.get('https://api.llama.fi/v2/chains', timeout=10)
-        llama_map = {item['name']: item.get('tvl') for item in r.json()}
+        llama_map = {item['name']: item.get('tvl') for item in llama_chains()}
         for c in SCANNER_CHAINS:
             tvl = llama_map.get(c['llama'])
             if tvl:
@@ -58,9 +58,8 @@ def crypto_scanner():
 
     # 3. DeFiLlama — stablecoin supply per chain
     try:
-        r = requests.get('https://stablecoins.llama.fi/stablecoins?includePrices=true', timeout=12)
         chain_stable = {}
-        for s in r.json().get('peggedAssets', []):
+        for s in llama_stablecoins().get('peggedAssets', []):
             for chain, data in s.get('chainCirculating', {}).items():
                 amt = (data.get('current') or {}).get('peggedUSD') or 0
                 key = chain.lower()
