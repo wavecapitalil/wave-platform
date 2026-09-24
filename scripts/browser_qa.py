@@ -84,8 +84,6 @@ async def run_viewport(browser, name, width, height):
         elif slug=="confluence":
             await page.locator("#confSymbol").fill("AAPL")
             await page.locator("#confSymbol").press("Enter")
-            # Enter isn't wired, so call analyze directly.
-            await page.evaluate("loadConfluence()")
             await page.wait_for_function("""() => {
                 const x=document.querySelector('#confResults');
                 return x && x.innerText.includes('/3');
