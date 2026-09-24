@@ -35,7 +35,7 @@ async def wait_not_loading(page, selector, timeout=45000):
               const t=(el.innerText||'').toLowerCase();
               return !t.includes('loading') && !t.includes('select a lens');
             }""",
-            selector,
+            arg=selector,
             timeout=timeout,
         )
     except PlaywrightTimeout:
