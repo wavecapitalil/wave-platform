@@ -21,6 +21,9 @@ CASES = [
     ("sectors", "/api/sectors"),
     ("crypto_global", "/api/crypto-global"),
     ("pcr", "/api/pcr"),
+    ("seasonality", "/api/seasonality?symbol=SPY&years=10"),
+    ("gold_silver", "/api/commodities/gold-silver-ratio"),
+    ("hormuz", "/api/hormuz/summary"),
 ]
 
 failed = 0
