@@ -1,0 +1,345 @@
+/* WAVE Terminal — University visual language
+   Derived from the live WAVE University design system.
+   This file is intentionally overrides-only so the current terminal remains functional. */
+
+:root{
+  --black:#050c15;
+  --surface:#091827;
+  --surface2:#0c2035;
+  --border:#173752;
+  --border2:#244e73;
+  --blue:#55aaff;
+  --blue-dim:rgba(85,170,255,.13);
+  --green:#48d18a;
+  --red:#ff6f82;
+  --yellow:#ffc857;
+  --gray:#90a8c2;
+}
+
+html,body{
+  background:
+    radial-gradient(circle at 15% 0%,#0f2a48 0,#071423 27%,#050c15 60%);
+  color:#edf6ff;
+}
+
+body{
+  letter-spacing:-.005em;
+}
+
+/* App chrome */
+.top-nav{
+  height:52px;
+  margin:10px 12px 0;
+  padding:0 14px;
+  border:1px solid #173752;
+  border-radius:16px;
+  background:rgba(5,12,21,.92);
+  backdrop-filter:blur(18px);
+  box-shadow:0 14px 40px rgba(0,0,0,.16);
+}
+
+.top-nav-logo{
+  border-right:1px solid #173752;
+}
+
+.top-nav-logo span{
+  color:#edf6ff;
+  letter-spacing:.17em;
+}
+
+.top-nav-link{
+  color:#6f8ba7;
+  border:1px solid transparent;
+  border-radius:10px;
+  padding:7px 11px;
+  font-weight:700;
+}
+
+.top-nav-link:hover{
+  color:#edf6ff;
+  background:#07192a;
+  border-color:#173752;
+}
+
+.top-nav-link.active{
+  color:#d9efff;
+  background:#0b2845;
+  border-color:#2a5277;
+}
+
+.ticker-bar{
+  margin:8px 12px 0;
+  height:36px;
+  border:1px solid #173752;
+  border-radius:12px;
+  background:rgba(6,19,33,.92);
+  overflow:hidden;
+}
+
+.ticker-item{
+  border-right:1px solid #173752;
+}
+
+.ticker-sym{color:#90a8c2}
+.ticker-val{color:#edf6ff}
+.ticker-time{color:#6f8ba7}
+
+/* Main app layout */
+.app-body{
+  padding:10px 12px 12px;
+  gap:10px;
+}
+
+.nav-panel{
+  border:1px solid #173752;
+  border-radius:18px;
+  background:rgba(8,23,38,.9);
+  overflow:hidden;
+  box-shadow:0 18px 50px rgba(0,0,0,.12);
+}
+
+.nav-header{
+  background:#0a2036;
+  border-bottom:1px solid #173752;
+}
+
+.nav-content{
+  padding:8px 6px;
+}
+
+.nav-section-title{
+  color:#597895;
+  padding:12px 12px 5px;
+  letter-spacing:1.45px;
+}
+
+.nav-sublabel{
+  color:#4d7599;
+  border-top:1px solid #102b45;
+}
+
+.nav-item{
+  margin:2px 4px;
+  padding:8px 12px;
+  border-radius:10px;
+  color:#8fa9c2;
+  font-weight:650;
+  transition:background .16s,border-color .16s,color .16s,transform .16s;
+  border:1px solid transparent;
+}
+
+.nav-item:hover{
+  background:#07192a;
+  border-color:#173752;
+  color:#edf6ff;
+  transform:translateX(-1px);
+}
+
+.nav-item.active{
+  color:#d9efff;
+  background:#0b2845;
+  border-color:#2a5277;
+  box-shadow:inset 3px 0 0 #55aaff;
+}
+
+.nav-footer{
+  border-top:1px solid #173752;
+  background:#071522;
+}
+
+.user-avatar{
+  background:linear-gradient(135deg,#55aaff,#58d7e8);
+  box-shadow:0 0 0 3px rgba(85,170,255,.08);
+}
+
+/* Main content canvas */
+.main{
+  background:transparent;
+}
+
+.page{
+  padding:16px 18px 28px;
+}
+
+.page-title,
+.page h1{
+  color:#edf6ff;
+  letter-spacing:-.03em;
+}
+
+.page-subtitle,
+.page-sub,
+.muted{
+  color:#90a8c2;
+}
+
+/* Cards and panels */
+.card,
+.mini-section,
+.section-card,
+.home-card,
+.metric-card,
+.research-card,
+.sc-card,
+.cd-card,
+.earn-card,
+.crypto-card,
+.risk-card,
+.seas-card,
+.smd-card,
+.cf-card{
+  background:#071725 !important;
+  border:1px solid #193a57 !important;
+  border-radius:14px !important;
+  box-shadow:none;
+}
+
+.card:hover,
+.home-card:hover,
+.metric-card:hover,
+.research-card:hover{
+  border-color:#4286bd !important;
+}
+
+/* Generic inline panels used heavily in the legacy UI */
+[style*="background:var(--surface2)"]{
+  border-color:#173752 !important;
+}
+
+[style*="background:var(--surface)"]{
+  border-color:#173752 !important;
+}
+
+/* Inputs / controls */
+input,
+select,
+textarea{
+  background:#061321 !important;
+  color:#edf6ff !important;
+  border-color:#173752 !important;
+  border-radius:10px !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  outline:none;
+  border-color:#55aaff !important;
+  box-shadow:0 0 0 3px rgba(85,170,255,.10);
+}
+
+button,
+.cd-vbtn,
+.period-btn,
+.tab-btn{
+  border-radius:10px !important;
+}
+
+.cd-vbtn,
+.period-btn,
+.tab-btn{
+  background:#07192a !important;
+  border-color:#21496c !important;
+  color:#c8def2 !important;
+}
+
+.cd-vbtn:hover,
+.period-btn:hover,
+.tab-btn:hover{
+  border-color:#5da9e6 !important;
+  color:#fff !important;
+}
+
+.cd-vbtn.active,
+.period-btn.active,
+.tab-btn.active{
+  background:#0b2845 !important;
+  border-color:#2a5277 !important;
+  color:#fff !important;
+}
+
+/* Tables */
+table{
+  border-color:#173752 !important;
+}
+
+th{
+  background:#0a1e31 !important;
+  color:#a5d4fb !important;
+}
+
+td{
+  border-color:#17334d !important;
+}
+
+tr:hover td{
+  background:#071a2b;
+}
+
+/* Section headers */
+.ms-title,
+.section-title,
+.card-title{
+  color:#b0dbff !important;
+}
+
+.ms-header,
+.card-header{
+  border-color:#173752 !important;
+}
+
+/* Chips / status tags */
+.chip,
+.badge,
+.pill,
+.status-pill{
+  border-color:#2a5072 !important;
+  background:#091c2e !important;
+  color:#b9d9f4 !important;
+}
+
+/* University-style hero treatment for welcome / major headers */
+.welcome-hero,
+.hero-card,
+.page-hero{
+  background:linear-gradient(135deg,#091a2e,#0e3459 72%,#0b2138) !important;
+  border:1px solid #244e73 !important;
+  border-radius:24px !important;
+  box-shadow:0 18px 50px rgba(0,0,0,.16);
+}
+
+/* Scrollbars */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#173752;border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:#244e73}
+
+/* Softer charts / dividers */
+canvas{
+  filter:saturate(.92);
+}
+
+hr{
+  border-color:#173752;
+}
+
+/* Responsive behavior closer to University */
+@media(max-width:1050px){
+  .app-body{gap:8px}
+  .nav-panel{width:205px}
+  .page{padding:14px}
+}
+
+@media(max-width:760px){
+  .top-nav{margin:6px 6px 0;border-radius:13px;padding:0 9px}
+  .ticker-bar{margin:6px 6px 0}
+  .app-body{padding:6px}
+  .nav-panel{border-radius:14px}
+  .page{padding:10px}
+}
+
+@media(max-width:650px){
+  .top-nav-links{display:none}
+  .top-nav-logo{border-right:0}
+  .nav-panel{position:absolute;z-index:70;left:6px;top:104px;bottom:6px}
+}
