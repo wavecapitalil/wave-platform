@@ -76,14 +76,20 @@ async def run_viewport(browser, name, width, height):
             assert "STRONGLY FAVORS" not in body
             assert "FAVORS SILVER" not in body
             assert "FAVORS GOLD" not in body
+            # Exercise the period control after JS modularization.
+            await page.locator("#gsrTimeTabs .cd-vbtn").first.click()
+            await page.wait_for_timeout(200)
+            assert await page.locator("#gsrTimeTabs .cd-vbtn").first.evaluate("(el) => el.classList.contains('active')")
+            await page.locator("#gsrTimeTabs .cd-vbtn").last.click()
             await active.screenshot(path=str(OUT/f"{name}-metals.png"))
         elif slug=="comm-flows":
             await page.locator("#flowTabCrypto").wait_for(state="visible")
             await wait_not_loading(page,"#flowContent",60000)
             assert "Advertising Intelligence" not in await active.inner_text()
-            # Exercise another lens, not just the default.
-            await page.locator("#flowTabOptions").click()
-            await wait_not_loading(page,"#flowContent",60000)
+            # Exercise every lens, not just the default.
+            for selector in ("#flowTabFutures", "#flowTabOptions", "#flowTabShort", "#flowTabCrypto"):
+                await page.locator(selector).click()
+                await wait_not_loading(page,"#flowContent",90000)
             await active.screenshot(path=str(OUT/f"{name}-flows.png"))
         elif slug=="confluence":
             await page.locator("#confSymbol").fill("AAPL")
@@ -92,6 +98,13 @@ async def run_viewport(browser, name, width, height):
                 const x=document.querySelector('#confResults');
                 return x && x.innerText.includes('/3');
             }""", timeout=120000)
+            # Exercise alternate evidence windows.
+            buttons=page.locator("#confWindowBtns .cd-vbtn")
+            await buttons.nth(0).click()
+            await page.wait_for_timeout(300)
+            await buttons.nth(2).click()
+            await page.wait_for_timeout(300)
+            await buttons.nth(1).click()
             await active.screenshot(path=str(OUT/f"{name}-confluence.png"))
         elif slug=="hormuz":
             await page.wait_for_function("""() => {
