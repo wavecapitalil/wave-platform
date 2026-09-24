@@ -3,21 +3,26 @@ from pathlib import Path
 import sys
 
 html = Path("apps/terminal/public/terminal_app.html").read_text(encoding="utf-8")
+js = Path("apps/terminal/public/terminal.js").read_text(encoding="utf-8")
+css = Path("apps/terminal/public/terminal.css").read_text(encoding="utf-8")
+frontend = html + "\n" + js
 api = Path("services/api/api.py").read_text(encoding="utf-8")
 
 checks = [
-    ("Seasonality uses new contract", "historical_average" in html and "seas-line-chart" in html),
-    ("No legacy seasonality monthly contract", "data.monthly" not in html),
-    ("Cross-Asset Flows UI wired", "/api/flows/" in html and "Cross-Asset Flows" in html),
-    ("No legacy Comm Flows API calls", "/api/comm-flows/" not in html),
-    ("Confluence v2 UI wired", "/api/confluence?symbol=" in html and "Confluence Monitor" in html),
-    ("No old Insider Buying page loader", "loadInsiderBuying" not in html),
-    ("Metals removed directional verdict language", "STRONGLY FAVORS" not in html),
-    ("No dead metal-intel API calls", "/api/commodities/metal-intel" not in html),
-    ("Hormuz has no legacy watchlist API", "/api/hormuz/watchlist" not in html),
-    ("Hormuz has no legacy agent start API", "/api/hormuz/agent-start" not in html),
+    ("Seasonality uses new contract", "historical_average" in html and "seas-line-chart" in frontend),
+    ("No legacy seasonality monthly contract", "data.monthly" not in frontend),
+    ("Cross-Asset Flows UI wired", "/api/flows/" in html and "Cross-Asset Flows" in frontend),
+    ("No legacy Comm Flows API calls", "/api/comm-flows/" not in frontend),
+    ("Confluence v2 UI wired", "/api/confluence?symbol=" in html and "Confluence Monitor" in frontend),
+    ("No old Insider Buying page loader", "loadInsiderBuying" not in frontend),
+    ("Metals removed directional verdict language", "STRONGLY FAVORS" not in frontend),
+    ("No dead metal-intel API calls", "/api/commodities/metal-intel" not in frontend),
+    ("Hormuz has no legacy watchlist API", "/api/hormuz/watchlist" not in frontend),
+    ("Hormuz has no legacy agent start API", "/api/hormuz/agent-start" not in frontend),
     ("Unsafe static catch-all removed", "return send_from_directory(BASE_DIR, filename)" not in api),
     ("Theme is loaded", "wave-university-theme.css" in html),
+    ("Base Terminal CSS extracted", "terminal.css" in html and len(css) > 10000),
+    ("Terminal JS extracted", "terminal.js" in html and len(js) > 100000),
     ("Morning Brief uses portable storage", "WAVE_BRIEF_DIR" in api),
     ("No Daniel-local iCloud path remains", "/Users/danielarad/" not in api),
     ("No Claude local-session dependency remains", "local-agent-mode-sessions" not in api),
