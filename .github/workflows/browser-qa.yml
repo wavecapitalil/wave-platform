@@ -1,0 +1,50 @@
+name: Browser QA
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install API + browser dependencies
+        run: |
+          pip install -r services/api/requirements.txt
+          pip install playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Start WAVE API
+        run: |
+          mkdir -p services/api/data/briefs
+          nohup python services/api/api.py > /tmp/wave-api-browser.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:5001/api/health >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/wave-api-browser.log
+          exit 1
+
+      - name: Run browser UX QA
+        run: python scripts/browser_qa.py
+
+      - name: Upload screenshots and report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-qa
+          path: |
+            browser_qa/
+            /tmp/wave-api-browser.log
