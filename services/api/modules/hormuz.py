@@ -20,7 +20,8 @@ HIGH_TERMS = (
 )
 MED_TERMS = (
     "threat", "warning", "tension", "military", "sanction",
-    "escort", "disruption", "reroute", "intercept"
+    "escort", "disruption", "reroute", "intercept",
+    "traffic falls", "shipping traffic", "vessels trickle", "flows fall"
 )
 
 
@@ -71,16 +72,31 @@ def hormuz_summary():
     except Exception:
         news = []
 
-    high = sum(1 for x in news if x["severity"] == "HIGH")
-    med = sum(1 for x in news if x["severity"] == "MEDIUM")
-    oil_move = max(
-        abs((brent or {}).get("daily_pct", 0)),
-        abs((wti or {}).get("daily_pct", 0)),
-    )
+    now = datetime.now(timezone.utc)
+    recent = []
+    for item in news:
+        try:
+            dt = datetime.fromisoformat(str(item.get("published", "")).replace("Z", "+00:00"))
+            if (now - dt).days <= 7:
+                recent.append(item)
+        except Exception:
+            continue
 
-    if high >= 2 or (high >= 1 and oil_move >= 3):
+    high = sum(1 for x in recent if x["severity"] == "HIGH")
+    med = sum(1 for x in recent if x["severity"] == "MEDIUM")
+
+    oil_moves = [
+        (brent or {}).get("daily_pct"),
+        (wti or {}).get("daily_pct"),
+    ]
+    oil_moves = [float(x) for x in oil_moves if x is not None]
+    oil_avg = sum(oil_moves) / len(oil_moves) if oil_moves else 0.0
+    both_positive = len(oil_moves) >= 2 and all(x >= 1.0 for x in oil_moves)
+    price_confirmation = oil_avg >= 1.5 or both_positive
+
+    if high >= 1 and price_confirmation:
         state = "RED"
-    elif high >= 1 or med >= 3 or oil_move >= 2:
+    elif high >= 1 or med >= 2 or oil_avg >= 2.0:
         state = "YELLOW"
     else:
         state = "GREEN"
@@ -90,8 +106,9 @@ def hormuz_summary():
         "brent": brent,
         "wti": wti,
         "events": news[:10],
-        "event_counts": {"high": high, "medium": med, "total": len(news)},
-        "price_confirmation": oil_move >= 2,
+        "event_counts": {"high": high, "medium": med, "total": len(recent), "headline_total": len(news)},
+        "price_confirmation": price_confirmation,
+        "oil_average_daily_pct": round(oil_avg, 3),
         "meta": build_meta(
             "Google News RSS + Yahoo Finance via yfinance",
             freshness="live_with_daily_market_confirmation",
