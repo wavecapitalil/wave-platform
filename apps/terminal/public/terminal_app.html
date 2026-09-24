@@ -6399,13 +6399,6 @@ async function loadCommodities(){
   }catch(e){ console.error('loadCommodities:', e); }
 }
 
-function setGsrPeriod(period, btn){
-  _gsrPeriod = period;
-  document.querySelectorAll('#gsrTimeTabs .cd-vbtn').forEach(function(b){ b.classList.remove('active'); });
-  if(btn) btn.classList.add('active');
-  if(_gsrData) renderGsrChart(_gsrData);
-}
-
 function renderGsrMetrics(d){
   var current=d.current, mean=d.mean;
   var diff=current-mean;
