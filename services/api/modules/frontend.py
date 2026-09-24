@@ -27,7 +27,14 @@ PUBLIC_FILES = {
     "terminal-hormuz.js",
     "terminal-metals.js",
     "terminal-confluence.js",
-    "terminal-seasonality.js",
+    "terminal-seasonality.js",    "terminal-equities.js",
+    "terminal-risk.js",
+    "terminal-crypto.js",
+    "terminal-rates.js",
+    "terminal-industries.js",
+    "terminal-macro.js",
+    "terminal-earnings.js",
+
 }
 
 
