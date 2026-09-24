@@ -33,6 +33,8 @@ university_html = Path("apps/terminal/public/university.html").read_text(encodin
 university_js = Path("apps/terminal/public/university.js").read_text(encoding="utf-8")
 platform_js = Path("apps/terminal/public/platform.js").read_text(encoding="utf-8")
 platform_css = Path("apps/terminal/public/platform.css").read_text(encoding="utf-8")
+platform_cloud_js = Path("apps/terminal/public/platform-cloud.js").read_text(encoding="utf-8")
+supabase_config_js = Path("apps/terminal/public/supabase-config.js").read_text(encoding="utf-8")
 
 checks = [
     ("Seasonality uses new contract", "historical_average" in frontend and "seas-line-chart" in frontend),
@@ -58,7 +60,10 @@ checks = [
     ("API entrypoint uses app factory", "from app_factory import create_app" in api and "BLUEPRINTS" in factory),
     ("Standard metadata helper is wired", "from core.meta import build_meta" in Path("services/api/modules/seasonality.py").read_text(encoding="utf-8")),
     ("Unified platform routes exposed", "serve_account" in frontend_server and "serve_university" in frontend_server),
-    ("Unified platform assets allowlisted", all(x in frontend_server for x in ["account.html","university.html","platform.js","platform.css"])),
+    ("Unified platform assets allowlisted", all(x in frontend_server for x in ["account.html","university.html","platform.js","platform-cloud.js","supabase-config.js","platform.css"])),
+    ("Cloud adapter uses publishable key only", "sb_publishable_" in supabase_config_js and "service_role" not in supabase_config_js and "sb_secret_" not in supabase_config_js),
+    ("Cloud sync adapter wired", "WaveCloud" in platform_cloud_js and "student_progress" in platform_cloud_js and "watchlist_items" in platform_cloud_js),
+    ("Supabase client pinned", "@supabase/supabase-js@2.117.1" in account_html and "@supabase/supabase-js@2.117.1" in university_html),
     ("Account workspace wired", "WavePlatform" in account_js and "watchList" in account_html and "Alert Rules" in account_html),
     ("University progress wired", "advanceCourse" in university_js and "courseGrid" in university_html),
     ("Local-first state has versioned schema", "wave.platform.v1" in platform_js and "version:1" in platform_js),
