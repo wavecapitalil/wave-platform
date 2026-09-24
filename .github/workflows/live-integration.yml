@@ -48,6 +48,9 @@ jobs:
       - name: Security smoke
         run: python scripts/security_smoke.py
 
+      - name: Core API smoke
+        run: python scripts/api_smoke.py
+
       - name: Portable Morning Brief integration
         run: |
           curl -fsS http://127.0.0.1:5001/api/daily-brief > /tmp/brief.html
