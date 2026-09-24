@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 import io
 import zipfile
 from core.meta import build_meta
+from services.binance import coinm_positioning
 
 import pandas as pd
 import requests
@@ -10,7 +11,6 @@ from flask import Blueprint, jsonify, request
 
 bp = Blueprint("flows", __name__)
 
-BINANCE_DAPI = "https://dapi.binance.com"
 CFTC_DISAGG_ZIP = "https://www.cftc.gov/files/dea/history/fut_disagg_txt_{year}.zip"
 CFTC_FIN_ZIP = "https://www.cftc.gov/files/dea/history/fut_fin_txt_{year}.zip"
 
@@ -45,32 +45,20 @@ def crypto_positioning():
     if period not in allowed_periods:
         return jsonify({"error": "unsupported period"}), 400
 
-    params = {"pair": pair, "period": period, "contractType": "PERPETUAL", "limit": 30}
-    endpoints = {
-        "global_accounts": "/futures/data/globalLongShortAccountRatio",
-        "top_accounts": "/futures/data/topLongShortAccountRatio",
-        "top_positions": "/futures/data/topLongShortPositionRatio",
-    }
-
+    raw_series, errors = coinm_positioning(pair, period, limit=30)
     out = {}
-    errors = {}
-    for key, path in endpoints.items():
-        try:
-            r = requests.get(BINANCE_DAPI + path, params=params, timeout=10)
-            r.raise_for_status()
-            raw = r.json()
-            rows = []
-            for x in raw:
-                rows.append({
-                    "timestamp": x.get("timestamp"),
-                    "long_pct": round(_float(x.get("longAccount")) * 100, 3) if _float(x.get("longAccount")) is not None else None,
-                    "short_pct": round(_float(x.get("shortAccount")) * 100, 3) if _float(x.get("shortAccount")) is not None else None,
-                    "long_short_ratio": _float(x.get("longShortRatio")),
-                })
-            out[key] = rows
-        except Exception as exc:
-            out[key] = []
-            errors[key] = str(exc)
+    for key, raw in raw_series.items():
+        rows = []
+        for x in raw:
+            long_v = _float(x.get("longAccount"))
+            short_v = _float(x.get("shortAccount"))
+            rows.append({
+                "timestamp": x.get("timestamp"),
+                "long_pct": round(long_v * 100, 3) if long_v is not None else None,
+                "short_pct": round(short_v * 100, 3) if short_v is not None else None,
+                "long_short_ratio": _float(x.get("longShortRatio")),
+            })
+        out[key] = rows
 
     return jsonify({
         "asset_class": "crypto",
