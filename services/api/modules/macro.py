@@ -7,9 +7,9 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
 import requests
-import yfinance as yf
 from flask import Blueprint, Response, jsonify, request
 from services.fred import get_series_csv
+from services.yahoo import history_frame
 
 bp = Blueprint("macro", __name__)
 
@@ -163,7 +163,7 @@ def yields():
     try:
         for label, sym in CURVE:
             try:
-                hist = yf.Ticker(sym).history(period='5d', interval='1d')
+                hist = history_frame(sym, period='5d', interval='1d')
                 if hist.empty:
                     continue
                 curr  = round(float(hist['Close'].iloc[-1]), 3)
@@ -175,7 +175,7 @@ def yields():
                 pass
 
         # 1-year history for 10Y chart
-        hist10 = yf.Ticker('^TNX').history(period='1y', interval='1d')
+        hist10 = history_frame('^TNX', period='1y', interval='1d')
         chart = []
         for dt, row in hist10.iterrows():
             chart.append({'date': str(dt)[:10], 'value': round(float(row['Close']), 3)})
