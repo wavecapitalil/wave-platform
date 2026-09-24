@@ -22,7 +22,7 @@ PUBLIC_FILES = {
     "platform.css",
     "platform.js",
     "platform-cloud.js",
-    "platform-search.js",
+    "platform-search.js",\n    "ai-tutor.js",\n    "ai-tutor.css",
     "research-save.js",
     "supabase-config.js",
     "terminal.html",
