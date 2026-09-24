@@ -1,0 +1,22 @@
+wave-terminal-export/
+├── docs/
+│   └── wave_cache_schema.sql  (560 B)
+├── legacy_modules/
+│   ├── api_legacy_2026-05-13.py  (162,564 B)
+│   ├── comm_flows.py  (42,827 B)
+│   ├── confluence.py  (21,038 B)
+│   ├── hormuz_agent.py  (16,121 B)
+│   └── requirements_legacy.txt  (35 B)
+├── .env.example  (450 B)
+├── .gitignore  (81 B)
+├── api.py  (151,518 B)
+├── blog.html  (11,790 B)
+├── comm_flows.py  (794 B)
+├── FILE_TREE.txt  (775 B)
+├── i18n.js  (12,855 B)
+├── index.html  (28,362 B)
+├── products.html  (4,446 B)
+├── PROJECT_README.md  (13,371 B)
+├── requirements.txt  (35 B)
+├── terminal.html  (677 B)
+└── terminal_app.html  (513,469 B)
