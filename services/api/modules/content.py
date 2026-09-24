@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 import requests
 import yfinance as yf
 from flask import Blueprint, jsonify, request, send_from_directory
+from services.ai import load_ai_config, call_anthropic, call_openai
 
 bp = Blueprint("content", __name__)
 
@@ -22,15 +23,6 @@ HEADERS = {
 
 # ── AI Article Generation ─────────────────────────────────────────────────────
 import json as _json
-
-def _load_secrets():
-    """Read provider credentials from process environment only."""
-    keys = {}
-    for key in ("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "ANTHROPIC_MODEL", "OPENAI_MODEL"):
-        value = os.environ.get(key)
-        if value:
-            keys[key] = value
-    return keys
 
 def _looks_like_article(t):
     """Reject paywall/JS/config junk so we never feed garbage to the model."""
@@ -62,46 +54,12 @@ def _fetch_source_text(url):
     except Exception:
         return ''
 
-def _call_anthropic(key, model, prompt):
-    # Try the configured model first, then fall back through known-good models
-    # so this keeps working as Anthropic retires/renames models over time.
-    candidates = [m for m in [model, 'claude-haiku-4-5-20251001', 'claude-3-5-haiku-latest',
-                              'claude-sonnet-4-6', 'claude-3-5-sonnet-latest'] if m]
-    seen, last = set(), None
-    for mdl in candidates:
-        if mdl in seen:
-            continue
-        seen.add(mdl)
-        r = requests.post('https://api.anthropic.com/v1/messages',
-            headers={'x-api-key': key, 'anthropic-version': '2023-06-01', 'content-type': 'application/json'},
-            json={'model': mdl, 'max_tokens': 2600,
-                  'messages': [{'role': 'user', 'content': prompt}]},
-            timeout=45)
-        last = r
-        if r.status_code == 404:   # model not found -> try the next candidate
-            continue
-        r.raise_for_status()
-        d = r.json()
-        return ''.join(p.get('text', '') for p in d.get('content', []))
-    last.raise_for_status()
-    d = last.json()
-    return ''.join(p.get('text', '') for p in d.get('content', []))
-
-def _call_openai(key, model, prompt):
-    r = requests.post('https://api.openai.com/v1/chat/completions',
-        headers={'Authorization': 'Bearer ' + key, 'content-type': 'application/json'},
-        json={'model': model or 'gpt-4o-mini', 'max_tokens': 2600,
-              'messages': [{'role': 'user', 'content': prompt}]},
-        timeout=45)
-    r.raise_for_status()
-    return r.json()['choices'][0]['message']['content']
-
 def _write_article(title, source, url, desc):
     """Core LLM article-writing logic, shared by /api/article (on-demand) and
     the top-stories curator (pre-generated). Returns a dict with lead/body/
     image_query/sources, or {'error': ...} if no key is configured or the
     LLM call fails."""
-    secrets  = _load_secrets()
+    secrets  = load_ai_config()
     key_anth = secrets.get('ANTHROPIC_API_KEY')
     key_oai  = secrets.get('OPENAI_API_KEY')
     if not key_anth and not key_oai:
@@ -137,9 +95,9 @@ def _write_article(title, source, url, desc):
 
     try:
         if key_anth:
-            raw = _call_anthropic(key_anth, secrets.get('ANTHROPIC_MODEL'), prompt)
+            raw = call_anthropic(key_anth, secrets.get('ANTHROPIC_MODEL'), prompt)
         else:
-            raw = _call_openai(key_oai, secrets.get('OPENAI_MODEL'), prompt)
+            raw = call_openai(key_oai, secrets.get('OPENAI_MODEL'), prompt)
     except Exception as e:
         return {'error': 'LLM request failed: ' + str(e)}
 
