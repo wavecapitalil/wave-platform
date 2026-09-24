@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wave Capital — Follow the Next Wave</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:    #000000;
+      --blue:     #4a9eff;
+      --blue-dim: #2563a8;
+      --white:    #ffffff;
+      --gray:     #888888;
+      --gray-dim: #333333;
+      --border:   rgba(74,158,255,0.25);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: #222; border-radius: 2px; }
+
+    /* ══════════════════════════════════════
+       HEADER / NAV
+    ══════════════════════════════════════ */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 48px;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: background 0.3s;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo svg { width: 32px; height: 20px; }
+
+    .nav-logo-text {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      color: var(--white);
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray);
+      text-decoration: none;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a.active { color: var(--white); }
+
+    .nav-cta {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--blue) !important;
+      border: 1px solid var(--border);
+      padding: 8px 20px;
+      border-radius: 4px;
+      transition: all 0.2s !important;
+    }
+    .nav-cta:hover {
+      background: rgba(74,158,255,0.08) !important;
+      border-color: var(--blue) !important;
+      color: var(--blue) !important;
+    }
+
+    .nav-lang {
+      font-size: 12px;
+      color: var(--gray);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* ══════════════════════════════════════
+       HERO
+    ══════════════════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 32px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle radial glow behind hero */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(74,158,255,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Animated wave lines in background */
+    .hero-bg-waves {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      opacity: 0.04;
+      pointer-events: none;
+    }
+
+    .hero-logo {
+      margin-bottom: 32px;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-logo svg {
+      width: 100px;
+      height: 60px;
+    }
+
+    .hero-title {
+      font-size: clamp(52px, 9vw, 100px);
+      font-weight: 900;
+      letter-spacing: 8px;
+      text-transform: uppercase;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 20px;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 3px;
+      color: var(--blue);
+      text-transform: uppercase;
+      margin-bottom: 56px;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 36px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: transparent;
+      color: var(--blue);
+      border: 1.5px solid var(--blue);
+    }
+    .btn-primary:hover {
+      background: rgba(74,158,255,0.1);
+      box-shadow: 0 0 30px rgba(74,158,255,0.15);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: rgba(255,255,255,0.4);
+      border: 1.5px solid rgba(255,255,255,0.1);
+    }
+    .btn-secondary:hover {
+      border-color: rgba(255,255,255,0.3);
+      color: var(--white);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      animation: fadeUp 1s 0.6s ease both;
+    }
+    .hero-scroll span {
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(74,158,255,0.4), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    /* ══════════════════════════════════════
+       STATS STRIP
+    ══════════════════════════════════════ */
+    .stats {
+      border-top: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 40px 80px;
+    }
+
+    .stat {
+      text-align: center;
+      padding: 0 20px;
+      border-right: 1px solid rgba(255,255,255,0.05);
+    }
+    .stat:last-child { border-right: none; }
+
+    .stat-val {
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+    .stat-val span { color: var(--blue); }
+    .stat-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    /* ══════════════════════════════════════
+       FEATURES / PRODUCTS SECTION
+    ══════════════════════════════════════ */
+    .section {
+      padding: 100px 80px;
+    }
+
+    .section-tag {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      color: var(--white);
+      margin-bottom: 16px;
+      max-width: 600px;
+    }
+
+    .section-sub {
+      font-size: 15px;
+      color: var(--gray);
+      line-height: 1.7;
+      max-width: 500px;
+      margin-bottom: 60px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .feature-card {
+      background: var(--black);
+      padding: 40px 36px;
+      transition: background 0.2s;
+      text-decoration: none;
+      display: block;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--blue);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+    .feature-card:hover { background: rgba(74,158,255,0.03); }
+    .feature-card:hover::before { transform: scaleX(1); }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      font-size: 18px;
+    }
+
+    .feature-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .feature-desc {
+      font-size: 13px;
+      color: var(--gray);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .feature-link {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .feature-link::after { content: '→'; transition: transform 0.2s; }
+    .feature-card:hover .feature-link::after { transform: translateX(4px); }
+
+    .feature-badge {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 2px;
+      background: rgba(74,158,255,0.1);
+      color: var(--blue);
+      margin-bottom: 12px;
+    }
+    .feature-badge.soon {
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* ══════════════════════════════════════
+       TERMINAL PREVIEW SECTION
+    ══════════════════════════════════════ */
+    .terminal-section {
+      padding: 80px;
+      background: rgba(255,255,255,0.01);
+      border-top: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .terminal-preview {
+      background: #080d1a;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .tp-bar {
+      background: #0f1629;
+      padding: 12px 16px;
+      border-bottom: 1px solid #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tp-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .tp-dot.r { background: #ef4444; }
+    .tp-dot.y { background: #f59e0b; }
+    .tp-dot.g { background: #22c55e; }
+    .tp-title { font-size: 11px; color: #334155; margin-right: auto; margin-left: 12px; letter-spacing: 1px; }
+    .tp-body { padding: 20px; }
+    .tp-regime {
+      font-size: 11px;
+      color: #334155;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .tp-regime-val {
+      font-size: 28px;
+      font-weight: 900;
+      color: #f59e0b;
+      letter-spacing: 3px;
+      margin-bottom: 16px;
+    }
+    .tp-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      font-size: 12px;
+    }
+    .tp-row:last-child { border-bottom: none; }
+    .tp-asset { color: #64748b; }
+    .tp-val { font-family: 'Courier New', monospace; font-weight: 700; color: #e2e8f0; }
+    .tp-chg { font-size: 11px; font-weight: 700; }
+    .tp-chg.up { color: #22c55e; }
+    .tp-chg.dn { color: #ef4444; }
+
+    /* ══════════════════════════════════════
+       MANIFESTO / QUOTE SECTION
+    ══════════════════════════════════════ */
+    .manifesto {
+      padding: 120px 80px;
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .manifesto-quote {
+      font-size: clamp(22px, 3.5vw, 38px);
+      font-weight: 300;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: -0.5px;
+      margin-bottom: 32px;
+    }
+    .manifesto-quote strong {
+      color: var(--white);
+      font-weight: 700;
+    }
+    .manifesto-author {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+
+    /* ══════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════ */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 40px 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .footer-logo svg { width: 24px; height: 14px; }
+    .footer-logo-text {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: rgba(255,255,255,0.6); }
+
+    .footer-copy {
+      font-size: 11px;
+      color: rgba(255,255,255,0.15);
+      letter-spacing: 1px;
+    }
+
+    /* ══════════════════════════════════════
+       ANIMATIONS
+    ══════════════════════════════════════ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; }
+      50%       { opacity: 1; }
+    }
+
+    @keyframes waveFlow {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════ */
+    @media (max-width: 1000px) {
+      .nav { padding: 18px 24px; }
+      .section { padding: 60px 24px; }
+      .stats { grid-template-columns: repeat(2,1fr); padding: 40px 24px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .terminal-section { grid-template-columns: 1fr; padding: 60px 24px; gap: 40px; }
+      .manifesto { padding: 80px 24px; }
+      footer { padding: 32px 24px; flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .hero-title { letter-spacing: 4px; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     NAVIGATION
+══════════════════════════════════════ -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <!-- Wave SVG -->
+    <svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 20 C10 10, 20 10, 30 20 C40 30, 50 30, 60 20 C70 10, 80 10, 90 20" stroke="#4a9eff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M0 13 C10 3, 20 3, 30 13 C40 23, 50 23, 60 13 C70 3, 80 3, 90 13" stroke="#4a9eff" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+      <path d="M0 27 C10 17, 20 17, 30 27 C40 37, 50 37, 60 27 C70 17, 80 17, 90 27" stroke="#4a9eff" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.3"/>
+    </svg>
+    <span class="nav-logo-text">Wave Capital</span>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="index.html" class="active" data-i18n="nav.home">Home</a></li>
+    <li><a href="terminal.html" data-i18n="nav.terminal">Terminal</a></li>
+    <li><a href="blog.html" data-i18n="nav.blog">Blog</a></li>
+    <li><a href="products.html" data-i18n="nav.products">Products</a></li>
+    <li><a href="terminal.html" class="nav-cta" data-i18n="nav.enter">Enter Terminal</a></li>
+  </ul>
+
+  <div class="nav-lang" onclick="cycleLang()" role="button" tabindex="0" onkeydown="if(event.key==='Enter')cycleLang()">🌐 EN</div>
+</nav>
+
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section class="hero">
+
+  <!-- Animated background waves -->
+  <svg class="hero-bg-waves" viewBox="0 0 1440 200" preserveAspectRatio="none">
+    <path d="M0,100 C240,160,480,40,720,100 C960,160,1200,40,1440,100 L1440,200 L0,200 Z" fill="#4a9eff"/>
+  </svg>
+
+  <div class="hero-logo">
+    <svg viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 40 C15 20, 30 20, 45 40 C60 60, 75 60, 90 40 C105 20, 120 20, 135 40" stroke="#4a9eff" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M0 26 C15 6, 30 6, 45 26 C60 46, 75 46, 90 26 C105 6, 120 6, 135 26" stroke="#4a9eff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+      <path d="M0 54 C15 34, 30 34, 45 54 C60 74, 75 74, 90 54 C105 34, 120 34, 135 54" stroke="#4a9eff" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.4"/>
+    </svg>
+  </div>
+
+  <h1 class="hero-title" data-i18n="hero.title">Wave Capital</h1>
+  <p class="hero-subtitle" data-i18n="hero.subtitle">Follow the Next Wave</p>
+
+  <div class="hero-buttons">
+    <a href="terminal.html" class="btn btn-primary" data-i18n="hero.enter">Enter Terminal</a>
+    <a href="products.html" class="btn btn-secondary" data-i18n="hero.viewProducts">View Products</a>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span data-i18n="hero.scroll">Scroll</span>
+  </div>
+
+</section>
+
+
+<!-- ══════════════════════════════════════
+     STATS STRIP
+══════════════════════════════════════ -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-val">08<span>:00</span></div>
+    <div class="stat-label" data-i18n="stats.brief">Daily Brief — Israel Time</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val">5<span>+</span></div>
+    <div class="stat-label" data-i18n="stats.assets">Asset Classes Tracked</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val">AI<span>×</span></div>
+    <div class="stat-label" data-i18n="stats.ai">Claude-Powered Analysis</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val">1<span>K+</span></div>
+    <div class="stat-label" data-i18n="stats.monte">Monte Carlo Simulations</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     FEATURES / PRODUCTS
+══════════════════════════════════════ -->
+<section class="section">
+  <div class="section-tag" data-i18n="features.tag">Platform</div>
+  <h2 class="section-title" data-i18n="features.title">Everything a trader needs. In one place.</h2>
+  <p class="section-sub" data-i18n="features.sub">Wave Capital combines real-time market intelligence, AI-powered analysis, and quantitative backtesting into a unified system.</p>
+
+  <div class="features-grid">
+
+    <a href="terminal.html" class="feature-card">
+      <div class="feature-badge" data-i18n="features.live">Live</div>
+      <div class="feature-icon">🌅</div>
+      <div class="feature-title" data-i18n="features.terminalTitle">Morning Terminal</div>
+      <div class="feature-desc" data-i18n="features.terminalDesc">Daily AI-generated market briefing. Regime detection, top drivers, options flow, economic calendar, and trading bias — delivered every morning at 08:00.</div>
+      <div class="feature-link" data-i18n="features.terminalLink">Enter Terminal</div>
+    </a>
+
+    <a href="blog.html" class="feature-card">
+      <div class="feature-badge" data-i18n="features.new">New</div>
+      <div class="feature-icon">📝</div>
+      <div class="feature-title" data-i18n="features.blogTitle">Research & Blog</div>
+      <div class="feature-desc" data-i18n="features.blogDesc">Deep-dive market analysis, strategy breakdowns, and trade recaps. Macro themes explained with a trader's perspective.</div>
+      <div class="feature-link" data-i18n="features.blogLink">Read Blog</div>
+    </a>
+
+    <a href="products.html" class="feature-card">
+      <div class="feature-badge soon" data-i18n="features.soon">Coming Soon</div>
+      <div class="feature-icon">📊</div>
+      <div class="feature-title" data-i18n="features.backtestTitle">Backtest Suite</div>
+      <div class="feature-desc" data-i18n="features.backtestDesc">Upload your 4H strategy data and get instant performance analytics — win rate, drawdown, Monte Carlo simulation, and S/D zone breakdown.</div>
+      <div class="feature-link" data-i18n="features.backtestLink">View Products</div>
+    </a>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     TERMINAL PREVIEW
+══════════════════════════════════════ -->
+<div class="terminal-section">
+  <div>
+    <div class="section-tag" data-i18n="tp.tag">Morning Terminal</div>
+    <h2 class="section-title" data-i18n="tp.title">Know your regime before the market opens.</h2>
+    <p class="section-sub" data-i18n="tp.sub">Every morning at 08:00 Israel time, the system fetches live market data, runs it through a multi-factor risk engine, and sends it to Claude for structured analysis.</p>
+    <a href="terminal.html" class="btn btn-primary" style="margin-top: 8px;" data-i18n="tp.openBrief">Open Today's Brief →</a>
+  </div>
+
+  <div class="terminal-preview">
+    <div class="tp-bar">
+      <div class="tp-dot r"></div>
+      <div class="tp-dot y"></div>
+      <div class="tp-dot g"></div>
+      <span class="tp-title" data-i18n="tp.barTitle">Morning Intelligence — Wave Capital</span>
+    </div>
+    <div class="tp-body">
+      <div class="tp-regime" data-i18n="tp.regime">Market Regime</div>
+      <div class="tp-regime-val" id="tpRegime">—</div>
+      <div class="tp-row"><span class="tp-asset">S&P 500 (ES)</span><span class="tp-val" id="tpSpx">—</span><span class="tp-chg" id="tpSpxChg">—</span></div>
+      <div class="tp-row"><span class="tp-asset">VIX</span><span class="tp-val" id="tpVix">—</span><span class="tp-chg" id="tpVixChg">—</span></div>
+      <div class="tp-row"><span class="tp-asset">BTC / USD</span><span class="tp-val" id="tpBtc">—</span><span class="tp-chg" id="tpBtcChg">—</span></div>
+      <div class="tp-row"><span class="tp-asset">Gold</span><span class="tp-val" id="tpGold">—</span><span class="tp-chg" id="tpGoldChg">—</span></div>
+      <div class="tp-row"><span class="tp-asset" data-i18n="tp.pcr">Put/Call Ratio</span><span class="tp-val" id="tpPcr">—</span><span class="tp-chg" id="tpPcrChg">—</span></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     MANIFESTO
+══════════════════════════════════════ -->
+<section class="manifesto">
+  <p class="manifesto-quote" data-i18n-html="manifesto.quote">
+    "Markets don't reward the busiest trader.<br>
+    They reward the one who understands <strong>what matters today</strong>,<br>
+    ignores the noise, and acts with conviction."
+  </p>
+  <div class="manifesto-author" data-i18n="manifesto.author">— Wave Capital Philosophy</div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer>
+  <a href="index.html" class="footer-logo">
+    <svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 20 C10 10, 20 10, 30 20 C40 30, 50 30, 60 20 C70 10, 80 10, 90 20" stroke="#4a9eff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.4"/>
+    </svg>
+    <span class="footer-logo-text">Wave Capital</span>
+  </a>
+
+  <ul class="footer-links">
+    <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+    <li><a href="terminal.html" data-i18n="nav.terminal">Terminal</a></li>
+    <li><a href="blog.html" data-i18n="nav.blog">Blog</a></li>
+    <li><a href="products.html" data-i18n="nav.products">Products</a></li>
+  </ul>
+
+  <span class="footer-copy">© 2026 Wave Capital. All rights reserved.</span>
+</footer>
+
+<script src="i18n.js"></script>
+<!-- Live-wire the Terminal Preview card to the same backend the terminal uses,
+     so it never shows stale/hardcoded quotes. Values fall back to "—" if offline. -->
+<script>
+(function(){
+  function q(sym){ return fetch('/api/quote?symbol='+encodeURIComponent(sym)).then(function(r){return r.json();}).catch(function(){return null;}); }
+  function fnum(v, pre, dec){ return (pre||'') + Number(v).toLocaleString('en-US',{minimumFractionDigits:dec||0, maximumFractionDigits:dec||0}); }
+  function setVal(id, v, pre, dec){ var el=document.getElementById(id); if(el && v!=null && !isNaN(v)) el.textContent = fnum(v, pre, dec); }
+  function setChg(id, pct, riskUp){ // riskUp=true means a rise is "bad" (VIX): color it red
+    var el=document.getElementById(id); if(!el || pct==null || isNaN(pct)) return;
+    var up = pct >= 0, good = riskUp ? !up : up;
+    el.textContent = (up?'▲ +':'▼ ') + Math.abs(pct).toFixed(1) + '%';
+    el.className = 'tp-chg ' + (good ? 'up' : 'dn');
+  }
+  Promise.all([q('ES=F'), q('%5EVIX'), q('BTC-USD'), q('GC=F')]).then(function(r){
+    var es=r[0], vix=r[1], btc=r[2], gold=r[3];
+    if(es){ setVal('tpSpx', es.price, '', 0); setChg('tpSpxChg', es.pct); }
+    if(vix){
+      setVal('tpVix', vix.price, '', 1); setChg('tpVixChg', vix.pct, true);
+      var reg = vix.price>30?'RISK-OFF':vix.price>22?'FRAGILE':vix.price>16?'NEUTRAL':'CALM';
+      var rv=document.getElementById('tpRegime'); if(rv) rv.textContent = reg;
+    }
+    if(btc){ setVal('tpBtc', btc.price, '$', 0); setChg('tpBtcChg', btc.pct); }
+    if(gold){ setVal('tpGold', gold.price, '$', 0); setChg('tpGoldChg', gold.pct); }
+  });
+  fetch('/api/pcr').then(function(r){return r.json();}).then(function(d){
+    if(d && d.pcr!=null){
+      var el=document.getElementById('tpPcr'); if(el) el.textContent = Number(d.pcr).toFixed(2);
+      var c=document.getElementById('tpPcrChg'); if(c){ var bear = d.pcr>1; c.textContent = bear?'BEARISH':'BULLISH'; c.className='tp-chg '+(bear?'dn':'up'); }
+    }
+  }).catch(function(){});
+})();
+</script>
+
+</body>
+</html>
