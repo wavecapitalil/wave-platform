@@ -33,6 +33,8 @@ from modules.hormuz import bp as hormuz_bp
 from modules.flows import bp as flows_bp
 from modules.confluence import bp as confluence_bp
 from modules.market import bp as market_bp
+from modules.frontend import bp as frontend_bp
+from modules.system import bp as system_bp
 
 app.register_blueprint(seasonality_bp)
 app.register_blueprint(metals_bp)
@@ -40,6 +42,8 @@ app.register_blueprint(hormuz_bp)
 app.register_blueprint(flows_bp)
 app.register_blueprint(confluence_bp)
 app.register_blueprint(market_bp)
+app.register_blueprint(frontend_bp)
+app.register_blueprint(system_bp)
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
@@ -589,33 +593,6 @@ def news():
         del s['_ts']
     return jsonify({'stories': stories[:12]})
 
-
-# ── Serve explicitly allowlisted public files only ────────────────────────────
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', '..'))
-PUBLIC_DIR = os.path.join(PROJECT_ROOT, 'apps', 'terminal', 'public')
-
-_PUBLIC_FILES = {
-    'terminal_app.html',
-    'terminal.html',
-    'index.html',
-    'blog.html',
-    'products.html',
-    'i18n.js',
-    'wave-university-theme.css',
-}
-
-@app.route('/')
-@app.route('/terminal')
-def serve_terminal():
-    return send_from_directory(PUBLIC_DIR, 'terminal_app.html')
-
-@app.route('/<path:filename>')
-def serve_public_file(filename):
-    # Deliberately deny arbitrary project files (.env, .py, .db, logs, etc.).
-    if filename not in _PUBLIC_FILES:
-        return jsonify({'error': 'not found'}), 404
-    return send_from_directory(PUBLIC_DIR, filename)
 
 # ── Crypto Scanner — CoinGecko + DeFiLlama + GitHub ──────────────────────────
 SCANNER_CHAINS = [
@@ -2066,11 +2043,6 @@ def pcr_route():
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
-
-@app.route('/api/health')
-def health():
-    return jsonify({'status': 'ok', 'service': 'Wave Capital API'})
 
 
 # ── Risk Signals (7-factor composite) ─────────────────────────────────────────
