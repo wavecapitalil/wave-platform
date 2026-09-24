@@ -16,75 +16,76 @@ The migration strategy is strangler-style:
 - Create stable migration branch.
 - No production behavior changes.
 
-## Phase 1 — Security + stabilization
-Priority: P0
+## Phase 1 — Security + stabilization — COMPLETE
 
-Tasks:
-- replace unsafe catch-all file serving;
-- remove local secret-file exposure;
-- restrict CORS;
-- add input validation;
-- reconcile missing Hormuz / Commodities / Seasonality routes;
-- restore Comm Flows;
-- restore Confluence;
-- fix dependency list;
-- replace hard-coded `http://localhost:5001`;
-- standardize errors.
+Delivered:
+- unsafe catch-all removed and public assets allowlisted;
+- local secret-file exposure removed;
+- CORS constrained;
+- hard-coded production localhost removed;
+- Hormuz / Metals / Seasonality rebuilt to validated intent;
+- legacy ad Comm Flows replaced by Cross-Asset Flows;
+- Confluence rebuilt as transparent evidence overlap;
+- Morning Brief made portable;
+- source/freshness contract introduced.
 
 Output:
-- Terminal v1 Stable.
+- reproducible Terminal stabilization baseline.
 
-## Phase 2 — Tests
-Add:
-- health test
-- route smoke tests
-- schema tests
-- stale-data tests
-- provider-failure tests
-- basic browser navigation test
+## Phase 2 — Tests — COMPLETE BASELINE
 
-No large refactor before this safety net exists.
+Implemented:
+- health/security smoke tests;
+- core route smoke tests;
+- live external-provider + schema checks;
+- semantic checks on rebuilt research modules;
+- full Flask route-surface contract;
+- JavaScript/Python syntax gates;
+- desktop Chromium browser workflows;
+- iPad viewport browser workflows;
+- responsive overflow and uncaught-JS checks.
 
-## Phase 3 — Backend split
+The suite remains a migration gate and will expand with each extracted domain.
 
-Target:
+## Phase 3 — Backend split — CORE COMPLETE
+
+Current runtime:
 
 ```
-backend/
-  app.py
-  routes/
-    market.py
-    macro.py
-    equities.py
-    crypto.py
-    news.py
-    research.py
-    brief.py
+services/api/
+  api.py                 # minimal process entrypoint
+  app_factory.py         # composition root
+  modules/               # Flask domain blueprints
   services/
-    yahoo.py
-    fred.py
-    sec.py
-    cboe.py
-    coingecko.py
-    defillama.py
-    binance.py
     ai.py
+    sec.py
   core/
-    config.py
-    cache.py
-    logging.py
-    errors.py
+    meta.py
 ```
 
-## Phase 4 — Data layer
-Create a provider abstraction and response metadata.
+All legacy HTTP routes have been moved out of the original API monolith into domain blueprints. Background schedulers now have explicit/idempotent lifecycle functions.
 
-Goals:
-- one place per provider;
-- cache centrally;
-- fallback providers where possible;
-- source + timestamp on every metric;
-- data health dashboard.
+Remaining Phase 3 work is provider extraction, not route extraction:
+- Yahoo/yfinance
+- FRED
+- CFTC
+- Binance
+- CoinGecko
+- DeFiLlama
+- CBOE
+
+## Phase 4 — Data/provider layer — IN PROGRESS
+- shared AI provider adapter created;
+- shared SEC adapter created;
+- rebuilt research endpoints use provenance/freshness metadata;
+- portable application data directory introduced.
+
+Next:
+- extract remaining provider-specific HTTP/yfinance access;
+- centralize cache and timeout policy;
+- define provider errors/fallbacks;
+- expand source + timestamp metadata to legacy endpoints;
+- add internal data-health reporting.
 
 ## Phase 5 — Shared WAVE design system
 Create reusable:
@@ -100,23 +101,22 @@ Create reusable:
 - empty/error states
 - RTL rules
 
-## Phase 6 — Frontend migration
+## Phase 6 — Frontend migration — BOUNDARY EXTRACTION IN PROGRESS
 
-Recommended target:
-- Next.js
-- React
-- TypeScript
+Before framework migration, the legacy bundle is being decomposed safely:
+- inline CSS -> `terminal.css`;
+- inline app JS -> `terminal.js`;
+- rebuilt research domains -> dedicated JS modules;
+- dead legacy Silver Stress code removed.
 
-Migrate in this order:
-1. App shell
-2. Overview
-3. Macro
-4. Equities
-5. Crypto
-6. Research
-7. Tools
+Next:
+1. extract remaining Macro / Equities / Crypto / Research domains;
+2. introduce shared API/loading/error helpers;
+3. eliminate direct browser-to-provider calls;
+4. preserve browser QA;
+5. then migrate component-by-component to Next.js + React + TypeScript.
 
-Each migrated module must match current behavior before enhancements are added.
+No big-bang rewrite.
 
 ## Phase 7 — WAVE Account
 Shared identity across:
