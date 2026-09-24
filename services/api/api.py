@@ -32,102 +32,19 @@ from modules.metals import bp as metals_bp
 from modules.hormuz import bp as hormuz_bp
 from modules.flows import bp as flows_bp
 from modules.confluence import bp as confluence_bp
+from modules.market import bp as market_bp
 
 app.register_blueprint(seasonality_bp)
 app.register_blueprint(metals_bp)
 app.register_blueprint(hormuz_bp)
 app.register_blueprint(flows_bp)
 app.register_blueprint(confluence_bp)
+app.register_blueprint(market_bp)
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
     'Accept': 'application/json, text/html, */*',
 }
-
-
-# ── Fear & Greed (CNN) ────────────────────────────────────────────────────────
-@app.route('/api/fear-greed')
-def fear_greed():
-    try:
-        r = requests.get(
-            'https://production.dataviz.cnn.io/index/fearandgreed/current',
-            headers={
-                **HEADERS,
-                'Referer': 'https://edition.cnn.com/markets/fear-and-greed',
-                'Origin': 'https://edition.cnn.com',
-            },
-            timeout=10
-        )
-        r.raise_for_status()
-        return jsonify(r.json())
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-
-# ── Single quote: price + daily % change ─────────────────────────────────────
-@app.route('/api/quote')
-def quote():
-    symbol = request.args.get('symbol', '').strip()
-    if not symbol:
-        return jsonify({'error': 'symbol required'}), 400
-    try:
-        info  = yf.Ticker(symbol).info
-        state = info.get('marketState', 'REGULAR')
-        if state == 'PRE' and info.get('preMarketPrice') and info.get('preMarketChangePercent') is not None:
-            price = info['preMarketPrice']
-            pct   = info['preMarketChangePercent']
-        elif state in ('POST', 'POSTPOST') and info.get('postMarketPrice') and info.get('postMarketChangePercent') is not None:
-            price = info['postMarketPrice']
-            pct   = info['postMarketChangePercent']
-        else:
-            price = info.get('regularMarketPrice') or info.get('currentPrice')
-            pct   = info.get('regularMarketChangePercent', 0)
-        if price is None:
-            raise ValueError('no price in info')
-        return jsonify({'price': price, 'pct': pct, 'symbol': symbol})
-    except Exception:
-        pass
-    # Fallback: daily history
-    try:
-        hist = yf.Ticker(symbol).history(period='5d', interval='1d')
-        if hist.empty:
-            return jsonify({'error': 'no data'}), 404
-        closes = hist['Close'].dropna().tolist()
-        last = closes[-1]
-        prev = closes[-2] if len(closes) >= 2 else last
-        pct  = (last - prev) / prev * 100
-        return jsonify({'price': last, 'pct': pct, 'symbol': symbol})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-
-# ── Intraday closes for sparklines (5m candles, today) ───────────────────────
-@app.route('/api/intraday')
-def intraday():
-    symbol = request.args.get('symbol', '').strip()
-    if not symbol:
-        return jsonify({'error': 'symbol required'}), 400
-    try:
-        hist = yf.Ticker(symbol).history(period='1d', interval='5m')
-        if hist.empty:
-            return jsonify({'closes': []})
-        closes = hist['Close'].ffill().dropna().tolist()
-        return jsonify({'closes': closes})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-
-# ── VIX: last 7 daily closes for 3-day trend ─────────────────────────────────
-@app.route('/api/vix-history')
-def vix_history():
-    try:
-        hist = yf.Ticker('^VIX').history(period='7d', interval='1d')
-        if hist.empty:
-            return jsonify({'error': 'no data'}), 404
-        closes = hist['Close'].dropna().tolist()
-        return jsonify({'closes': closes})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
 
 
 # ── Sub-sector stock universe ────────────────────────────────────────────────
@@ -1593,29 +1510,6 @@ def insider_activity():
         return jsonify({'results': rows[:30]})
     except Exception as e:
         return jsonify({'error': str(e), 'results': []})
-
-
-# ── Historical daily closes ───────────────────────────────────────────────────
-@app.route('/api/history')
-def history():
-    symbol = request.args.get('symbol', '').strip()
-    days   = int(request.args.get('days', 30))
-    if not symbol:
-        return jsonify({'error': 'symbol required'}), 400
-    try:
-        if days <= 7:    period = '7d'
-        elif days <= 30: period = '1mo'
-        elif days <= 90: period = '3mo'
-        elif days <= 180:period = '6mo'
-        else:            period = '1y'
-        hist = yf.Ticker(symbol).history(period=period, interval='1d')
-        if hist.empty:
-            return jsonify({'error': 'no data'}), 404
-        closes = hist['Close'].dropna().tail(days)
-        dates  = [d.strftime('%b %d') for d in closes.index]
-        return jsonify({'closes': closes.tolist(), 'dates': dates})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
 
 
 @app.route('/api/correlation')
