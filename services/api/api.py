@@ -26,6 +26,15 @@ _ALLOWED_ORIGINS = [o.strip() for o in os.getenv(
 ).split(',') if o.strip()]
 CORS(app, resources={r"/api/*": {"origins": _ALLOWED_ORIGINS}})
 
+# Stabilization modules validated against current product intent.
+from modules.seasonality import bp as seasonality_bp
+from modules.metals import bp as metals_bp
+from modules.hormuz import bp as hormuz_bp
+
+app.register_blueprint(seasonality_bp)
+app.register_blueprint(metals_bp)
+app.register_blueprint(hormuz_bp)
+
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
     'Accept': 'application/json, text/html, */*',
