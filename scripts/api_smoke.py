@@ -19,6 +19,8 @@ CASES = [
     ("vix", "/api/vix-history"),
     ("fear_greed", "/api/fear-greed"),
     ("history", "/api/history?symbol=SPY&days=30"),
+    ("crypto_market_quote", "/api/crypto-market/quote?symbol=BTCUSDT"),
+    ("crypto_market_klines", "/api/crypto-market/klines?symbol=BTCUSDT&interval=30m&limit=12"),
     ("macro_news", "/api/macro-news"),
     ("econ_calendar", "/api/econ-calendar"),
     ("fred", "/api/fred?series=DGS10"),
