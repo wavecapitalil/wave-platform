@@ -40,7 +40,7 @@ checks = [
     ("Unsafe static catch-all removed", "send_from_directory(BASE_DIR, filename)" not in frontend_server and "PUBLIC_FILES" in frontend_server),
     ("Theme is loaded", "wave-university-theme.css" in html),
     ("Base Terminal CSS extracted", "terminal.css" in html and len(css) > 10000),
-    ("Terminal JS extracted", "terminal.js" in html and len(js) > 100000),
+    ("Terminal JS extracted", "terminal.js" in html and len(js) > 50000 and "function navigate(page)" in js),
     ("Domain JS modules loaded", all(path.name in html for path in domain_js_paths)),
     ("Dead Silver Stress code removed", "smdInit" not in frontend and "SMD_TIMER" not in frontend),
     ("Morning Brief uses portable storage", "WAVE_BRIEF_DIR" in brief_module),
