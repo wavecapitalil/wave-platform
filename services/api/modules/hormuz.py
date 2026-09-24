@@ -5,6 +5,7 @@ import re
 import requests
 import xml.etree.ElementTree as ET
 import yfinance as yf
+from core.meta import build_meta
 
 bp = Blueprint("hormuz", __name__)
 
@@ -91,13 +92,14 @@ def hormuz_summary():
         "events": news[:10],
         "event_counts": {"high": high, "medium": med, "total": len(news)},
         "price_confirmation": oil_move >= 2,
-        "meta": {
-            "generated_at": datetime.now(timezone.utc).isoformat(),
-            "news_source": "Google News RSS query",
-            "market_source": "Yahoo Finance via yfinance",
-            "method": "Descriptive rule set combining incident headline severity and daily Brent/WTI movement.",
-            "note": "Macro supply-risk monitor; not a stock-picking signal."
-        }
+        "meta": build_meta(
+            "Google News RSS + Yahoo Finance via yfinance",
+            freshness="live_with_daily_market_confirmation",
+            note="Macro supply-risk monitor; not a stock-picking signal.",
+            news_source="Google News RSS query",
+            market_source="Yahoo Finance via yfinance",
+            method="Descriptive rule set combining incident headline severity and daily Brent/WTI movement.",
+        )
     })
 
 
@@ -105,6 +107,6 @@ def hormuz_summary():
 def hormuz_events():
     try:
         news = _fetch_news(limit=30)
-        return jsonify({"events": news})
+        return jsonify({"events": news, "meta": build_meta("Google News RSS", freshness="live")})
     except Exception as exc:
         return jsonify({"error": str(exc), "events": []}), 502
