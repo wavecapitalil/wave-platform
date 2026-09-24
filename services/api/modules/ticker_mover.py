@@ -5,10 +5,10 @@ import re
 import xml.etree.ElementTree as ET
 
 import requests
-import yfinance as yf
 from flask import Blueprint, jsonify, request
 
 from services.sec import get_cik
+from services.yahoo import history_frame
 from services.ai import load_ai_config, call_anthropic, call_openai
 
 bp = Blueprint("ticker_mover", __name__)
@@ -22,8 +22,7 @@ HEADERS = {
 def _mover_price(sym):
     """Live price + change. ALL math done here in code, never by the model."""
     try:
-        t = yf.Ticker(sym)
-        h = t.history(period='1mo', interval='1d')
+        h = history_frame(sym, period='1mo', interval='1d')
         if h is None or h.empty or len(h) < 2:
             return None
         closes = h['Close'].dropna()
