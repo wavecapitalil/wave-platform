@@ -16,7 +16,7 @@ def _year_series(symbol: str, year: int):
     every completed year has the same 365 month-day keys.
     """
     start = f"{year}-01-01"
-    end = f"{year + 1}-01-10"
+    end = f"{year + 1}-01-01"
     df = yf.download(symbol, start=start, end=end, auto_adjust=True, progress=False)
     if df is None or df.empty:
         return []
