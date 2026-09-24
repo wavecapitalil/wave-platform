@@ -7,8 +7,8 @@ import threading
 import time as _time
 
 import requests
-import yfinance as yf
 from flask import Blueprint, jsonify
+from services.yahoo import quote as yahoo_quote, history_frame
 
 bp = Blueprint("market_risk", __name__)
 
@@ -88,18 +88,8 @@ def risk_signals():
 
     def _get(sym):
         try:
-            info  = yf.Ticker(sym).info
-            state = info.get('marketState', 'REGULAR')
-            if state == 'PRE' and info.get('preMarketPrice'):
-                pct   = float(info.get('preMarketChangePercent') or 0)
-                price = float(info['preMarketPrice'])
-            elif state in ('POST', 'POSTPOST') and info.get('postMarketPrice'):
-                pct   = float(info.get('postMarketChangePercent') or 0)
-                price = float(info['postMarketPrice'])
-            else:
-                pct   = float(info.get('regularMarketChangePercent') or 0)
-                price = float(info.get('regularMarketPrice') or info.get('currentPrice') or 0)
-            return price, pct
+            data = yahoo_quote(sym)
+            return data.price, data.pct
         except Exception:
             return 0.0, 0.0
 
@@ -117,7 +107,7 @@ def risk_signals():
     # VIX recent closes for trend display
     vix_closes = []
     try:
-        h = yf.Ticker('^VIX').history(period='7d', interval='1d')
+        h = history_frame('^VIX', period='7d', interval='1d')
         vix_closes = [round(float(v), 2) for v in h['Close'].dropna().tolist()[-5:]]
         if vix_closes:
             vix_price = vix_closes[-1]
@@ -127,7 +117,7 @@ def risk_signals():
     # SPY 200-day MA
     spy_200dma, spy_pct_vs_200 = 0.0, 0.0
     try:
-        h = yf.Ticker('SPY').history(period='1y', interval='1d')
+        h = history_frame('SPY', period='1y', interval='1d')
         closes = h['Close'].dropna()
         if len(closes) >= 200:
             spy_200dma     = round(float(closes.tail(200).mean()), 2)
