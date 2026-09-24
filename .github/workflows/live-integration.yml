@@ -1,0 +1,70 @@
+name: Live Integration
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  live-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install API dependencies
+        run: pip install -r services/api/requirements.txt
+
+      - name: Start WAVE API
+        run: |
+          mkdir -p services/api/data/briefs
+          cat > services/api/data/briefs/2026-09-24-morning-ci.html <<'EOF'
+          <!doctype html><html><head><title>CI Brief</title></head><body>
+          <div class="section"><div class="section-title">CI Portable Brief</div>
+          <p>This briefing exists only to validate portable WAVE_BRIEF_DIR storage in CI.</p>
+          <p>Portable storage integration test payload with enough content to exceed the loader's minimum-size guard.
+          The Morning Brief service should discover this HTML from its configured application storage rather than any user-specific macOS, iCloud, or Claude session directory.
+          This confirms that a deployed server can mount a persistent directory and serve the latest briefing without depending on Daniel's local machine.
+          Additional filler verifies the production loader path and refresh behavior safely.</p></div>
+          </body></html>
+          EOF
+          nohup python services/api/api.py > /tmp/wave-api.log 2>&1 &
+          echo $! > /tmp/wave-api.pid
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:5001/api/health >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/wave-api.log
+          exit 1
+
+      - name: Security smoke
+        run: python scripts/security_smoke.py
+
+      - name: Core API smoke
+        run: python scripts/api_smoke.py
+
+      - name: Portable Morning Brief integration
+        run: |
+          curl -fsS http://127.0.0.1:5001/api/daily-brief > /tmp/brief.html
+          grep -q "CI Portable Brief" /tmp/brief.html
+          ! grep -q "http://localhost:5001" /tmp/brief.html
+
+      - name: Live provider integration + schema checks
+        run: python scripts/live_integration.py
+
+      - name: Upload integration report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-integration-report
+          path: |
+            live_integration_report.json
+            /tmp/wave-api.log

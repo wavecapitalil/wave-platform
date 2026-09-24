@@ -1,0 +1,44 @@
+name: Stabilization CI
+
+on:
+  push:
+    branches:
+      - migration/terminal-v2
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  static-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Python syntax check
+        run: python -m py_compile services/api/*.py services/api/core/*.py services/api/services/*.py services/api/modules/*.py scripts/*.py
+
+      - name: JavaScript syntax check
+        run: |
+          for f in apps/terminal/public/*.js; do
+            node --check "$f"
+          done
+
+      - name: Install backend dependencies
+        run: pip install -r services/api/requirements.txt
+
+      - name: Frontend/API contract checks
+        run: python scripts/static_contract_check.py
+
+      - name: Route contract check
+        run: python scripts/route_contract_check.py
+
+      - name: Secret-file guard
+        run: |
+          test ! -e wave_secrets.env
+          test ! -e .env
+          ! find . -type f \( -name "*.db" -o -name "*.sqlite" -o -name "*.sqlite3" \) | grep .

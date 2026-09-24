@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wave Capital — Terminal</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="terminal.css">
+
+<script src="i18n.js"></script>
+  <link rel="stylesheet" href="wave-university-theme.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     TICKER BAR
+══════════════════════════════════════ -->
+<!-- TOP NAV BAR -->
+<div class="top-nav">
+  <a href="index.html" class="top-nav-logo">
+    <svg viewBox="0 0 80 30" fill="none" width="22" height="14">
+      <path d="M0 20 C10 10,20 10,30 20 C40 30,50 30,60 20 C70 10,80 10,90 20" stroke="#4a9eff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    </svg>
+    <span>Wave Capital</span>
+  </a>
+  <nav class="top-nav-links">
+    <a href="index.html" class="top-nav-link" data-i18n="nav.home">Home</a>
+    <a href="terminal_app.html" class="top-nav-link active" data-i18n="nav.terminal">Terminal</a>
+    <a href="blog.html" class="top-nav-link" data-i18n="nav.blog">Blog</a>
+    <a href="products.html" class="top-nav-link" data-i18n="nav.products">Products</a>
+  </nav>
+  <div class="top-nav-right">
+    <span class="ticker-time" id="tickerTime"></span>
+    <span class="ticker-refresh" onclick="loadTickerData()" title="Refresh">⟳</span>
+    <span class="nav-lang" onclick="setLang(getLang()==='he'?'en':'he');location.reload()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){setLang(getLang()==='he'?'en':'he');location.reload();}" style="font-size:12px;color:#64748b;cursor:pointer;margin-left:12px;padding:4px 8px;border-radius:4px">🌐 EN</span>
+  </div>
+</div>
+
+<!-- TICKER BAR -->
+<div class="ticker-bar">
+  <div class="ticker-items" id="tickerItems">
+    <div class="ticker-item"><span class="ticker-sym">SPY</span><span class="ticker-val" id="t-spy">—</span><span class="ticker-chg" id="tc-spy">—</span></div>
+    <div class="ticker-item"><span class="ticker-sym">QQQ</span><span class="ticker-val" id="t-qqq">—</span><span class="ticker-chg" id="tc-qqq">—</span></div>
+    <div class="ticker-item"><span class="ticker-sym">VIX</span><span class="ticker-val" id="t-vix">—</span><span class="ticker-chg" id="tc-vix">—</span></div>
+    <div class="ticker-item"><span class="ticker-sym">BTC</span><span class="ticker-val" id="t-btc">—</span><span class="ticker-chg" id="tc-btc">—</span></div>
+    <div class="ticker-item"><span class="ticker-sym">Gold</span><span class="ticker-val" id="t-gold">—</span><span class="ticker-chg" id="tc-gold">—</span></div>
+    <div class="ticker-item"><span class="ticker-sym">DXY</span><span class="ticker-val" id="t-dxy">—</span><span class="ticker-chg" id="tc-dxy">—</span></div>
+    <div class="ticker-item"><span class="ticker-sym">10Y</span><span class="ticker-val" id="t-10y">—</span><span class="ticker-chg" id="tc-10y">—</span></div>
+    <div class="ticker-item"><span class="ticker-sym">WTI</span><span class="ticker-val" id="t-wti">—</span><span class="ticker-chg" id="tc-wti">—</span></div>
+  </div>
+</div>
+
+
+<!-- re-open tab when nav is collapsed -->
+<div class="nav-reopen" id="navReopen" onclick="toggleNav()">›</div>
+
+<!-- ══════════════════════════════════════
+     APP BODY
+══════════════════════════════════════ -->
+<div class="app-body">
+
+  <!-- NAV PANEL -->
+  <div class="nav-panel" id="navPanel">
+
+    <!-- Header: logo + collapse button -->
+    <div class="nav-header">
+      <a href="index.html" class="nav-logo">
+        <svg viewBox="0 0 80 30" fill="none">
+          <path d="M0 20 C10 10,20 10,30 20 C40 30,50 30,60 20 C70 10,80 10,90 20" stroke="#4a9eff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-logo-text">Wave</span>
+      </a>
+      <button class="nav-toggle-btn" onclick="toggleNav()" title="Collapse menu">‹</button>
+    </div>
+
+    <div class="nav-content">
+
+    <div class="nav-section">
+      <div class="nav-section-title" onclick="toggleSection('overview')">
+        <span data-i18n="sidebar.secOverview">OVERVIEW</span> <span class="nav-section-caret open" id="caret-overview">▾</span>
+      </div>
+      <div class="nav-items" id="items-overview">
+        <div class="nav-item active" data-page="welcome" onclick="navigate('welcome')">
+          <span class="nav-item-icon">🏠</span> <span data-i18n="sidebar.home">Home</span>
+          <span class="nav-item-badge live" data-i18n="sidebar.live">Live</span>
+        </div>
+        <div class="nav-item" data-page="brief" onclick="navigate('brief')">
+          <span class="nav-item-icon" id="briefNavIcon">🌅</span><span id="briefNavLabel" data-i18n="sidebar.brief"> Morning Brief</span>
+          <span class="nav-item-badge live" id="briefNavBadge">—</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title" onclick="toggleSection('macro')">
+        <span data-i18n="sidebar.secMacro">MACRO</span> <span class="nav-section-caret open" id="caret-macro">▾</span>
+      </div>
+      <div class="nav-items" id="items-macro">
+        <div class="nav-item" data-page="risk" onclick="document.title='RISK CLICKED'; navigate('risk')">
+          <span class="nav-item-icon">🌡️</span> <span data-i18n="sidebar.riskMeter">Risk Meter</span>
+          <span class="nav-item-badge live" data-i18n="sidebar.live">Live</span>
+        </div>
+        <div class="nav-item" data-page="macro" onclick="navigate('macro')">
+          <span class="nav-item-icon">📡</span> <span data-i18n="sidebar.macroScanner">Macro Scanner</span>
+          <span class="nav-item-badge live" data-i18n="sidebar.live">Live</span>
+        </div>
+        <div class="nav-item" data-page="fx" onclick="navigate('fx')">
+          <span class="nav-item-icon">💱</span> <span data-i18n="sidebar.fx">FX Monitor</span>
+        </div>
+        <div class="nav-item" data-page="rates" onclick="navigate('rates')">
+          <span class="nav-item-icon">📈</span> <span data-i18n="sidebar.rates">Rates & Yields</span>
+        </div>
+        <div class="nav-item" data-page="commodities" onclick="navigate('commodities')">
+          <span class="nav-item-icon">🛢️</span> <span data-i18n="sidebar.commodities">Commodities</span>
+        </div>
+        <div class="nav-item" data-page="hormuz" onclick="navigate('hormuz')">
+          <span class="nav-item-icon">🚢</span> <span data-i18n="sidebar.hormuz">Hormuz Risk</span>
+        </div>
+        <div class="nav-item" data-page="btcgold" onclick="navigate('btcgold')">
+          <span class="nav-item-icon">⚖️</span> <span data-i18n="sidebar.btcgold">BTC / Gold Ratio</span>
+        </div>
+        <div class="nav-item" data-page="pcr" onclick="navigate('pcr')">
+          <span class="nav-item-icon">🎯</span> <span data-i18n="sidebar.pcr">Put/Call Ratio</span>
+          <span class="nav-item-badge live" data-i18n="sidebar.live">Live</span>
+        </div>
+        <div class="nav-item" data-page="housing" onclick="navigate('housing')">
+          <span class="nav-item-icon">🏠</span> <span data-i18n="sidebar.housing">Housing Risk Gauge</span>
+        </div>
+        <div class="nav-item" data-page="seasonality" onclick="navigate('seasonality')">
+          <span class="nav-item-icon">📅</span> <span data-i18n="sidebar.seasonality">Seasonality Scanner</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title" onclick="toggleSection('equities')">
+        <span data-i18n="sidebar.secEquities">EQUITIES</span> <span class="nav-section-caret open" id="caret-equities">▾</span>
+      </div>
+      <div class="nav-items" id="items-equities">
+        <div class="nav-item" data-page="sectors" onclick="navigate('sectors')">
+          <span class="nav-item-icon">📊</span> <span data-i18n="sidebar.sectorStrength">Sector Strength</span>
+          <span class="nav-item-badge live" data-i18n="sidebar.live">Live</span>
+        </div>
+        <div class="nav-item" data-page="breadth" onclick="navigate('breadth')">
+          <span class="nav-item-icon">🫁</span> <span data-i18n="sidebar.marketBreadth">Market Breadth</span>
+          <span class="nav-item-badge live" data-i18n="sidebar.live">Live</span>
+        </div>
+        <div class="nav-item" data-page="research" onclick="navigate('research')">
+          <span class="nav-item-icon">🔎</span> <span data-i18n="sidebar.companyResearch">Company Research</span>
+        </div>
+        <div class="nav-item" data-page="mover" onclick="navigate('mover')">
+          <span class="nav-item-icon">⚡</span> <span data-i18n="sidebar.whatsMoving">What's Moving</span>
+          <span class="nav-item-badge live" data-i18n="sidebar.ai">AI</span>
+        </div>
+        <div class="nav-item" data-page="institutions" onclick="navigate('institutions')">
+          <span class="nav-item-icon">🏛️</span> <span data-i18n="sidebar.institutions">Institutional Holdings</span>
+        </div>
+        <div class="nav-item" data-page="fundchart" onclick="navigate('fundchart')">
+          <span class="nav-item-icon">📉</span> <span data-i18n="sidebar.fundChart">Fundamental Chart</span>
+        </div>
+        <div class="nav-item" data-page="confluence" onclick="navigate('confluence')">
+          <span class="nav-item-icon">🧩</span> <span data-i18n="sidebar.insider">Confluence</span>
+        </div>
+        <div class="nav-item" data-page="earnings" onclick="navigate('earnings')">
+          <span class="nav-item-icon">📣</span> <span data-i18n="sidebar.earnings">Earnings</span>
+        </div>
+        <div class="nav-item" data-page="correlation" onclick="navigate('correlation')">
+          <span class="nav-item-icon">🔗</span> <span data-i18n="sidebar.correlation">Correlation</span>
+        </div>
+        <div class="nav-sublabel" data-i18n="sidebar.industries">Industries</div>
+        <div class="nav-item" data-page="comm-flows" onclick="navigate('comm-flows')">
+          <span class="nav-item-icon">🌊</span> <span data-i18n="sidebar.commFlows">Cross-Asset Flows</span>
+        </div>
+        <div class="nav-item" data-page="ev" onclick="navigate('ev')">
+          <span class="nav-item-icon">⚡</span> <span data-i18n="sidebar.ev">EV Industry</span>
+          <span class="nav-item-badge live" data-i18n="sidebar.live">Live</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title" onclick="toggleSection('crypto')">
+        <span data-i18n="sidebar.secCrypto">CRYPTO</span> <span class="nav-section-caret open" id="caret-crypto">▾</span>
+      </div>
+      <div class="nav-items" id="items-crypto">
+        <div class="nav-item" data-page="crypto" onclick="navigate('crypto')">
+          <span class="nav-item-icon">🪙</span> <span data-i18n="sidebar.cryptoDash">Crypto Dashboard</span>
+        </div>
+        <div class="nav-item" data-page="scanner" onclick="navigate('scanner')">
+          <span class="nav-item-icon">🔍</span> <span data-i18n="sidebar.cryptoScanner">Crypto Scanner</span>
+          <span class="nav-item-badge live" data-i18n="sidebar.live">Live</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title" onclick="toggleSection('tools')">
+        <span data-i18n="sidebar.secTools">TOOLS</span> <span class="nav-section-caret open" id="caret-tools">▾</span>
+      </div>
+      <div class="nav-items" id="items-tools">
+        <div class="nav-item" data-page="backtest" onclick="navigate('backtest')">
+          <span class="nav-item-icon">🔬</span> <span data-i18n="sidebar.backtest">Backtest Suite</span>
+          <span class="nav-item-badge soon" data-i18n="sidebar.soon">Soon</span>
+        </div>
+        <div class="nav-item" data-page="ideas" onclick="navigate('ideas')">
+          <span class="nav-item-icon">💡</span> <span data-i18n="sidebar.tradeIdeas">Trade Ideas</span>
+          <span class="nav-item-badge soon" data-i18n="sidebar.soon">Soon</span>
+        </div>
+      </div>
+    </div>
+
+    </div><!-- end nav-content -->
+
+    <!-- Footer: user -->
+    <div class="nav-footer">
+      <div class="user-avatar">DA</div>
+      <span class="nav-user-name">Daniel</span>
+    </div>
+
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main" id="mainContent">
+
+    <!-- ─── WELCOME PAGE ─── -->
+    <div class="page active" id="page-welcome">
+      <!-- Ambient animated wave -->
+      <canvas id="heroWaveCanvas" class="hero-wave-canvas"></canvas>
+
+      <div class="welcome-wrap">
+
+        <!-- Greeting row -->
+        <div class="greeting-row" style="margin-bottom:20px">
+          <div class="greeting-left">
+            <div class="greeting" id="greeting">Good morning, <span>Daniel</span> 👋</div>
+            <div class="greeting-sub" id="greetingDate"></div>
+          </div>
+          <div class="regime-pill" id="regimePill">
+            <div class="regime-dot" id="regimeDot" style="background:#f59e0b"></div>
+            <div>
+              <div class="regime-label" data-i18n="home.regime">Market Regime</div>
+              <div class="regime-val" id="regimeVal" style="color:#f59e0b">FRAGILE</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8-ticker glass strip — tilt-enabled -->
+        <div class="summary-grid" style="margin-bottom:20px">
+          <div class="summary-card" data-tilt>
+            <div class="sc-label">S&P 500</div>
+            <div class="sc-val" id="s-sp">—</div>
+            <div class="sc-chg" id="sc-sp">—</div>
+            <svg class="sc-spark" id="spark-sp" viewBox="0 0 100 28" preserveAspectRatio="none"></svg>
+          </div>
+          <div class="summary-card" data-tilt>
+            <div class="sc-label">Nasdaq</div>
+            <div class="sc-val" id="s-qqq">—</div>
+            <div class="sc-chg" id="sc-qqq">—</div>
+            <svg class="sc-spark" id="spark-qqq" viewBox="0 0 100 28" preserveAspectRatio="none"></svg>
+          </div>
+          <div class="summary-card" data-tilt>
+            <div class="sc-label">VIX</div>
+            <div class="sc-val" id="s-vix">—</div>
+            <div class="sc-chg" id="sc-vix">—</div>
+            <svg class="sc-spark" id="spark-vix" viewBox="0 0 100 28" preserveAspectRatio="none"></svg>
+          </div>
+          <div class="summary-card" data-tilt>
+            <div class="sc-label">10Y Yield</div>
+            <div class="sc-val" id="s-10y">—</div>
+            <div class="sc-chg" id="sc-10y">—</div>
+            <svg class="sc-spark" id="spark-10y" viewBox="0 0 100 28" preserveAspectRatio="none"></svg>
+          </div>
+          <div class="summary-card" data-tilt>
+            <div class="sc-label">WTI Crude</div>
+            <div class="sc-val" id="s-wti">—</div>
+            <div class="sc-chg" id="sc-wti">—</div>
+            <svg class="sc-spark" id="spark-wti" viewBox="0 0 100 28" preserveAspectRatio="none"></svg>
+          </div>
+          <div class="summary-card" data-tilt>
+            <div class="sc-label">Gold</div>
+            <div class="sc-val" id="s-gold">—</div>
+            <div class="sc-chg" id="sc-gold">—</div>
+            <svg class="sc-spark" id="spark-gold" viewBox="0 0 100 28" preserveAspectRatio="none"></svg>
+          </div>
+          <div class="summary-card" data-tilt>
+            <div class="sc-label">EUR/USD</div>
+            <div class="sc-val" id="s-eur">—</div>
+            <div class="sc-chg" id="sc-eur">—</div>
+            <svg class="sc-spark" id="spark-eur" viewBox="0 0 100 28" preserveAspectRatio="none"></svg>
+          </div>
+          <div class="summary-card" data-tilt>
+            <div class="sc-label">BTC/USD</div>
+            <div class="sc-val" id="s-btc">—</div>
+            <div class="sc-chg" id="sc-btc">—</div>
+            <svg class="sc-spark" id="spark-btc" viewBox="0 0 100 28" preserveAspectRatio="none"></svg>
+          </div>
+        </div>
+
+        <!-- Main row: news carousel + sidebar -->
+        <div class="home-content-row">
+
+          <!-- Left: carousel + secondary grid -->
+          <div class="home-news-side">
+            <div class="wsj-section-header" style="margin-bottom:12px">
+              <span class="wsj-section-label" data-i18n="home.marketsIntel">Markets Intelligence</span>
+              <a class="wsj-section-link" onclick="navigate('brief')" data-i18n="home.fullBrief">Full Brief →</a>
+            </div>
+            <div id="newsList"><div style="color:#334155;font-size:12px;padding:20px 0">Loading headlines...</div></div>
+          </div>
+
+          <!-- Right: sidebar -->
+          <div class="hero-sidebar">
+            <!-- Economic Calendar -->
+            <div class="sidebar-widget">
+              <div class="sidebar-widget-header">
+                <span data-i18n="home.calendar">📅 Today's Calendar</span>
+                <span id="calDate" style="font-size:9px;color:#334155"></span>
+              </div>
+              <div class="sidebar-widget-body" id="calList">
+                <div style="color:#334155;font-size:11px">Loading events...</div>
+              </div>
+            </div>
+            <!-- Sector Pulse -->
+            <div class="sidebar-widget">
+              <div class="sidebar-widget-header">
+                <span data-i18n="home.sectorPulse">📊 Sector Pulse</span>
+                <a class="wsj-section-link" onclick="navigate('sectors')" style="font-size:9px" data-i18n="home.seeAll">See all →</a>
+              </div>
+              <div class="sidebar-widget-body" id="sectorPulse">
+                <div style="color:#334155;font-size:11px">Loading sectors...</div>
+              </div>
+            </div>
+            <!-- Market Drivers -->
+            <div class="side-drivers">
+              <div class="side-driver">
+                <div class="dr-rank" style="background:#ef4444">1</div>
+                <div class="dr-text">Growth &amp; Recession Risk</div>
+                <div class="dr-asset">SPY</div>
+              </div>
+              <div class="side-driver">
+                <div class="dr-rank" style="background:#f59e0b">2</div>
+                <div class="dr-text">Inflation &amp; Price Pressure</div>
+                <div class="dr-asset">TIPS</div>
+              </div>
+              <div class="side-driver">
+                <div class="dr-rank" style="background:#3b82f6">3</div>
+                <div class="dr-text">Geopolitical Risk Premium</div>
+                <div class="dr-asset">GLD</div>
+              </div>
+              <div class="side-driver" style="justify-content:flex-end">
+                <a class="ms-link" onclick="navigate('brief')" style="font-size:11px">Full Brief →</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div><!-- end welcome -->
+
+    <!-- ─── WHAT'S MOVING PAGE ─── -->
+    <div class="page" id="page-mover">
+      <div style="max-width:1100px;margin:0 auto;padding:8px 4px">
+        <div class="page-header">
+          <div class="page-header-tag">Catalyst Desk</div>
+          <div class="page-header-title">What's Moving</div>
+          <div style="color:#64748b;font-size:13px;margin-top:4px">Type a ticker to see the move and an AI deep-dive of why — across news, SEC filings, Reddit &amp; StockTwits.</div>
+        </div>
+        <div style="display:flex;gap:8px;margin:18px 0">
+          <input id="moverInput" placeholder="e.g. HOOD" autocomplete="off"
+            style="flex:1;max-width:260px;background:#0b1120;border:1px solid #1e293b;color:#e2e8f0;padding:11px 14px;border-radius:10px;font-size:15px;text-transform:uppercase;outline:none"
+            onkeydown="if(event.key==='Enter')loadMover()">
+          <button onclick="loadMover()"
+            style="background:#4a9eff;color:#fff;border:none;padding:11px 22px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer">Analyze</button>
+        </div>
+        <div id="moverBody"></div>
+      </div>
+    </div>
+
+    <!-- ─── MORNING BRIEF PAGE ─── -->
+    <div class="page" id="page-brief">
+      <div class="brief-wrap">
+        <div class="page-header">
+          <div class="page-header-tag">Daily Intelligence</div>
+          <div class="page-header-title" id="briefPageTitle">Morning Brief</div>
+          <div class="page-header-sub" id="briefDate"></div>
+        </div>
+        <div class="iframe-container">
+          <iframe src="" id="briefFrame" title="Morning Intelligence Dashboard"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── COMING SOON PAGES ─── -->
+    <div class="page" id="page-macro">
+      <div class="welcome-wrap" style="max-width:1140px">
+        <div class="page-header" style="margin-bottom:20px">
+          <div class="page-header-tag">Macro · Intelligence</div>
+          <div class="page-header-title">Macro Scanner</div>
+          <div class="page-header-sub">Real-time macro news filtered by topic — Fed, CPI, Jobs, GDP, Trade, FX, Energy, Housing</div>
+        </div>
+
+        <!-- Topic filter pills -->
+        <div id="macroTopics" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px"></div>
+
+        <!-- Country filter pills -->
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+          <span style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#334155">REGION</span>
+          <div id="macroCountryPills" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+        </div>
+
+        <!-- Stats bar -->
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #1e293b">
+          <div id="macroCount" style="font-size:11px;color:#475569"></div>
+          <button onclick="loadMacroScanner()" style="margin-left:auto;background:transparent;border:1px solid #1e293b;color:#64748b;border-radius:6px;padding:5px 14px;font-size:11px;cursor:pointer">⟳ Refresh</button>
+        </div>
+
+        <!-- Stories grid -->
+        <div id="macroGrid"><div style="color:#334155;font-size:13px;padding:40px 0;text-align:center">Loading macro news...</div></div>
+      </div>
+    </div>
+    <div class="page" id="page-fx">
+      <div class="coming-wrap"><div class="coming-icon">💱</div><div class="coming-title">FX Monitor</div><div class="coming-sub">Coming soon</div></div>
+    </div>
+    <div class="page" id="page-rates">
+      <div class="welcome-wrap" style="max-width:900px">
+        <div class="page-header" style="margin-bottom:24px">
+          <div class="page-header-tag">Macro · Fixed Income</div>
+          <div class="page-header-title">Rates &amp; Yields</div>
+          <div class="page-header-sub">US Treasury yield curve — the market's real-time view on growth, inflation and recession risk</div>
+        </div>
+
+        <!-- Yield curve cards -->
+        <div id="ratesStrip" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px"></div>
+
+        <!-- Spread + verdict -->
+        <div id="ratesSpread" style="margin-bottom:24px"></div>
+
+        <!-- Yield curve chart -->
+        <div class="mini-section" style="margin-bottom:24px">
+          <div class="ms-header"><div class="ms-title">📉 10-Year Treasury — 60 Day</div></div>
+          <div style="margin-top:14px;position:relative;height:180px">
+            <canvas id="ratesChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Visual yield curve shape -->
+        <div class="mini-section" style="margin-bottom:24px">
+          <div class="ms-header"><div class="ms-title">📐 Yield Curve Shape</div></div>
+          <div id="ratesCurveChart" style="margin-top:14px;position:relative;height:160px">
+            <canvas id="ratesCurveCanvas"></canvas>
+          </div>
+        </div>
+
+        <!-- Beginner explainer -->
+        <div id="ratesExplainer"></div>
+
+      </div>
+    </div>
+    <div class="page" id="page-commodities">
+      <div class="welcome-wrap" style="max-width:1120px">
+        <div class="page-header" style="margin-bottom:16px">
+          <div class="page-header-tag">Metals · Relative Value</div>
+          <div class="page-header-title">Metals Dashboard</div>
+          <div class="page-header-sub">Gold / Silver Ratio relative to its 10-year historical distribution</div>
+        </div>
+
+        <div class="cd-section" id="gsrSection">
+          <div class="cd-section-head">
+            <span class="cd-section-title">⚖️ Gold / Silver Ratio</span>
+            <div class="cd-view-toggle" id="gsrTimeTabs">
+              <button class="cd-vbtn" onclick="setGsrPeriod('ytd',this)">YTD</button>
+              <button class="cd-vbtn" onclick="setGsrPeriod('1y',this)">1Y</button>
+              <button class="cd-vbtn" onclick="setGsrPeriod('5y',this)">5Y</button>
+              <button class="cd-vbtn active" onclick="setGsrPeriod('10y',this)">10Y</button>
+            </div>
+          </div>
+
+          <div id="gsrMetrics" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:20px">
+            <div class="td-stat" style="text-align:center">
+              <div class="td-stat-label">Current Ratio</div>
+              <div class="td-stat-val" id="gsrCurrent" style="font-size:28px;font-weight:900">—</div>
+              <div class="td-stat-sub" id="gsrCurrentSub"></div>
+            </div>
+            <div class="td-stat" style="text-align:center">
+              <div class="td-stat-label" id="gsrMeanLabel">10Y Mean</div>
+              <div class="td-stat-val" id="gsrMean" style="font-size:22px;font-weight:800">—</div>
+              <div class="td-stat-sub" id="gsrMeanSub"></div>
+            </div>
+            <div class="td-stat" style="text-align:center">
+              <div class="td-stat-label">10Y Percentile</div>
+              <div class="td-stat-val" id="gsrVsMean" style="font-size:22px;font-weight:800">—</div>
+              <div class="td-stat-sub" id="gsrSignal"></div>
+            </div>
+            <div class="td-stat" style="text-align:center">
+              <div class="td-stat-label">Gold Price</div>
+              <div class="td-stat-val" id="gsrGold" style="font-size:18px;font-weight:800;color:#f59e0b">—</div>
+              <div class="td-stat-sub">per oz</div>
+            </div>
+            <div class="td-stat" style="text-align:center">
+              <div class="td-stat-label">Silver Price</div>
+              <div class="td-stat-val" id="gsrSilver" style="font-size:18px;font-weight:800;color:#94a3b8">—</div>
+              <div class="td-stat-sub">per oz</div>
+            </div>
+          </div>
+
+          <div id="gsrVerdict" style="display:none"></div>
+          <div id="gsrBanner" style="border-radius:10px;padding:12px 18px;margin-bottom:16px;display:none;font-size:12px;line-height:1.6"></div>
+
+          <div style="position:relative;height:430px">
+            <canvas id="gsrChart"></canvas>
+          </div>
+          <div id="gsrMeta" style="margin-top:8px;font-size:10px;color:#597895;text-align:right"></div>
+        </div>
+
+        <div class="callout" style="margin-top:12px">
+          Relative-value context only. A historically high or low ratio does not by itself imply that the ratio must mean-revert.
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="page-hormuz">
+      <div class="welcome-wrap" style="max-width:1080px">
+        <div class="page-header" style="margin-bottom:16px">
+          <div class="page-header-tag">Macro · Energy Supply Risk</div>
+          <div class="page-header-title">Hormuz Energy Risk Monitor</div>
+          <div class="page-header-sub">Recent Strait of Hormuz developments combined with Brent and WTI price confirmation</div>
+        </div>
+
+        <div class="hero-card" id="hormuzHero" style="padding:20px;margin-bottom:14px">
+          <div style="display:grid;grid-template-columns:180px 1fr 1fr 1.4fr 100px;gap:12px;align-items:center">
+            <div id="hormuzThreatBlock" style="text-align:center">
+              <div style="font-size:9px;letter-spacing:1.4px;color:#90a8c2">RISK STATE</div>
+              <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:5px">
+                <span id="hormuzThreatDot" style="width:10px;height:10px;border-radius:50%;background:#48d18a"></span>
+                <span id="hormuzThreatBig" style="font-size:28px;font-weight:950;color:#48d18a">—</span>
+              </div>
+            </div>
+            <div class="td-stat"><div class="td-stat-label">Brent</div><div class="td-stat-val" id="hormuzBrent">—</div></div>
+            <div class="td-stat"><div class="td-stat-label">WTI</div><div class="td-stat-val" id="hormuzWti">—</div></div>
+            <div>
+              <div style="font-size:9px;color:#90a8c2;letter-spacing:1px">LATEST DEVELOPMENT</div>
+              <div id="hormuzLatestTitle" style="font-size:13px;font-weight:800;color:#edf6ff;margin-top:5px;line-height:1.45">—</div>
+              <div id="hormuzLatestSummary" style="font-size:10px;color:#90a8c2;margin-top:5px;line-height:1.5"></div>
+            </div>
+            <div style="text-align:center"><div style="font-size:9px;color:#90a8c2">EVENTS</div><div id="hormuzEventCount" style="font-size:28px;font-weight:900">—</div></div>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-bottom:14px">
+          This is a macro supply-chain risk monitor. It does not rank stocks or generate trade recommendations. Risk state combines recent Hormuz-specific developments with Brent/WTI market confirmation.
+        </div>
+
+        <div class="mini-section">
+          <div class="ms-header"><div class="ms-title">Supply-Risk Developments</div><div style="font-size:10px;color:#90a8c2">Latest monitored headlines</div></div>
+          <div id="hPanel-events" style="margin-top:12px">
+            <button id="hTab-events" style="display:none"></button>
+            <div id="hormuzEventList"><div style="padding:24px;text-align:center;color:#90a8c2">Loading…</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="page-ev">
+      <div class="welcome-wrap" style="max-width:960px">
+        <div class="page-header" style="margin-bottom:24px">
+          <div class="page-header-tag">Clean Energy · Autos</div>
+          <div class="page-header-title">EV Industry</div>
+          <div class="page-header-sub">Global electric vehicle adoption, delivery leaders &amp; public company financials</div>
+        </div>
+
+        <!-- EV vs Petrol/Diesel adoption trend -->
+        <div class="mini-section" style="margin-bottom:24px">
+          <div class="ms-header">
+            <div class="ms-title">🌍 Global EV Adoption — Annual Trend</div>
+            <div style="font-size:10px;color:#475569">Source: IEA / BloombergNEF</div>
+          </div>
+          <div style="margin-top:14px;position:relative;height:220px">
+            <canvas id="evAdoptionChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Delivery leaders -->
+        <div class="mini-section" style="margin-bottom:24px">
+          <div class="ms-header">
+            <div class="ms-title">🏆 2024 Deliveries — Top Manufacturers</div>
+            <div style="display:flex;gap:6px">
+              <button onclick="evSetDeliveryMode('bev')" id="evBtnBev" style="font-size:10px;padding:3px 10px;border-radius:4px;border:1px solid #3b82f6;background:#1e3a5f;color:#93c5fd;cursor:pointer">BEV Only</button>
+              <button onclick="evSetDeliveryMode('total')" id="evBtnTotal" style="font-size:10px;padding:3px 10px;border-radius:4px;border:1px solid #334155;background:transparent;color:#475569;cursor:pointer">All EV (incl. PHEV)</button>
+            </div>
+          </div>
+          <div style="margin-top:14px;position:relative;height:280px">
+            <canvas id="evDeliveryChart"></canvas>
+          </div>
+          <div style="font-size:10px;color:#334155;margin-top:6px">BEV = Battery Electric only · PHEV = includes Plug-in Hybrids · 2024 full year data</div>
+        </div>
+
+        <!-- Public company financials -->
+        <div class="mini-section" style="margin-bottom:24px">
+          <div class="ms-header"><div class="ms-title">💰 Public Companies — Revenue &amp; Financials</div></div>
+          <div id="evCompanyTable" style="margin-top:14px">
+            <div style="color:#475569;font-size:12px">Loading...</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="page" id="page-crypto">
+      <div class="welcome-wrap" style="max-width:1160px">
+
+        <div class="page-header" style="margin-bottom:20px">
+          <div class="page-header-tag">Crypto</div>
+          <div class="page-header-title">Market Dashboard</div>
+          <div class="page-header-sub" id="cdLastUpdated">—</div>
+        </div>
+
+        <!-- Market Cap Hero -->
+        <div class="cd-mc-hero">
+          <div class="cd-mc-label">Total Crypto Market Cap</div>
+          <div class="cd-mc-value" id="cdMcValue">—</div>
+          <div class="cd-mc-badges">
+            <div class="cd-mc-badge">
+              <span class="cd-mc-badge-val" id="cdChg24h">—</span>
+              <span class="cd-mc-badge-lbl">24H</span>
+            </div>
+            <div class="cd-mc-badge">
+              <span class="cd-mc-badge-val" id="cdChg7d">—</span>
+              <span class="cd-mc-badge-lbl">7D</span>
+            </div>
+            <div class="cd-mc-badge">
+              <span class="cd-mc-badge-val" id="cdBtcDom">—</span>
+              <span class="cd-mc-badge-lbl">BTC DOM</span>
+            </div>
+            <div class="cd-mc-badge">
+              <span class="cd-mc-badge-val" id="cdVol24h">—</span>
+              <span class="cd-mc-badge-lbl">24H VOL</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cohort Performance / Price History -->
+        <div class="cd-section">
+          <div class="cd-section-head">
+            <span class="cd-section-title">📊 Cohort Performance</span>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+              <!-- Period tabs -->
+              <div class="cd-tabs" id="cohortPeriodTabs">
+                <button class="cd-tab active" onclick="setCohortPeriod('24h',this)">1D</button>
+                <button class="cd-tab" onclick="setCohortPeriod('7d',this)">1W</button>
+                <button class="cd-tab" onclick="setCohortPeriod('30d',this)">1M</button>
+                <button class="cd-tab" onclick="setCohortPeriod('1y',this)">1Y</button>
+              </div>
+              <!-- Bar / Line toggle -->
+              <div class="cd-view-toggle">
+                <button class="cd-vbtn active" id="cohortBarBtn" onclick="setCohortView('bar')">▦ Bar</button>
+                <button class="cd-vbtn" id="cohortLineBtn" onclick="setCohortView('line')">〜 Line</button>
+              </div>
+              <!-- Line period (only visible in line mode) -->
+              <div class="cd-tabs" id="cohortLinePeriodTabs" style="display:none">
+                <button class="cd-tab active" onclick="setCohortLineDays(7,this)">7D</button>
+                <button class="cd-tab" onclick="setCohortLineDays(30,this)">30D</button>
+                <button class="cd-tab" onclick="setCohortLineDays(90,this)">90D</button>
+                <button class="cd-tab" onclick="setCohortLineDays(365,this)">1Y</button>
+              </div>
+            </div>
+          </div>
+          <div class="cd-chart-wrap">
+            <canvas id="cohortChart"></canvas>
+          </div>
+          <!-- Coin breakdown (shown on cohort click) -->
+          <div id="cohortBreakdown" style="margin-top:14px;display:none"></div>
+        </div>
+
+        <!-- On-Chain KPIs -->
+        <div class="cd-section">
+          <div class="cd-section-head">
+            <span class="cd-section-title">⛓ On-Chain Metrics</span>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <div class="cd-tabs" id="onchainKpiTabs">
+                <button class="cd-tab active" onclick="setOnchainKpi('tvl',this)">TVL</button>
+                <button class="cd-tab" onclick="setOnchainKpi('dex_volume',this)">DEX Volume</button>
+                <button class="cd-tab" onclick="setOnchainKpi('fees',this)">Fees</button>
+                <button class="cd-tab" onclick="setOnchainKpi('revenue',this)">Revenue</button>
+              </div>
+              <div class="cd-view-toggle" id="onchainDaysTabs">
+                <button class="cd-vbtn active" onclick="setOnchainDays(7,this)">7D</button>
+                <button class="cd-vbtn" onclick="setOnchainDays(30,this)">30D</button>
+                <button class="cd-vbtn" onclick="setOnchainDays(90,this)">90D</button>
+                <button class="cd-vbtn" onclick="setOnchainDays(365,this)">1Y</button>
+              </div>
+            </div>
+          </div>
+          <div id="onchainProtocolPicker" style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 6px"></div>
+          <div class="cd-onchain-wrap">
+            <canvas id="onchainChart"></canvas>
+          </div>
+          <div id="onchainMeta" style="margin-top:10px;font-size:10px;color:#334155;text-align:right"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ─── SECTOR STRENGTH PAGE ─── -->
+    <div class="page" id="page-sectors">
+      <div class="welcome-wrap" style="max-width:800px">
+
+        <!-- ── SECTOR LIST VIEW ── -->
+        <div id="sectorListView">
+          <div class="page-header" style="margin-bottom:24px">
+            <div class="page-header-tag">Equities</div>
+            <div class="page-header-title">Sector Strength</div>
+            <div class="page-header-sub" id="sectorsUpdated">Loading...</div>
+          </div>
+
+
+          <div class="mini-section">
+            <div class="ms-header" style="margin-bottom:16px">
+              <div class="ms-title">📊 Daily % Change — SPDR Sector ETFs</div>
+              <button onclick="loadSectors()" style="font-size:10px;padding:2px 8px;border-radius:4px;border:1px solid var(--border2);background:transparent;color:var(--gray);cursor:pointer">↻ Refresh</button>
+            </div>
+            <div id="sectorBars"></div>
+          </div>
+        </div>
+
+        <!-- ── SECTOR DETAIL VIEW ── -->
+        <div id="sectorDetailView" style="display:none">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+            <div style="display:flex;align-items:center;gap:16px">
+              <button onclick="closeSectorDetail()" style="font-size:12px;padding:5px 12px;border-radius:6px;border:1px solid var(--border2);background:transparent;color:var(--gray);cursor:pointer">← Back</button>
+              <div>
+                <div class="page-header-tag" style="margin-bottom:2px">Equities · Sub-Sector Drill-Down</div>
+                <div class="page-header-title" id="detailSectorTitle" style="font-size:20px">—</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:4px" id="detailPeriodBtns">
+              <button class="ratio-btn active" onclick="switchDetailPeriod('1d',this)">1D</button>
+              <button class="ratio-btn" onclick="switchDetailPeriod('1w',this)">1W</button>
+              <button class="ratio-btn" onclick="switchDetailPeriod('1m',this)">1M</button>
+              <button class="ratio-btn" onclick="switchDetailPeriod('3m',this)">3M</button>
+            </div>
+          </div>
+          <div id="sectorDetailStatus" style="font-size:11px;color:#334155;margin-bottom:16px">Loading...</div>
+          <div id="sectorDetailContent"></div>
+        </div>
+
+        <!-- ── STOCK DETAIL VIEW ── -->
+        <div id="stockDetailView" style="display:none">
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px">
+            <button onclick="closeStockDetail()" style="font-size:12px;padding:5px 12px;border-radius:6px;border:1px solid var(--border2);background:transparent;color:var(--gray);cursor:pointer">← Back</button>
+            <div>
+              <div class="page-header-tag" style="margin-bottom:2px" id="stockDetailBreadcrumb">Equities</div>
+              <div style="display:flex;align-items:baseline;gap:10px">
+                <div class="page-header-title" id="stockDetailName" style="font-size:20px">—</div>
+                <div id="stockDetailSym" style="font-size:13px;color:#475569;font-weight:600">—</div>
+              </div>
+              <div id="stockDetailIndustry" style="font-size:11px;color:#334155;margin-top:2px">—</div>
+            </div>
+            <div style="margin-left:auto;text-align:right">
+              <div id="stockDetailPrice" style="font-size:22px;font-weight:800;color:#e2e8f0">—</div>
+              <div id="stockDetailMcap" style="font-size:11px;color:#475569;margin-top:2px">—</div>
+            </div>
+          </div>
+          <div id="stockDetailStatus" style="font-size:11px;color:#334155;margin-bottom:16px">Loading...</div>
+          <div id="stockDetailContent"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ─── MARKET BREADTH PAGE ─── -->
+    <div class="page" id="page-breadth">
+      <div class="welcome-wrap" style="max-width:800px">
+
+        <div class="page-header" style="margin-bottom:24px">
+          <div class="page-header-tag">Equities</div>
+          <div class="page-header-title">Market Breadth</div>
+          <div class="page-header-sub" id="bpStatus">Loading...</div>
+        </div>
+
+        <!-- SPY vs RSP card -->
+        <div class="mini-section" style="margin-bottom:20px">
+          <div class="ms-header" style="margin-bottom:16px">
+            <div class="ms-title">📡 Cap-Weight vs Equal-Weight</div>
+            <button onclick="loadBreadthPage()" style="font-size:10px;padding:2px 8px;border-radius:4px;border:1px solid var(--border2);background:transparent;color:var(--gray);cursor:pointer">↻ Refresh</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+            <div style="flex:1;min-width:120px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+                <span style="font-size:11px;color:#94a3b8;letter-spacing:1px">SPY (Cap-Weighted)</span>
+                <span id="bpSpyPct" style="font-size:12px;font-weight:700">—</span>
+              </div>
+              <div style="background:#1e293b;border-radius:4px;height:8px;overflow:hidden">
+                <div id="bpSpyBar" style="height:100%;width:0%;border-radius:4px;transition:width 0.6s"></div>
+              </div>
+            </div>
+            <div style="text-align:center;min-width:110px">
+              <div id="bpVerdict" style="font-size:11px;font-weight:700;letter-spacing:2px;padding:6px 14px;border-radius:20px;background:rgba(100,116,139,0.15);color:#64748b">—</div>
+              <div id="bpSpread" style="font-size:10px;color:#475569;margin-top:4px">spread: —</div>
+            </div>
+            <div style="flex:1;min-width:120px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+                <span style="font-size:11px;color:#94a3b8;letter-spacing:1px">RSP (Equal-Weight)</span>
+                <span id="bpRspPct" style="font-size:12px;font-weight:700">—</span>
+              </div>
+              <div style="background:#1e293b;border-radius:4px;height:8px;overflow:hidden">
+                <div id="bpRspBar" style="height:100%;width:0%;border-radius:4px;transition:width 0.6s"></div>
+              </div>
+            </div>
+          </div>
+          <div id="bpInterpret" style="margin-top:12px;font-size:11px;color:#64748b;font-style:italic"></div>
+        </div>
+
+        <!-- Cap Tier breakdown -->
+        <div class="mini-section" style="margin-bottom:20px">
+          <div class="ms-header" style="margin-bottom:16px">
+            <div class="ms-title">📐 Cap Tier Performance</div>
+          </div>
+          <div id="bpTierBars"></div>
+          <div id="bpDiagnosis" style="margin-top:14px;font-size:11px;color:#94a3b8;padding:8px 12px;background:rgba(255,255,255,0.03);border-radius:6px;border-left:2px solid #334155"></div>
+        </div>
+
+        <!-- Summary cards -->
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <div class="summary-card" style="flex:1;min-width:120px;text-align:center">
+            <div class="sc-label">QQQ vs SPY</div>
+            <div class="sc-val" id="bpQvS">—</div>
+            <div style="font-size:10px;color:#64748b;margin-top:4px">Mega-cap premium</div>
+          </div>
+          <div class="summary-card" style="flex:1;min-width:120px;text-align:center">
+            <div class="sc-label">MDY vs SPY</div>
+            <div class="sc-val" id="bpMvS">—</div>
+            <div style="font-size:10px;color:#64748b;margin-top:4px">Mid-cap spread</div>
+          </div>
+          <div class="summary-card" style="flex:1;min-width:120px;text-align:center">
+            <div class="sc-label">IWM vs SPY</div>
+            <div class="sc-val" id="bpIvS">—</div>
+            <div style="font-size:10px;color:#64748b;margin-top:4px">Small-cap spread</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ─── COMPANY RESEARCH PAGE ─── -->
+    <div class="page" id="page-research">
+      <div class="welcome-wrap" style="max-width:760px">
+
+        <div class="page-header" style="margin-bottom:24px">
+          <div class="page-header-tag">Equities</div>
+          <div class="page-header-title">Company Research</div>
+          <div class="page-header-sub">Financial KPIs for any stock — valuation, profitability, growth, balance sheet</div>
+        </div>
+
+        <!-- Search box -->
+        <div class="mini-section" style="margin-bottom:20px">
+          <div style="display:flex;gap:10px;align-items:center">
+            <input id="researchInput" type="text" placeholder="Enter ticker (e.g. AAPL, MSFT, NVDA)..."
+              style="flex:1;background:#0f1117;border:1px solid var(--border2);border-radius:8px;padding:10px 14px;font-size:14px;color:#e2e8f0;font-family:inherit;outline:none"
+              onkeydown="if(event.key==='Enter') runResearch()"
+              onfocus="this.style.borderColor='#4a9eff'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+            <button onclick="runResearch()"
+              style="background:#4a9eff;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;flex-shrink:0">
+              Research
+            </button>
+          </div>
+          <div style="margin-top:10px;font-size:11px;color:#334155">
+            Quick access:
+            <span onclick="researchTicker('AAPL')" style="color:#475569;cursor:pointer;margin:0 4px" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#475569'">AAPL</span>·
+            <span onclick="researchTicker('MSFT')" style="color:#475569;cursor:pointer;margin:0 4px" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#475569'">MSFT</span>·
+            <span onclick="researchTicker('NVDA')" style="color:#475569;cursor:pointer;margin:0 4px" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#475569'">NVDA</span>·
+            <span onclick="researchTicker('META')" style="color:#475569;cursor:pointer;margin:0 4px" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#475569'">META</span>·
+            <span onclick="researchTicker('GOOGL')" style="color:#475569;cursor:pointer;margin:0 4px" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#475569'">GOOGL</span>·
+            <span onclick="researchTicker('AMZN')" style="color:#475569;cursor:pointer;margin:0 4px" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#475569'">AMZN</span>·
+            <span onclick="researchTicker('TSLA')" style="color:#475569;cursor:pointer;margin:0 4px" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#475569'">TSLA</span>·
+            <span onclick="researchTicker('JPM')" style="color:#475569;cursor:pointer;margin:0 4px" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#475569'">JPM</span>
+          </div>
+        </div>
+
+        <!-- Result area -->
+        <div id="researchResult" style="display:none">
+          <!-- Company header card -->
+          <div class="mini-section" style="margin-bottom:20px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+              <div>
+                <div id="resNameLine" style="font-size:18px;font-weight:700;color:#e2e8f0">—</div>
+                <div id="resIndustryLine" style="font-size:11px;color:#475569;margin-top:3px">—</div>
+                <div id="res52wLine" style="font-size:11px;color:#334155;margin-top:6px">—</div>
+              </div>
+              <div style="text-align:right">
+                <div id="resPriceLine" style="font-size:26px;font-weight:800;color:#e2e8f0">—</div>
+                <div id="resMcapLine" style="font-size:11px;color:#475569;margin-top:3px">—</div>
+                <div id="resBetaLine" style="font-size:11px;color:#334155;margin-top:2px">—</div>
+              </div>
+            </div>
+          </div>
+          <!-- KPI grid -->
+          <div id="resKpiContent"></div>
+          <!-- Insider transactions — loaded async -->
+          <div id="resInsiderSection"></div>
+          <!-- Analyst estimates — loaded async -->
+          <div id="resAnalystSection"></div>
+          <!-- Peer comparison — loaded async -->
+          <div id="resPeersSection"></div>
+        </div>
+
+        <div id="researchStatus" style="font-size:12px;color:#334155;padding:10px 0"></div>
+
+      </div>
+    </div>
+
+    <!-- ─── INSTITUTIONAL HOLDINGS PAGE ─── -->
+    <div class="page" id="page-institutions">
+      <div class="welcome-wrap" style="max-width:960px">
+
+        <div class="page-header" style="margin-bottom:24px">
+          <div class="page-header-tag">Equities</div>
+          <div class="page-header-title">Institutional Holdings</div>
+          <div class="page-header-sub">13F filings from SEC EDGAR — top positions & quarter-over-quarter changes</div>
+        </div>
+
+        <!-- Institution picker -->
+        <div id="instButtons" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px"></div>
+
+        <!-- Holdings content -->
+        <div id="instContent"></div>
+        <div id="instStatus" style="font-size:12px;color:#334155;padding:6px 0"></div>
+
+      </div>
+    </div>
+
+    <!-- ─── COMM. FLOWS PAGE ─── -->
+    <div class="page" id="page-comm-flows">
+      <div class="welcome-wrap" style="max-width:1120px">
+        <div class="page-header" style="margin-bottom:18px">
+          <div class="page-header-tag">Cross-Asset · Positioning & Flows</div>
+          <div class="page-header-title">Cross-Asset Flows</div>
+          <div class="page-header-sub">Venue positioning, futures, options and short interest — each metric shown with its own units and source</div>
+        </div>
+
+        <div class="mini-section" style="margin-bottom:14px">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <button class="cd-vbtn active" id="flowTabCrypto" onclick="flowSetTab('crypto',this)">Crypto</button>
+            <button class="cd-vbtn" id="flowTabFutures" onclick="flowSetTab('futures',this)">Futures</button>
+            <button class="cd-vbtn" id="flowTabOptions" onclick="flowSetTab('options',this)">Options</button>
+            <button class="cd-vbtn" id="flowTabShort" onclick="flowSetTab('short',this)">Short Interest</button>
+            <div id="flowStatus" style="margin-left:auto;font-size:10px;color:#90a8c2">Select a lens</div>
+          </div>
+        </div>
+
+        <div id="flowControls" class="mini-section" style="margin-bottom:14px"></div>
+        <div id="flowContent"></div>
+
+        <div class="callout" style="margin-top:14px">
+          WAVE does not combine these measures into one synthetic “money flow” score. Futures positioning, options open interest, exchange positioning and short interest have different reporting conventions and should be interpreted separately.
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="page-fundchart">
+      <div class="welcome-wrap" style="max-width:860px">
+
+        <div class="page-header" style="margin-bottom:24px">
+          <div class="page-header-tag">Equities</div>
+          <div class="page-header-title">Fundamental Chart</div>
+          <div class="page-header-sub">Compare financial KPIs across companies over time</div>
+        </div>
+
+        <!-- Controls -->
+        <div class="mini-section" style="margin-bottom:20px">
+          <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;flex-wrap:wrap">
+
+            <!-- Company 1 -->
+            <div>
+              <div style="font-size:10px;color:#475569;letter-spacing:1px;margin-bottom:6px;text-transform:uppercase">Company 1</div>
+              <div style="display:flex;gap:6px">
+                <input id="fcTicker1" type="text" placeholder="e.g. AAPL" maxlength="8"
+                  style="flex:1;background:#0f1117;border:1px solid var(--border2);border-radius:6px;padding:8px 10px;font-size:13px;color:#e2e8f0;font-family:inherit;outline:none;text-transform:uppercase"
+                  onfocus="this.style.borderColor='#4a9eff'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"
+                  onkeydown="if(event.key==='Enter') runFundChart()">
+              </div>
+            </div>
+
+            <!-- Company 2 (optional) -->
+            <div>
+              <div style="font-size:10px;color:#475569;letter-spacing:1px;margin-bottom:6px;text-transform:uppercase">Company 2 <span style="color:#334155">(optional)</span></div>
+              <input id="fcTicker2" type="text" placeholder="e.g. MSFT" maxlength="8"
+                style="width:100%;background:#0f1117;border:1px solid var(--border2);border-radius:6px;padding:8px 10px;font-size:13px;color:#e2e8f0;font-family:inherit;outline:none;text-transform:uppercase"
+                onfocus="this.style.borderColor='#4a9eff'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"
+                onkeydown="if(event.key==='Enter') runFundChart()">
+            </div>
+
+            <!-- Period + Run -->
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="font-size:10px;color:#475569;letter-spacing:1px;text-transform:uppercase">Period</div>
+              <div style="display:flex;gap:6px">
+                <div id="fcPeriodBtns" style="display:flex;gap:4px">
+                  <button class="ratio-btn active" onclick="fcSetPeriod('annual',this)">Annual</button>
+                  <button class="ratio-btn" onclick="fcSetPeriod('quarterly',this)">Quarterly</button>
+                </div>
+                <button onclick="runFundChart()"
+                  style="background:#4a9eff;color:#fff;border:none;border-radius:6px;padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">
+                  Chart →
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Metrics multi-select -->
+          <div style="margin-top:12px">
+            <div style="font-size:10px;color:#475569;letter-spacing:1px;margin-bottom:8px;text-transform:uppercase">Metrics <span style="color:#334155;font-weight:400;text-transform:none;letter-spacing:0">(select one or more)</span></div>
+            <div id="fcMetricPills" style="display:flex;flex-wrap:wrap;gap:6px">
+              <button class="ratio-btn active" onclick="fcToggleMetric('revenue',this)">Revenue</button>
+              <button class="ratio-btn" onclick="fcToggleMetric('gross_profit',this)">Gross Profit</button>
+              <button class="ratio-btn" onclick="fcToggleMetric('operating_income',this)">Op. Income</button>
+              <button class="ratio-btn" onclick="fcToggleMetric('net_income',this)">Net Income</button>
+              <button class="ratio-btn" onclick="fcToggleMetric('eps_diluted',this)">EPS</button>
+              <button class="ratio-btn" onclick="fcToggleMetric('free_cash_flow',this)">Free Cash Flow</button>
+              <button class="ratio-btn" onclick="fcToggleMetric('capex',this)">CapEx</button>
+              <button class="ratio-btn" onclick="fcToggleMetric('rd_expense',this)">R&amp;D</button>
+              <button class="ratio-btn" onclick="fcToggleMetric('gross_margin',this)">Gross Margin</button>
+              <button class="ratio-btn" onclick="fcToggleMetric('operating_margin',this)">Op. Margin</button>
+              <button class="ratio-btn" onclick="fcToggleMetric('net_margin',this)">Net Margin</button>
+              <button class="ratio-btn" onclick="fcToggleMetric('revenue_growth',this)">Revenue Growth</button>
+              <button class="ratio-btn" onclick="fcToggleMetric('op_income_growth',this)">Op. Income Growth</button>
+              <button class="ratio-btn" onclick="fcToggleMetric('net_income_growth',this)">Net Income Growth</button>
+            </div>
+          </div>
+
+          <!-- Chart type toggle -->
+          <div style="margin-top:10px;display:flex;align-items:center;gap:10px">
+            <span style="font-size:10px;color:#475569;letter-spacing:1px;text-transform:uppercase">Chart Type</span>
+            <div id="fcTypeBtns" style="display:flex;gap:4px">
+              <button class="ratio-btn active" onclick="fcSetChartType('bar',this)">Bar</button>
+              <button class="ratio-btn" onclick="fcSetChartType('line',this)">Line</button>
+              <button class="ratio-btn" onclick="fcSetChartType('stacked',this)">Stacked</button>
+            </div>
+          </div>
+
+          <!-- Time range slider (shown after chart loads) -->
+          <div id="fcRangeWrap" style="display:none;margin-top:14px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+              <span style="font-size:10px;color:#475569;letter-spacing:1px;text-transform:uppercase">Time Range</span>
+              <span id="fcRangeLabel" style="font-size:11px;color:#94a3b8;font-weight:600"></span>
+            </div>
+            <div style="position:relative">
+              <div class="fc-range-track"></div>
+              <div class="fc-range-fill" id="fcRangeFill"></div>
+              <div class="fc-range-wrap">
+                <input type="range" id="fcRangeMin" min="0" max="100" value="0" oninput="fcRangeChange()">
+                <input type="range" id="fcRangeMax" min="0" max="100" value="100" oninput="fcRangeChange()">
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick picks -->
+          <div style="margin-top:12px;font-size:11px;color:#334155;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+            <span>Quick pairs:</span>
+            <span onclick="fcQuickPick('AAPL','MSFT')" style="color:#4a9eff;cursor:pointer;padding:2px 8px;border:1px solid rgba(74,158,255,0.2);border-radius:4px" onmouseover="this.style.background='rgba(74,158,255,0.08)'" onmouseout="this.style.background='transparent'">AAPL vs MSFT</span>
+            <span onclick="fcQuickPick('NVDA','AMD')" style="color:#4a9eff;cursor:pointer;padding:2px 8px;border:1px solid rgba(74,158,255,0.2);border-radius:4px" onmouseover="this.style.background='rgba(74,158,255,0.08)'" onmouseout="this.style.background='transparent'">NVDA vs AMD</span>
+            <span onclick="fcQuickPick('META','GOOGL')" style="color:#4a9eff;cursor:pointer;padding:2px 8px;border:1px solid rgba(74,158,255,0.2);border-radius:4px" onmouseover="this.style.background='rgba(74,158,255,0.08)'" onmouseout="this.style.background='transparent'">META vs GOOGL</span>
+            <span onclick="fcQuickPick('JPM','BAC')" style="color:#4a9eff;cursor:pointer;padding:2px 8px;border:1px solid rgba(74,158,255,0.2);border-radius:4px" onmouseover="this.style.background='rgba(74,158,255,0.08)'" onmouseout="this.style.background='transparent'">JPM vs BAC</span>
+            <span onclick="fcQuickPick('TSLA','')" style="color:#4a9eff;cursor:pointer;padding:2px 8px;border:1px solid rgba(74,158,255,0.2);border-radius:4px" onmouseover="this.style.background='rgba(74,158,255,0.08)'" onmouseout="this.style.background='transparent'">TSLA solo</span>
+          </div>
+        </div>
+
+        <!-- Chart area -->
+        <div id="fcStatus" style="font-size:12px;color:#334155;margin-bottom:8px"></div>
+        <div id="fcChartWrap" style="display:none">
+          <div class="mini-section" style="margin-bottom:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+              <div id="fcChartTitle" style="font-size:14px;font-weight:600;color:#e2e8f0"></div>
+              <div id="fcLegend" style="display:flex;gap:16px;font-size:11px"></div>
+            </div>
+            <div style="position:relative;height:320px">
+              <canvas id="fcCanvas"></canvas>
+            </div>
+          </div>
+          <!-- Data table -->
+          <div class="mini-section">
+            <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:#334155;text-transform:uppercase;margin-bottom:12px">Data Table</div>
+            <div id="fcTable" style="overflow-x:auto"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ─── CONFLUENCE PAGE ─── -->
+    <div class="page" id="page-confluence">
+      <div class="welcome-wrap" style="max-width:1100px">
+        <div class="page-header" style="margin-bottom:16px">
+          <div class="page-header-tag">Equities · Evidence Overlap</div>
+          <div class="page-header-title">Confluence Monitor</div>
+          <div class="page-header-sub">Institutional accumulation + insider buying + analyst upgrades/revisions</div>
+        </div>
+
+        <div class="mini-section" style="margin-bottom:14px">
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <input id="confSymbol" value="AAPL" placeholder="Ticker" style="width:120px;text-transform:uppercase" onkeydown="if(event.key==='Enter') loadConfluence()">
+            <button class="cd-vbtn" onclick="loadConfluence()">Analyze</button>
+            <div style="display:flex;gap:6px;margin-left:6px" id="confWindowBtns">
+              <button class="cd-vbtn" onclick="confSetWindow(7,this)">7D</button>
+              <button class="cd-vbtn active" onclick="confSetWindow(30,this)">30D</button>
+              <button class="cd-vbtn" onclick="confSetWindow(90,this)">90D</button>
+            </div>
+            <div id="confStatus" style="margin-left:auto;font-size:10px;color:#90a8c2">30-day view</div>
+          </div>
+        </div>
+
+        <div id="confResults"></div>
+
+        <div class="callout" style="margin-top:14px">
+          Institutional evidence is based on 13F filings and is therefore quarterly and lagged. The selected 7D / 30D / 90D window applies directly to insider and analyst evidence, not to the filing date of institutional holdings.
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="page-earnings">
+      <div class="welcome-wrap" style="max-width:1140px">
+        <div class="page-header" style="margin-bottom:20px">
+          <div class="page-header-tag">Equities · Corporate Calendar</div>
+          <div class="page-header-title">Earnings Dashboard</div>
+          <div class="page-header-sub">Upcoming earnings from the S&amp;P 500 universe — EPS &amp; revenue consensus estimates</div>
+        </div>
+
+        <!-- Controls -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap">
+          <div style="display:flex;gap:8px">
+            <button id="earnTabWeek" onclick="earnSetTab('week')"
+              style="background:#1e3a5f;color:#4a9eff;border:1px solid #2d4f7a;border-radius:6px;padding:6px 16px;font-size:12px;font-weight:600;cursor:pointer">This Week</button>
+            <button id="earnTabAll" onclick="earnSetTab('all')"
+              style="background:transparent;color:#475569;border:1px solid #1e293b;border-radius:6px;padding:6px 16px;font-size:12px;font-weight:600;cursor:pointer">All Upcoming</button>
+          </div>
+          <!-- Market cap filter pills (only visible in All tab) -->
+          <div id="earnCapFilter" style="display:flex;gap:6px;align-items:center">
+            <span style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#334155">MIN CAP</span>
+            <button onclick="earnSetMinCap(0)"   id="earnCap0"   style="border-radius:5px;padding:3px 10px;font-size:11px;cursor:pointer;border:1px solid #1e293b;background:transparent;color:#475569">All</button>
+            <button onclick="earnSetMinCap(1)"   id="earnCap1"   style="border-radius:5px;padding:3px 10px;font-size:11px;cursor:pointer;border:1px solid #2d4f7a;background:#1e3a5f;color:#4a9eff">$1B+</button>
+            <button onclick="earnSetMinCap(10)"  id="earnCap10"  style="border-radius:5px;padding:3px 10px;font-size:11px;cursor:pointer;border:1px solid #1e293b;background:transparent;color:#475569">$10B+</button>
+            <button onclick="earnSetMinCap(50)"  id="earnCap50"  style="border-radius:5px;padding:3px 10px;font-size:11px;cursor:pointer;border:1px solid #1e293b;background:transparent;color:#475569">$50B+</button>
+          </div>
+          <div id="earnStatus" style="font-size:11px;color:#475569;margin-left:auto"></div>
+          <button onclick="earnRefresh()"
+            style="background:transparent;border:1px solid #1e293b;color:#64748b;border-radius:6px;padding:6px 14px;font-size:11px;cursor:pointer">⟳ Refresh</button>
+        </div>
+
+        <!-- Beat Rate Summary -->
+        <div id="earnBeatBanner" style="display:none;margin-bottom:16px"></div>
+
+        <div id="earnContent"><div style="color:#334155;font-size:13px;padding:40px 0;text-align:center">Loading earnings data — scanning ~150 stocks, takes ~30 seconds...</div></div>
+      </div>
+    </div>
+
+    <!-- ─── CORRELATION PAGE ─── -->
+    <div class="page" id="page-correlation">
+      <div class="welcome-wrap" style="max-width:1140px">
+        <div class="page-header" style="margin-bottom:24px">
+          <div class="page-header-tag">Equities · Statistical</div>
+          <div class="page-header-title">Correlation</div>
+          <div class="page-header-sub">Pearson correlation of daily returns — stock vs benchmark · refreshes once per day</div>
+        </div>
+
+        <!-- Controls -->
+        <div class="mini-section" style="margin-bottom:20px">
+          <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end">
+            <div>
+              <div style="font-size:10px;color:#475569;letter-spacing:1px;margin-bottom:6px;text-transform:uppercase">Ticker</div>
+              <input id="corrTicker" type="text" placeholder="e.g. JPM" maxlength="8" value="JPM"
+                style="width:100%;background:#0f1117;border:1px solid var(--border2);border-radius:6px;padding:8px 10px;font-size:13px;color:#e2e8f0;font-family:inherit;outline:none;text-transform:uppercase"
+                onfocus="this.style.borderColor='#4a9eff'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"
+                onkeydown="if(event.key==='Enter') runCorrelation()">
+            </div>
+            <div>
+              <div style="font-size:10px;color:#475569;letter-spacing:1px;margin-bottom:6px;text-transform:uppercase">Benchmark</div>
+              <select id="corrBench"
+                style="width:100%;background:#0f1117;border:1px solid var(--border2);border-radius:6px;padding:8px 10px;font-size:13px;color:#e2e8f0;font-family:inherit;outline:none">
+                <option value="SPY">SPY · S&amp;P 500</option>
+                <option value="QQQ">QQQ · Nasdaq 100</option>
+                <option value="IWM">IWM · Russell 2000</option>
+                <option value="GLD">GLD · Gold</option>
+                <option value="DX-Y.NYB">DXY · US Dollar Index</option>
+                <option value="^TNX">10Y Treasury Yield</option>
+                <option value="USO">USO · Crude Oil</option>
+                <option value="^VIX">VIX</option>
+                <option value="BTC-USD">BTC · Bitcoin</option>
+              </select>
+            </div>
+            <div>
+              <button onclick="runCorrelation()"
+                style="background:#4a9eff;color:#fff;border:none;border-radius:6px;padding:8px 20px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">
+                Run →
+              </button>
+            </div>
+          </div>
+          <div id="corrStatus" style="margin-top:8px;font-size:11px;color:#475569"></div>
+        </div>
+
+        <!-- Stat cards row -->
+        <div id="corrCards" style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px"></div>
+
+        <!-- Rolling chart -->
+        <div class="mini-section">
+          <div class="ms-header">
+            <div class="ms-title">📊 60-Day Rolling Correlation · 3 Years</div>
+            <div id="corrChartMeta" style="font-size:10px;color:#475569"></div>
+          </div>
+          <div style="position:relative;height:280px">
+            <canvas id="corrChart"></canvas>
+          </div>
+          <div style="text-align:center;font-size:10px;color:#334155;margin-top:6px">
+            r &gt; 0.7 = strong positive · r 0.3–0.7 = moderate · |r| &lt; 0.3 = weak · r &lt; -0.3 = inverse
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── BTC / GOLD RATIO PAGE ─── -->
+    <div class="page" id="page-btcgold">
+      <div class="welcome-wrap">
+        <div class="page-header" style="margin-bottom:24px">
+          <div class="page-header-tag">Risk Gauge</div>
+          <div class="page-header-title">BTC / Gold Ratio</div>
+          <div class="page-header-sub">Intraday performance — risk-on vs flight-to-safety</div>
+        </div>
+
+        <!-- Stats row -->
+        <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap">
+          <div class="summary-card" style="flex:1;min-width:140px">
+            <div class="sc-label">Ratio</div>
+            <div class="sc-val" id="nrgRatio">—</div>
+            <div id="nrgBadge" style="display:inline-block;margin-top:6px;font-size:9px;font-weight:800;letter-spacing:.8px;padding:2px 8px;border-radius:4px;background:rgba(100,116,139,0.12);color:#64748b">—</div>
+          </div>
+          <div class="summary-card" style="flex:1;min-width:140px">
+            <div class="sc-label">BTC Intraday</div>
+            <div class="sc-val" id="nrgBtcPct">—</div>
+            <div class="sc-chg" id="nrgBtcPrice">—</div>
+          </div>
+          <div class="summary-card" style="flex:1;min-width:140px">
+            <div class="sc-label">Gold Intraday</div>
+            <div class="sc-val" id="nrgGoldPct">—</div>
+            <div class="sc-chg" id="nrgGoldPrice">—</div>
+          </div>
+          <div class="summary-card" style="flex:1;min-width:140px">
+            <div class="sc-label">Spread</div>
+            <div class="sc-val" id="nrgSpread">—</div>
+            <div class="sc-chg" style="color:#64748b;font-size:11px">BTC vs Gold</div>
+          </div>
+        </div>
+
+        <!-- Chart -->
+        <div class="mini-section" style="margin-bottom:24px">
+          <div class="ms-header">
+            <div class="ms-title">📈 Intraday % Change from Open</div>
+            <div style="display:flex;gap:14px">
+              <span style="font-size:10px;color:#4a9eff">● BTC</span>
+              <span style="font-size:10px;color:#f59e0b">● Gold</span>
+            </div>
+          </div>
+          <div style="position:relative;height:260px">
+            <canvas id="nrgChartMain"></canvas>
+          </div>
+        </div>
+
+        <!-- Ratio chart -->
+        <div class="mini-section">
+          <div class="ms-header">
+            <div class="ms-title">⚖️ BTC / Gold Ratio</div>
+            <div style="display:flex;gap:4px" id="ratioPeriodBtns">
+              <button class="ratio-btn active" onclick="loadRatioPeriod('1D',this)">1D</button>
+              <button class="ratio-btn" onclick="loadRatioPeriod('MTD',this)">MTD</button>
+              <button class="ratio-btn" onclick="loadRatioPeriod('YTD',this)">YTD</button>
+              <button class="ratio-btn" onclick="loadRatioPeriod('1Y',this)">1Y</button>
+            </div>
+          </div>
+          <div style="position:relative;height:220px">
+            <canvas id="nrgRatioChart"></canvas>
+          </div>
+          <div style="text-align:center;font-size:10px;color:#334155;margin-top:6px" id="ratioPeriodLabel"></div>
+        </div>
+      </div>
+    </div>
+    <!-- ─── PUT/CALL RATIO PAGE ─── -->
+    <div class="page" id="page-pcr">
+      <div class="welcome-wrap" style="max-width:900px">
+        <div class="page-header" style="margin-bottom:24px">
+          <div class="page-header-tag">Sentiment · Options Flow</div>
+          <div class="page-header-title">Put/Call Ratio</div>
+          <div class="page-header-sub">Options market sentiment — extreme readings are contrarian signals</div>
+        </div>
+
+        <!-- Gauge + meta -->
+        <div class="mini-section" style="margin-bottom:24px">
+          <div class="ms-header"><div class="ms-title">🎯 SPX Options Sentiment Gauge</div></div>
+          <div id="pcrContent" style="margin-top:14px">
+            <div style="color:#475569;font-size:12px">Loading...</div>
+          </div>
+        </div>
+
+        <!-- 20-day chart -->
+        <div class="mini-section" id="pcrChartWrap" style="margin-bottom:24px;display:none">
+          <div class="ms-header"><div class="ms-title">📊 PCR — 20-Day History</div></div>
+          <div style="margin-top:14px;position:relative;height:160px">
+            <canvas id="pcrChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Explainer -->
+        <div id="pcrExplainer"></div>
+
+      </div>
+    </div>
+
+    <!-- ─── CRYPTO SCANNER PAGE ─── -->
+    <div class="page" id="page-scanner">
+      <div class="welcome-wrap" style="max-width:1200px">
+        <div class="page-header" style="margin-bottom:20px">
+          <div class="page-header-tag">Artemis Data</div>
+          <div class="page-header-title">Crypto Scanner</div>
+          <div class="page-header-sub">Live token squeeze, protocol fundamentals & chain activity — powered by Artemis Sheets</div>
+        </div>
+
+        <!-- Tab buttons -->
+        <div style="display:flex;gap:6px;margin-bottom:20px" id="scannerTabs">
+          <button class="ratio-btn active" onclick="switchScannerTab('squeeze',this)">🎯 Squeeze</button>
+          <button class="ratio-btn" onclick="switchScannerTab('fundamentals',this)">🏗️ Fundamentals</button>
+          <button class="ratio-btn" onclick="switchScannerTab('activity',this)">⚡ Activity</button>
+        </div>
+
+        <!-- Data status -->
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+          <div id="scannerStatus" style="font-size:10px;letter-spacing:1px;color:#334155">Loading data...</div>
+          <button onclick="loadScannerData()" style="font-size:10px;padding:2px 8px;border-radius:4px;border:1px solid var(--border2);background:transparent;color:var(--gray);cursor:pointer">↻ Refresh</button>
+        </div>
+
+        <!-- Tables -->
+        <div class="mini-section" style="overflow-x:auto">
+          <div id="scannerTableWrap" style="min-width:700px">
+            <table id="scannerTable" style="width:100%;border-collapse:collapse;font-size:12px">
+              <thead id="scannerHead"></thead>
+              <tbody id="scannerBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="page-backtest">
+      <div class="coming-wrap"><div class="coming-icon">🔬</div><div class="coming-title">Backtest Suite</div><div class="coming-sub">Coming soon</div></div>
+    </div>
+    <div class="page" id="page-ideas">
+      <div class="coming-wrap"><div class="coming-icon">💡</div><div class="coming-title">Trade Ideas</div><div class="coming-sub">Coming soon</div></div>
+    </div>
+
+    <!-- ─── RISK METER PAGE ─── -->
+    <div class="page" id="page-risk">
+      <div class="welcome-wrap">
+        <div class="page-header" style="margin-bottom:20px">
+          <div class="page-header-tag">Market Intelligence</div>
+          <div class="page-header-title">Risk Meter</div>
+          <div class="page-header-sub" id="riskLastUpdated">Loading market data...</div>
+        </div>
+
+        <!-- Top row: gauge + signal contributions -->
+        <div class="rsig-top-row">
+          <div class="rsig-gauge-panel">
+            <div id="riskGaugeSvgWrap"></div>
+            <div id="riskScoreNum" class="rsig-score-num" style="color:#334155">—</div>
+            <div id="riskLabel" class="rsig-score-label" style="color:#334155">—</div>
+            <div id="riskSummary" class="rsig-summary-text">—</div>
+          </div>
+          <div class="rsig-contrib-panel">
+            <div class="rsig-contrib-title">Signal Breakdown</div>
+            <div id="riskContribRows"></div>
+          </div>
+        </div>
+
+        <!-- 7 signal cards -->
+        <div class="rsig-grid" id="riskSignalGrid"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         HOUSING RISK GAUGE
+    ════════════════════════════════════════════════════════════ -->
+    <div class="page" id="page-housing">
+      <div class="welcome-wrap">
+
+        <div class="page-header" style="margin-bottom:20px">
+          <div class="page-header-tag">Macro · Cross-Asset Regime</div>
+          <div class="page-header-title">Housing Risk Gauge</div>
+          <div class="page-header-sub" id="hrg-updated">Fetching cross-asset signals...</div>
+        </div>
+
+        <!-- Gauge + signal contribution bars -->
+        <div class="rsig-top-row">
+          <div class="rsig-gauge-panel">
+            <div id="hrg-gauge-wrap"></div>
+            <div id="hrg-score-num" class="rsig-score-num" style="color:#334155">—</div>
+            <div id="hrg-label" class="rsig-score-label" style="color:#334155">—</div>
+            <div id="hrg-summary" class="rsig-summary-text">—</div>
+          </div>
+          <div class="rsig-contrib-panel">
+            <div class="rsig-contrib-title">Signal Breakdown · 8 Factors</div>
+            <div id="hrg-contrib-rows"></div>
+          </div>
+        </div>
+
+        <!-- 8 signal cards -->
+        <div class="rsig-grid" id="hrg-signal-grid"></div>
+
+        <!-- 3 trend charts -->
+        <div class="hrg-chart-row">
+          <div class="hrg-chart-box"><canvas id="hrg-chart-1"></canvas></div>
+          <div class="hrg-chart-box"><canvas id="hrg-chart-2"></canvas></div>
+          <div class="hrg-chart-box"><canvas id="hrg-chart-3"></canvas></div>
+        </div>
+
+        <!-- Portfolio implications -->
+        <div class="hrg-portfolio-section">
+          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#334155;margin-bottom:12px">
+            📊 Regime-Based Portfolio Implications
+          </div>
+          <div id="hrg-portfolio"><div style="color:#334155;font-size:12px">Loading...</div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SEASONALITY SCANNER
+    ════════════════════════════════════════════════════════════ -->
+    <div class="page" id="page-seasonality">
+      <div class="welcome-wrap">
+        <div class="page-header" style="margin-bottom:16px">
+          <div class="page-header-tag">Macro · Historical Context</div>
+          <div class="page-header-title">Seasonality Scanner</div>
+          <div class="page-header-sub" id="seas-updated">10-year average cumulative path vs current year</div>
+        </div>
+
+        <div class="seas-asset-bar" id="seas-asset-bar">
+          <button class="seas-asset-btn active" onclick="seasLoad('SPY','S&P 500',this)">SPY</button>
+          <button class="seas-asset-btn" onclick="seasLoad('QQQ','Nasdaq 100',this)">QQQ</button>
+          <button class="seas-asset-btn" onclick="seasLoad('GLD','Gold',this)">GLD</button>
+          <button class="seas-asset-btn" onclick="seasLoad('BTC-USD','Bitcoin',this)">BTC</button>
+          <button class="seas-asset-btn" onclick="seasLoad('IWM','Russell 2000',this)">IWM</button>
+          <button class="seas-asset-btn" onclick="seasLoad('TLT','20Y Treasuries',this)">TLT</button>
+          <button class="seas-asset-btn" onclick="seasLoad('USO','Oil',this)">OIL</button>
+          <button class="seas-asset-btn" onclick="seasLoad('EEM','Emerging Markets',this)">EEM</button>
+          <button class="seas-asset-btn" onclick="seasLoad('DX-Y.NYB','US Dollar',this)">DXY</button>
+          <button class="seas-asset-btn" onclick="seasLoad('^TNX','10Y Yield',this)">10Y</button>
+        </div>
+
+        <div class="mini-section" style="margin-top:14px">
+          <div class="ms-header">
+            <div class="ms-title" id="seasChartTitle">SPY · Current year vs 10Y average</div>
+            <div style="font-size:10px;color:#90a8c2">Cumulative return from first available trading day</div>
+          </div>
+          <div style="position:relative;height:430px;margin-top:14px">
+            <canvas id="seas-line-chart"></canvas>
+          </div>
+        </div>
+
+        <div id="seas-summary" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px">
+          <div class="td-stat"><div class="td-stat-label">Current Year</div><div class="td-stat-val" id="seasCurrentRet">—</div></div>
+          <div class="td-stat"><div class="td-stat-label">10Y Average at Same Point</div><div class="td-stat-val" id="seasAvgRet">—</div></div>
+          <div class="td-stat"><div class="td-stat-label">Gap vs History</div><div class="td-stat-val" id="seasGap">—</div></div>
+          <div class="td-stat"><div class="td-stat-label">Historical Sample</div><div class="td-stat-val" id="seasSample">—</div><div class="td-stat-sub">completed years</div></div>
+        </div>
+
+        <div class="callout" style="margin-top:12px">
+          This view is descriptive context only. It compares the current year's cumulative path with the average path of the prior 10 completed years; it is not a standalone trading signal.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end main -->
+</div><!-- end app-body -->
+
+<script src="terminal.js"></script>
+<script src="terminal-market.js"></script>
+<script src="terminal-content.js"></script>
+<script src="terminal-flows.js"></script>
+<script src="terminal-hormuz.js"></script>
+<script src="terminal-metals.js"></script>
+<script src="terminal-confluence.js"></script>
+<script src="terminal-seasonality.js"></script>
+<script src="terminal-equities.js"></script>
+<script src="terminal-risk.js"></script>
+<script src="terminal-crypto.js"></script>
+<script src="terminal-rates.js"></script>
+<script src="terminal-industries.js"></script>
+<script src="terminal-macro.js"></script>
+<script src="terminal-earnings.js"></script>
+<!-- ARTICLE READER OVERLAY -->
+<div id="articleOverlay">
+  <div class="ar-backdrop" onclick="closeArticleReader()"></div>
+  <div class="ar-panel" id="arPanel">
+    <div class="ar-close"><button class="ar-close-btn" onclick="closeArticleReader()">✕ Close</button></div>
+    <div id="arContent" style="width:100%;max-width:860px"></div>
+  </div>
+</div>
+
+<!-- TOKEN DETAIL OVERLAY -->
+<div id="tokenOverlay">
+  <div class="td-backdrop" onclick="closeTokenOverlay()"></div>
+  <div class="td-panel" id="tdPanel">
+    <div class="td-close"><button class="td-close-btn" onclick="closeTokenOverlay()">✕ Close</button></div>
+    <div class="td-body" id="tdBody"><div style="text-align:center;padding:60px;color:#334155">Loading…</div></div>
+  </div>
+</div>
+</body>
+</html>
