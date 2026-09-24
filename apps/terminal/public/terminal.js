@@ -305,29 +305,38 @@ async function fetchIntraday(symbol){
   }catch(e){ return null; }
 }
 
-// ── BINANCE (BTC — public API, no key, CORS enabled) ─────────────────────────
-var BN_BASE = 'https://api.binance.com/api/v3';
-async function bnFetch(path){
-  try{ var r = await fetch(BN_BASE + path); return await r.json(); }catch(e){ return null; }
-}
+// ── BTC MARKET DATA — via WAVE API ───────────────────────────────────────────
 async function bnBtcPrice(){
-  var d = await bnFetch('/ticker/tradingDay?symbol=BTCUSDT&type=MINI');
-  if(!d) return null;
-  var openP = parseFloat(d.openPrice), lastP = parseFloat(d.lastPrice);
-  var pct = openP > 0 ? (lastP - openP) / openP * 100 : 0;
-  return { price: lastP, pct: pct };
+  try{
+    var r=await fetch(API+'/api/crypto-market/quote?symbol=BTCUSDT');
+    var d=await r.json();
+    if(d.error) return null;
+    return {price:Number(d.price),pct:Number(d.pct)};
+  }catch(e){return null;}
 }
-async function bnBtcKlines(interval, limit){
-  var d = await bnFetch('/klines?symbol=BTCUSDT&interval=' + interval + '&limit=' + limit);
-  if(!d) return null;
-  return d.map(function(x){ return parseFloat(x[4]); });
+
+async function _btcKlines(interval,limit){
+  try{
+    var r=await fetch(API+'/api/crypto-market/klines?symbol=BTCUSDT&interval='+encodeURIComponent(interval)+'&limit='+encodeURIComponent(limit));
+    var d=await r.json();
+    if(d.error||!d.closes) return null;
+    return d;
+  }catch(e){return null;}
 }
-async function bnBtcKlinesLabeled(interval, limit){
-  var d = await bnFetch('/klines?symbol=BTCUSDT&interval=' + interval + '&limit=' + limit);
+
+async function bnBtcKlines(interval,limit){
+  var d=await _btcKlines(interval,limit);
+  return d?d.closes:null;
+}
+
+async function bnBtcKlinesLabeled(interval,limit){
+  var d=await _btcKlines(interval,limit);
   if(!d) return null;
   return {
-    closes: d.map(function(x){ return parseFloat(x[4]); }),
-    labels: d.map(function(x){ return new Date(x[0]).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}); })
+    closes:d.closes,
+    labels:(d.timestamps||[]).map(function(ts){
+      return new Date(ts).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    })
   };
 }
 
