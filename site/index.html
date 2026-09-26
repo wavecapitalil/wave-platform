@@ -13,7 +13,7 @@
 </style>
 </head>
 <body>
-<header class="top"><div class="brand"><svg viewBox="0 0 80 30" fill="none"><path d="M0 20 C10 10,20 10,30 20 C40 30,50 30,60 20 C70 10,80 10,90 20" stroke="#55aaff" stroke-width="2.5"/></svg>Wave Capital</div><nav class="nav"><button data-view="home" class="active">Home</button><button data-view="university">University</button><button data-view="terminal">Terminal</button><button data-view="account">Account</button></nav><button id="accountChip" class="account">Local preview</button></header>
+<header class="top"><div class="brand"><svg viewBox="0 0 80 30" fill="none"><path d="M0 20 C10 10,20 10,30 20 C40 30,50 30,60 20 C70 10,80 10,90 20" stroke="#55aaff" stroke-width="2.5"/></svg>Wave Capital</div><nav class="nav"><button data-view="home" class="active">Home</button><button data-view="university">University</button><button data-view="terminal">Terminal</button><button data-view="account">Account</button></nav><button id="accountChip" class="account" data-view="account">Local preview</button></header>
 <main class="wrap">
 <section id="home" class="view active"><div class="hero"><div class="kicker">WAVE Platform · Live Preview</div><h1>Research. Learn. Ask. Improve.</h1><p>One workspace for market intelligence, structured education and a personal AI tutor that follows your progress and understands the page you are looking at.</p><div class="status"><span class="dot"></span><span>Supabase platform live · AI backend deployed</span></div></div><div class="grid"><div class="card s4"><span class="pill live">LIVE</span><div class="ctitle" style="margin-top:12px">WAVE University</div><div class="csub">Six analytical tracks with persistent progress and personal learning memory.</div><div class="stat">6 tracks</div></div><div class="card s4"><span class="pill live">LIVE</span><div class="ctitle" style="margin-top:12px">WAVE Account</div><div class="csub">Watchlists, saved research, progress and alert rules in one profile.</div><div class="stat" id="homeWatch">4</div></div><div class="card s4"><span class="pill next" id="aiPill">KEY NEEDED</span><div class="ctitle" style="margin-top:12px">WAVE AI Tutor</div><div class="csub">Context-aware tutor with Explain, Socratic, Quiz and Research modes.</div><div class="stat">24/7</div></div><div class="card s12"><div class="ctitle">How the tutor learns you</div><div class="csub">Each signed-in conversation stores question history, the current page context, learning events, weak/strong topics and a compact tutor summary. The model receives that state on the next interaction instead of starting from zero.</div></div></div></section>
 <section id="university" class="view"><div class="hero"><div class="kicker">WAVE University</div><h1>Learn the framework. Then use it.</h1><p>The curriculum is built around research processes: causal logic, valuation, falsification, data quality and risk.</p></div><div class="tracks" id="tracks"></div></section>
@@ -24,7 +24,12 @@
 <section id="tutor"><div class="th"><div class="logo">W</div><div><b style="font-size:12px">WAVE AI Tutor</b><div id="ctx" style="font-size:8px;color:var(--muted);margin-top:2px">Context aware</div></div><button class="x" id="closeTutor">×</button></div><div class="modes" id="modes"></div><div id="messages" class="messages"></div><div id="compose" class="compose"><textarea id="q" placeholder="Ask about this page…"></textarea><button id="send">↑</button></div></section>
 <script>
 const URL='https://nqmtayofbhletydmiujz.supabase.co', KEY='sb_publishable_5WjaBtaWtb3q7EJ3ldUfXQ_rVKIrZZy', TUTOR=URL+'/functions/v1/wave-tutor';
-const sb=supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+let sb=null;
+try{
+  if(window.supabase&&typeof window.supabase.createClient==='function'){
+    sb=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+  }
+}catch(e){console.warn('Supabase client unavailable',e);}
 const courses=[
 ['macro_regimes','Macro & Market Regimes','Rates, liquidity, inflation, growth, credit and dollar regimes.'],
 ['equity_research','Equity Research','Business quality, unit economics, valuation, catalysts and falsification.'],
@@ -35,20 +40,43 @@ const courses=[
 ];
 let local=JSON.parse(localStorage.getItem('wave.live.v1')||'{"progress":{},"watchlist":["SPY","QQQ","BTC-USD","GLD"]}'),mode='explain',conversation='';
 function save(){localStorage.setItem('wave.live.v1',JSON.stringify(local));renderTracks();renderWatch();}
-function show(id){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x.dataset.view===id));location.hash=id;document.getElementById('ctx').textContent=id+' · WAVE live preview'}
-document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>show(b.dataset.view)); if(location.hash&&document.getElementById(location.hash.slice(1)))show(location.hash.slice(1));
+function show(id){
+  const target=document.getElementById(id);
+  if(!target)return;
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+  target.classList.add('active');
+  document.querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x.dataset.view===id));
+  try{history.replaceState(null,'','#'+id);}catch(e){location.hash=id;}
+  const ctx=document.getElementById('ctx');if(ctx)ctx.textContent=id+' · WAVE live preview';
+}
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.view)));
+if(location.hash&&document.getElementById(location.hash.slice(1)))show(location.hash.slice(1));
 function renderTracks(){document.getElementById('tracks').innerHTML=courses.map(c=>{let p=local.progress[c[0]]||0;return '<div class="track" data-course="'+c[0]+'"><span class="pill live">'+c[0].split('_')[0].toUpperCase()+'</span><b>'+c[1]+'</b><p>'+c[2]+'</p><div class="bar"><span style="width:'+p+'%"></span></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px"><small style="color:var(--muted)">'+p+'%</small><button class="btn" onclick="advance(\''+c[0]+'\')">+20%</button></div></div>'}).join('')}
 window.advance=id=>{local.progress[id]=Math.min(100,(local.progress[id]||0)+20);save()}
 function renderWatch(){document.getElementById('homeWatch').textContent=local.watchlist.length;document.getElementById('watchRows').innerHTML=local.watchlist.map(s=>'<div class="row"><div><b>'+s+'</b><small>Local preview watchlist</small></div><button class="btn" onclick="removeWatch(\''+s+'\')">Remove</button></div>').join('')}
 window.removeWatch=s=>{local.watchlist=local.watchlist.filter(x=>x!==s);save()};document.getElementById('watchAdd').onclick=()=>{let s=document.getElementById('watchInput').value.toUpperCase().trim();if(s&&!local.watchlist.includes(s)){local.watchlist.push(s);document.getElementById('watchInput').value='';save()}};
-async function authState(){let {data:{session}}=await sb.auth.getSession();let signed=!!session;document.getElementById('accountChip').textContent=signed?(session.user.email||'Cloud account'):'Local preview';document.getElementById('authText').textContent=signed?'Cloud session active. Tutor and personal memory are unlocked.':'Not signed in. Add an email session to unlock Tutor memory.';document.getElementById('email').classList.toggle('hidden',signed);document.getElementById('magic').classList.toggle('hidden',signed);document.getElementById('logout').classList.toggle('hidden',!signed);renderTutorEmpty()}
-sb.auth.onAuthStateChange(()=>setTimeout(authState,0));authState();
-document.getElementById('magic').onclick=async()=>{let email=document.getElementById('email').value.trim();if(!email)return;let {error}=await sb.auth.signInWithOtp({email,options:{shouldCreateUser:true,emailRedirectTo:location.href.split('#')[0]}});alert(error?error.message:'Check your email for the WAVE sign-in link.');};document.getElementById('logout').onclick=()=>sb.auth.signOut();
+async function getSession(){
+  if(!sb)return null;
+  try{const result=await sb.auth.getSession();return result&&result.data?result.data.session:null;}catch(e){return null;}
+}
+async function authState(){
+  const session=await getSession(),signed=!!session;
+  document.getElementById('accountChip').textContent=signed?(session.user.email||'Cloud account'):'Local preview';
+  document.getElementById('authText').textContent=signed?'Cloud session active. Tutor and personal memory are unlocked.':(sb?'Not signed in. Add an email session to unlock Tutor memory.':'Cloud auth is temporarily unavailable. Local navigation and progress still work.');
+  document.getElementById('email').classList.toggle('hidden',signed);
+  document.getElementById('magic').classList.toggle('hidden',signed||!sb);
+  document.getElementById('logout').classList.toggle('hidden',!signed);
+  renderTutorEmpty();
+}
+if(sb)sb.auth.onAuthStateChange(()=>setTimeout(authState,0));
+authState();
+document.getElementById('magic').onclick=async()=>{if(!sb){alert('Cloud auth is temporarily unavailable.');return;}let email=document.getElementById('email').value.trim();if(!email)return;let {error}=await sb.auth.signInWithOtp({email,options:{shouldCreateUser:true,emailRedirectTo:location.href.split('#')[0]}});alert(error?error.message:'Check your email for the WAVE sign-in link.');};
+document.getElementById('logout').onclick=()=>sb&&sb.auth.signOut();
 const modes={explain:'Explain',socratic:'Socratic',quiz:'Quiz me',research:'Research'};document.getElementById('modes').innerHTML=Object.keys(modes).map(k=>'<button class="mode '+(k===mode?'active':'')+'" data-mode="'+k+'">'+modes[k]+'</button>').join('');document.querySelectorAll('.mode').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('.mode').forEach(x=>x.classList.toggle('active',x===b))});
 function add(role,text){let e=document.createElement('div');e.className='msg '+role;e.textContent=text;document.getElementById('messages').appendChild(e);document.getElementById('messages').scrollTop=999999;return e}
-async function renderTutorEmpty(){let {data:{session}}=await sb.auth.getSession();let m=document.getElementById('messages');m.innerHTML='';if(!session){add('sys','Sign in from Account to unlock your personal WAVE Tutor and learning memory.');document.getElementById('compose').classList.add('hidden')}else{add('sys','Ask about the current page, a course concept, or select Quiz me / Socratic mode.');document.getElementById('compose').classList.remove('hidden')}}
+async function renderTutorEmpty(){let session=await getSession();let m=document.getElementById('messages');m.innerHTML='';if(!session){add('sys','Sign in from Account to unlock your personal WAVE Tutor and learning memory.');document.getElementById('compose').classList.add('hidden')}else{add('sys','Ask about the current page, a course concept, or select Quiz me / Socratic mode.');document.getElementById('compose').classList.remove('hidden')}}
 document.getElementById('tutorBtn').onclick=()=>{document.getElementById('tutor').classList.add('open');renderTutorEmpty()};document.getElementById('closeTutor').onclick=()=>document.getElementById('tutor').classList.remove('open');
-async function send(){let q=document.getElementById('q'),msg=q.value.trim();if(!msg)return;let {data:{session}}=await sb.auth.getSession();if(!session){show('account');return}add('me',msg);q.value='';let wait=add('ai','Thinking…');let active=document.querySelector('.view.active')?.id||'home';let course=document.querySelector('#university .track:hover')?.dataset.course||'';try{let r=await fetch(TUTOR,{method:'POST',headers:{authorization:'Bearer '+session.access_token,'content-type':'application/json'},body:JSON.stringify({message:msg,mode,conversation_id:conversation,page_context:{product:active,page:active,course_id:course,title:document.title,screen_summary:(document.querySelector('.view.active')?.innerText||'').slice(0,3000)}})});let d=await r.json();wait.remove();if(!r.ok){add('sys',d.message||'Tutor unavailable.');if(d.error==='ai_not_configured')document.getElementById('aiPill').textContent='OPENAI KEY NEEDED'}else{conversation=d.conversation_id||conversation;add('ai',d.answer||'');if(d.check_question)add('ai',d.check_question)}}catch(e){wait.textContent='Network error.'}}
+async function send(){let q=document.getElementById('q'),msg=q.value.trim();if(!msg)return;let session=await getSession();if(!session){show('account');return}add('me',msg);q.value='';let wait=add('ai','Thinking…');let active=document.querySelector('.view.active')?.id||'home';let course=document.querySelector('#university .track:hover')?.dataset.course||'';try{let r=await fetch(TUTOR,{method:'POST',headers:{authorization:'Bearer '+session.access_token,'content-type':'application/json'},body:JSON.stringify({message:msg,mode,conversation_id:conversation,page_context:{product:active,page:active,course_id:course,title:document.title,screen_summary:(document.querySelector('.view.active')?.innerText||'').slice(0,3000)}})});let d=await r.json();wait.remove();if(!r.ok){add('sys',d.message||'Tutor unavailable.');if(d.error==='ai_not_configured')document.getElementById('aiPill').textContent='OPENAI KEY NEEDED'}else{conversation=d.conversation_id||conversation;add('ai',d.answer||'');if(d.check_question)add('ai',d.check_question)}}catch(e){wait.textContent='Network error.'}}
 document.getElementById('send').onclick=send;document.getElementById('q').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}};renderTracks();renderWatch();renderTutorEmpty();
 </script>
 </body></html>
