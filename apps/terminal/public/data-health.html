@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WAVE — Data Health</title>
+<link rel="stylesheet" href="platform.css">
+<link rel="stylesheet" href="data-health.css">
+</head>
+<body class="wp-body">
+<header class="wp-topbar">
+  <a class="wp-brand" href="index.html">
+    <svg viewBox="0 0 80 30" fill="none"><path d="M0 20 C10 10,20 10,30 20 C40 30,50 30,60 20 C70 10,80 10,90 20" stroke="#55aaff" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+    <span>Wave Capital</span>
+  </a>
+  <nav class="wp-nav">
+    <a href="terminal_app.html">Terminal</a>
+    <a href="university.html">University</a>
+    <a href="blog.html">Research</a>
+    <a href="products.html">Products</a>
+    <a href="account.html">Account</a>
+  </nav>
+  <a href="account.html" class="wp-account-chip"><span class="wp-avatar">W</span><span>Ops</span></a>
+</header>
+
+<main class="wp-shell dh-shell">
+  <section class="dh-hero">
+    <div>
+      <div class="wp-kicker">WAVE Ops · Internal</div>
+      <h1 class="dh-title">Data Health</h1>
+      <p class="dh-sub">One operational view for every scheduled dataset powering the Terminal. Freshness, source, status, fallback state and logic version live here — not inside the customer experience.</p>
+    </div>
+    <div class="dh-hero-actions">
+      <button class="wp-btn ghost" id="autoBtn" type="button">Auto-refresh · 60s</button>
+      <button class="wp-btn primary" id="refreshBtn" type="button">Refresh now</button>
+    </div>
+  </section>
+
+  <section class="dh-banner" id="healthBanner">
+    <div class="dh-banner-dot"></div>
+    <div>
+      <div class="dh-banner-title" id="bannerTitle">Loading production telemetry…</div>
+      <div class="dh-banner-sub" id="bannerSub">Checking Supabase snapshots</div>
+    </div>
+    <div class="dh-banner-time" id="generatedAt">—</div>
+  </section>
+
+  <section class="dh-stats">
+    <article class="dh-stat">
+      <div class="dh-stat-label">Datasets</div>
+      <div class="dh-stat-value" id="statTotal">—</div>
+      <div class="dh-stat-note" id="statGroups">— groups</div>
+    </article>
+    <article class="dh-stat">
+      <div class="dh-stat-label">Healthy</div>
+      <div class="dh-stat-value dh-good" id="statOk">—</div>
+      <div class="dh-stat-note">Status OK</div>
+    </article>
+    <article class="dh-stat">
+      <div class="dh-stat-label">Stale</div>
+      <div class="dh-stat-value" id="statStale">—</div>
+      <div class="dh-stat-note">Past expiry</div>
+    </article>
+    <article class="dh-stat">
+      <div class="dh-stat-label">Partial / Error</div>
+      <div class="dh-stat-value" id="statIssues">—</div>
+      <div class="dh-stat-note">Needs attention</div>
+    </article>
+    <article class="dh-stat">
+      <div class="dh-stat-label">Fallback</div>
+      <div class="dh-stat-value" id="statFallback">—</div>
+      <div class="dh-stat-note">Alternate provider/path</div>
+    </article>
+    <article class="dh-stat">
+      <div class="dh-stat-label">Oldest Age</div>
+      <div class="dh-stat-value dh-age" id="statOldest">—</div>
+      <div class="dh-stat-note">Since calculation</div>
+    </article>
+  </section>
+
+  <section class="dh-panel">
+    <div class="dh-toolbar">
+      <div class="dh-search-wrap">
+        <span class="dh-search-icon">⌕</span>
+        <input id="searchInput" class="dh-search" placeholder="Search dataset, source or logic version…">
+      </div>
+      <select id="groupFilter" class="dh-select">
+        <option value="">All domains</option>
+      </select>
+      <select id="statusFilter" class="dh-select">
+        <option value="">All status</option>
+        <option value="healthy">Healthy</option>
+        <option value="stale">Stale</option>
+        <option value="fallback">Fallback</option>
+        <option value="partial">Partial</option>
+        <option value="error">Error</option>
+      </select>
+      <div class="dh-result-count" id="resultCount">—</div>
+    </div>
+
+    <div class="dh-group-strip" id="groupStrip"></div>
+
+    <div class="dh-table-wrap">
+      <table class="dh-table">
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Dataset</th>
+            <th>Domain</th>
+            <th>Source</th>
+            <th>Age</th>
+            <th>Expires</th>
+            <th>Freshness</th>
+            <th>Logic</th>
+          </tr>
+        </thead>
+        <tbody id="healthRows">
+          <tr><td colspan="8" class="dh-empty">Loading datasets…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<div class="dh-drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="dh-drawer" id="detailDrawer" aria-hidden="true">
+  <div class="dh-drawer-head">
+    <div>
+      <div class="wp-kicker">Dataset detail</div>
+      <h2 id="drawerTitle">—</h2>
+    </div>
+    <button class="dh-close" id="drawerClose" type="button">×</button>
+  </div>
+  <div class="dh-drawer-body" id="drawerBody"></div>
+</aside>
+
+<script src="data-health.js"></script>
+</body>
+</html>
