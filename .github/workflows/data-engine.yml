@@ -57,13 +57,15 @@ jobs:
 
       - name: Unit-test canonical calculations
         working-directory: services/api/data_engine
-        run: python -m unittest -v test_calculations.py test_route_registry.py test_resilience.py test_fundamentals.py
+        run: python -m unittest -v test_calculations.py test_route_registry.py test_resilience.py test_fundamentals.py test_flows.py
 
       - name: Build due snapshots
         shell: bash
         run: |
           FORCE=""
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.force }}" == "true" ]]; then
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            FORCE="--force"
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.force }}" == "true" ]]; then
             FORCE="--force"
           fi
           python services/api/data_engine/run.py --output artifacts/data_snapshots.json $FORCE
