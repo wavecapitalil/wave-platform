@@ -20,15 +20,20 @@ on:
       - "services/api/data_engine/**"
       - ".github/workflows/data-engine.yml"
       - "supabase/functions/wave-snapshot-ingest/**"
+      - "supabase/functions/wave-data/**"
 
 permissions:
   contents: read
   id-token: write
 
+concurrency:
+  group: wave-data-engine
+  cancel-in-progress: false
+
 jobs:
   snapshots:
     runs-on: ubuntu-latest
-    timeout-minutes: 14
+    timeout-minutes: 30
     env:
       WAVE_SUPABASE_URL: https://nqmtayofbhletydmiujz.supabase.co
       WAVE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_5WjaBtaWtb3q7EJ3ldUfXQ_rVKIrZZy
@@ -46,7 +51,7 @@ jobs:
 
       - name: Unit-test canonical calculations
         working-directory: services/api/data_engine
-        run: python -m unittest -v test_calculations.py
+        run: python -m unittest -v test_calculations.py test_route_registry.py
 
       - name: Build due snapshots
         shell: bash
