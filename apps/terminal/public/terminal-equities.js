@@ -480,10 +480,15 @@ async function runFundChart(){
     var fetched = await Promise.all(fetches);
     fetched.forEach(function(f){ if(f.result.error) throw new Error(f.ticker + ': ' + f.result.error); });
 
-    // Unified date axis across all results — store globally for range slider
+    // Align companies by comparable reporting periods, not exact fiscal
+    // calendar dates. AAPL (Sep FY-end) and MSFT (Jun FY-end) must share the
+    // same annual x-axis year; quarterly views align by year + quarter.
     var allDates = [];
     fetched.forEach(function(f){
-      (f.result.data||[]).forEach(function(x){ if(allDates.indexOf(x.date)<0) allDates.push(x.date); });
+      (f.result.data||[]).forEach(function(x){
+        var key=fcPeriodKey(x.date);
+        if(allDates.indexOf(key)<0) allDates.push(key);
+      });
     });
     allDates.sort();
     _fcAllDates = allDates;
@@ -500,10 +505,17 @@ async function runFundChart(){
   }
 }
 
+function fcPeriodKey(d){
+  if(_fcPeriod === 'annual') return String(d).slice(0,4);
+  if(/^\d{4} Q[1-4]$/.test(String(d))) return String(d);
+  var dt = new Date(d);
+  if(isNaN(dt.getTime())) return String(d);
+  var q = Math.ceil((dt.getUTCMonth()+1)/3);
+  return dt.getUTCFullYear() + ' Q' + q;
+}
+
 function fcDateLabel(d){
-  if(_fcPeriod === 'annual') return d.slice(0,4);
-  var dt = new Date(d); var q = Math.ceil((dt.getMonth()+1)/3);
-  return dt.getFullYear() + ' Q' + q;
+  return fcPeriodKey(d);
 }
 
 function fcInitRangeSlider(dates){
@@ -544,7 +556,8 @@ function fcDrawChart(dates){
   var labels = allDates.map(fcDateLabel);
 
   function mapVals(dataArr){
-    var m = {}; (dataArr||[]).forEach(function(x){ m[x.date]=x.value; });
+    var m = {};
+    (dataArr||[]).forEach(function(x){ m[fcPeriodKey(x.date)]=x.value; });
     return allDates.map(function(d){ return m[d]!=null ? m[d] : null; });
   }
 
@@ -656,7 +669,8 @@ function fcDrawChart(dates){
       if(!mFetches.length) return;
       var valsMap = {};
       mFetches.forEach(function(f){
-        var m = {}; (f.result.data||[]).forEach(function(x){ m[x.date]=x.value; });
+        var m = {};
+        (f.result.data||[]).forEach(function(x){ m[fcPeriodKey(x.date)]=x.value; });
         valsMap[f.ticker] = m;
       });
       var colLine = FC_COLORS[mi % FC_COLORS.length].line;
