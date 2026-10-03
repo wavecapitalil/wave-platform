@@ -2,8 +2,10 @@ import { createClient } from "npm:@supabase/supabase-js@2.57.4";
 
 const SUPABASE_URL=Deno.env.get("SUPABASE_URL")!;
 const ANON=Deno.env.get("SUPABASE_ANON_KEY")!;
+const SERVICE_KEY=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const CORE=SUPABASE_URL+"/functions/v1/wave-core";
 const db=createClient(SUPABASE_URL,ANON,{auth:{persistSession:false}});
+const admin=createClient(SUPABASE_URL,SERVICE_KEY,{auth:{persistSession:false}});
 
 const cors={
   "access-control-allow-origin":"*",
@@ -132,57 +134,37 @@ async function proxyCore(req:Request){
 async function liveCryptoPositioning(u:URL){
   const pair=String(u.searchParams.get("pair")||"BTCUSD").trim().toUpperCase();
   const period=String(u.searchParams.get("period")||"1h").trim();
-  const allowed=new Set(["5m","15m","30m","1h","2h","4h","6h","12h","1d"]);
-  if(!allowed.has(period)) return json({error:"unsupported period"},400);
-  const symbol:any=({BTCUSD:"BTCUSDT",ETHUSD:"ETHUSDT"} as any)[pair];
-  if(!symbol) return json({error:"unsupported pair",supported:["BTCUSD","ETHUSD"]},400);
+  const allowed=new Set(["1h","4h","1d"]);
+  if(!allowed.has(period)) return json({error:"unsupported period",supported:["1h","4h","1d"]},400);
+  if(!["BTCUSD","ETHUSD"].includes(pair)) return json({error:"unsupported pair",supported:["BTCUSD","ETHUSD"]},400);
 
-  const endpoints:any={
-    global_accounts:"globalLongShortAccountRatio",
-    top_accounts:"topLongShortAccountRatio",
-    top_positions:"topLongShortPositionRatio"
-  };
-  const series:any={}, errors:any={};
-  for(const [key,name] of Object.entries(endpoints)){
-    try{
-      const target="https://fapi.binance.com/futures/data/"+name+"?"+new URLSearchParams({
-        symbol,period,limit:"30"
-      }).toString();
-      const r=await fetch(target,{headers:{"accept":"application/json","user-agent":"Mozilla/5.0"}});
-      if(!r.ok) throw new Error("Binance USD-M HTTP "+r.status);
-      const raw=await r.json();
-      series[key]=(Array.isArray(raw)?raw:[]).map((x:any)=>({
-        timestamp:Number(x.timestamp),
-        long_pct:Number(x.longAccount)*100,
-        short_pct:Number(x.shortAccount)*100,
-        long_short_ratio:Number(x.longShortRatio)
-      }));
-    }catch(e){
-      series[key]=[];
-      errors[key]=String(e?.message||e);
-    }
-  }
-  if(!Object.values(series).some((rows:any)=>Array.isArray(rows)&&rows.length)){
-    return json({error:"crypto_positioning_unavailable",pair,period,errors},502);
-  }
-  return json({
-    asset_class:"crypto",
-    venue:"Binance USD-M Futures",
-    pair,
-    provider_symbol:symbol,
-    period,
-    series,
-    errors,
-    meta:{
-      source:"Binance public USD-M futures market-data API",
-      source_timestamp:null,
-      fetched_at:new Date().toISOString(),
-      freshness:"live",
-      stale:false,
+  const {data:cached,error}=await db
+    .from("crypto_positioning_cache")
+    .select("data,source,fetched_at,status,error")
+    .eq("pair",pair)
+    .eq("period",period)
+    .maybeSingle();
+
+  if(!error && cached?.status==="ok" && cached?.data){
+    const ageMs=Date.now()-Date.parse(cached.fetched_at);
+    const payload={...cached.data};
+    payload.meta={
+      source:cached.source||"Binance public USD-M futures market-data API",
+      source_timestamp:cached.fetched_at,
+      fetched_at:cached.fetched_at,
+      freshness:"hourly_cache",
+      stale:ageMs>90*60*1000,
       fallback:true,
-      note:"Positioning ratios, not blockchain exchange inflow/outflow data. WAVE uses USD-M because COIN-M endpoints can be region-blocked from cloud infrastructure."
-    }
-  },200,{"cache-control":"public, max-age=60","x-wave-source":"binance-usdm-live"});
+      note:"Positioning ratios, not blockchain exchange inflow/outflow data. WAVE caches Binance USD-M data in Supabase because cloud egress to Binance can be region-dependent."
+    };
+    return json(payload,200,{"cache-control":"public, max-age=60","x-wave-source":"supabase-crypto-positioning-cache"});
+  }
+
+  return json({
+    error:"crypto_positioning_cache_unavailable",
+    pair,period,
+    detail:error?.message||cached?.error||"no cached observation"
+  },503);
 }
 
 const SEC_HEADERS={
@@ -287,11 +269,18 @@ async function dynamicFundamentals(u:URL){
   const valid=new Set(["revenue","gross_profit","operating_income","net_income","eps_diluted","rd_expense","free_cash_flow","capex","gross_margin","operating_margin","net_margin","revenue_growth","op_income_growth","net_income_growth"]);
   if(!valid.has(metric)) return json({error:"unknown metric"},400);
 
-  const rec=await secTickerRecord(symbol);
-  if(!rec) return json({error:"symbol not found in SEC ticker universe",symbol},404);
-  const fr=await fetch("https://data.sec.gov/api/xbrl/companyfacts/CIK"+rec.cik+".json",{headers:SEC_HEADERS});
-  if(!fr.ok) return json({error:"SEC companyfacts HTTP "+fr.status,symbol},502);
-  const fd=await fr.json();
+  const {data:cachedFacts,error:factsError}=await admin.rpc("wave_get_companyfacts",{
+    p_ticker:symbol,
+    p_force:false
+  });
+  if(factsError || !cachedFacts?.document){
+    return json({error:factsError?.message||"SEC companyfacts cache unavailable",symbol},502);
+  }
+  const rec={
+    cik:String(cachedFacts.cik||"").padStart(10,"0"),
+    name:String(cachedFacts.company_name||symbol)
+  };
+  const fd=cachedFacts.document;
   const facts=fd?.facts?.["us-gaap"]||{};
   const form=period==="quarterly"?"10-Q":"10-K";
   const minDays=period==="quarterly"?60:340;
@@ -330,10 +319,13 @@ async function dynamicFundamentals(u:URL){
     period,
     data,
     meta:{
-      source:"SEC EDGAR companyfacts",
+      source:"SEC EDGAR companyfacts via Supabase cache",
       cik:rec.cik,
-      logic_version:"fundamentals_dynamic_sec_v2.0",
+      logic_version:"fundamentals_dynamic_sec_v2.1",
       growth_basis:metric.endsWith("_growth")?(period==="quarterly"?"same-quarter YoY":"annual YoY"):null,
+      provider_fetched_at:cachedFacts.fetched_at||null,
+      cached:Boolean(cachedFacts.cached),
+      stale_fallback:Boolean(cachedFacts.stale_fallback),
       fetched_at:new Date().toISOString()
     }
   },200,{"x-wave-source":"sec-dynamic","cache-control":"public, max-age=900"});
