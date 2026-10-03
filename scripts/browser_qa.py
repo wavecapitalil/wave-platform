@@ -142,6 +142,10 @@ async def run_viewport(browser, name, width, height):
             await buttons.nth(2).click()
             await page.wait_for_timeout(300)
             await buttons.nth(1).click()
+            await page.wait_for_function("""() => {
+                const x=document.querySelector('#confResults');
+                return x && x.innerText.includes('/3') && !x.innerText.toLowerCase().includes('checking');
+            }""", timeout=120000)
             await active.screenshot(path=str(OUT/f"{name}-confluence.png"))
         elif slug=="hormuz":
             await page.wait_for_function("""() => {
@@ -194,7 +198,12 @@ async def run_viewport(browser, name, width, height):
              table && table.innerText.includes('MSFT') && table.innerText.includes('HOOD') &&
              (!status || !status.innerText.startsWith('Error'));
     }""", timeout=120000)
-    assert await page.locator("#fcCanvas").is_visible()
+    chart_state=await page.evaluate("""() => {
+      const c=document.querySelector('#fcCanvas');
+      const r=c?c.getBoundingClientRect():null;
+      return {width:r?.width||0,height:r?.height||0,hasChart:!!window._fcChart};
+    }""")
+    assert chart_state["width"] > 100 and chart_state["height"] > 100 and chart_state["hasChart"], f"Fundamental chart not rendered: {chart_state}"
     await page.locator("#page-fundchart").screenshot(path=str(OUT/f"{name}-fundamentals.png"))
     report["fundamentals"]={"pair":"MSFT vs HOOD","metrics":["revenue","net_margin"],"ok":True}
 
