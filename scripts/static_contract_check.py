@@ -52,6 +52,7 @@ products_html = Path("apps/terminal/public/products.html").read_text(encoding="u
 data_health_html = Path("apps/terminal/public/data-health.html").read_text(encoding="utf-8")
 data_health_js = Path("apps/terminal/public/data-health.js").read_text(encoding="utf-8")
 data_health_css = Path("apps/terminal/public/data-health.css").read_text(encoding="utf-8")
+provider_cache_migration = Path("supabase/migrations/20261003_provider_caches.sql").read_text(encoding="utf-8")
 
 checks = [
     ("Seasonality uses new contract", "historical_average" in frontend and "seas-line-chart" in frontend),
@@ -120,6 +121,8 @@ checks = [
     ("Risk UI consumes canonical engine score", "data.score.signals" in Path("apps/terminal/public/terminal-risk.js").read_text(encoding="utf-8") and "result.composite=Number(data.score.composite)" in Path("apps/terminal/public/terminal-risk.js").read_text(encoding="utf-8")),
     ("Dynamic fundamentals use SEC fallback", "dynamicFundamentals" in wave_data_fn and "SEC EDGAR companyfacts" in wave_data_fn),
     ("Fundamental growth helper is explicit", "_growth_map" in Path("services/api/modules/equities_core.py").read_text(encoding="utf-8")),
+    ("Provider caches are reproducible", all(x in provider_cache_migration for x in ["sec_ticker_map","sec_companyfacts_cache","crypto_positioning_cache","wave_get_companyfacts","wave_refresh_crypto_positioning"])),
+
 
 ]
 
