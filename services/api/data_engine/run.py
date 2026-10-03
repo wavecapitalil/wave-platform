@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import sys
 import requests
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 HERE=Path(__file__).resolve().parent
 sys.path.insert(0,str(HERE))
@@ -103,17 +104,46 @@ def main():
     current=existing_expiries()
     selected=set(args.only)
     snapshots=[]; failures=[]
+    due_items=[]
     for key,(group,ttl,collector) in REGISTRY.items():
-        if selected and key not in selected and group not in selected:continue
+        if selected and key not in selected and group not in selected:
+            continue
         if not due(key,current.get(key),now,args.force):
             print(f"SKIP {key}: fresh")
             continue
+        due_items.append((key,group,ttl,collector))
+
+    # Deterministic core collectors stay sequential. Flask/API snapshots are
+    # independent HTTP contracts and can be evaluated with a small worker pool.
+    core_items=[x for x in due_items if not x[0].startswith("api:")]
+    api_items=[x for x in due_items if x[0].startswith("api:")]
+
+    for key,group,ttl,collector in core_items:
         print(f"RUN  {key}")
         try:
             snapshots.append(build_snapshot(key,group,ttl,collector,now))
         except Exception as exc:
             failures.append({"dataset_key":key,"error":str(exc)})
             print(f"FAIL {key}: {exc}",file=sys.stderr)
+
+    def _run(item):
+        key,group,ttl,collector=item
+        return key,build_snapshot(key,group,ttl,collector,now)
+
+    if api_items:
+        workers=min(4,len(api_items))
+        print(f"RUN  {len(api_items)} API snapshots with {workers} workers")
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            futures={pool.submit(_run,item):item[0] for item in api_items}
+            for fut in as_completed(futures):
+                key=futures[fut]
+                try:
+                    _,snap=fut.result()
+                    snapshots.append(snap)
+                    print(f" OK  {key}")
+                except Exception as exc:
+                    failures.append({"dataset_key":key,"error":str(exc)})
+                    print(f"FAIL {key}: {exc}",file=sys.stderr)
 
     out=Path(args.output);out.parent.mkdir(parents=True,exist_ok=True)
     payload={"generated_at":iso(datetime.now(UTC)),"snapshots":snapshots,"failures":failures}
