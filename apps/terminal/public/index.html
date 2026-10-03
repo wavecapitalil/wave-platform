@@ -814,7 +814,7 @@
     el.textContent = (up?'▲ +':'▼ ') + Math.abs(pct).toFixed(1) + '%';
     el.className = 'tp-chg ' + (good ? 'up' : 'dn');
   }
-  Promise.all([q('ES=F'), q('%5EVIX'), q('BTC-USD'), q('GC=F')]).then(function(r){
+  Promise.all([q('ES=F'), q('^VIX'), q('BTC-USD'), q('GC=F')]).then(function(r){
     var es=r[0], vix=r[1], btc=r[2], gold=r[3];
     if(es){ setVal('tpSpx', es.price, '', 0); setChg('tpSpxChg', es.pct); }
     if(vix){
