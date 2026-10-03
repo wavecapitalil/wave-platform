@@ -104,7 +104,7 @@
 <script src="platform-search.js"></script>
 <script src="research-save.js"></script>\n<script src="ai-tutor.js"></script>
 <script>
-var API = '';
+var API = (location.hostname==='localhost'||location.hostname==='127.0.0.1') ? 'http://localhost:5001' : 'https://nqmtayofbhletydmiujz.supabase.co/functions/v1/wave-data';
 var PAGE_SIZE = 12;
 var _offset = 0;
 var _total = 0;
