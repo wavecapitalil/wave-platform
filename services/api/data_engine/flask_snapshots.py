@@ -79,6 +79,8 @@ def route_specs():
         _spec("/api/flows/overview", group="flows", ttl=10080),
         _spec("/api/crypto-global", group="crypto", ttl=15),
         _spec("/api/crypto-scanner", group="crypto", ttl=15),
+        _spec("/api/earnings", group="earnings", ttl=360),
+        _spec("/api/insider-buying", group="insiders", ttl=720),
         _spec("/api/institutions-list", group="institutions", ttl=10080),
         _spec("/api/top-stories", group="content", ttl=60, optional=True),
         _spec("/api/blog/articles", {"limit":50,"offset":0}, group="content", ttl=60, optional=True),
@@ -153,29 +155,23 @@ def route_specs():
     return specs
 
 
-def _warm_background_caches():
-    """Populate routes whose Flask implementation otherwise returns loading."""
-    try:
-        from modules.earnings import _fetch_earnings_universe
-        _fetch_earnings_universe()
-    except Exception as exc:
-        print(f"WARN earnings warmup: {exc}", file=sys.stderr)
-    try:
-        from modules.equities_research import _fetch_insider_buying
-        _fetch_insider_buying()
-    except Exception as exc:
-        print(f"WARN insider warmup: {exc}", file=sys.stderr)
-
-
-_WARMED = False
-
+def _warm_for(spec: RouteSpec):
+    """Populate only the background cache required by the requested route."""
+    if spec.path == "/api/earnings":
+        try:
+            from modules.earnings import _fetch_earnings_universe
+            _fetch_earnings_universe()
+        except Exception as exc:
+            print(f"WARN earnings warmup: {exc}", file=sys.stderr)
+    elif spec.path == "/api/insider-buying":
+        try:
+            from modules.equities_research import _fetch_insider_buying
+            _fetch_insider_buying()
+        except Exception as exc:
+            print(f"WARN insider warmup: {exc}", file=sys.stderr)
 
 def collect_flask_route(spec: RouteSpec):
-    global _WARMED
-    if not _WARMED:
-        _warm_background_caches()
-        _WARMED = True
-
+    _warm_for(spec)
     app = _app()
     with app.test_client() as client:
         response = client.get(spec.path, query_string=spec.query_dict)
