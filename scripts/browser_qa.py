@@ -196,10 +196,26 @@ async def run_viewport(browser, name, width, height):
     report["fundamentals"]={"pair":"MSFT vs HOOD","metrics":["revenue","net_margin"],"ok":True}
 
     # Broad page activation regression after JS domain extraction.
+    generic_page_failures=[]
     for slug in ALL_NAV_PAGES:
         await page.evaluate(f"navigate('{slug}')")
-        await page.locator(f"#page-{slug}").wait_for(state="visible", timeout=10000)
-        await page.wait_for_timeout(120)
+        active_page=page.locator(f"#page-{slug}")
+        await active_page.wait_for(state="visible", timeout=10000)
+        await page.wait_for_timeout(350)
+        body=(await active_page.inner_text()).lower()
+        bad_markers=[
+            "route_not_available_on_edge",
+            "http 404",
+            "http 500",
+            "failed —",
+            "failed to load",
+            "networkerror",
+            "typeerror:",
+        ]
+        hits=[x for x in bad_markers if x in body]
+        if hits:
+            generic_page_failures.append({"page":slug,"markers":hits})
+    assert not generic_page_failures, f"Terminal page failures: {generic_page_failures}"
     report["navigation_pages"]=len(ALL_NAV_PAGES)
 
     # Navigation naming checks
@@ -246,10 +262,10 @@ async def run_viewport(browser, name, width, height):
         content_type="application/json",
         body=json.dumps({
             "generated_at":"2026-10-03T20:00:00Z",
-            "engine_cadence_minutes":15,
+            "engine_cadence_minutes":60,
             "summary":{"total":3,"ok":3,"partial":0,"error":0,"stale":0,"fallback":0,"groups":3},
             "datasets":[
-                {"dataset_key":"market:core","dataset_group":"market","source":"Yahoo Finance","source_timestamp":"2026-10-03T19:59:00Z","fetched_at":"2026-10-03T19:59:10Z","calculated_at":"2026-10-03T19:59:12Z","expires_at":"2026-10-03T20:14:12Z","logic_version":"market_snapshot_v1.0","freshness":"15m_snapshot","stale":False,"fallback":False,"status":"ok","error":None,"updated_at":"2026-10-03T19:59:12Z","age_seconds":48,"expires_in_seconds":852},
+                {"dataset_key":"market:core","dataset_group":"market","source":"Yahoo Finance","source_timestamp":"2026-10-03T19:59:00Z","fetched_at":"2026-10-03T19:59:10Z","calculated_at":"2026-10-03T19:59:12Z","expires_at":"2026-10-03T20:14:12Z","logic_version":"market_snapshot_v1.0","freshness":"60m_snapshot","stale":False,"fallback":False,"status":"ok","error":None,"updated_at":"2026-10-03T19:59:12Z","age_seconds":48,"expires_in_seconds":852},
                 {"dataset_key":"risk:composite","dataset_group":"risk","source":"Yahoo Finance + CBOE","source_timestamp":"2026-10-03T19:59:00Z","fetched_at":"2026-10-03T19:59:10Z","calculated_at":"2026-10-03T19:59:14Z","expires_at":"2026-10-03T20:14:14Z","logic_version":"risk_meter_v1.0","freshness":"15m_snapshot","stale":False,"fallback":False,"status":"ok","error":None,"updated_at":"2026-10-03T19:59:14Z","age_seconds":46,"expires_in_seconds":854},
                 {"dataset_key":"api:/api/earnings","dataset_group":"earnings","source":"WAVE Flask route /api/earnings","source_timestamp":"2026-10-03T19:55:00Z","fetched_at":"2026-10-03T19:55:00Z","calculated_at":"2026-10-03T19:55:03Z","expires_at":"2026-10-04T01:55:03Z","logic_version":"flask_route_v1.0","freshness":"360m_snapshot","stale":False,"fallback":False,"status":"ok","error":None,"updated_at":"2026-10-03T19:55:03Z","age_seconds":297,"expires_in_seconds":21303}
             ]
