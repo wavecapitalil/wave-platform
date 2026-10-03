@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 import asyncio
 import json
+import os
 from pathlib import Path
 from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeout
 
-BASE="http://127.0.0.1:5001"
+BASE=os.getenv("WAVE_BROWSER_BASE","http://127.0.0.1:5001").rstrip("/")
+IS_PRODUCTION=not ("127.0.0.1" in BASE or "localhost" in BASE)
 OUT=Path("browser_qa")
 OUT.mkdir(exist_ok=True)
 
@@ -57,10 +59,35 @@ async def run_viewport(browser, name, width, height):
     page_errors=[]
     page.on("pageerror", lambda exc: page_errors.append(str(exc)))
 
-    await page.goto(BASE, wait_until="domcontentloaded", timeout=60000)
-    await page.wait_for_function("typeof navigate === 'function'", timeout=30000)
-
     report={"viewport":name,"pages":[]}
+
+    # Public Home: live terminal preview + sourced market story.
+    await page.goto(BASE + "/index.html", wait_until="domcontentloaded", timeout=60000)
+    await page.locator("#latestStoryTitle").wait_for(state="visible", timeout=30000)
+    await page.wait_for_function("""() => {
+      const t=document.querySelector('#latestStoryTitle');
+      const s=document.querySelector('#latestStorySummary');
+      const src=document.querySelector('#latestStorySource');
+      const a=document.querySelector('#latestStoryLink');
+      return t && s && src && a &&
+             t.innerText.trim() && !t.innerText.includes('Fetching') &&
+             s.innerText.trim() && s.innerText.trim() !== '—' &&
+             src.innerText.trim() && src.innerText.trim() !== '—' &&
+             /^https:\/\//.test(a.href);
+    }""", timeout=60000)
+    await page.wait_for_function("""() => {
+      const v=document.querySelector('#tpVix');
+      const b=document.querySelector('#tpBtc');
+      const g=document.querySelector('#tpGold');
+      return [v,b,g].every(x => x && x.innerText.trim() && x.innerText.trim() !== '—');
+    }""", timeout=60000)
+    await assert_no_horizontal_overflow(page, f"{name}/home")
+    await page.screenshot(path=str(OUT/f"{name}-home.png"), full_page=True)
+    report["home"]={"ok":True,"story":await page.locator("#latestStoryTitle").inner_text()}
+
+    # Terminal application.
+    await page.goto(BASE + "/terminal_app.html", wait_until="domcontentloaded", timeout=60000)
+    await page.wait_for_function("typeof navigate === 'function'", timeout=30000)
 
     for slug,title in PAGES:
         await page.evaluate(f"navigate('{slug}')")
@@ -129,6 +156,45 @@ async def run_viewport(browser, name, width, height):
         await assert_no_horizontal_overflow(page, f"{name}/{slug}")
         report["pages"].append({"page":slug,"ok":True})
 
+    # Canonical Risk Meter must render the backend composite exactly.
+    await page.evaluate("navigate('risk')")
+    await page.locator("#page-risk").wait_for(state="visible", timeout=15000)
+    await page.wait_for_function("""() => {
+      const x=document.querySelector('#riskScoreNum');
+      return x && /^\d+$/.test(x.innerText.trim());
+    }""", timeout=60000)
+    canonical=await page.evaluate("""async () => {
+      const r=await fetch(window.API + '/api/risk-signals');
+      const d=await r.json();
+      return d.score && d.score.composite;
+    }""")
+    visible=int((await page.locator("#riskScoreNum").inner_text()).strip())
+    assert visible == int(canonical), f"Risk UI {visible} != canonical {canonical}"
+    await page.locator("#page-risk").screenshot(path=str(OUT/f"{name}-risk.png"))
+    report["risk"]={"visible":visible,"canonical":canonical}
+
+    # Fundamental comparison: two companies, multiple KPIs, real chart + table.
+    await page.evaluate("navigate('fundchart')")
+    await page.locator("#page-fundchart").wait_for(state="visible", timeout=15000)
+    await page.locator("#fcTicker1").fill("MSFT")
+    await page.locator("#fcTicker2").fill("HOOD")
+    net_margin=page.locator("#fcMetricPills button", has_text="Net Margin")
+    await net_margin.click()
+    await page.evaluate("runFundChart()")
+    await page.wait_for_function("""() => {
+      const wrap=document.querySelector('#fcChartWrap');
+      const legend=document.querySelector('#fcLegend');
+      const table=document.querySelector('#fcTable');
+      const status=document.querySelector('#fcStatus');
+      return wrap && wrap.style.display !== 'none' &&
+             legend && legend.innerText.includes('MSFT') && legend.innerText.includes('HOOD') &&
+             table && table.innerText.includes('MSFT') && table.innerText.includes('HOOD') &&
+             (!status || !status.innerText.startsWith('Error'));
+    }""", timeout=120000)
+    assert await page.locator("#fcCanvas").is_visible()
+    await page.locator("#page-fundchart").screenshot(path=str(OUT/f"{name}-fundamentals.png"))
+    report["fundamentals"]={"pair":"MSFT vs HOOD","metrics":["revenue","net_margin"],"ok":True}
+
     # Broad page activation regression after JS domain extraction.
     for slug in ALL_NAV_PAGES:
         await page.evaluate(f"navigate('{slug}')")
@@ -143,7 +209,7 @@ async def run_viewport(browser, name, width, height):
     assert "Hormuz Risk" in nav_text
 
     # Unified platform shell: Account persistence + University progress.
-    await page.goto(BASE + "/account", wait_until="domcontentloaded", timeout=30000)
+    await page.goto(BASE + "/account.html", wait_until="domcontentloaded", timeout=30000)
     await page.locator("#watchList").wait_for(state="visible")
     await page.wait_for_function("() => typeof WavePlatform === 'object' && typeof WaveCloud === 'object'")
     await page.locator("#watchSymbol").fill("AAPL")
@@ -152,7 +218,7 @@ async def run_viewport(browser, name, width, height):
     await assert_no_horizontal_overflow(page, f"{name}/account")
     await page.screenshot(path=str(OUT/f"{name}-account.png"), full_page=True)
 
-    await page.goto(BASE + "/university", wait_until="domcontentloaded", timeout=30000)
+    await page.goto(BASE + "/university.html", wait_until="domcontentloaded", timeout=30000)
     await page.locator("#courseGrid").wait_for(state="visible")
     await page.wait_for_function("() => typeof WavePlatform === 'object' && typeof WaveCloud === 'object' && typeof WaveSearch === 'object' && typeof WaveTutor === 'object'")
     await page.locator("#waveTutorLauncher").click()
@@ -173,8 +239,9 @@ async def run_viewport(browser, name, width, height):
     report["platform_pages"]=["account","university"]
 
     # Internal operations page stays outside customer navigation, but must render
-    # production-style telemetry correctly on desktop and iPad.
-    await page.route("**/wave-data/api/data-health**", lambda route: route.fulfill(
+    # production telemetry correctly on desktop and iPad.
+    if not IS_PRODUCTION:
+        await page.route("**/wave-data/api/data-health**", lambda route: route.fulfill(
         status=200,
         content_type="application/json",
         body=json.dumps({
@@ -187,11 +254,16 @@ async def run_viewport(browser, name, width, height):
                 {"dataset_key":"api:/api/earnings","dataset_group":"earnings","source":"WAVE Flask route /api/earnings","source_timestamp":"2026-10-03T19:55:00Z","fetched_at":"2026-10-03T19:55:00Z","calculated_at":"2026-10-03T19:55:03Z","expires_at":"2026-10-04T01:55:03Z","logic_version":"flask_route_v1.0","freshness":"360m_snapshot","stale":False,"fallback":False,"status":"ok","error":None,"updated_at":"2026-10-03T19:55:03Z","age_seconds":297,"expires_in_seconds":21303}
             ]
         })
-    ))
-    await page.goto(BASE + "/data-health", wait_until="domcontentloaded", timeout=30000)
-    await page.wait_for_function("() => document.querySelector('#statTotal') && document.querySelector('#statTotal').innerText === '3'", timeout=15000)
-    assert "All production datasets healthy" in await page.locator("#bannerTitle").inner_text()
-    assert await page.locator("#healthRows tr").count() == 3
+        ))
+    await page.goto(BASE + "/data-health.html", wait_until="domcontentloaded", timeout=30000)
+    if IS_PRODUCTION:
+        await page.wait_for_function("() => Number(document.querySelector('#statTotal')?.innerText || 0) >= 300", timeout=30000)
+        assert int((await page.locator("#statIssues").inner_text()).strip()) == 0
+        assert await page.locator("#healthRows tr").count() >= 300
+    else:
+        await page.wait_for_function("() => document.querySelector('#statTotal') && document.querySelector('#statTotal').innerText === '3'", timeout=15000)
+        assert "All production datasets healthy" in await page.locator("#bannerTitle").inner_text()
+        assert await page.locator("#healthRows tr").count() == 3
     await page.locator("#searchInput").fill("risk")
     await page.wait_for_timeout(100)
     assert await page.locator("#healthRows tr").count() == 1
