@@ -101,7 +101,7 @@
 
     'stats.brief':     {en:'Daily Brief — Israel Time', he:'תדריך יומי — שעון ישראל'},
     'stats.assets':    {en:'Asset Classes Tracked', he:'סוגי נכסים במעקב'},
-    'stats.ai':        {en:'Claude-Powered Analysis', he:'ניתוח מבוסס Claude'},
+    'stats.ai':        {en:'AI-Powered Analysis', he:'ניתוח מבוסס AI'},
     'stats.monte':     {en:'Monte Carlo Simulations', he:'סימולציות מונטה קרלו'},
 
     'features.tag':    {en:'Platform',        he:'הפלטפורמה'},
@@ -122,7 +122,7 @@
 
     'tp.tag':          {en:'Morning Terminal', he:'טרמינל הבוקר'},
     'tp.title':        {en:'Know your regime before the market opens.', he:'הכירו את משטר השוק לפני הפתיחה.'},
-    'tp.sub':          {en:'Every morning at 08:00 Israel time, the system fetches live market data, runs it through a multi-factor risk engine, and sends it to Claude for structured analysis.', he:'כל בוקר ב-08:00 שעון ישראל, המערכת שואבת נתוני שוק חיים, מריצה אותם דרך מנוע סיכון רב-גורמי ושולחת אותם ל-Claude לניתוח מובנה.'},
+    'tp.sub':          {en:'Every morning at 08:00 Israel time, the system fetches live market data, runs it through a multi-factor risk engine, and turns it into structured analysis.', he:'כל בוקר ב-08:00 שעון ישראל, המערכת שואבת נתוני שוק חיים, מריצה אותם דרך מנוע סיכון רב-גורמי והופכת אותם לניתוח מובנה.'},
     'tp.openBrief':    {en:"Open Today's Brief →", he:'פתחו את התדריך של היום ←'},
     'tp.barTitle':     {en:'Morning Intelligence — Wave Capital', he:'מודיעין בוקר — Wave Capital'},
     'tp.regime':       {en:'Market Regime',   he:'משטר שוק'},
