@@ -75,7 +75,7 @@ async function dataHealthResponse(){
   };
   return json({
     generated_at:new Date(now).toISOString(),
-    engine_cadence_minutes:15,
+    engine_cadence_minutes:60,
     summary,
     datasets:rows,
   },200,{"cache-control":"no-store"});
@@ -140,8 +140,8 @@ Deno.serve(async(req:Request)=>{
         return json({
           status:"managed",
           refresh_mode:"scheduled_data_engine",
-          cadence:"15m",
-          note:"The public Terminal is snapshot-backed; the next eligible GitHub Data Engine run refreshes this dataset."
+          cadence:"60m",
+          note:"The public Terminal is snapshot-backed; the next eligible hourly GitHub Data Engine run refreshes this dataset."
         },202,{"x-wave-refresh-mode":"scheduled"});
       }
       return json({error:"method_not_allowed"},405);
