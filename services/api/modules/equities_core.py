@@ -36,6 +36,7 @@ SECTOR_DETAIL = {
         'Insurance':            ['BRK-B','MET','PRU','AFL','TRV'],
         'Asset Management':     ['BLK','SCHW','ICE','CME'],
         'Regional Banks':       ['USB','TFC','PNC','CFG','FITB'],
+        'Fintech & Brokerage':  ['HOOD','SOFI','COIN','IBKR','PYPL','AFRM'],
     }},
     'XLI': {'name': 'Industrials', 'subsectors': {
         'Aerospace & Defense':  ['BA','LMT','RTX','NOC','GD','HII'],

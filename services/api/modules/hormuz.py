@@ -128,6 +128,27 @@ def hormuz_summary():
 def hormuz_events():
     try:
         news = _fetch_news(limit=30)
-        return jsonify({"events": news, "meta": build_meta("Google News RSS", freshness="live")})
+        return jsonify({
+            "events": news,
+            "meta": build_meta(
+                "Google News RSS",
+                freshness="live",
+                fallback=False,
+            ),
+        })
     except Exception as exc:
-        return jsonify({"error": str(exc), "events": []}), 502
+        # News RSS is an external convenience feed and can transiently return
+        # 5xx. Do not make the whole scheduled snapshot pipeline fail because
+        # one headline provider is unavailable. The page can render an empty
+        # feed and surface fallback metadata while the summary still retains
+        # oil-price confirmation.
+        return jsonify({
+            "events": [],
+            "warning": "Hormuz news feed temporarily unavailable",
+            "meta": build_meta(
+                "Google News RSS",
+                freshness="provider_unavailable",
+                fallback=True,
+                provider_error=str(exc)[:300],
+            ),
+        })
