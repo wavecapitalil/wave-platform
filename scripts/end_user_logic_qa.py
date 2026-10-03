@@ -170,7 +170,25 @@ try:
 except Exception as e:
     record("home_story_source",False,str(e))
 
-# 9) End-user feature endpoint availability
+# 9) Crypto positioning must contain real public-market observations
+try:
+    flows=get("/api/flows/crypto?pair=BTCUSD&period=1h",45)
+    series=flows.get("series") or {}
+    for key in ("global_accounts","top_accounts","top_positions"):
+        rows=series.get(key) or []
+        if not rows:
+            raise AssertionError(f"{key} has no observations")
+        last=rows[-1]
+        if last.get("long_pct") is None or last.get("short_pct") is None or last.get("long_short_ratio") is None:
+            raise AssertionError(f"{key} latest observation incomplete")
+    source=str((flows.get("meta") or {}).get("source") or "")
+    if "Binance" not in source:
+        raise AssertionError(f"unexpected crypto positioning source: {source}")
+    record("crypto_positioning",True,f"{flows.get('venue')} · 3 populated ratios · {source}")
+except Exception as e:
+    record("crypto_positioning",False,str(e))
+
+# 10) End-user feature endpoint availability
 endpoint_cases={
     "market_quote":"/api/quote?symbol=SPY",
     "rates":"/api/yields",
