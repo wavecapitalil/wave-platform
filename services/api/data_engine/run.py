@@ -17,6 +17,7 @@ from collectors import (
     collect_market, collect_risk, collect_sectors, collect_rates, collect_metals,
     collect_seasonality, collect_crypto, collect_calendar, SEASONALITY_SYMBOLS
 )
+from flask_snapshots import route_registry
 
 UTC=timezone.utc
 SUPABASE_URL=os.getenv("WAVE_SUPABASE_URL","https://nqmtayofbhletydmiujz.supabase.co")
@@ -33,6 +34,8 @@ REGISTRY={
 }
 for symbol in SEASONALITY_SYMBOLS:
     REGISTRY[f"seasonality:{symbol}"]=("seasonality",1440,lambda s=symbol: collect_seasonality(s))
+
+REGISTRY.update(route_registry())
 
 
 def iso(dt):
@@ -67,6 +70,8 @@ def build_snapshot(key,group,ttl,collector,now):
     fetched=now
     result=collector()
     calculated=datetime.now(UTC)
+    status=result.get("_snapshot_status","ok")
+    error=result.get("_snapshot_error")
     return {
         "dataset_key":key,
         "dataset_group":group,
@@ -80,8 +85,8 @@ def build_snapshot(key,group,ttl,collector,now):
         "freshness":f"{ttl}m_snapshot",
         "stale":False,
         "fallback":False,
-        "status":"ok",
-        "error":None,
+        "status":status,
+        "error":error,
     }
 
 
