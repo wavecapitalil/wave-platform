@@ -203,6 +203,27 @@ async function loadRiskMeter(){
     var data=await res.json();
     if(data.error)throw new Error(data.error);
     var result=scoreRiskSignals(data);
+    // Data Engine is the canonical source of truth. Keep the browser formula
+    // only as a backwards-compatible fallback for older snapshots.
+    if(data.score && Number.isFinite(Number(data.score.composite)) && data.score.signals){
+      var map={
+        vixLevel:'vix_level',
+        termStructure:'vix_term_structure',
+        credit:'credit',
+        breadth:'breadth',
+        sectorRotation:'sector_rotation',
+        pcr:'put_call',
+        spy200dma:'spy_200dma'
+      };
+      Object.keys(map).forEach(function(localKey){
+        var canonical=data.score.signals[map[localKey]];
+        if(canonical && result.signals[localKey]){
+          result.signals[localKey].score=Number(canonical.score);
+          result.signals[localKey].weight=Number(canonical.weight);
+        }
+      });
+      result.composite=Number(data.score.composite);
+    }
     renderRiskMeter(result,data);
     document.getElementById('riskLastUpdated').textContent='Updated '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
   }catch(e){
