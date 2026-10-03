@@ -27,7 +27,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: wave-data-engine
+  group: ${{ github.event_name == 'pull_request' && format('wave-data-engine-pr-{0}', github.sha) || 'wave-data-engine-main' }}
   cancel-in-progress: false
 
 jobs:
