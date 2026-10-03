@@ -16,6 +16,7 @@ on:
       - "services/api/modules/**"
       - "services/api/services/**"
       - "services/api/core/**"
+      - "supabase/migrations/**"
       - ".github/workflows/data-engine.yml"
   push:
     branches: [main]
@@ -24,6 +25,7 @@ on:
       - "services/api/modules/**"
       - "services/api/services/**"
       - "services/api/core/**"
+      - "supabase/migrations/**"
       - ".github/workflows/data-engine.yml"
       - "supabase/functions/wave-snapshot-ingest/**"
       - "supabase/functions/wave-data/**"
