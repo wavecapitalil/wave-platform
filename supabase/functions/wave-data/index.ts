@@ -129,6 +129,62 @@ async function proxyCore(req:Request){
   return new Response(text,{status:r.status,headers});
 }
 
+async function liveCryptoPositioning(u:URL){
+  const pair=String(u.searchParams.get("pair")||"BTCUSD").trim().toUpperCase();
+  const period=String(u.searchParams.get("period")||"1h").trim();
+  const allowed=new Set(["5m","15m","30m","1h","2h","4h","6h","12h","1d"]);
+  if(!allowed.has(period)) return json({error:"unsupported period"},400);
+  const symbol:any=({BTCUSD:"BTCUSDT",ETHUSD:"ETHUSDT"} as any)[pair];
+  if(!symbol) return json({error:"unsupported pair",supported:["BTCUSD","ETHUSD"]},400);
+
+  const endpoints:any={
+    global_accounts:"globalLongShortAccountRatio",
+    top_accounts:"topLongShortAccountRatio",
+    top_positions:"topLongShortPositionRatio"
+  };
+  const series:any={}, errors:any={};
+  for(const [key,name] of Object.entries(endpoints)){
+    try{
+      const target="https://fapi.binance.com/futures/data/"+name+"?"+new URLSearchParams({
+        symbol,period,limit:"30"
+      }).toString();
+      const r=await fetch(target,{headers:{"accept":"application/json","user-agent":"Mozilla/5.0"}});
+      if(!r.ok) throw new Error("Binance USD-M HTTP "+r.status);
+      const raw=await r.json();
+      series[key]=(Array.isArray(raw)?raw:[]).map((x:any)=>({
+        timestamp:Number(x.timestamp),
+        long_pct:Number(x.longAccount)*100,
+        short_pct:Number(x.shortAccount)*100,
+        long_short_ratio:Number(x.longShortRatio)
+      }));
+    }catch(e){
+      series[key]=[];
+      errors[key]=String(e?.message||e);
+    }
+  }
+  if(!Object.values(series).some((rows:any)=>Array.isArray(rows)&&rows.length)){
+    return json({error:"crypto_positioning_unavailable",pair,period,errors},502);
+  }
+  return json({
+    asset_class:"crypto",
+    venue:"Binance USD-M Futures",
+    pair,
+    provider_symbol:symbol,
+    period,
+    series,
+    errors,
+    meta:{
+      source:"Binance public USD-M futures market-data API",
+      source_timestamp:null,
+      fetched_at:new Date().toISOString(),
+      freshness:"live",
+      stale:false,
+      fallback:true,
+      note:"Positioning ratios, not blockchain exchange inflow/outflow data. WAVE uses USD-M because COIN-M endpoints can be region-blocked from cloud infrastructure."
+    }
+  },200,{"cache-control":"public, max-age=60","x-wave-source":"binance-usdm-live"});
+}
+
 const SEC_HEADERS={
   "user-agent":"WaveCapital research@wavecapital.com",
   "accept-encoding":"gzip, deflate",
@@ -138,6 +194,21 @@ let secTickerCache:any=null;
 let secTickerCacheAt=0;
 
 async function secTickerRecord(symbol:string){
+  const normalized=String(symbol||"").trim().toUpperCase();
+  if(!normalized) return null;
+
+  // Persistent SEC ticker cache in Supabase avoids repeated downloads of the
+  // 10k+ ticker mapping on Edge cold starts and prevents SEC 429s.
+  const {data:cached,error}=await db
+    .from("sec_ticker_map")
+    .select("ticker,cik,company_name")
+    .eq("ticker",normalized)
+    .maybeSingle();
+  if(!error && cached){
+    return {cik:String(cached.cik).padStart(10,"0"),name:String(cached.company_name||normalized)};
+  }
+
+  // Safety fallback for a brand-new ticker not yet present in the persisted map.
   const now=Date.now();
   if(!secTickerCache || now-secTickerCacheAt>24*60*60*1000){
     const r=await fetch("https://www.sec.gov/files/company_tickers.json",{headers:SEC_HEADERS});
@@ -146,8 +217,8 @@ async function secTickerRecord(symbol:string){
     secTickerCacheAt=now;
   }
   for(const item of Object.values(secTickerCache||{}) as any[]){
-    if(String(item?.ticker||"").toUpperCase()===symbol){
-      return {cik:String(item.cik_str).padStart(10,"0"),name:String(item.title||symbol)};
+    if(String(item?.ticker||"").toUpperCase()===normalized){
+      return {cik:String(item.cik_str).padStart(10,"0"),name:String(item.title||normalized)};
     }
   }
   return null;
@@ -292,6 +363,9 @@ Deno.serve(async(req:Request)=>{
     }
     if(p.endsWith("/api/data-health")){
       return await dataHealthResponse();
+    }
+    if(p.endsWith("/api/flows/crypto")){
+      return await liveCryptoPositioning(u);
     }
     if(p.endsWith("/api/risk-signals")){
       return await snapshotResponse("risk:composite");
