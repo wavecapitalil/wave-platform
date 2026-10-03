@@ -44,11 +44,46 @@ async function snapshotResponse(key:string, transform?:(data:any,row:any)=>any){
   return json(body,200,{"x-wave-dataset":key,"x-wave-logic-version":row.logic_version||""});
 }
 
-async function proxyCore(req:Request){
-  const u=new URL(req.url);
+
+function apiSuffix(u:URL){
   const marker="/wave-data";
   const idx=u.pathname.indexOf(marker);
-  const suffix=idx>=0?u.pathname.slice(idx+marker.length):u.pathname;
+  return idx>=0?u.pathname.slice(idx+marker.length):u.pathname;
+}
+
+function canonicalApiKey(u:URL){
+  const suffix=apiSuffix(u);
+  const pairs=Array.from(u.searchParams.entries()).sort((a,b)=>{
+    if(a[0]===b[0]) return a[1].localeCompare(b[1]);
+    return a[0].localeCompare(b[0]);
+  });
+  const qs=new URLSearchParams();
+  for(const [k,v] of pairs) qs.append(k,v);
+  const encoded=qs.toString();
+  return "api:"+suffix+(encoded?"?"+encoded:"");
+}
+
+async function genericApiSnapshot(u:URL){
+  const key=canonicalApiKey(u);
+  const row=await snapshot(key);
+  if(!row || row.status!=="ok") return null;
+  const d=row.data||{};
+  const headers={"x-wave-dataset":key,"x-wave-logic-version":row.logic_version||"","x-wave-source":"scheduled-flask"};
+  if(d._response_type==="text"){
+    return new Response(String(d.payload??""),{
+      status:Number(d._status_code||200),
+      headers:{...cors,...headers,"content-type":String(d._content_type||"text/plain")}
+    });
+  }
+  if(d._response_type==="json"){
+    return json(d.payload,Number(d._status_code||200),headers);
+  }
+  return json(d,200,headers);
+}
+
+async function proxyCore(req:Request){
+  const u=new URL(req.url);
+  const suffix=apiSuffix(u);
   const target=CORE+suffix+u.search;
   const r=await fetch(target,{method:"GET",headers:{"accept":"application/json"}});
   const text=await r.text();
@@ -103,7 +138,12 @@ Deno.serve(async(req:Request)=>{
       return await proxyCore(req);
     }
 
-    // Intraday/history and any route not yet migrated keep the existing live edge fallback.
+    // Any Flask route that has a scheduled snapshot is served generically with
+    // the exact original payload shape. Uncached/dynamic requests fall through.
+    const generic=await genericApiSnapshot(u);
+    if(generic) return generic;
+
+    // Intraday/history and any route not yet cached keep the live edge fallback.
     return await proxyCore(req);
   }catch(e){
     return json({error:String(e?.message||e)},502);
