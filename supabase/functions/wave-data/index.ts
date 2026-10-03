@@ -94,10 +94,22 @@ async function proxyCore(req:Request){
 
 Deno.serve(async(req:Request)=>{
   if(req.method==="OPTIONS") return new Response("",{headers:cors});
-  if(req.method!=="GET") return json({error:"method_not_allowed"},405);
 
   try{
     const u=new URL(req.url), p=u.pathname;
+
+    if(req.method==="POST"){
+      if(p.endsWith("/api/earnings/refresh") || p.endsWith("/api/insider-buying/refresh") || p.endsWith("/api/daily-brief/refresh")){
+        return json({
+          status:"managed",
+          refresh_mode:"scheduled_data_engine",
+          cadence:"15m",
+          note:"The public Terminal is snapshot-backed; the next eligible GitHub Data Engine run refreshes this dataset."
+        },202,{"x-wave-refresh-mode":"scheduled"});
+      }
+      return json({error:"method_not_allowed"},405);
+    }
+    if(req.method!=="GET") return json({error:"method_not_allowed"},405);
 
     if(p.endsWith("/api/health")){
       return json({ok:true,service:"wave-data",snapshot_backend:"supabase"});
