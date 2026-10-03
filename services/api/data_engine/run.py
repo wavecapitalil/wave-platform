@@ -18,6 +18,7 @@ from collectors import (
     collect_seasonality, collect_crypto, collect_calendar, SEASONALITY_SYMBOLS
 )
 from flask_snapshots import route_registry
+from page_snapshots import page_registry
 
 UTC=timezone.utc
 SUPABASE_URL=os.getenv("WAVE_SUPABASE_URL","https://nqmtayofbhletydmiujz.supabase.co")
@@ -36,6 +37,7 @@ for symbol in SEASONALITY_SYMBOLS:
     REGISTRY[f"seasonality:{symbol}"]=("seasonality",1440,lambda s=symbol: collect_seasonality(s))
 
 REGISTRY.update(route_registry())
+REGISTRY.update(page_registry())
 
 
 def iso(dt):
