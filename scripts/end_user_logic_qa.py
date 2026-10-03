@@ -140,11 +140,11 @@ except Exception as e:
 try:
     aapl=get("/api/fundamentals?symbol=AAPL&metric=revenue&period=annual",60)
     msft=get("/api/fundamentals?symbol=MSFT&metric=revenue&period=annual",60)
-    a={x["date"] for x in aapl.get("data") or []}
-    m={x["date"] for x in msft.get("data") or []}
+    a={str(x["date"])[:4] for x in aapl.get("data") or []}
+    m={str(x["date"])[:4] for x in msft.get("data") or []}
     common=sorted(a&m)
-    if len(common)<3: raise AssertionError(f"only {len(common)} common annual periods")
-    record("fundamentals_comparison",True,f"AAPL vs MSFT · {len(common)} common periods")
+    if len(common)<3: raise AssertionError(f"only {len(common)} common fiscal years")
+    record("fundamentals_comparison",True,f"AAPL vs MSFT · {len(common)} comparable fiscal years")
 except Exception as e:
     record("fundamentals_comparison",False,str(e))
 
