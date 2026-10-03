@@ -170,18 +170,36 @@ def collect_rates() -> dict:
     rows=[]
     for label,sym in curve:
         try:
-            q=_daily_quote(sym)
-            rows.append({"label":label,"symbol":sym,"yield":round(q["price"],3)})
+            df=yf.download(sym,period="1mo",interval="1d",auto_adjust=True,progress=False)
+            s=_series(df,sym)
+            if s.empty: continue
+            curr=float(s.iloc[-1])
+            prev=float(s.iloc[-2]) if len(s)>=2 else curr
+            week=float(s.iloc[-6]) if len(s)>=6 else float(s.iloc[0])
+            rows.append({
+                "label":label,"symbol":sym,"yield":round(curr,3),
+                "chg_day":round(curr-prev,3),"chg_week":round(curr-week,3)
+            })
         except Exception:
             pass
     by={x["label"]:x["yield"] for x in rows}
+
+    chart=[]
+    try:
+        df10=yf.download("^TNX",period="1y",interval="1d",auto_adjust=True,progress=False)
+        s10=_series(df10,"^TNX").tail(60)
+        chart=[{"date":idx.strftime("%Y-%m-%d"),"value":round(float(v),3)} for idx,v in s10.items()]
+    except Exception:
+        pass
+
     return {
         "data":{
             "curve":rows,
+            "chart10y":chart,
             "spread_2_10":round(by["10Y"]-by["2Y"],3) if "10Y" in by and "2Y" in by else None,
             "spread_3m_10":round(by["10Y"]-by["3M"],3) if "10Y" in by and "3M" in by else None,
         },
-        "source":"Yahoo Finance via yfinance","source_timestamp":_now().isoformat(),"logic_version":"rates_curve_v1.0"
+        "source":"Yahoo Finance via yfinance","source_timestamp":_now().isoformat(),"logic_version":"rates_curve_v1.1"
     }
 
 
@@ -215,12 +233,8 @@ def collect_metals() -> dict:
     return {"data":data,"source":"Yahoo Finance futures continuous contracts via yfinance","source_timestamp":joined.index[-1].isoformat(),"logic_version":GSR_LOGIC_VERSION}
 
 
-def _year_path(symbol: str, year: int) -> list[dict]:
-    df=yf.download(symbol,start=f"{year}-01-01",end=f"{year+1}-01-01",auto_adjust=True,progress=False)
-    if df is None or df.empty:
-        return []
-    s=_series(df,symbol)
-    s=s[s.index.year==year]
+def _path_from_series(series, year: int) -> list[dict]:
+    s=series[series.index.year==year].dropna()
     if s.empty:return []
     cumulative=(s/float(s.iloc[0])-1.0)*100.0
     cal=cumulative.reindex(pd.date_range(start=f"{year}-01-01",end=s.index[-1].normalize(),freq="D")).ffill().fillna(0.0)
@@ -229,18 +243,22 @@ def _year_path(symbol: str, year: int) -> list[dict]:
 
 def collect_seasonality(symbol: str) -> dict:
     year=_now().year
+    df=yf.download(symbol,start=f"{year-10}-01-01",end=f"{year+1}-01-01",auto_adjust=True,progress=False)
+    if df is None or df.empty:
+        raise LookupError(f"insufficient history for {symbol}")
+    series=_series(df,symbol)
+
     historical=[]; used=[]
     for y in range(year-10,year):
-        path=_year_path(symbol,y)
+        path=_path_from_series(series,y)
         if path: historical.append(path); used.append(y)
-    current=_year_path(symbol,year)
+    current=_path_from_series(series,year)
     if not historical: raise LookupError(f"insufficient history for {symbol}")
     avg=average_seasonal_paths(historical,min_samples=max(3,len(historical)-1))
     return {
         "data":{"symbol":symbol,"lookback_years":10,"years_used":used,"historical_average":avg,"current_year":year,"current_path":current},
-        "source":"Yahoo Finance via yfinance","source_timestamp":_now().isoformat(),"logic_version":SEASONALITY_LOGIC_VERSION
+        "source":"Yahoo Finance via yfinance","source_timestamp":series.index[-1].isoformat(),"logic_version":"seasonality_v1.1"
     }
-
 
 def collect_crypto() -> dict:
     rows={}
