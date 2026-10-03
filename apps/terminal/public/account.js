@@ -1,5 +1,8 @@
 (function(){
   'use strict';
+  var WAVE_DATA_API = (location.hostname==='localhost'||location.hostname==='127.0.0.1')
+    ? 'http://localhost:5001'
+    : 'https://nqmtayofbhletydmiujz.supabase.co/functions/v1/wave-data';
   var courses={
     macro_regimes:'Macro & Regimes',
     equity_research:'Equity Research',
@@ -16,7 +19,7 @@
     return '<div class="wp-price">'+(p>=1000?'$'+p.toLocaleString('en-US',{maximumFractionDigits:0}):p.toLocaleString('en-US',{maximumFractionDigits:2}))+'<div class="'+cls+'" style="font-size:9px;margin-top:3px">'+(pct>=0?'+':'')+pct.toFixed(2)+'%</div></div>';
   }
   async function quote(symbol){
-    try{var r=await fetch('/api/quote?symbol='+encodeURIComponent(symbol));if(!r.ok)return null;var d=await r.json();return d&&d.error?null:d;}catch(e){return null;}
+    try{var r=await fetch(WAVE_DATA_API+'/api/quote?symbol='+encodeURIComponent(symbol));if(!r.ok)return null;var d=await r.json();return d&&d.error?null:d;}catch(e){return null;}
   }
   async function renderWatchlist(state){
     var root=document.getElementById('watchList');
