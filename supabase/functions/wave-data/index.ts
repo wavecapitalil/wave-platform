@@ -53,7 +53,8 @@ function apiSuffix(u:URL){
 
 function canonicalApiKey(u:URL){
   const suffix=apiSuffix(u);
-  const pairs=Array.from(u.searchParams.entries()).sort((a,b)=>{
+  const ignored=new Set(["t","_","cacheBust","cache_bust"]);
+  const pairs=Array.from(u.searchParams.entries()).filter(([k])=>!ignored.has(k)).sort((a,b)=>{
     if(a[0]===b[0]) return a[1].localeCompare(b[1]);
     return a[0].localeCompare(b[0]);
   });
