@@ -48,6 +48,9 @@ ai_tutor_js = Path("apps/terminal/public/ai-tutor.js").read_text(encoding="utf-8
 ai_tutor_css = Path("apps/terminal/public/ai-tutor.css").read_text(encoding="utf-8")
 index_html = Path("apps/terminal/public/index.html").read_text(encoding="utf-8")
 products_html = Path("apps/terminal/public/products.html").read_text(encoding="utf-8")
+data_health_html = Path("apps/terminal/public/data-health.html").read_text(encoding="utf-8")
+data_health_js = Path("apps/terminal/public/data-health.js").read_text(encoding="utf-8")
+data_health_css = Path("apps/terminal/public/data-health.css").read_text(encoding="utf-8")
 
 checks = [
     ("Seasonality uses new contract", "historical_average" in frontend and "seas-line-chart" in frontend),
@@ -101,6 +104,11 @@ checks = [
     ("Local-first state has versioned schema", "wave.platform.v1" in platform_js and "version:1" in platform_js),
     ("Platform responsive stylesheet present", "@media(max-width:720px)" in platform_css),
     ("Terminal links unified platform", "university.html" in html and "account.html" in html),
+    ("Data Health page is standalone", "Data Health" in data_health_html and "data-health.js" in data_health_html and "data-health.css" in data_health_html),
+    ("Data Health uses metadata endpoint", "/api/data-health" in data_health_js and "data_snapshots" in wave_data_fn),
+    ("Data Health avoids customer nav clutter", "data-health.html" not in html and "data-health.html" in account_html),
+    ("Data Health assets allowlisted", all(x in frontend_server for x in ["data-health.html","data-health.css","data-health.js","serve_data_health"])),
+    ("Data Health responsive CSS present", "@media(max-width:760px)" in data_health_css),
 ]
 
 failed = 0

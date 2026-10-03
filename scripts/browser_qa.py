@@ -172,6 +172,36 @@ async def run_viewport(browser, name, width, height):
     await page.screenshot(path=str(OUT/f"{name}-university.png"), full_page=True)
     report["platform_pages"]=["account","university"]
 
+    # Internal operations page stays outside customer navigation, but must render
+    # production-style telemetry correctly on desktop and iPad.
+    await page.route("**/wave-data/api/data-health**", lambda route: route.fulfill(
+        status=200,
+        content_type="application/json",
+        body=json.dumps({
+            "generated_at":"2026-10-03T20:00:00Z",
+            "engine_cadence_minutes":15,
+            "summary":{"total":3,"ok":3,"partial":0,"error":0,"stale":0,"fallback":0,"groups":3},
+            "datasets":[
+                {"dataset_key":"market:core","dataset_group":"market","source":"Yahoo Finance","source_timestamp":"2026-10-03T19:59:00Z","fetched_at":"2026-10-03T19:59:10Z","calculated_at":"2026-10-03T19:59:12Z","expires_at":"2026-10-03T20:14:12Z","logic_version":"market_snapshot_v1.0","freshness":"15m_snapshot","stale":False,"fallback":False,"status":"ok","error":None,"updated_at":"2026-10-03T19:59:12Z","age_seconds":48,"expires_in_seconds":852},
+                {"dataset_key":"risk:composite","dataset_group":"risk","source":"Yahoo Finance + CBOE","source_timestamp":"2026-10-03T19:59:00Z","fetched_at":"2026-10-03T19:59:10Z","calculated_at":"2026-10-03T19:59:14Z","expires_at":"2026-10-03T20:14:14Z","logic_version":"risk_meter_v1.0","freshness":"15m_snapshot","stale":False,"fallback":False,"status":"ok","error":None,"updated_at":"2026-10-03T19:59:14Z","age_seconds":46,"expires_in_seconds":854},
+                {"dataset_key":"api:/api/earnings","dataset_group":"earnings","source":"WAVE Flask route /api/earnings","source_timestamp":"2026-10-03T19:55:00Z","fetched_at":"2026-10-03T19:55:00Z","calculated_at":"2026-10-03T19:55:03Z","expires_at":"2026-10-04T01:55:03Z","logic_version":"flask_route_v1.0","freshness":"360m_snapshot","stale":False,"fallback":False,"status":"ok","error":None,"updated_at":"2026-10-03T19:55:03Z","age_seconds":297,"expires_in_seconds":21303}
+            ]
+        })
+    ))
+    await page.goto(BASE + "/data-health", wait_until="domcontentloaded", timeout=30000)
+    await page.wait_for_function("() => document.querySelector('#statTotal') && document.querySelector('#statTotal').innerText === '3'", timeout=15000)
+    assert "All production datasets healthy" in await page.locator("#bannerTitle").inner_text()
+    assert await page.locator("#healthRows tr").count() == 3
+    await page.locator("#searchInput").fill("risk")
+    await page.wait_for_timeout(100)
+    assert await page.locator("#healthRows tr").count() == 1
+    await page.locator("#healthRows tr").first.click()
+    await page.locator("#detailDrawer").wait_for(state="visible")
+    assert "risk:composite" in await page.locator("#drawerTitle").inner_text()
+    await assert_no_horizontal_overflow(page, f"{name}/data-health")
+    await page.screenshot(path=str(OUT/f"{name}-data-health.png"), full_page=True)
+    report["platform_pages"].append("data-health")
+
     await page.goto(BASE + "/terminal_app.html#page=risk", wait_until="domcontentloaded", timeout=60000)
     await page.wait_for_function("typeof navigate === 'function'")
     await page.locator("#page-risk").wait_for(state="visible", timeout=15000)

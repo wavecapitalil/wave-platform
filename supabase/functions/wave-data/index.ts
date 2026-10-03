@@ -44,6 +44,43 @@ async function snapshotResponse(key:string, transform?:(data:any,row:any)=>any){
   return json(body,200,{"x-wave-dataset":key,"x-wave-logic-version":row.logic_version||""});
 }
 
+async function dataHealthResponse(){
+  const {data,error}=await db
+    .from("data_snapshots")
+    .select("dataset_key,dataset_group,source,source_timestamp,fetched_at,calculated_at,expires_at,logic_version,freshness,stale,fallback,status,error,updated_at")
+    .order("dataset_group",{ascending:true})
+    .order("dataset_key",{ascending:true})
+    .limit(1000);
+  if(error) throw new Error(error.message);
+
+  const now=Date.now();
+  const rows=(data||[]).map((row:any)=>{
+    const expires=row.expires_at?Date.parse(row.expires_at):0;
+    const calculated=row.calculated_at?Date.parse(row.calculated_at):0;
+    return {
+      ...row,
+      stale:Boolean(row.stale)||!expires||expires<now,
+      age_seconds:calculated?Math.max(0,Math.round((now-calculated)/1000)):null,
+      expires_in_seconds:expires?Math.round((expires-now)/1000):null,
+    };
+  });
+  const summary={
+    total:rows.length,
+    ok:rows.filter((x:any)=>x.status==="ok").length,
+    partial:rows.filter((x:any)=>x.status==="partial").length,
+    error:rows.filter((x:any)=>x.status==="error").length,
+    stale:rows.filter((x:any)=>x.stale).length,
+    fallback:rows.filter((x:any)=>x.fallback).length,
+    groups:new Set(rows.map((x:any)=>x.dataset_group)).size,
+  };
+  return json({
+    generated_at:new Date(now).toISOString(),
+    engine_cadence_minutes:15,
+    summary,
+    datasets:rows,
+  },200,{"cache-control":"no-store"});
+}
+
 
 function apiSuffix(u:URL){
   const marker="/wave-data";
@@ -113,6 +150,9 @@ Deno.serve(async(req:Request)=>{
 
     if(p.endsWith("/api/health")){
       return json({ok:true,service:"wave-data",snapshot_backend:"supabase"});
+    }
+    if(p.endsWith("/api/data-health")){
+      return await dataHealthResponse();
     }
     if(p.endsWith("/api/risk-signals")){
       return await snapshotResponse("risk:composite");

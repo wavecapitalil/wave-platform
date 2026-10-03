@@ -17,6 +17,9 @@ PUBLIC_FILES = {
     "terminal_app.html",
     "account.html",
     "account.js",
+    "data-health.html",
+    "data-health.css",
+    "data-health.js",
     "university.html",
     "university.js",
     "platform.css",
@@ -66,6 +69,11 @@ def serve_account():
 @bp.get("/university")
 def serve_university():
     return send_from_directory(PUBLIC_DIR, "university.html")
+
+
+@bp.get("/data-health")
+def serve_data_health():
+    return send_from_directory(PUBLIC_DIR, "data-health.html")
 
 
 @bp.get("/<path:filename>")
