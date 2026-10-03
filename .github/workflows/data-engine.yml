@@ -13,11 +13,17 @@ on:
   pull_request:
     paths:
       - "services/api/data_engine/**"
+      - "services/api/modules/**"
+      - "services/api/services/**"
+      - "services/api/core/**"
       - ".github/workflows/data-engine.yml"
   push:
     branches: [main]
     paths:
       - "services/api/data_engine/**"
+      - "services/api/modules/**"
+      - "services/api/services/**"
+      - "services/api/core/**"
       - ".github/workflows/data-engine.yml"
       - "supabase/functions/wave-snapshot-ingest/**"
       - "supabase/functions/wave-data/**"
@@ -51,7 +57,7 @@ jobs:
 
       - name: Unit-test canonical calculations
         working-directory: services/api/data_engine
-        run: python -m unittest -v test_calculations.py test_route_registry.py
+        run: python -m unittest -v test_calculations.py test_route_registry.py test_resilience.py
 
       - name: Build due snapshots
         shell: bash
