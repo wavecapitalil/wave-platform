@@ -20,7 +20,9 @@ function chgSummHtml(pct){
 }
 
 // ── PYTHON API (localhost:5001) ───────────────────────────
-var API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') ? 'http://localhost:5001' : '';
+var API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? 'http://localhost:5001'
+  : 'https://nqmtayofbhletydmiujz.supabase.co/functions/v1/wave-data';
 
 async function fetchQuote(symbol){
   try{

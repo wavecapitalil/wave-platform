@@ -38,6 +38,12 @@ supabase_config_js = Path("apps/terminal/public/supabase-config.js").read_text(e
 platform_search_js = Path("apps/terminal/public/platform-search.js").read_text(encoding="utf-8")
 research_save_js = Path("apps/terminal/public/research-save.js").read_text(encoding="utf-8")
 blog_html = Path("apps/terminal/public/blog.html").read_text(encoding="utf-8")
+data_engine_workflow = Path(".github/workflows/data-engine.yml").read_text(encoding="utf-8")
+data_engine_runner = Path("services/api/data_engine/run.py").read_text(encoding="utf-8")
+data_engine_math = Path("services/api/data_engine/calculations.py").read_text(encoding="utf-8")
+terminal_market_js = Path("apps/terminal/public/terminal-market.js").read_text(encoding="utf-8")
+snapshot_ingest_fn = Path("supabase/functions/wave-snapshot-ingest/index.ts").read_text(encoding="utf-8")
+wave_data_fn = Path("supabase/functions/wave-data/index.ts").read_text(encoding="utf-8")
 ai_tutor_js = Path("apps/terminal/public/ai-tutor.js").read_text(encoding="utf-8")
 ai_tutor_css = Path("apps/terminal/public/ai-tutor.css").read_text(encoding="utf-8")
 index_html = Path("apps/terminal/public/index.html").read_text(encoding="utf-8")
@@ -82,6 +88,12 @@ checks = [
     ("AI Tutor has page context and modes", "pageContext" in ai_tutor_js and all(x in ai_tutor_js for x in ["explain","socratic","quiz","research"])),
     ("AI Tutor UI loaded across platform", all("ai-tutor.js" in x for x in [html, account_html, university_html, blog_html, index_html, products_html])),
     ("AI Tutor responsive CSS present", "@media(max-width:720px)" in ai_tutor_css),
+    ("Data engine runs every 15 minutes", 'cron: "*/15 * * * *"' in data_engine_workflow),
+    ("Data engine uses GitHub OIDC", "id-token: write" in data_engine_workflow and "wave-snapshot-ingest" in data_engine_workflow),
+    ("Data engine has versioned logic", "logic_version" in data_engine_runner and "RISK_LOGIC_VERSION" in data_engine_math),
+    ("Snapshot ingest restricts repository", "wavecapitalil/wave-platform" in snapshot_ingest_fn and "jwtVerify" in snapshot_ingest_fn),
+    ("Production terminal uses WAVE data gateway", "functions/v1/wave-data" in terminal_market_js),
+    ("WAVE data gateway supports snapshots", "data_snapshots" in wave_data_fn and "risk:composite" in wave_data_fn),
     ("Account workspace wired", "WavePlatform" in account_js and "watchList" in account_html and "Alert Rules" in account_html),
     ("University progress wired", "advanceCourse" in university_js and "courseGrid" in university_html),
     ("Local-first state has versioned schema", "wave.platform.v1" in platform_js and "version:1" in platform_js),

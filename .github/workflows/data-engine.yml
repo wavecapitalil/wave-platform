@@ -1,0 +1,92 @@
+name: WAVE Data Engine
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Recompute all datasets regardless of TTL"
+        required: false
+        default: false
+        type: boolean
+  pull_request:
+    paths:
+      - "services/api/data_engine/**"
+      - ".github/workflows/data-engine.yml"
+  push:
+    branches: [main]
+    paths:
+      - "services/api/data_engine/**"
+      - ".github/workflows/data-engine.yml"
+      - "supabase/functions/wave-snapshot-ingest/**"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  snapshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    env:
+      WAVE_SUPABASE_URL: https://nqmtayofbhletydmiujz.supabase.co
+      WAVE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_5WjaBtaWtb3q7EJ3ldUfXQ_rVKIrZZy
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: services/api/requirements.txt
+
+      - name: Install data dependencies
+        run: pip install -r services/api/requirements.txt
+
+      - name: Unit-test canonical calculations
+        working-directory: services/api/data_engine
+        run: python -m unittest -v test_calculations.py
+
+      - name: Build due snapshots
+        shell: bash
+        run: |
+          FORCE=""
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.force }}" == "true" ]]; then
+            FORCE="--force"
+          fi
+          python services/api/data_engine/run.py --output artifacts/data_snapshots.json $FORCE
+          python - <<'PY'
+          import json
+          p=json.load(open("artifacts/data_snapshots.json"))
+          print("generated:", len(p["snapshots"]), "failures:", len(p["failures"]))
+          for x in p["snapshots"]:
+              print(" OK ", x["dataset_key"], x["logic_version"], x["expires_at"])
+          for x in p["failures"]:
+              print("FAIL", x["dataset_key"], x["error"])
+          PY
+
+      - name: Request GitHub OIDC token
+        if: github.event_name != 'pull_request'
+        id: oidc
+        shell: bash
+        run: |
+          RESP=$(curl -sSf             -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN"             "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=wave-snapshot-ingest")
+          TOKEN=$(echo "$RESP" | python -c 'import json,sys; print(json.load(sys.stdin)["value"])')
+          echo "::add-mask::$TOKEN"
+          echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
+
+      - name: Publish snapshots to Supabase
+        if: github.event_name != 'pull_request'
+        shell: bash
+        env:
+          OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
+        run: |
+          curl -sSf -X POST             "https://nqmtayofbhletydmiujz.supabase.co/functions/v1/wave-snapshot-ingest"             -H "Authorization: Bearer $OIDC_TOKEN"             -H "Content-Type: application/json"             --data-binary @artifacts/data_snapshots.json
+
+      - name: Upload engine artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wave-data-snapshots
+          path: artifacts/data_snapshots.json
+          retention-days: 7
