@@ -131,6 +131,10 @@ def route_specs():
         specs.append(_spec("/api/correlation", {"symbol":symbol,"benchmark":"SPY"}, "equity_research", 60, optional=True))
         specs.append(_spec("/api/peers", {"symbol":symbol}, "equity_research", 1440, optional=True))
 
+    # Ticker Mover search has no fixed default; cache the most-used research universe.
+    for symbol in COMMON_EQUITIES:
+        specs.append(_spec("/api/ticker-mover", {"symbol":symbol}, "ticker_mover", 30, optional=True))
+
     # Confluence UI defaults to AAPL and supports 7/30/90-day windows.
     for symbol in RESEARCH_EQUITIES:
         for window in (7,30,90):
