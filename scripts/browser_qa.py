@@ -127,6 +127,9 @@ async def run_viewport(browser, name, width, height):
             for selector in ("#flowTabFutures", "#flowTabOptions", "#flowTabShort", "#flowTabCrypto"):
                 await page.locator(selector).click()
                 await wait_not_loading(page,"#flowContent",90000)
+            crypto_text=await page.locator("#flowContent").inner_text()
+            assert "Global Accounts" in crypto_text and "Top Trader Accounts" in crypto_text and "Top Trader Positions" in crypto_text
+            assert "L/S ratio: —" not in crypto_text, f"Crypto positioning missing values: {crypto_text}"
             await active.screenshot(path=str(OUT/f"{name}-flows.png"))
         elif slug=="confluence":
             await page.locator("#confSymbol").fill("AAPL")
