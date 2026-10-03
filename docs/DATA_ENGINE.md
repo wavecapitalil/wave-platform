@@ -4,7 +4,7 @@
 Replace browser-side provider dependence with a scheduled, auditable data layer.
 
 ## Flow
-GitHub Actions (every 15 minutes) -> canonical collectors/calculations -> GitHub OIDC -> Supabase Edge ingestion -> data_snapshots -> wave-data gateway -> Terminal.
+GitHub Actions (hourly) -> canonical collectors/calculations -> GitHub OIDC -> Supabase Edge ingestion -> data_snapshots -> wave-data gateway -> Terminal.
 
 No Supabase service-role key is stored in GitHub. The ingestion Edge Function validates GitHub's signed OIDC token and only accepts the WAVE repository/ref/event.
 
@@ -12,11 +12,11 @@ No Supabase service-role key is stored in GitHub. The ingestion Edge Function va
 
 | Dataset | Key | TTL | Logic |
 |---|---|---:|---|
-| Core market | market:core | 15m | market_snapshot_v1.0 |
-| Risk Meter | risk:composite | 15m | risk_meter_v1.0 |
-| S&P sectors | sectors:sp500 | 15m | sector_strength_v1.0 |
-| Rates curve | rates:curve | 15m | rates_curve_v1.1 |
-| Crypto market | crypto:market | 15m | crypto_market_v1.0 |
+| Core market | market:core | 60m | market_snapshot_v1.0 |
+| Risk Meter | risk:composite | 60m | risk_meter_v1.0 |
+| S&P sectors | sectors:sp500 | 60m | sector_strength_v1.0 |
+| Rates curve | rates:curve | 60m | rates_curve_v1.1 |
+| Crypto market | crypto:market | 60m | crypto_market_v1.0 |
 | Gold/Silver | metals:gold-silver | 60m | gold_silver_v1.0 |
 | Economic calendar | macro:calendar | 60m | econ_calendar_v1.0 |
 | Seasonality per asset | seasonality:<symbol> | 24h | seasonality_v1.1 |
@@ -50,7 +50,7 @@ Every snapshot includes:
 - stale/fallback/status/error
 
 ## TTL behavior
-The workflow runs every 15 minutes, but a collector only runs when its snapshot has expired. This means daily/weekly datasets are not refetched 96 times per day.
+The workflow runs hourly, but a collector only runs when its snapshot has expired. This means daily/weekly datasets are not refetched 96 times per day.
 
 ## Public API
 Production frontend points to:

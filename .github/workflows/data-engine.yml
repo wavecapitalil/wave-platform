@@ -2,7 +2,7 @@ name: WAVE Data Engine
 
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "7 * * * *"
   workflow_dispatch:
     inputs:
       force:

@@ -24,14 +24,16 @@ from page_snapshots import page_registry
 UTC=timezone.utc
 SUPABASE_URL=os.getenv("WAVE_SUPABASE_URL","https://nqmtayofbhletydmiujz.supabase.co")
 PUBLISHABLE=os.getenv("WAVE_SUPABASE_PUBLISHABLE_KEY","sb_publishable_5WjaBtaWtb3q7EJ3ldUfXQ_rVKIrZZy")
+MIN_REFRESH_MINUTES=60
+STALE_GRACE_MINUTES=20
 
 REGISTRY={
-    "market:core":("market",15,collect_market),
-    "risk:composite":("risk",15,collect_risk),
-    "sectors:sp500":("sectors",15,collect_sectors),
-    "rates:curve":("rates",15,collect_rates),
+    "market:core":("market",60,collect_market),
+    "risk:composite":("risk",60,collect_risk),
+    "sectors:sp500":("sectors",60,collect_sectors),
+    "rates:curve":("rates",60,collect_rates),
     "metals:gold-silver":("metals",60,collect_metals),
-    "crypto:market":("crypto",15,collect_crypto),
+    "crypto:market":("crypto",60,collect_crypto),
     "macro:calendar":("macro",60,collect_calendar),
 }
 for symbol in SEASONALITY_SYMBOLS:
@@ -49,7 +51,7 @@ def existing_expiries():
     try:
         r=requests.get(
             SUPABASE_URL+"/rest/v1/data_snapshots",
-            params={"select":"dataset_key,expires_at,status"},
+            params={"select":"dataset_key,calculated_at,expires_at,status"},
             headers={"apikey":PUBLISHABLE},
             timeout=15,
         )
@@ -60,21 +62,32 @@ def existing_expiries():
         return {}
 
 
-def due(key,row,now,force=False):
-    if force or not row or row.get("status")!="ok":return True
+def effective_refresh_minutes(ttl: int) -> int:
+    """GitHub schedule is hourly; sub-hour TTLs cannot be guaranteed."""
+    return max(MIN_REFRESH_MINUTES, int(ttl))
+
+
+def due(key,row,now,ttl,force=False):
+    if force or not row or row.get("status")!="ok":
+        return True
     try:
-        exp=datetime.fromisoformat(row["expires_at"].replace("Z","+00:00"))
-        return exp<=now
+        calculated=datetime.fromisoformat(row["calculated_at"].replace("Z","+00:00"))
+        return calculated + timedelta(minutes=effective_refresh_minutes(ttl)) <= now
     except Exception:
         return True
 
 
 def build_snapshot(key,group,ttl,collector,now):
     fetched=now
+    refresh_minutes=effective_refresh_minutes(ttl)
     result=collector()
     calculated=datetime.now(UTC)
     status=result.get("_snapshot_status","ok")
     error=result.get("_snapshot_error")
+    # Refresh is due at refresh_minutes. expires_at adds a small operational
+    # grace window so a normal GitHub scheduler delay does not create a false
+    # stale alert. The next run still refreshes based on calculated_at.
+    expiry_minutes=refresh_minutes + (STALE_GRACE_MINUTES if refresh_minutes <= 60 else 0)
     return {
         "dataset_key":key,
         "dataset_group":group,
@@ -83,9 +96,9 @@ def build_snapshot(key,group,ttl,collector,now):
         "source_timestamp":result.get("source_timestamp"),
         "fetched_at":iso(fetched),
         "calculated_at":iso(calculated),
-        "expires_at":iso(calculated+timedelta(minutes=ttl)),
+        "expires_at":iso(calculated+timedelta(minutes=expiry_minutes)),
         "logic_version":result["logic_version"],
-        "freshness":f"{ttl}m_snapshot",
+        "freshness":f"{refresh_minutes}m_snapshot",
         "stale":False,
         "fallback":False,
         "status":status,
@@ -108,7 +121,7 @@ def main():
     for key,(group,ttl,collector) in REGISTRY.items():
         if selected and key not in selected and group not in selected:
             continue
-        if not due(key,current.get(key),now,args.force):
+        if not due(key,current.get(key),now,ttl,args.force):
             print(f"SKIP {key}: fresh")
             continue
         due_items.append((key,group,ttl,collector))
