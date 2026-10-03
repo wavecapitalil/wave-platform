@@ -491,6 +491,7 @@ def analyst_estimates():
 # ── Peer comparison ───────────────────────────────────────────────────────────
 @bp.route('/api/peers')
 def peers():
+    from modules.equities_core import SECTOR_DETAIL
     symbol = request.args.get('symbol', '').upper().strip()
     if not symbol:
         return jsonify({'error': 'symbol required'}), 400
