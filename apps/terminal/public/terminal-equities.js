@@ -495,10 +495,13 @@ async function runFundChart(){
     _fcFetched  = fetched;
     _fcTickers  = tickers;
 
+    // Chart.js measures its parent at construction time. Make the chart region
+    // visible before creating the chart so it never initializes at 0×0.
+    document.getElementById('fcChartWrap').style.display = 'block';
     fcInitRangeSlider(allDates);
     fcDrawChart(allDates);
+    if(_fcChart && typeof _fcChart.resize === 'function') _fcChart.resize();
 
-    document.getElementById('fcChartWrap').style.display = 'block';
     document.getElementById('fcStatus').textContent = '';
   }catch(e){
     document.getElementById('fcStatus').textContent = 'Error: ' + e.message;
