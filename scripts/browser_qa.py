@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 import asyncio
 import json
+import os
 from pathlib import Path
 from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeout
 
-BASE="http://127.0.0.1:5001"
+BASE=os.getenv("WAVE_BROWSER_BASE","http://127.0.0.1:5001").rstrip("/")
+IS_PRODUCTION=not ("127.0.0.1" in BASE or "localhost" in BASE)
 OUT=Path("browser_qa")
 OUT.mkdir(exist_ok=True)
 
@@ -57,10 +59,35 @@ async def run_viewport(browser, name, width, height):
     page_errors=[]
     page.on("pageerror", lambda exc: page_errors.append(str(exc)))
 
-    await page.goto(BASE, wait_until="domcontentloaded", timeout=60000)
-    await page.wait_for_function("typeof navigate === 'function'", timeout=30000)
-
     report={"viewport":name,"pages":[]}
+
+    # Public Home: live terminal preview + sourced market story.
+    await page.goto(BASE + "/index.html", wait_until="domcontentloaded", timeout=60000)
+    await page.locator("#latestStoryTitle").wait_for(state="visible", timeout=30000)
+    await page.wait_for_function("""() => {
+      const t=document.querySelector('#latestStoryTitle');
+      const s=document.querySelector('#latestStorySummary');
+      const src=document.querySelector('#latestStorySource');
+      const a=document.querySelector('#latestStoryLink');
+      return t && s && src && a &&
+             t.innerText.trim() && !t.innerText.includes('Fetching') &&
+             s.innerText.trim() && s.innerText.trim() !== '—' &&
+             src.innerText.trim() && src.innerText.trim() !== '—' &&
+             a.href.startsWith('https://');
+    }""", timeout=60000)
+    await page.wait_for_function("""() => {
+      const v=document.querySelector('#tpVix');
+      const b=document.querySelector('#tpBtc');
+      const g=document.querySelector('#tpGold');
+      return [v,b,g].every(x => x && x.innerText.trim() && x.innerText.trim() !== '—');
+    }""", timeout=60000)
+    await assert_no_horizontal_overflow(page, f"{name}/home")
+    await page.screenshot(path=str(OUT/f"{name}-home.png"), full_page=True)
+    report["home"]={"ok":True,"story":await page.locator("#latestStoryTitle").inner_text()}
+
+    # Terminal application.
+    await page.goto(BASE + "/terminal_app.html", wait_until="domcontentloaded", timeout=60000)
+    await page.wait_for_function("typeof navigate === 'function'", timeout=30000)
 
     for slug,title in PAGES:
         await page.evaluate(f"navigate('{slug}')")
@@ -100,6 +127,10 @@ async def run_viewport(browser, name, width, height):
             for selector in ("#flowTabFutures", "#flowTabOptions", "#flowTabShort", "#flowTabCrypto"):
                 await page.locator(selector).click()
                 await wait_not_loading(page,"#flowContent",90000)
+            crypto_text=await page.locator("#flowContent").inner_text()
+            if IS_PRODUCTION:
+                assert "Global Accounts" in crypto_text and "Top Trader Accounts" in crypto_text and "Top Trader Positions" in crypto_text
+                assert "L/S ratio: —" not in crypto_text, f"Crypto positioning missing values: {crypto_text}"
             await active.screenshot(path=str(OUT/f"{name}-flows.png"))
         elif slug=="confluence":
             await page.locator("#confSymbol").fill("AAPL")
@@ -115,6 +146,10 @@ async def run_viewport(browser, name, width, height):
             await buttons.nth(2).click()
             await page.wait_for_timeout(300)
             await buttons.nth(1).click()
+            await page.wait_for_function("""() => {
+                const x=document.querySelector('#confResults');
+                return x && x.innerText.includes('/3') && !x.innerText.toLowerCase().includes('checking');
+            }""", timeout=120000)
             await active.screenshot(path=str(OUT/f"{name}-confluence.png"))
         elif slug=="hormuz":
             await page.wait_for_function("""() => {
@@ -129,11 +164,74 @@ async def run_viewport(browser, name, width, height):
         await assert_no_horizontal_overflow(page, f"{name}/{slug}")
         report["pages"].append({"page":slug,"ok":True})
 
+    # Canonical Risk Meter must render the backend composite exactly.
+    await page.evaluate("navigate('risk')")
+    await page.locator("#page-risk").wait_for(state="visible", timeout=15000)
+    await page.wait_for_function("""() => {
+      const x=document.querySelector('#riskScoreNum');
+      return x && Number.isFinite(Number(x.innerText.trim()));
+    }""", timeout=60000)
+    canonical=await page.evaluate("""async () => {
+      const r=await fetch(window.API + '/api/risk-signals');
+      const d=await r.json();
+      if(d.score && Number.isFinite(Number(d.score.composite))) return Number(d.score.composite);
+      if(typeof scoreRiskSignals === 'function') return Number(scoreRiskSignals(d).composite);
+      return null;
+    }""")
+    visible=int((await page.locator("#riskScoreNum").inner_text()).strip())
+    assert canonical is not None, "Risk canonical/fallback score unavailable"
+    assert visible == int(canonical), f"Risk UI {visible} != expected {canonical}"
+    await page.locator("#page-risk").screenshot(path=str(OUT/f"{name}-risk.png"))
+    report["risk"]={"visible":visible,"canonical":canonical}
+
+    # Fundamental comparison: two companies, multiple KPIs, real chart + table.
+    await page.evaluate("navigate('fundchart')")
+    await page.locator("#page-fundchart").wait_for(state="visible", timeout=15000)
+    await page.locator("#fcTicker1").fill("MSFT")
+    await page.locator("#fcTicker2").fill("HOOD")
+    net_margin=page.locator("#fcMetricPills button", has_text="Net Margin")
+    await net_margin.click()
+    await page.evaluate("runFundChart()")
+    await page.wait_for_function("""() => {
+      const wrap=document.querySelector('#fcChartWrap');
+      const legend=document.querySelector('#fcLegend');
+      const table=document.querySelector('#fcTable');
+      const status=document.querySelector('#fcStatus');
+      return wrap && wrap.style.display !== 'none' &&
+             legend && legend.innerText.includes('MSFT') && legend.innerText.includes('HOOD') &&
+             table && table.innerText.includes('MSFT') && table.innerText.includes('HOOD') &&
+             (!status || !status.innerText.startsWith('Error'));
+    }""", timeout=120000)
+    chart_state=await page.evaluate("""() => {
+      const c=document.querySelector('#fcCanvas');
+      const r=c?c.getBoundingClientRect():null;
+      return {width:r?.width||0,height:r?.height||0,hasChart:!!window._fcChart};
+    }""")
+    assert chart_state["width"] > 100 and chart_state["height"] > 100 and chart_state["hasChart"], f"Fundamental chart not rendered: {chart_state}"
+    await page.locator("#page-fundchart").screenshot(path=str(OUT/f"{name}-fundamentals.png"))
+    report["fundamentals"]={"pair":"MSFT vs HOOD","metrics":["revenue","net_margin"],"ok":True}
+
     # Broad page activation regression after JS domain extraction.
+    generic_page_failures=[]
     for slug in ALL_NAV_PAGES:
         await page.evaluate(f"navigate('{slug}')")
-        await page.locator(f"#page-{slug}").wait_for(state="visible", timeout=10000)
-        await page.wait_for_timeout(120)
+        active_page=page.locator(f"#page-{slug}")
+        await active_page.wait_for(state="visible", timeout=10000)
+        await page.wait_for_timeout(350)
+        body=(await active_page.inner_text()).lower()
+        bad_markers=[
+            "route_not_available_on_edge",
+            "http 404",
+            "http 500",
+            "failed —",
+            "failed to load",
+            "networkerror",
+            "typeerror:",
+        ]
+        hits=[x for x in bad_markers if x in body]
+        if hits:
+            generic_page_failures.append({"page":slug,"markers":hits})
+    assert not generic_page_failures, f"Terminal page failures: {generic_page_failures}"
     report["navigation_pages"]=len(ALL_NAV_PAGES)
 
     # Navigation naming checks
@@ -143,7 +241,7 @@ async def run_viewport(browser, name, width, height):
     assert "Hormuz Risk" in nav_text
 
     # Unified platform shell: Account persistence + University progress.
-    await page.goto(BASE + "/account", wait_until="domcontentloaded", timeout=30000)
+    await page.goto(BASE + "/account.html", wait_until="domcontentloaded", timeout=30000)
     await page.locator("#watchList").wait_for(state="visible")
     await page.wait_for_function("() => typeof WavePlatform === 'object' && typeof WaveCloud === 'object'")
     await page.locator("#watchSymbol").fill("AAPL")
@@ -152,7 +250,7 @@ async def run_viewport(browser, name, width, height):
     await assert_no_horizontal_overflow(page, f"{name}/account")
     await page.screenshot(path=str(OUT/f"{name}-account.png"), full_page=True)
 
-    await page.goto(BASE + "/university", wait_until="domcontentloaded", timeout=30000)
+    await page.goto(BASE + "/university.html", wait_until="domcontentloaded", timeout=30000)
     await page.locator("#courseGrid").wait_for(state="visible")
     await page.wait_for_function("() => typeof WavePlatform === 'object' && typeof WaveCloud === 'object' && typeof WaveSearch === 'object' && typeof WaveTutor === 'object'")
     await page.locator("#waveTutorLauncher").click()
@@ -173,25 +271,31 @@ async def run_viewport(browser, name, width, height):
     report["platform_pages"]=["account","university"]
 
     # Internal operations page stays outside customer navigation, but must render
-    # production-style telemetry correctly on desktop and iPad.
-    await page.route("**/wave-data/api/data-health**", lambda route: route.fulfill(
+    # production telemetry correctly on desktop and iPad.
+    if not IS_PRODUCTION:
+        await page.route("**/wave-data/api/data-health**", lambda route: route.fulfill(
         status=200,
         content_type="application/json",
         body=json.dumps({
             "generated_at":"2026-10-03T20:00:00Z",
-            "engine_cadence_minutes":15,
+            "engine_cadence_minutes":60,
             "summary":{"total":3,"ok":3,"partial":0,"error":0,"stale":0,"fallback":0,"groups":3},
             "datasets":[
-                {"dataset_key":"market:core","dataset_group":"market","source":"Yahoo Finance","source_timestamp":"2026-10-03T19:59:00Z","fetched_at":"2026-10-03T19:59:10Z","calculated_at":"2026-10-03T19:59:12Z","expires_at":"2026-10-03T20:14:12Z","logic_version":"market_snapshot_v1.0","freshness":"15m_snapshot","stale":False,"fallback":False,"status":"ok","error":None,"updated_at":"2026-10-03T19:59:12Z","age_seconds":48,"expires_in_seconds":852},
+                {"dataset_key":"market:core","dataset_group":"market","source":"Yahoo Finance","source_timestamp":"2026-10-03T19:59:00Z","fetched_at":"2026-10-03T19:59:10Z","calculated_at":"2026-10-03T19:59:12Z","expires_at":"2026-10-03T20:14:12Z","logic_version":"market_snapshot_v1.0","freshness":"60m_snapshot","stale":False,"fallback":False,"status":"ok","error":None,"updated_at":"2026-10-03T19:59:12Z","age_seconds":48,"expires_in_seconds":852},
                 {"dataset_key":"risk:composite","dataset_group":"risk","source":"Yahoo Finance + CBOE","source_timestamp":"2026-10-03T19:59:00Z","fetched_at":"2026-10-03T19:59:10Z","calculated_at":"2026-10-03T19:59:14Z","expires_at":"2026-10-03T20:14:14Z","logic_version":"risk_meter_v1.0","freshness":"15m_snapshot","stale":False,"fallback":False,"status":"ok","error":None,"updated_at":"2026-10-03T19:59:14Z","age_seconds":46,"expires_in_seconds":854},
                 {"dataset_key":"api:/api/earnings","dataset_group":"earnings","source":"WAVE Flask route /api/earnings","source_timestamp":"2026-10-03T19:55:00Z","fetched_at":"2026-10-03T19:55:00Z","calculated_at":"2026-10-03T19:55:03Z","expires_at":"2026-10-04T01:55:03Z","logic_version":"flask_route_v1.0","freshness":"360m_snapshot","stale":False,"fallback":False,"status":"ok","error":None,"updated_at":"2026-10-03T19:55:03Z","age_seconds":297,"expires_in_seconds":21303}
             ]
         })
-    ))
-    await page.goto(BASE + "/data-health", wait_until="domcontentloaded", timeout=30000)
-    await page.wait_for_function("() => document.querySelector('#statTotal') && document.querySelector('#statTotal').innerText === '3'", timeout=15000)
-    assert "All production datasets healthy" in await page.locator("#bannerTitle").inner_text()
-    assert await page.locator("#healthRows tr").count() == 3
+        ))
+    await page.goto(BASE + "/data-health.html", wait_until="domcontentloaded", timeout=30000)
+    if IS_PRODUCTION:
+        await page.wait_for_function("() => Number(document.querySelector('#statTotal')?.innerText || 0) >= 300", timeout=30000)
+        assert int((await page.locator("#statIssues").inner_text()).strip()) == 0
+        assert await page.locator("#healthRows tr").count() >= 300
+    else:
+        await page.wait_for_function("() => document.querySelector('#statTotal') && document.querySelector('#statTotal').innerText === '3'", timeout=15000)
+        assert "All production datasets healthy" in await page.locator("#bannerTitle").inner_text()
+        assert await page.locator("#healthRows tr").count() == 3
     await page.locator("#searchInput").fill("risk")
     await page.wait_for_timeout(100)
     assert await page.locator("#healthRows tr").count() == 1

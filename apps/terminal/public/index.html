@@ -462,6 +462,19 @@
     .tp-chg.dn { color: #ef4444; }
 
     /* ══════════════════════════════════════
+       LATEST MARKET STORY
+    ══════════════════════════════════════ */
+    .latest-story-section{padding:80px;max-width:1440px;margin:0 auto}
+    .latest-story-card{margin-top:28px;background:linear-gradient(145deg,rgba(10,23,39,.96),rgba(5,12,21,.96));border:1px solid rgba(74,158,255,.22);border-radius:16px;padding:28px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:start}
+    .latest-story-kicker{font-size:10px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#4a9eff;margin-bottom:10px}
+    .latest-story-title{font-size:clamp(22px,3vw,34px);line-height:1.2;letter-spacing:-.8px;font-weight:800;max-width:900px}
+    .latest-story-summary{font-size:14px;line-height:1.75;color:#9aa8b7;max-width:900px;margin-top:14px}
+    .latest-story-meta{font-size:10px;color:#64748b;margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .latest-story-source{color:#9bd1ff;font-weight:700}
+    .latest-story-link{white-space:nowrap;align-self:center}
+    @media(max-width:1000px){.latest-story-section{padding:60px 24px}.latest-story-card{grid-template-columns:1fr}.latest-story-link{justify-self:start}}
+
+    /* ══════════════════════════════════════
        MANIFESTO / QUOTE SECTION
     ══════════════════════════════════════ */
     .manifesto {
@@ -629,7 +642,7 @@
   <p class="hero-subtitle" data-i18n="hero.subtitle">Follow the Next Wave</p>
 
   <div class="hero-buttons">
-    <a href="terminal.html" class="btn btn-primary" data-i18n="hero.enter">Enter Terminal</a>
+    <a href="terminal_app.html" class="btn btn-primary" data-i18n="hero.enter">Enter Terminal</a>
     <a href="products.html" class="btn btn-secondary" data-i18n="hero.viewProducts">View Products</a>
   </div>
 
@@ -655,7 +668,7 @@
   </div>
   <div class="stat">
     <div class="stat-val">AI<span>×</span></div>
-    <div class="stat-label" data-i18n="stats.ai">Claude-Powered Analysis</div>
+    <div class="stat-label" data-i18n="stats.ai">AI-Powered Analysis</div>
   </div>
   <div class="stat">
     <div class="stat-val">1<span>K+</span></div>
@@ -674,7 +687,7 @@
 
   <div class="features-grid">
 
-    <a href="terminal.html" class="feature-card">
+    <a href="terminal_app.html" class="feature-card">
       <div class="feature-badge" data-i18n="features.live">Live</div>
       <div class="feature-icon">🌅</div>
       <div class="feature-title" data-i18n="features.terminalTitle">Morning Terminal</div>
@@ -709,8 +722,8 @@
   <div>
     <div class="section-tag" data-i18n="tp.tag">Morning Terminal</div>
     <h2 class="section-title" data-i18n="tp.title">Know your regime before the market opens.</h2>
-    <p class="section-sub" data-i18n="tp.sub">Every morning at 08:00 Israel time, the system fetches live market data, runs it through a multi-factor risk engine, and sends it to Claude for structured analysis.</p>
-    <a href="terminal.html" class="btn btn-primary" style="margin-top: 8px;" data-i18n="tp.openBrief">Open Today's Brief →</a>
+    <p class="section-sub" data-i18n="tp.sub">Every morning at 08:00 Israel time, the system fetches live market data, runs it through a multi-factor risk engine, and turns it into structured analysis.</p>
+    <a href="terminal_app.html" class="btn btn-primary" style="margin-top: 8px;" data-i18n="tp.openBrief">Open Today's Brief →</a>
   </div>
 
   <div class="terminal-preview">
@@ -731,6 +744,25 @@
     </div>
   </div>
 </div>
+
+
+<!-- ══════════════════════════════════════
+     LATEST MARKET STORY
+══════════════════════════════════════ -->
+<section class="latest-story-section" id="latestStorySection">
+  <div class="section-tag">Latest Market Story</div>
+  <h2 class="section-title">What matters now.</h2>
+  <p class="section-sub">A concise publisher-provided summary from the latest market story in the WAVE news feed, with a direct reference to the original source.</p>
+  <div class="latest-story-card">
+    <div>
+      <div class="latest-story-kicker" id="latestStoryCategory">Loading</div>
+      <div class="latest-story-title" id="latestStoryTitle">Fetching the latest story…</div>
+      <div class="latest-story-summary" id="latestStorySummary">—</div>
+      <div class="latest-story-meta"><span class="latest-story-source" id="latestStorySource">—</span><span>·</span><span id="latestStoryTime">—</span></div>
+    </div>
+    <a class="btn btn-secondary latest-story-link" id="latestStoryLink" href="blog.html">Read source →</a>
+  </div>
+</section>
 
 
 <!-- ══════════════════════════════════════
@@ -759,7 +791,7 @@
 
   <ul class="footer-links">
     <li><a href="index.html" data-i18n="nav.home">Home</a></li>
-    <li><a href="terminal.html" data-i18n="nav.terminal">Terminal</a></li>
+    <li><a href="terminal_app.html" data-i18n="nav.terminal">Terminal</a></li>
     <li><a href="blog.html" data-i18n="nav.blog">Blog</a></li>
     <li><a href="products.html" data-i18n="nav.products">Products</a></li>
   </ul>
@@ -772,7 +804,8 @@
      so it never shows stale/hardcoded quotes. Values fall back to "—" if offline. -->
 <script>
 (function(){
-  function q(sym){ return fetch('/api/quote?symbol='+encodeURIComponent(sym)).then(function(r){return r.json();}).catch(function(){return null;}); }
+  var API='https://nqmtayofbhletydmiujz.supabase.co/functions/v1/wave-data';
+  function q(sym){ return fetch(API+'/api/quote?symbol='+encodeURIComponent(sym)).then(function(r){return r.json();}).catch(function(){return null;}); }
   function fnum(v, pre, dec){ return (pre||'') + Number(v).toLocaleString('en-US',{minimumFractionDigits:dec||0, maximumFractionDigits:dec||0}); }
   function setVal(id, v, pre, dec){ var el=document.getElementById(id); if(el && v!=null && !isNaN(v)) el.textContent = fnum(v, pre, dec); }
   function setChg(id, pct, riskUp){ // riskUp=true means a rise is "bad" (VIX): color it red
@@ -781,7 +814,7 @@
     el.textContent = (up?'▲ +':'▼ ') + Math.abs(pct).toFixed(1) + '%';
     el.className = 'tp-chg ' + (good ? 'up' : 'dn');
   }
-  Promise.all([q('ES=F'), q('%5EVIX'), q('BTC-USD'), q('GC=F')]).then(function(r){
+  Promise.all([q('ES=F'), q('^VIX'), q('BTC-USD'), q('GC=F')]).then(function(r){
     var es=r[0], vix=r[1], btc=r[2], gold=r[3];
     if(es){ setVal('tpSpx', es.price, '', 0); setChg('tpSpxChg', es.pct); }
     if(vix){
@@ -792,12 +825,36 @@
     if(btc){ setVal('tpBtc', btc.price, '$', 0); setChg('tpBtcChg', btc.pct); }
     if(gold){ setVal('tpGold', gold.price, '$', 0); setChg('tpGoldChg', gold.pct); }
   });
-  fetch('/api/pcr').then(function(r){return r.json();}).then(function(d){
+  fetch(API+'/api/pcr').then(function(r){return r.json();}).then(function(d){
     if(d && d.pcr!=null){
       var el=document.getElementById('tpPcr'); if(el) el.textContent = Number(d.pcr).toFixed(2);
       var c=document.getElementById('tpPcrChg'); if(c){ var bear = d.pcr>1; c.textContent = bear?'BEARISH':'BULLISH'; c.className='tp-chg '+(bear?'dn':'up'); }
     }
   }).catch(function(){});
+
+  function safeUrl(v){ try{ var u=new URL(v); return u.protocol==='https:'?u.href:null; }catch(e){ return null; } }
+  fetch(API+'/api/news').then(function(r){return r.json();}).then(function(d){
+    var story=d && Array.isArray(d.stories) ? d.stories.find(function(s){return s && s.title && s.link;}) : null;
+    if(!story) return;
+    var title=document.getElementById('latestStoryTitle');
+    var summary=document.getElementById('latestStorySummary');
+    var source=document.getElementById('latestStorySource');
+    var cat=document.getElementById('latestStoryCategory');
+    var time=document.getElementById('latestStoryTime');
+    var link=document.getElementById('latestStoryLink');
+    if(title) title.textContent=story.title;
+    if(summary) summary.textContent=story.desc || 'Open the original source for the full story.';
+    if(source) source.textContent=story.source || 'External source';
+    if(cat) cat.textContent=story.category || 'Markets';
+    if(time) time.textContent=story.pub ? new Date(story.pub).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : '';
+    var href=safeUrl(story.link);
+    if(link && href){ link.href=href; link.target='_blank'; link.rel='noopener noreferrer'; link.textContent='Read '+(story.source||'source')+' →'; }
+  }).catch(function(){
+    var title=document.getElementById('latestStoryTitle');
+    var summary=document.getElementById('latestStorySummary');
+    if(title) title.textContent='Latest story temporarily unavailable';
+    if(summary) summary.textContent='The rest of the WAVE platform remains available.';
+  });
 })();
 </script>
 

@@ -47,10 +47,12 @@ wave_data_fn = Path("supabase/functions/wave-data/index.ts").read_text(encoding=
 ai_tutor_js = Path("apps/terminal/public/ai-tutor.js").read_text(encoding="utf-8")
 ai_tutor_css = Path("apps/terminal/public/ai-tutor.css").read_text(encoding="utf-8")
 index_html = Path("apps/terminal/public/index.html").read_text(encoding="utf-8")
+i18n_js = Path("apps/terminal/public/i18n.js").read_text(encoding="utf-8")
 products_html = Path("apps/terminal/public/products.html").read_text(encoding="utf-8")
 data_health_html = Path("apps/terminal/public/data-health.html").read_text(encoding="utf-8")
 data_health_js = Path("apps/terminal/public/data-health.js").read_text(encoding="utf-8")
 data_health_css = Path("apps/terminal/public/data-health.css").read_text(encoding="utf-8")
+provider_cache_migration = Path("supabase/migrations/20261003_provider_caches.sql").read_text(encoding="utf-8")
 
 checks = [
     ("Seasonality uses new contract", "historical_average" in frontend and "seas-line-chart" in frontend),
@@ -111,6 +113,17 @@ checks = [
     ("Data Health avoids customer nav clutter", "data-health.html" not in html and "data-health.html" in account_html),
     ("Data Health assets allowlisted", all(x in frontend_server for x in ["data-health.html","data-health.css","data-health.js","serve_data_health"])),
     ("Data Health responsive CSS present", "@media(max-width:760px)" in data_health_css),
+    ("Home uses production WAVE gateway", "functions/v1/wave-data" in index_html and "fetch('/api/" not in index_html),
+    ("Home exposes sourced latest story", "latestStoryTitle" in index_html and "latestStorySummary" in index_html and "latestStorySource" in index_html and "latestStoryLink" in index_html),
+    ("Home links real Terminal", 'href="terminal.html"' not in index_html and 'href="terminal_app.html"' in index_html),
+    ("Home VIX symbol is not double encoded", "q('^VIX')" in index_html and "%5EVIX" not in index_html),
+    ("No stale Claude-specific Home copy", "Claude-Powered" not in index_html and "Claude-Powered" not in i18n_js and "sends it to Claude" not in i18n_js),
+    ("Risk UI consumes canonical engine score", "data.score.signals" in Path("apps/terminal/public/terminal-risk.js").read_text(encoding="utf-8") and "result.composite=Number(data.score.composite)" in Path("apps/terminal/public/terminal-risk.js").read_text(encoding="utf-8")),
+    ("Dynamic fundamentals use SEC fallback", "dynamicFundamentals" in wave_data_fn and "SEC EDGAR companyfacts" in wave_data_fn),
+    ("Fundamental growth helper is explicit", "_growth_map" in Path("services/api/modules/equities_core.py").read_text(encoding="utf-8")),
+    ("Provider caches are reproducible", all(x in provider_cache_migration for x in ["sec_ticker_map","sec_companyfacts_cache","crypto_positioning_cache","wave_get_companyfacts","wave_refresh_crypto_positioning"])),
+
+
 ]
 
 failed = 0

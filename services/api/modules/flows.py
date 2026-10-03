@@ -42,7 +42,7 @@ def crypto_positioning():
     if period not in allowed_periods:
         return jsonify({"error": "unsupported period"}), 400
 
-    raw_series, errors = coinm_positioning(pair, period, limit=30)
+    raw_series, errors, provider = coinm_positioning(pair, period, limit=30)
     out = {}
     for key, raw in raw_series.items():
         rows = []
@@ -59,15 +59,17 @@ def crypto_positioning():
 
     return jsonify({
         "asset_class": "crypto",
-        "venue": "Binance COIN-M Futures",
+        "venue": provider["venue"],
         "pair": pair,
+        "provider_symbol": provider["provider_symbol"],
         "period": period,
         "series": out,
         "errors": errors,
         "meta": build_meta(
-            "Binance public futures market-data API",
+            provider["source"],
             freshness="live",
-            note="These are positioning ratios, not blockchain exchange inflow/outflow data.",
+            fallback=provider["fallback"],
+            note="These are positioning ratios, not blockchain exchange inflow/outflow data. COIN-M requests fall back to the equivalent Binance USD-M perpetual when the cloud runner is region-blocked.",
         )
     })
 

@@ -1,0 +1,47 @@
+name: Production End-User QA
+
+on:
+  workflow_run:
+    workflows: ["Deploy WAVE Preview"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  production-qa:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install QA dependencies
+        run: |
+          pip install requests playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Production logic QA
+        run: python scripts/end_user_logic_qa.py
+
+      - name: Production browser QA
+        env:
+          WAVE_BROWSER_BASE: https://wavecapitalil.github.io/wave-platform
+        run: python scripts/browser_qa.py
+
+      - name: Upload production QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-end-user-qa
+          path: |
+            end_user_qa_report.json
+            browser_qa/
+          retention-days: 14
