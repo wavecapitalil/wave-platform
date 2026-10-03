@@ -153,9 +153,6 @@ def route_specs():
                     optional=True,
                 ))
 
-    # Default correlation page is JPM vs SPY.
-    specs.append(_spec("/api/correlation", {"symbol":"JPM","benchmark":"SPY"}, "correlation", 60, optional=True))
-
     return specs
 
 
