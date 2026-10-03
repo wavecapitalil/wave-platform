@@ -57,7 +57,7 @@ jobs:
 
       - name: Unit-test canonical calculations
         working-directory: services/api/data_engine
-        run: python -m unittest -v test_calculations.py test_route_registry.py test_resilience.py
+        run: python -m unittest -v test_calculations.py test_route_registry.py test_resilience.py test_fundamentals.py
 
       - name: Build due snapshots
         shell: bash
