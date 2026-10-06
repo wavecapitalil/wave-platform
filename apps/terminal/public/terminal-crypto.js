@@ -8,8 +8,15 @@ function fmtMc(v){
   if(v >= 1e6)  return '$' + (v/1e6).toFixed(0) + 'M';
   return '$' + Math.round(v).toLocaleString();
 }
-function fmtPct(v){return (v>=0?'+':'')+v.toFixed(2)+'%';}
-function pctColor(v){return v>=0?'#22c55e':'#ef4444';}
+function fmtPct(v){
+  if(v===null || v===undefined || !Number.isFinite(Number(v))) return '—';
+  v=Number(v);
+  return (v>=0?'+':'')+v.toFixed(2)+'%';
+}
+function pctColor(v){
+  if(v===null || v===undefined || !Number.isFinite(Number(v))) return '#64748b';
+  return Number(v)>=0?'#22c55e':'#ef4444';
+}
 
 async function loadCryptoDash(){
   document.getElementById('cdLastUpdated').textContent = 'Loading…';
