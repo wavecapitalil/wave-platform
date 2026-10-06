@@ -280,7 +280,25 @@ async def run_viewport(browser, name, width, height):
     await page.locator("#page-risk").screenshot(path=str(OUT/f"{name}-risk.png"))
     report["risk"]={"visible":visible,"canonical":canonical}
 
-    # Fundamental comparison: two companies, multiple KPIs, real chart + table.
+    # Company Research: arbitrary ticker not dependent on a pre-warmed cache.
+    await page.evaluate("navigate('research')")
+    await page.locator("#page-research").wait_for(state="visible", timeout=15000)
+    await page.locator("#researchInput").fill("BE")
+    await page.evaluate("runResearch()")
+    await page.wait_for_function("""() => {
+      const result=document.querySelector('#researchResult');
+      const name=document.querySelector('#resNameLine');
+      const price=document.querySelector('#resPriceLine');
+      const status=document.querySelector('#researchStatus');
+      return result && result.style.display !== 'none' &&
+             name && /Bloom Energy/i.test(name.innerText) &&
+             price && price.innerText.trim() !== '—' &&
+             (!status || !status.innerText.startsWith('Error'));
+    }""", timeout=90000)
+    assert "Industrials" in await page.locator("#resIndustryLine").inner_text()
+    report["company_research_dynamic"]={"ticker":"BE","ok":True}
+
+        # Fundamental comparison: two companies, multiple KPIs, real chart + table.
     await page.evaluate("navigate('fundchart')")
     await page.locator("#page-fundchart").wait_for(state="visible", timeout=15000)
     await page.locator("#fcTicker1").fill("MSFT")
