@@ -133,6 +133,18 @@ for case in CASES:
                 if counts.get("total",0) > counts.get("headline_total",0):
                     semantic_errors.append("recent event count exceeds headline total")
 
+            if case["name"] == "flows_crypto":
+                series=data.get("series") or {}
+                for key in ("global_accounts","top_accounts","top_positions"):
+                    rows=series.get(key) or []
+                    if not rows:
+                        semantic_errors.append(f"{key} has no observations")
+                    elif rows[-1].get("long_pct") is None or rows[-1].get("short_pct") is None:
+                        semantic_errors.append(f"{key} latest long/short values missing")
+                source=str((data.get("meta") or {}).get("source") or "")
+                if "Binance" not in source:
+                    semantic_errors.append("crypto positioning source is not Binance")
+
             if case["name"] == "gold_silver":
                 if data.get("n_years") != 10:
                     semantic_errors.append("metals default lookback is not 10 years")

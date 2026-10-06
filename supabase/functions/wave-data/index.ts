@@ -2,8 +2,10 @@ import { createClient } from "npm:@supabase/supabase-js@2.57.4";
 
 const SUPABASE_URL=Deno.env.get("SUPABASE_URL")!;
 const ANON=Deno.env.get("SUPABASE_ANON_KEY")!;
+const SERVICE_KEY=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const CORE=SUPABASE_URL+"/functions/v1/wave-core";
 const db=createClient(SUPABASE_URL,ANON,{auth:{persistSession:false}});
+const admin=createClient(SUPABASE_URL,SERVICE_KEY,{auth:{persistSession:false}});
 
 const cors={
   "access-control-allow-origin":"*",
@@ -129,6 +131,206 @@ async function proxyCore(req:Request){
   return new Response(text,{status:r.status,headers});
 }
 
+async function liveCryptoPositioning(u:URL){
+  const pair=String(u.searchParams.get("pair")||"BTCUSD").trim().toUpperCase();
+  const period=String(u.searchParams.get("period")||"1h").trim();
+  const allowed=new Set(["1h","4h","1d"]);
+  if(!allowed.has(period)) return json({error:"unsupported period",supported:["1h","4h","1d"]},400);
+  if(!["BTCUSD","ETHUSD"].includes(pair)) return json({error:"unsupported pair",supported:["BTCUSD","ETHUSD"]},400);
+
+  const {data:cached,error}=await db
+    .from("crypto_positioning_cache")
+    .select("data,source,fetched_at,status,error")
+    .eq("pair",pair)
+    .eq("period",period)
+    .maybeSingle();
+
+  if(!error && cached?.status==="ok" && cached?.data){
+    const ageMs=Date.now()-Date.parse(cached.fetched_at);
+    const payload={...cached.data};
+    payload.meta={
+      source:cached.source||"Binance public USD-M futures market-data API",
+      source_timestamp:cached.fetched_at,
+      fetched_at:cached.fetched_at,
+      freshness:"hourly_cache",
+      stale:ageMs>90*60*1000,
+      fallback:true,
+      note:"Positioning ratios, not blockchain exchange inflow/outflow data. WAVE caches Binance USD-M data in Supabase because cloud egress to Binance can be region-dependent."
+    };
+    return json(payload,200,{"cache-control":"public, max-age=60","x-wave-source":"supabase-crypto-positioning-cache"});
+  }
+
+  return json({
+    error:"crypto_positioning_cache_unavailable",
+    pair,period,
+    detail:error?.message||cached?.error||"no cached observation"
+  },503);
+}
+
+const SEC_HEADERS={
+  "user-agent":"WaveCapital research@wavecapital.com",
+  "accept-encoding":"gzip, deflate",
+  "accept":"application/json"
+};
+let secTickerCache:any=null;
+let secTickerCacheAt=0;
+
+async function secTickerRecord(symbol:string){
+  const normalized=String(symbol||"").trim().toUpperCase();
+  if(!normalized) return null;
+
+  // Persistent SEC ticker cache in Supabase avoids repeated downloads of the
+  // 10k+ ticker mapping on Edge cold starts and prevents SEC 429s.
+  const {data:cached,error}=await db
+    .from("sec_ticker_map")
+    .select("ticker,cik,company_name")
+    .eq("ticker",normalized)
+    .maybeSingle();
+  if(!error && cached){
+    return {cik:String(cached.cik).padStart(10,"0"),name:String(cached.company_name||normalized)};
+  }
+
+  // Safety fallback for a brand-new ticker not yet present in the persisted map.
+  const now=Date.now();
+  if(!secTickerCache || now-secTickerCacheAt>24*60*60*1000){
+    const r=await fetch("https://www.sec.gov/files/company_tickers.json",{headers:SEC_HEADERS});
+    if(!r.ok) throw new Error("SEC ticker map HTTP "+r.status);
+    secTickerCache=await r.json();
+    secTickerCacheAt=now;
+  }
+  for(const item of Object.values(secTickerCache||{}) as any[]){
+    if(String(item?.ticker||"").toUpperCase()===normalized){
+      return {cik:String(item.cik_str).padStart(10,"0"),name:String(item.title||normalized)};
+    }
+  }
+  return null;
+}
+
+function daysBetween(a:string,b:string){
+  return Math.round((Date.parse(b)-Date.parse(a))/86400000);
+}
+
+function factUnits(facts:any,concept:string,unitNames:string[]){
+  const units=facts?.[concept]?.units||{};
+  for(const unit of unitNames){
+    if(Array.isArray(units[unit]) && units[unit].length) return units[unit];
+  }
+  return [];
+}
+
+function extractFact(facts:any,concepts:string[],form:string,minDays:number,maxDays:number,units=["USD"]){
+  for(const concept of concepts){
+    const raw=factUnits(facts,concept,units);
+    const seen:any={};
+    for(const row of raw){
+      if(row?.form!==form || !row?.start || !row?.end) continue;
+      const d=daysBetween(row.start,row.end);
+      if(d<minDays || d>maxDays) continue;
+      const end=String(row.end),filed=String(row.filed||"");
+      if(!seen[end] || filed>String(seen[end].filed||"")) seen[end]=row;
+    }
+    const out:any={};
+    for(const [end,row] of Object.entries(seen) as any[]){
+      const v=Number(row.val);
+      if(Number.isFinite(v)) out[end]=v;
+    }
+    if(Object.keys(out).length) return out;
+  }
+  return {};
+}
+
+function growthMap(raw:any,lag:number){
+  const dates=Object.keys(raw).sort(),out:any={};
+  for(let i=lag;i<dates.length;i++){
+    const prev=Number(raw[dates[i-lag]]),curr=Number(raw[dates[i]]);
+    if(Number.isFinite(prev)&&prev!==0&&Number.isFinite(curr)){
+      out[dates[i]]=Math.round(((curr-prev)/Math.abs(prev)*100)*100)/100;
+    }
+  }
+  return out;
+}
+
+async function dynamicFundamentals(u:URL){
+  const symbol=String(u.searchParams.get("symbol")||"").trim().toUpperCase();
+  const metric=String(u.searchParams.get("metric")||"revenue").trim();
+  const period=String(u.searchParams.get("period")||"annual").trim();
+  if(!symbol) return json({error:"symbol required"},400);
+  if(!["annual","quarterly"].includes(period)) return json({error:"period must be annual or quarterly"},400);
+
+  const concepts:any={
+    revenue:["RevenueFromContractWithCustomerExcludingAssessedTax","Revenues","SalesRevenueNet","SalesRevenueGoodsNet"],
+    gross_profit:["GrossProfit"],
+    operating_income:["OperatingIncomeLoss"],
+    net_income:["NetIncomeLoss"],
+    rd_expense:["ResearchAndDevelopmentExpense"],
+    capex:["PaymentsToAcquirePropertyPlantAndEquipment"],
+    ocf:["NetCashProvidedByUsedInOperatingActivities"]
+  };
+  const valid=new Set(["revenue","gross_profit","operating_income","net_income","eps_diluted","rd_expense","free_cash_flow","capex","gross_margin","operating_margin","net_margin","revenue_growth","op_income_growth","net_income_growth"]);
+  if(!valid.has(metric)) return json({error:"unknown metric"},400);
+
+  const {data:cachedFacts,error:factsError}=await admin.rpc("wave_get_companyfacts",{
+    p_ticker:symbol,
+    p_force:false
+  });
+  if(factsError || !cachedFacts?.document){
+    return json({error:factsError?.message||"SEC companyfacts cache unavailable",symbol},502);
+  }
+  const rec={
+    cik:String(cachedFacts.cik||"").padStart(10,"0"),
+    name:String(cachedFacts.company_name||symbol)
+  };
+  const fd=cachedFacts.document;
+  const facts=fd?.facts?.["us-gaap"]||{};
+  const form=period==="quarterly"?"10-Q":"10-K";
+  const minDays=period==="quarterly"?60:340;
+  const maxDays=period==="quarterly"?100:380;
+  const ex=(key:string)=>extractFact(facts,concepts[key]||[],form,minDays,maxDays,["USD"]);
+  let raw:any={};
+
+  if(metric==="eps_diluted"){
+    raw=extractFact(facts,["EarningsPerShareDiluted"],form,minDays,maxDays,["USD/shares","USD"]);
+  }else if(metric==="free_cash_flow"){
+    const ocf=ex("ocf"),capex=ex("capex");
+    for(const d of Object.keys(ocf)) raw[d]=Number(ocf[d])-Math.abs(Number(capex[d]||0));
+  }else if(["gross_margin","operating_margin","net_margin"].includes(metric)){
+    const rev=ex("revenue");
+    const key=metric==="gross_margin"?"gross_profit":metric==="operating_margin"?"operating_income":"net_income";
+    const num=ex(key);
+    for(const d of Object.keys(rev)){
+      if(num[d]!=null && Number(rev[d])!==0) raw[d]=Math.round((Number(num[d])/Number(rev[d])*100)*100)/100;
+    }
+  }else if(["revenue_growth","op_income_growth","net_income_growth"].includes(metric)){
+    const key=metric==="revenue_growth"?"revenue":metric==="op_income_growth"?"operating_income":"net_income";
+    raw=growthMap(ex(key),period==="quarterly"?3:1);
+  }else if(metric==="capex"){
+    const capex=ex("capex");
+    for(const d of Object.keys(capex)) raw[d]=-Math.abs(Number(capex[d]));
+  }else{
+    raw=ex(metric);
+  }
+
+  const data=Object.keys(raw).sort().map(date=>({date,value:raw[date]}));
+  if(!data.length) return json({error:"metric unavailable from SEC companyfacts",symbol,metric,period,source:"SEC EDGAR"},404);
+  return json({
+    symbol,
+    name:String(fd?.entityName||rec.name||symbol),
+    metric,
+    period,
+    data,
+    meta:{
+      source:"SEC EDGAR companyfacts via Supabase cache",
+      cik:rec.cik,
+      logic_version:"fundamentals_dynamic_sec_v2.1",
+      growth_basis:metric.endsWith("_growth")?(period==="quarterly"?"same-quarter YoY":"annual YoY"):null,
+      provider_fetched_at:cachedFacts.fetched_at||null,
+      cached:Boolean(cachedFacts.cached),
+      stale_fallback:Boolean(cachedFacts.stale_fallback),
+      fetched_at:new Date().toISOString()
+    }
+  },200,{"x-wave-source":"sec-dynamic","cache-control":"public, max-age=900"});
+}
+
 Deno.serve(async(req:Request)=>{
   if(req.method==="OPTIONS") return new Response("",{headers:cors});
 
@@ -153,6 +355,9 @@ Deno.serve(async(req:Request)=>{
     }
     if(p.endsWith("/api/data-health")){
       return await dataHealthResponse();
+    }
+    if(p.endsWith("/api/flows/crypto")){
+      return await liveCryptoPositioning(u);
     }
     if(p.endsWith("/api/risk-signals")){
       return await snapshotResponse("risk:composite");
@@ -189,6 +394,12 @@ Deno.serve(async(req:Request)=>{
       const x=row?.data?.assets?.[symbol];
       if(x) return json({symbol,price:x.price,pct:x.pct_24h,source:"Binance Spot",meta:meta(row)});
       return await proxyCore(req);
+    }
+
+    if(p.endsWith("/api/fundamentals")){
+      const cached=await genericApiSnapshot(u);
+      if(cached) return cached;
+      return await dynamicFundamentals(u);
     }
 
     // Any Flask route that has a scheduled snapshot is served generically with

@@ -219,6 +219,23 @@ FUNDAMENTAL_METRICS = {
     'net_income_growth': ('financials',  'Net Income',       'growth'),
 }
 
+
+def _growth_map(raw, lag=1):
+    """Return period-over-period growth with an explicit comparison lag.
+
+    Annual series use lag=1. yfinance quarterly series include Q4 and use lag=4.
+    SEC standalone 10-Q series omit Q4, so same-quarter YoY uses lag=3.
+    """
+    dates = sorted(raw)
+    out = {}
+    for i in range(lag, len(dates)):
+        curr_d, prev_d = dates[i], dates[i-lag]
+        prev_v = raw.get(prev_d)
+        curr_v = raw.get(curr_d)
+        if prev_v not in (None, 0) and curr_v is not None:
+            out[curr_d] = round((curr_v - prev_v) / abs(prev_v) * 100, 2)
+    return out
+
 @bp.route('/api/fundamentals')
 def fundamentals():
     symbol  = request.args.get('symbol', '').strip().upper()
@@ -252,12 +269,7 @@ def fundamentals():
                 elif metric in ('revenue_growth', 'op_income_growth', 'net_income_growth'):
                     base_key = {'revenue_growth':'revenue','op_income_growth':'operating_income','net_income_growth':'net_income'}[metric]
                     base_raw = _edgar_extract(facts, EDGAR_CONCEPTS[base_key], form, d_min, d_max)
-                    sorted_d = sorted(base_raw)
-                    raw = {}
-                    for i in range(1, len(sorted_d)):
-                        prev_v = base_raw[sorted_d[i-1]]
-                        if prev_v and prev_v != 0:
-                            raw[sorted_d[i]] = round((base_raw[sorted_d[i]] - prev_v) / abs(prev_v) * 100, 2)
+                    raw = _growth_map(base_raw, lag=3)
                 elif metric == 'capex':
                     raw_cap = _edgar_extract(facts, EDGAR_CAPEX_CONCEPTS, form, d_min, d_max)
                     raw = {d: -abs(v) for d, v in raw_cap.items()}
@@ -300,14 +312,7 @@ def fundamentals():
                     data[d] = round(num[d] / rev[d] * 100, 2)
         elif kind == 'growth':
             raw = extract(fin, row_key)
-            sorted_dates = sorted(raw.keys())
-            data = {}
-            for i in range(1, len(sorted_dates)):
-                curr_d = sorted_dates[i]
-                prev_d = sorted_dates[i - 1]
-                prev_v = raw[prev_d]
-                if prev_v and prev_v != 0:
-                    data[curr_d] = round((raw[curr_d] - prev_v) / abs(prev_v) * 100, 2)
+            data = _growth_map(raw, lag=4 if period == 'quarterly' else 1)
         elif source == 'cashflow':
             data = extract(cf, row_key)
         else:

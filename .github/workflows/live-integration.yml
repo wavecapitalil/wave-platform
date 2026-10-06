@@ -60,6 +60,9 @@ jobs:
       - name: Live provider integration + schema checks
         run: python scripts/live_integration.py
 
+      - name: End-user production logic QA
+        run: python scripts/end_user_logic_qa.py
+
       - name: Upload integration report
         if: always()
         uses: actions/upload-artifact@v4
@@ -67,4 +70,5 @@ jobs:
           name: live-integration-report
           path: |
             live_integration_report.json
+            end_user_qa_report.json
             /tmp/wave-api.log

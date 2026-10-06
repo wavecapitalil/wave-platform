@@ -150,6 +150,7 @@ def route_specs():
                     {"symbol":symbol,"metric":metric,"period":period},
                     "fundamentals",
                     1440,
+                    version="fundamentals_v2.0",
                     optional=True,
                 ))
 
