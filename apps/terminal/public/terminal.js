@@ -255,7 +255,10 @@ function ensureNavBackdrop(){
   el.id='navBackdrop';
   el.className='nav-backdrop';
   el.addEventListener('click',function(){ setNavVisible(false); });
-  document.body.appendChild(el);
+  var panel=document.getElementById('navPanel');
+  var host=panel&&panel.parentNode ? panel.parentNode : document.body;
+  if(panel&&host) host.insertBefore(el,panel);
+  else host.appendChild(el);
   return el;
 }
 
