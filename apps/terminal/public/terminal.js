@@ -41,11 +41,6 @@ function updateClock(){
 setInterval(updateClock, 1000);
 updateClock();
 
-// ── DEBUG: find what intercepts clicks ────────────────────
-document.addEventListener('click', function(e){
-  document.title = (e.target.id || e.target.className || e.target.tagName).toString().substr(0,40);
-}, true);
-
 // ── NAVIGATION ────────────────────────────────────────────
 var currentPage = 'welcome';
 
@@ -144,6 +139,11 @@ function navigate(page){
   }
 
   currentPage = page;
+
+  // On phones the menu is an overlay drawer; close it after choosing a page.
+  if(window.matchMedia && window.matchMedia('(max-width:800px)').matches){
+    setNavVisible(false);
+  }
 }
 
 // ── WHAT'S MOVING (catalyst deep-dive) ────────────────────
@@ -247,13 +247,49 @@ function renderMover(d){
 
 // ── NAV PANEL TOGGLE ──────────────────────────────────────
 var navVisible = true;
-function toggleNav(){
-  var panel  = document.getElementById('navPanel');
-  var reopen = document.getElementById('navReopen');
-  navVisible = !navVisible;
-  panel.classList.toggle('collapsed', !navVisible);
-  reopen.classList.toggle('visible', !navVisible);
+
+function ensureNavBackdrop(){
+  var el=document.getElementById('navBackdrop');
+  if(el)return el;
+  el=document.createElement('div');
+  el.id='navBackdrop';
+  el.className='nav-backdrop';
+  el.addEventListener('click',function(){ setNavVisible(false); });
+  document.body.appendChild(el);
+  return el;
 }
+
+function setNavVisible(visible){
+  var panel=document.getElementById('navPanel');
+  var reopen=document.getElementById('navReopen');
+  var backdrop=ensureNavBackdrop();
+  navVisible=!!visible;
+  if(panel){
+    panel.classList.toggle('collapsed',!navVisible);
+    panel.setAttribute('aria-hidden',(!navVisible).toString());
+  }
+  if(reopen)reopen.classList.toggle('visible',!navVisible);
+  var mobile=window.matchMedia&&window.matchMedia('(max-width:800px)').matches;
+  backdrop.classList.toggle('visible',mobile&&navVisible);
+}
+
+function toggleNav(){ setNavVisible(!navVisible); }
+
+function syncNavForViewport(){
+  var mobile=window.matchMedia&&window.matchMedia('(max-width:800px)').matches;
+  setNavVisible(!mobile);
+}
+
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',syncNavForViewport,{once:true});
+}else{
+  syncNavForViewport();
+}
+
+window.addEventListener('resize',function(){
+  clearTimeout(window.__waveNavResize);
+  window.__waveNavResize=setTimeout(syncNavForViewport,120);
+});
 
 // ── SECTION COLLAPSE ─────────────────────────────────────
 function toggleSection(id){
