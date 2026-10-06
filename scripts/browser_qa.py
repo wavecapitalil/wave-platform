@@ -108,6 +108,18 @@ async def run_viewport(browser, name, width, height):
     }
 
     if width <= 480:
+        # Mobile Home must be a real one-column flow with no card overlap.
+        await page.evaluate("navigate('welcome')")
+        await page.wait_for_timeout(300)
+        news=page.locator(".home-news-side")
+        sidebar=page.locator(".hero-sidebar")
+        nb=await news.bounding_box()
+        sb=await sidebar.bounding_box()
+        assert nb and sb
+        assert sb["y"] >= nb["y"] + nb["height"] - 2, f"Home overlap: news={nb} sidebar={sb}"
+        home_cols=await page.locator(".home-content-row").evaluate("(el)=>getComputedStyle(el).gridTemplateColumns")
+        assert " " not in home_cols.strip(), f"Home still multi-column on iPhone: {home_cols}"
+
         # Mobile drawer is closed by default and must not cover the content.
         await page.wait_for_function("""() => {
           const p=document.querySelector('#navPanel');
@@ -121,8 +133,18 @@ async def run_viewport(browser, name, width, height):
           return p && !p.classList.contains('collapsed');
         }""", timeout=10000)
 
-        # Drawer itself must scroll to the last navigation item.
+        # Drawer must be viewport-fixed below the topbar+ticker, not tied to page scroll.
         nav=page.locator("#navPanel")
+        pos=await nav.evaluate("(el)=>({position:getComputedStyle(el).position,top:getComputedStyle(el).top})")
+        assert pos["position"] == "fixed", pos
+        assert pos["top"] == "76px", pos
+        before=await nav.bounding_box()
+        await page.locator(".main").evaluate("(el)=>{el.scrollTop=700}")
+        await page.wait_for_timeout(120)
+        after=await nav.bounding_box()
+        assert before and after and abs(before["y"]-after["y"]) < 2, f"Drawer moved with page scroll: {before} -> {after}"
+
+        # Drawer itself must scroll to the last navigation item.
         last_item=page.locator("#navPanel .nav-item").last
         await last_item.scroll_into_view_if_needed()
         last_box=await last_item.bounding_box()
