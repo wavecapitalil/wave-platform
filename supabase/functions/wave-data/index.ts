@@ -251,6 +251,233 @@ function growthMap(raw:any,lag:number){
   return out;
 }
 
+function latestValue(map:any){
+  const keys=Object.keys(map||{}).sort();
+  if(!keys.length)return null;
+  const v=Number(map[keys[keys.length-1]]);
+  return Number.isFinite(v)?v:null;
+}
+
+function previousValue(map:any){
+  const keys=Object.keys(map||{}).sort();
+  if(keys.length<2)return null;
+  const v=Number(map[keys[keys.length-2]]);
+  return Number.isFinite(v)?v:null;
+}
+
+function ratioPct(num:any,den:any){
+  const n=Number(num),d=Number(den);
+  return Number.isFinite(n)&&Number.isFinite(d)&&d!==0 ? n/d*100 : null;
+}
+
+function pctGrowth(curr:any,prev:any){
+  const c=Number(curr),p=Number(prev);
+  return Number.isFinite(c)&&Number.isFinite(p)&&p!==0 ? (c-p)/Math.abs(p)*100 : null;
+}
+
+function extractInstantFact(facts:any,concepts:string[],forms:string|string[],units=["USD"]){
+  const allowed=new Set(Array.isArray(forms)?forms:[forms]);
+  for(const concept of concepts){
+    const seen:any={};
+    for(const row of factUnits(facts,concept,units)){
+      if(!allowed.has(String(row?.form||"")) || !row?.end)continue;
+      const end=String(row.end),filed=String(row.filed||"");
+      if(!seen[end] || filed>String(seen[end].filed||""))seen[end]=row;
+    }
+    const dates=Object.keys(seen).sort();
+    if(!dates.length)continue;
+    const v=Number(seen[dates[dates.length-1]].val);
+    if(Number.isFinite(v))return v;
+  }
+  return null;
+}
+
+async function yahooSearch(symbol:string){
+  const r=await fetch("https://query1.finance.yahoo.com/v1/finance/search?q="+encodeURIComponent(symbol)+"&quotesCount=5&newsCount=0",{
+    headers:{"accept":"application/json","user-agent":"Mozilla/5.0 WAVE"}
+  });
+  if(!r.ok)return null;
+  const d=await r.json();
+  return (d?.quotes||[]).find((x:any)=>String(x?.symbol||"").toUpperCase()===symbol)||null;
+}
+
+async function yahooChartMeta(symbol:string){
+  const r=await fetch("https://query1.finance.yahoo.com/v8/finance/chart/"+encodeURIComponent(symbol)+"?range=1y&interval=1d",{
+    headers:{"accept":"application/json","user-agent":"Mozilla/5.0 WAVE"}
+  });
+  if(!r.ok)return null;
+  const d=await r.json();
+  const result=d?.chart?.result?.[0];
+  if(!result)return null;
+  const meta=result.meta||{};
+  const closes=(result.indicators?.quote?.[0]?.close||[]).filter((x:any)=>Number.isFinite(Number(x))).map(Number);
+  return {
+    price:Number.isFinite(Number(meta.regularMarketPrice))?Number(meta.regularMarketPrice):(closes.length?closes[closes.length-1]:null),
+    previous_close:Number.isFinite(Number(meta.chartPreviousClose))?Number(meta.chartPreviousClose):null,
+    fifty_two_low:closes.length?Math.min(...closes):null,
+    fifty_two_high:closes.length?Math.max(...closes):null,
+    exchange:meta.fullExchangeName||meta.exchangeName||null,
+    currency:meta.currency||null,
+  };
+}
+
+async function yahooFundamentalTimeseries(symbol:string){
+  const types=[
+    "trailingMarketCap","trailingPeRatio","forwardPeRatio","pegRatio",
+    "priceToSalesTrailing12Months","priceToBook","enterpriseToEbitda",
+    "trailingEps","forwardEps","dividendYield","payoutRatio","beta",
+    "averageDailyVolume3Month"
+  ];
+  const p2=Math.floor(Date.now()/1000)+86400;
+  const p1=p2-3*365*86400;
+  const url="https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/"+encodeURIComponent(symbol)+
+    "?symbol="+encodeURIComponent(symbol)+"&type="+types.join(",")+"&merge=false&period1="+p1+"&period2="+p2;
+  const r=await fetch(url,{headers:{"accept":"application/json","user-agent":"Mozilla/5.0 WAVE"}});
+  if(!r.ok)return {};
+  const d=await r.json();
+  const out:any={};
+  for(const series of d?.timeseries?.result||[]){
+    const type=String(series?.meta?.type?.[0]||"");
+    const arr=Array.isArray(series?.[type])?series[type]:[];
+    if(!type||!arr.length)continue;
+    const sorted=arr.slice().sort((a:any,b:any)=>String(a?.asOfDate||"").localeCompare(String(b?.asOfDate||"")));
+    const raw=Number(sorted[sorted.length-1]?.reportedValue?.raw);
+    if(Number.isFinite(raw))out[type]=raw;
+  }
+  return out;
+}
+
+async function dynamicStockInfo(u:URL){
+  const symbol=String(u.searchParams.get("symbol")||"").trim().toUpperCase();
+  if(!symbol)return json({error:"symbol required"},400);
+
+  const [search,chart,yts]=await Promise.all([
+    yahooSearch(symbol).catch(()=>null),
+    yahooChartMeta(symbol).catch(()=>null),
+    yahooFundamentalTimeseries(symbol).catch(()=>({}))
+  ]);
+
+  let cachedRes:any={data:null,error:null};
+  try{
+    cachedRes=await admin.rpc("wave_get_companyfacts",{p_ticker:symbol,p_force:false});
+  }catch(_e){
+    cachedRes={data:null,error:null};
+  }
+
+  const cached:any=cachedRes?.data;
+  const fd=cached?.document||null;
+  const hasUs=Boolean(fd?.facts?.["us-gaap"] && Object.keys(fd.facts["us-gaap"]).length);
+  const taxonomy=hasUs?"us-gaap":"ifrs-full";
+  const facts=fd?.facts?.[taxonomy]||{};
+  const annualForms=taxonomy==="us-gaap"?["10-K"]:["20-F"];
+  const moneyUnits=["USD","EUR","DKK","GBP","CHF","JPY"];
+
+  const concepts=taxonomy==="us-gaap" ? {
+    revenue:["RevenueFromContractWithCustomerExcludingAssessedTax","Revenues","SalesRevenueNet","SalesRevenueGoodsNet"],
+    gross:["GrossProfit"],
+    op:["OperatingIncomeLoss"],
+    net:["NetIncomeLoss"],
+    assets:["Assets"],
+    equity:["StockholdersEquity","StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"],
+    current_assets:["AssetsCurrent"],
+    current_liab:["LiabilitiesCurrent"],
+    liabilities:["Liabilities"],
+    debt:["LongTermDebtAndFinanceLeaseObligations","LongTermDebtAndCapitalLeaseObligations","LongTermDebt","LongTermDebtNoncurrent"],
+  } : {
+    revenue:["Revenue","RevenueFromContractsWithCustomers","SalesRevenue"],
+    gross:["GrossProfit"],
+    op:["ProfitLossFromOperatingActivities","OperatingProfitLoss"],
+    net:["ProfitLoss","ProfitLossAttributableToOwnersOfParent"],
+    assets:["Assets"],
+    equity:["Equity","EquityAttributableToOwnersOfParent"],
+    current_assets:["CurrentAssets"],
+    current_liab:["CurrentLiabilities"],
+    liabilities:["Liabilities"],
+    debt:["NoncurrentBorrowings","CurrentBorrowings","Borrowings"],
+  };
+
+  const duration=(key:string)=>extractFact(facts,(concepts as any)[key]||[],annualForms,330,390,moneyUnits);
+  const revenueMap=duration("revenue");
+  const grossMap=duration("gross");
+  const opMap=duration("op");
+  const netMap=duration("net");
+  const revenue=latestValue(revenueMap);
+  const gross=latestValue(grossMap);
+  const op=latestValue(opMap);
+  const net=latestValue(netMap);
+  const prevRevenue=previousValue(revenueMap);
+  const prevNet=previousValue(netMap);
+
+  const assets=extractInstantFact(facts,(concepts as any).assets||[],annualForms,moneyUnits);
+  const equity=extractInstantFact(facts,(concepts as any).equity||[],annualForms,moneyUnits);
+  const currentAssets=extractInstantFact(facts,(concepts as any).current_assets||[],annualForms,moneyUnits);
+  const currentLiab=extractInstantFact(facts,(concepts as any).current_liab||[],annualForms,moneyUnits);
+  const liabilities=extractInstantFact(facts,(concepts as any).liabilities||[],annualForms,moneyUnits);
+  const debt=extractInstantFact(facts,(concepts as any).debt||[],annualForms,moneyUnits);
+
+  const y:any=yts||{};
+  const pct100=(v:any)=>Number.isFinite(Number(v)) ? (Math.abs(Number(v))<=2?Number(v)*100:Number(v)) : null;
+  const price=chart?.price??null;
+  const marketCap=y.trailingMarketCap??null;
+
+  const body:any={
+    symbol,
+    name:search?.longname||search?.shortname||fd?.entityName||cached?.company_name||symbol,
+    sector:search?.sector||search?.sectorDisp||null,
+    industry:search?.industry||search?.industryDisp||null,
+    exchange:search?.exchDisp||chart?.exchange||null,
+    price,
+    market_cap:marketCap,
+    beta:y.beta??null,
+    avg_volume:y.averageDailyVolume3Month??null,
+    fifty_two_low:chart?.fifty_two_low??null,
+    fifty_two_high:chart?.fifty_two_high??null,
+
+    pe_trailing:y.trailingPeRatio??null,
+    pe_forward:y.forwardPeRatio??null,
+    peg_ratio:y.pegRatio??null,
+    ps_ratio:y.priceToSalesTrailing12Months??null,
+    pb_ratio:y.priceToBook??null,
+    ev_ebitda:y.enterpriseToEbitda??null,
+    eps_trailing:y.trailingEps??null,
+    eps_forward:y.forwardEps??null,
+
+    revenue_growth:pctGrowth(revenue,prevRevenue),
+    earnings_growth:pctGrowth(net,prevNet),
+    gross_margin:ratioPct(gross,revenue),
+    operating_margin:ratioPct(op,revenue),
+    net_margin:ratioPct(net,revenue),
+    roe:ratioPct(net,equity),
+    roa:ratioPct(net,assets),
+
+    debt_to_equity:(debt!=null&&equity)?debt/equity*100:null,
+    current_ratio:(currentAssets!=null&&currentLiab)?currentAssets/currentLiab:null,
+    quick_ratio:null,
+    dividend_yield:pct100(y.dividendYield),
+    payout_ratio:pct100(y.payoutRatio),
+    total_revenue:revenue,
+
+    description:null,
+    website:null,
+    ceo:null,
+    employees:null,
+
+    meta:{
+      source:["Yahoo Finance public search/chart/timeseries",fd?"SEC EDGAR CompanyFacts via Supabase cache":null].filter(Boolean).join(" + "),
+      taxonomy:fd?taxonomy:null,
+      logic_version:"stock_info_dynamic_v1.0",
+      fetched_at:new Date().toISOString(),
+      sec_cached:Boolean(cached?.cached),
+      fields_may_be_null:true
+    }
+  };
+
+  if(!search && !fd && price==null && marketCap==null){
+    return json({error:"symbol data unavailable from public sources",symbol},404);
+  }
+  return json(body,200,{"x-wave-source":"dynamic-company-research","cache-control":"public, max-age=900"});
+}
+
 async function dynamicFundamentals(u:URL){
   const symbol=String(u.searchParams.get("symbol")||"").trim().toUpperCase();
   const metric=String(u.searchParams.get("metric")||"revenue").trim();
@@ -419,6 +646,11 @@ Deno.serve(async(req:Request)=>{
       const cached=await genericApiSnapshot(u);
       if(cached) return cached;
       return await dynamicFundamentals(u);
+    }
+    if(p.endsWith("/api/stock-info")){
+      const cached=await genericApiSnapshot(u);
+      if(cached) return cached;
+      return await dynamicStockInfo(u);
     }
 
     // Any Flask route that has a scheduled snapshot is served generically with
