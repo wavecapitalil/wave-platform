@@ -202,7 +202,21 @@ try:
 except Exception as e:
     record("crypto_positioning",False,str(e))
 
-# 11) End-user feature endpoint availability
+# 11) Company Research must work for arbitrary non-prewarmed SEC tickers
+for ticker in ("BE","CEG"):
+    try:
+        d=get(f"/api/stock-info?symbol={ticker}",60)
+        required=["symbol","name","price","market_cap","sector","industry","revenue_growth","operating_margin","net_margin"]
+        missing=[k for k in required if d.get(k) is None]
+        if d.get("symbol")!=ticker:
+            raise AssertionError(f"symbol mismatch: {d.get('symbol')}")
+        if missing:
+            raise AssertionError(f"missing key data: {missing}")
+        record(f"company_research_dynamic_{ticker}",True,f"{d.get('name')} · {d.get('sector')} · price={d.get('price')}")
+    except Exception as e:
+        record(f"company_research_dynamic_{ticker}",False,str(e))
+
+# 12) End-user feature endpoint availability
 endpoint_cases={
     "market_quote":"/api/quote?symbol=SPY",
     "rates":"/api/yields",
