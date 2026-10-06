@@ -254,7 +254,11 @@ function ensureNavBackdrop(){
   el=document.createElement('div');
   el.id='navBackdrop';
   el.className='nav-backdrop';
-  el.addEventListener('click',function(){ setNavVisible(false); });
+  el.addEventListener('click',function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    setNavVisible(false);
+  });
   var panel=document.getElementById('navPanel');
   var host=panel&&panel.parentNode ? panel.parentNode : document.body;
   if(panel&&host) host.insertBefore(el,panel);
@@ -293,6 +297,34 @@ window.addEventListener('resize',function(){
   clearTimeout(window.__waveNavResize);
   window.__waveNavResize=setTimeout(syncNavForViewport,120);
 });
+
+// Prevent a vertical swipe inside the mobile drawer from becoming a synthetic
+// click on the nav item under the finger when scrolling ends on iOS Safari.
+(function installMobileNavGestureGuard(){
+  var startY=0,startX=0,moved=false;
+  function panel(){ return document.getElementById('navPanel'); }
+  function onStart(e){
+    var p=panel(); if(!p||!p.contains(e.target)||!e.touches||!e.touches[0])return;
+    startY=e.touches[0].clientY; startX=e.touches[0].clientX; moved=false;
+  }
+  function onMove(e){
+    var p=panel(); if(!p||!p.contains(e.target)||!e.touches||!e.touches[0])return;
+    var dy=Math.abs(e.touches[0].clientY-startY);
+    var dx=Math.abs(e.touches[0].clientX-startX);
+    if(dy>8 && dy>dx) moved=true;
+  }
+  function onClick(e){
+    var p=panel(); if(!p||!p.contains(e.target))return;
+    if(moved){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      moved=false;
+    }
+  }
+  document.addEventListener('touchstart',onStart,{passive:true,capture:true});
+  document.addEventListener('touchmove',onMove,{passive:true,capture:true});
+  document.addEventListener('click',onClick,true);
+})();
 
 // ── SECTION COLLAPSE ─────────────────────────────────────
 function toggleSection(id){
