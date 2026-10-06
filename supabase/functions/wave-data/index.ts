@@ -382,7 +382,7 @@ async function dynamicStockInfo(u:URL){
     current_assets:["AssetsCurrent"],
     current_liab:["LiabilitiesCurrent"],
     liabilities:["Liabilities"],
-    debt:["LongTermDebtAndFinanceLeaseObligationsCurrent","LongTermDebtCurrent","LongTermDebtNoncurrent","LongTermDebt"],
+    debt:["LongTermDebtAndFinanceLeaseObligations","LongTermDebtAndCapitalLeaseObligations","LongTermDebt","LongTermDebtNoncurrent"],
   } : {
     revenue:["Revenue","RevenueFromContractsWithCustomers","SalesRevenue"],
     gross:["GrossProfit"],
