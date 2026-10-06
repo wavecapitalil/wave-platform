@@ -219,6 +219,7 @@ function factUnits(facts:any,concept:string,unitNames:string[]){
 }
 
 function extractFact(facts:any,concepts:string[],form:string,minDays:number,maxDays:number,units=["USD"]){
+  const merged:any={};
   for(const concept of concepts){
     const raw=factUnits(facts,concept,units);
     const seen:any={};
@@ -229,14 +230,13 @@ function extractFact(facts:any,concepts:string[],form:string,minDays:number,maxD
       const end=String(row.end),filed=String(row.filed||"");
       if(!seen[end] || filed>String(seen[end].filed||"")) seen[end]=row;
     }
-    const out:any={};
     for(const [end,row] of Object.entries(seen) as any[]){
+      if(end in merged) continue;
       const v=Number(row.val);
-      if(Number.isFinite(v)) out[end]=v;
+      if(Number.isFinite(v)) merged[end]=v;
     }
-    if(Object.keys(out).length) return out;
   }
-  return {};
+  return merged;
 }
 
 function growthMap(raw:any,lag:number){

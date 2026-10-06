@@ -140,28 +140,36 @@ def sector_detail():
 # Shared EDGAR provider helpers live in services/sec.py.
 
 def _edgar_extract(facts, concepts, form, min_days=60, max_days=100):
-    """Extract standalone period values for a metric. Tries concepts in order."""
+    """Extract standalone period values, merging compatible SEC concepts.
+
+    Companies can change XBRL revenue concepts over time. Earlier versions
+    stopped at the first concept with any rows, which could truncate history
+    (UBER quarterly revenue is a concrete example). Concepts are ordered by
+    preference; earlier concepts win on duplicate end dates, while later
+    concepts fill missing periods.
+    """
     from datetime import datetime as _dt
     def diff_days(s, e):
         return (_dt.strptime(e, '%Y-%m-%d') - _dt.strptime(s, '%Y-%m-%d')).days
 
+    merged = {}
     for concept in concepts:
         raw = facts.get(concept, {}).get('units', {}).get('USD', [])
         if not raw:
             continue
-        rows = [x for x in raw
-                if x.get('form') == form and 'start' in x and 'end' in x
-                and min_days <= diff_days(x['start'], x['end']) <= max_days]
-        if not rows:
-            continue
-        # Deduplicate by end date — keep most recently filed
         seen = {}
-        for x in rows:
+        for x in raw:
+            if x.get('form') != form or 'start' not in x or 'end' not in x:
+                continue
+            if not (min_days <= diff_days(x['start'], x['end']) <= max_days):
+                continue
             end = x['end']
             if end not in seen or x.get('filed','') > seen[end].get('filed',''):
                 seen[end] = x
-        return {end: float(x['val']) for end, x in seen.items()}
-    return {}
+        for end, x in seen.items():
+            if end not in merged:
+                merged[end] = float(x['val'])
+    return merged
 
 def _edgar_extract_eps(facts, form, min_days=60, max_days=100):
     from datetime import datetime as _dt
