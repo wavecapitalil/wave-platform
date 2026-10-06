@@ -135,9 +135,10 @@ async def run_viewport(browser, name, width, height):
 
         # Drawer must be viewport-fixed below the topbar+ticker, not tied to page scroll.
         nav=page.locator("#navPanel")
-        pos=await nav.evaluate("(el)=>({position:getComputedStyle(el).position,top:getComputedStyle(el).top})")
+        pos=await nav.evaluate("(el)=>({position:getComputedStyle(el).position,top:parseFloat(getComputedStyle(el).top)})")
+        ticker_bottom=await page.locator(".ticker-bar").evaluate("(el)=>el.getBoundingClientRect().bottom")
         assert pos["position"] == "fixed", pos
-        assert pos["top"] == "76px", pos
+        assert abs(float(pos["top"]) - float(ticker_bottom)) < 2, f"drawer top {pos['top']} != ticker bottom {ticker_bottom}"
         before=await nav.bounding_box()
         await page.locator(".main").evaluate("(el)=>{el.scrollTop=700}")
         await page.wait_for_timeout(120)
