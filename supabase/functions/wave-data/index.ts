@@ -218,13 +218,14 @@ function factUnits(facts:any,concept:string,unitNames:string[]){
   return [];
 }
 
-function extractFact(facts:any,concepts:string[],form:string,minDays:number,maxDays:number,units=["USD"]){
+function extractFact(facts:any,concepts:string[],forms:string|string[],minDays:number,maxDays:number,units=["USD"]){
+  const allowedForms=new Set(Array.isArray(forms)?forms:[forms]);
   const merged:any={};
   for(const concept of concepts){
     const raw=factUnits(facts,concept,units);
     const seen:any={};
     for(const row of raw){
-      if(row?.form!==form || !row?.start || !row?.end) continue;
+      if(!allowedForms.has(String(row?.form||"")) || !row?.start || !row?.end) continue;
       const d=daysBetween(row.start,row.end);
       if(d<minDays || d>maxDays) continue;
       const end=String(row.end),filed=String(row.filed||"");
@@ -257,14 +258,25 @@ async function dynamicFundamentals(u:URL){
   if(!symbol) return json({error:"symbol required"},400);
   if(!["annual","quarterly"].includes(period)) return json({error:"period must be annual or quarterly"},400);
 
-  const concepts:any={
+  const usGaapConcepts:any={
     revenue:["RevenueFromContractWithCustomerExcludingAssessedTax","Revenues","SalesRevenueNet","SalesRevenueGoodsNet"],
     gross_profit:["GrossProfit"],
     operating_income:["OperatingIncomeLoss"],
     net_income:["NetIncomeLoss"],
     rd_expense:["ResearchAndDevelopmentExpense"],
     capex:["PaymentsToAcquirePropertyPlantAndEquipment"],
-    ocf:["NetCashProvidedByUsedInOperatingActivities"]
+    ocf:["NetCashProvidedByUsedInOperatingActivities"],
+    eps:["EarningsPerShareDiluted"]
+  };
+  const ifrsConcepts:any={
+    revenue:["Revenue","RevenueFromContractsWithCustomers","SalesRevenue"],
+    gross_profit:["GrossProfit"],
+    operating_income:["ProfitLossFromOperatingActivities","OperatingProfitLoss"],
+    net_income:["ProfitLoss","ProfitLossAttributableToOwnersOfParent"],
+    rd_expense:["ResearchAndDevelopmentExpense"],
+    capex:["PurchaseOfPropertyPlantAndEquipment","PaymentsToAcquirePropertyPlantAndEquipment"],
+    ocf:["CashFlowsFromUsedInOperatingActivities","NetCashFlowsFromUsedInOperatingActivities"],
+    eps:["DilutedEarningsLossPerShare","BasicAndDilutedEarningsLossPerShare"]
   };
   const valid=new Set(["revenue","gross_profit","operating_income","net_income","eps_diluted","rd_expense","free_cash_flow","capex","gross_margin","operating_margin","net_margin","revenue_growth","op_income_growth","net_income_growth"]);
   if(!valid.has(metric)) return json({error:"unknown metric"},400);
@@ -281,15 +293,20 @@ async function dynamicFundamentals(u:URL){
     name:String(cachedFacts.company_name||symbol)
   };
   const fd=cachedFacts.document;
-  const facts=fd?.facts?.["us-gaap"]||{};
-  const form=period==="quarterly"?"10-Q":"10-K";
+  const hasUs=Boolean(fd?.facts?.["us-gaap"] && Object.keys(fd.facts["us-gaap"]).length);
+  const taxonomy=hasUs?"us-gaap":"ifrs-full";
+  const facts=fd?.facts?.[taxonomy]||{};
+  const concepts=taxonomy==="us-gaap"?usGaapConcepts:ifrsConcepts;
+  const forms=period==="quarterly"
+    ? (taxonomy==="us-gaap"?["10-Q"]:["6-K","20-F"])
+    : (taxonomy==="us-gaap"?["10-K"]:["20-F"]);
   const minDays=period==="quarterly"?60:340;
   const maxDays=period==="quarterly"?100:380;
-  const ex=(key:string)=>extractFact(facts,concepts[key]||[],form,minDays,maxDays,["USD"]);
+  const ex=(key:string)=>extractFact(facts,concepts[key]||[],forms,minDays,maxDays,["USD","USDm","EUR","DKK","GBP","CHF","JPY"]);
   let raw:any={};
 
   if(metric==="eps_diluted"){
-    raw=extractFact(facts,["EarningsPerShareDiluted"],form,minDays,maxDays,["USD/shares","USD"]);
+    raw=extractFact(facts,concepts.eps||[],forms,minDays,maxDays,["USD/shares","EUR/shares","DKK/shares","GBP/shares","CHF/shares","shares"]);
   }else if(metric==="free_cash_flow"){
     const ocf=ex("ocf"),capex=ex("capex");
     for(const d of Object.keys(ocf)) raw[d]=Number(ocf[d])-Math.abs(Number(capex[d]||0));
@@ -321,7 +338,9 @@ async function dynamicFundamentals(u:URL){
     meta:{
       source:"SEC EDGAR companyfacts via Supabase cache",
       cik:rec.cik,
-      logic_version:"fundamentals_dynamic_sec_v2.1",
+      logic_version:"fundamentals_dynamic_sec_v2.2",
+      taxonomy,
+      forms,
       growth_basis:metric.endsWith("_growth")?(period==="quarterly"?"same-quarter YoY":"annual YoY"):null,
       provider_fetched_at:cachedFacts.fetched_at||null,
       cached:Boolean(cachedFacts.cached),

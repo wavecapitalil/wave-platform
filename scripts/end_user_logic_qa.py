@@ -170,7 +170,21 @@ try:
 except Exception as e:
     record("home_story_source",False,str(e))
 
-# 9) Crypto positioning must contain real public-market observations
+# 9) Foreign SEC filer annual fundamentals should work via IFRS/20-F when available
+try:
+    nvo=get("/api/fundamentals?symbol=NVO&metric=revenue&period=annual",60)
+    nmeta=nvo.get("meta") or {}
+    if len(nvo.get("data") or [])<5:
+        raise AssertionError("NVO annual series too short")
+    if nmeta.get("taxonomy")!="ifrs-full":
+        raise AssertionError(f"unexpected taxonomy: {nmeta.get('taxonomy')}")
+    if "20-F" not in (nmeta.get("forms") or []):
+        raise AssertionError(f"unexpected forms: {nmeta.get('forms')}")
+    record("fundamentals_foreign_ifrs",True,f"NVO · {len(nvo.get('data') or [])} annual periods · IFRS/20-F")
+except Exception as e:
+    record("fundamentals_foreign_ifrs",False,str(e))
+
+# 10) Crypto positioning must contain real public-market observations
 try:
     flows=get("/api/flows/crypto?pair=BTCUSD&period=1h",45)
     series=flows.get("series") or {}
@@ -188,7 +202,7 @@ try:
 except Exception as e:
     record("crypto_positioning",False,str(e))
 
-# 10) End-user feature endpoint availability
+# 11) End-user feature endpoint availability
 endpoint_cases={
     "market_quote":"/api/quote?symbol=SPY",
     "rates":"/api/yields",
