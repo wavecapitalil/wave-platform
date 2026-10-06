@@ -350,14 +350,20 @@ async function dynamicStockInfo(u:URL){
   const symbol=String(u.searchParams.get("symbol")||"").trim().toUpperCase();
   if(!symbol)return json({error:"symbol required"},400);
 
-  const [search,chart,yts,cachedRes]=await Promise.all([
+  const [search,chart,yts]=await Promise.all([
     yahooSearch(symbol).catch(()=>null),
     yahooChartMeta(symbol).catch(()=>null),
-    yahooFundamentalTimeseries(symbol).catch(()=>({})),
-    admin.rpc("wave_get_companyfacts",{p_ticker:symbol,p_force:false}).catch(()=>({data:null,error:null}))
+    yahooFundamentalTimeseries(symbol).catch(()=>({}))
   ]);
 
-  const cached:any=(cachedRes as any)?.data;
+  let cachedRes:any={data:null,error:null};
+  try{
+    cachedRes=await admin.rpc("wave_get_companyfacts",{p_ticker:symbol,p_force:false});
+  }catch(_e){
+    cachedRes={data:null,error:null};
+  }
+
+  const cached:any=cachedRes?.data;
   const fd=cached?.document||null;
   const hasUs=Boolean(fd?.facts?.["us-gaap"] && Object.keys(fd.facts["us-gaap"]).length);
   const taxonomy=hasUs?"us-gaap":"ifrs-full";
