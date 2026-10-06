@@ -998,7 +998,7 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
     top:76px;
     bottom:0;
     left:0;
-    z-index:120;
+    z-index:140;
     width:min(86vw,320px);
     max-width:320px;
     height:auto;
@@ -1038,7 +1038,7 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
   .nav-reopen{
     top:88px;
     width:34px;height:48px;
-    z-index:122;
+    z-index:142;
     background:rgba(20,22,32,.98);
     border-color:var(--border2);
     font-size:18px;
@@ -1046,7 +1046,7 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
   .nav-backdrop{
     position:fixed;
     inset:76px 0 0 0;
-    z-index:119;
+    z-index:130;
     background:rgba(0,0,0,.46);
     backdrop-filter:blur(2px);
     -webkit-backdrop-filter:blur(2px);
