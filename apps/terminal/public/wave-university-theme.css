@@ -342,7 +342,20 @@ hr{
 @media(max-width:650px){
   .top-nav-links{display:none}
   .top-nav-logo{border-right:0}
-  .nav-panel{position:absolute;z-index:70;left:6px;top:104px;bottom:6px}
+  .nav-panel{
+    position:fixed;
+    z-index:140;
+    left:0;
+    top:var(--wave-mobile-drawer-top,92px);
+    bottom:0;
+    height:auto;
+    max-height:calc(100dvh - var(--wave-mobile-drawer-top,92px));
+    overflow-y:auto;
+    overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+    border-radius:0 14px 0 0;
+  }
 }
 
 

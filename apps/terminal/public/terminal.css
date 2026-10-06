@@ -994,15 +994,15 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
 
   /* Mobile navigation is a drawer, never a content column. */
   .nav-panel{
-    position:absolute;
-    top:0;
+    position:fixed;
+    top:var(--wave-mobile-drawer-top,92px);
     bottom:0;
     left:0;
     z-index:140;
     width:min(86vw,320px);
     max-width:320px;
-    height:100%;
-    max-height:none;
+    height:auto;
+    max-height:calc(100dvh - var(--wave-mobile-drawer-top,92px));
     background:rgba(15,17,23,.985);
     border-right:1px solid var(--border2);
     box-shadow:20px 0 50px rgba(0,0,0,.45);
@@ -1036,7 +1036,7 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
   .nav-section-title{padding-top:12px;padding-bottom:6px}
 
   .nav-reopen{
-    top:88px;
+    top:calc(var(--wave-mobile-drawer-top,92px) + 12px);
     width:34px;height:48px;
     z-index:142;
     background:rgba(20,22,32,.98);
@@ -1044,8 +1044,8 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
     font-size:18px;
   }
   .nav-backdrop{
-    position:absolute;
-    top:0;right:0;bottom:0;
+    position:fixed;
+    top:var(--wave-mobile-drawer-top,92px);right:0;bottom:0;
     left:min(86vw,320px);
     z-index:130;
     background:rgba(0,0,0,.46);
@@ -1068,6 +1068,28 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
 
   .summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .sections-row{grid-template-columns:1fr}
+
+  /* Home becomes a true single-column flow on phones. */
+  .home-content-row{
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    gap:14px;
+    width:100%;
+    min-width:0;
+  }
+  .home-news-side,.hero-sidebar{
+    width:100%;
+    min-width:0;
+  }
+  .hero-sidebar{order:2}
+  .car-card{
+    min-height:300px;
+    padding:22px 20px 18px;
+  }
+  .car-headline{font-size:clamp(20px,6.5vw,28px)}
+  .car-excerpt{font-size:12px;line-height:1.55}
+  .news-secondary-grid{grid-template-columns:1fr}
+  .sidebar-widget,.side-drivers{width:100%;min-width:0}
 
   /* Risk Meter: mobile-first vertical composition. */
   .rsig-top-row{
