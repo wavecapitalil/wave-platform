@@ -117,9 +117,9 @@ async def run_viewport(browser, name, width, height):
         await risk_nav.click()
         await page.wait_for_function("""() => document.querySelector('#navPanel').classList.contains('collapsed')""")
         await page.locator("#page-risk").wait_for(state="visible")
-        cols=await page.locator(".rsig-top-row").evaluate("(el)=>getComputedStyle(el).gridTemplateColumns")
+        cols=await page.locator("#page-risk .rsig-top-row").evaluate("(el)=>getComputedStyle(el).gridTemplateColumns")
         assert " " not in cols.strip(), f"phone risk top row is not single-column: {cols}"
-        grid_cols=await page.locator(".rsig-grid").evaluate("(el)=>getComputedStyle(el).gridTemplateColumns")
+        grid_cols=await page.locator("#riskSignalGrid").evaluate("(el)=>getComputedStyle(el).gridTemplateColumns")
         assert " " not in grid_cols.strip(), f"phone risk cards are not single-column: {grid_cols}"
         await assert_no_horizontal_overflow(page, f"{name}/terminal-mobile")
         await page.screenshot(path=str(OUT/f"{name}-terminal-mobile.png"), full_page=True)
