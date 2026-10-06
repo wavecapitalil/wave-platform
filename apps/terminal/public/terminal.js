@@ -282,8 +282,16 @@ function setNavVisible(visible){
 
 function toggleNav(){ setNavVisible(!navVisible); }
 
+function syncMobileDrawerTop(){
+  var ticker=document.querySelector('.ticker-bar');
+  if(!ticker)return;
+  var bottom=Math.max(0,Math.round(ticker.getBoundingClientRect().bottom));
+  document.documentElement.style.setProperty('--wave-mobile-drawer-top',bottom+'px');
+}
+
 function syncNavForViewport(){
   var mobile=window.matchMedia&&window.matchMedia('(max-width:800px)').matches;
+  if(mobile)syncMobileDrawerTop();
   setNavVisible(!mobile);
 }
 
@@ -296,6 +304,9 @@ if(document.readyState==='loading'){
 window.addEventListener('resize',function(){
   clearTimeout(window.__waveNavResize);
   window.__waveNavResize=setTimeout(syncNavForViewport,120);
+});
+window.addEventListener('orientationchange',function(){
+  setTimeout(syncNavForViewport,180);
 });
 
 // Prevent a vertical swipe inside the mobile drawer from becoming a synthetic
