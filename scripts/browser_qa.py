@@ -284,7 +284,12 @@ async def run_viewport(browser, name, width, height):
     await page.evaluate("navigate('research')")
     await page.locator("#page-research").wait_for(state="visible", timeout=15000)
     await page.locator("#researchInput").fill("BE")
-    await page.evaluate("runResearch()")
+    await page.evaluate("""() => {
+      window.__qaOldApi = window.API;
+      window.API = 'https://nqmtayofbhletydmiujz.supabase.co/functions/v1/wave-data';
+      API = window.API;
+      runResearch();
+    }""")
     await page.wait_for_function("""() => {
       const result=document.querySelector('#researchResult');
       const name=document.querySelector('#resNameLine');
@@ -297,8 +302,11 @@ async def run_viewport(browser, name, width, height):
     }""", timeout=90000)
     assert "Industrials" in await page.locator("#resIndustryLine").inner_text()
     report["company_research_dynamic"]={"ticker":"BE","ok":True}
+    await page.evaluate("""() => {
+      if(window.__qaOldApi){ window.API=window.__qaOldApi; API=window.API; delete window.__qaOldApi; }
+    }""")
 
-        # Fundamental comparison: two companies, multiple KPIs, real chart + table.
+    # Fundamental comparison: two companies, multiple KPIs, real chart + table.
     await page.evaluate("navigate('fundchart')")
     await page.locator("#page-fundchart").wait_for(state="visible", timeout=15000)
     await page.locator("#fcTicker1").fill("MSFT")
