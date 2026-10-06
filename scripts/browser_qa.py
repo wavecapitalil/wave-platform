@@ -54,7 +54,7 @@ async def wait_not_loading(page, selector, timeout=45000):
         pass
 
 async def run_viewport(browser, name, width, height):
-    context=await browser.new_context(viewport={"width":width,"height":height})
+    context=await browser.new_context(viewport={"width":width,"height":height}, has_touch=(width <= 480), is_mobile=(width <= 480))
     page=await context.new_page()
     page_errors=[]
     page.on("pageerror", lambda exc: page_errors.append(str(exc)))
@@ -89,6 +89,24 @@ async def run_viewport(browser, name, width, height):
     await page.goto(BASE + "/terminal_app.html", wait_until="domcontentloaded", timeout=60000)
     await page.wait_for_function("typeof navigate === 'function'", timeout=30000)
 
+    # Terminal Home itself must populate market data from the production gateway.
+    await page.wait_for_function("""() => {
+      const ids=['s-sp','s-qqq','s-vix','s-10y','s-wti','s-gold','s-btc'];
+      return ids.every(id => {
+        const el=document.getElementById(id);
+        return el && el.innerText.trim() && el.innerText.trim() !== '—';
+      });
+    }""", timeout=90000)
+    report["terminal_home_market_data"]={
+        "sp":await page.locator("#s-sp").inner_text(),
+        "qqq":await page.locator("#s-qqq").inner_text(),
+        "vix":await page.locator("#s-vix").inner_text(),
+        "ten_year":await page.locator("#s-10y").inner_text(),
+        "wti":await page.locator("#s-wti").inner_text(),
+        "gold":await page.locator("#s-gold").inner_text(),
+        "btc":await page.locator("#s-btc").inner_text(),
+    }
+
     if width <= 480:
         # Mobile drawer is closed by default and must not cover the content.
         await page.wait_for_function("""() => {
@@ -111,7 +129,26 @@ async def run_viewport(browser, name, width, height):
         nav_box=await nav.bounding_box()
         assert last_box and nav_box and last_box["y"] + last_box["height"] <= nav_box["y"] + nav_box["height"] + 4
 
-        # Choosing Risk closes the drawer and leaves the Risk page full-width.
+        # A real scroll gesture inside the drawer must never close it.
+        await nav.hover()
+        await page.mouse.wheel(0,-700)
+        await page.wait_for_timeout(150)
+        assert not await nav.evaluate("(el)=>el.classList.contains('collapsed')")
+
+        # Simulate iOS touch movement ending over a nav item; gesture guard must
+        # suppress the synthetic click that used to close the drawer.
+        await page.evaluate("""() => {
+          const p=document.querySelector('#navPanel');
+          const item=p.querySelector('.nav-item[data-page="risk"]');
+          const t={clientY:500,clientX:40};
+          p.dispatchEvent(new TouchEvent('touchstart',{bubbles:true,touches:[new Touch({identifier:1,target:item,clientX:40,clientY:500})]}));
+          p.dispatchEvent(new TouchEvent('touchmove',{bubbles:true,touches:[new Touch({identifier:1,target:item,clientX:40,clientY:430})]}));
+          item.click();
+        }""")
+        await page.wait_for_timeout(100)
+        assert not await nav.evaluate("(el)=>el.classList.contains('collapsed')")
+
+        # Choosing Risk with a genuine tap closes the drawer and leaves the Risk page full-width.
         risk_nav=page.locator('#navPanel .nav-item[data-page="risk"]')
         await risk_nav.scroll_into_view_if_needed()
         await risk_nav.click()
