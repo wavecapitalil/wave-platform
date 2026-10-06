@@ -89,6 +89,42 @@ async def run_viewport(browser, name, width, height):
     await page.goto(BASE + "/terminal_app.html", wait_until="domcontentloaded", timeout=60000)
     await page.wait_for_function("typeof navigate === 'function'", timeout=30000)
 
+    if width <= 480:
+        # Mobile drawer is closed by default and must not cover the content.
+        await page.wait_for_function("""() => {
+          const p=document.querySelector('#navPanel');
+          return p && p.classList.contains('collapsed');
+        }""", timeout=10000)
+        reopen=page.locator("#navReopen")
+        await reopen.wait_for(state="visible")
+        await reopen.click()
+        await page.wait_for_function("""() => {
+          const p=document.querySelector('#navPanel');
+          return p && !p.classList.contains('collapsed');
+        }""", timeout=10000)
+
+        # Drawer itself must scroll to the last navigation item.
+        nav=page.locator("#navPanel")
+        last_item=page.locator("#navPanel .nav-item").last
+        await last_item.scroll_into_view_if_needed()
+        last_box=await last_item.bounding_box()
+        nav_box=await nav.bounding_box()
+        assert last_box and nav_box and last_box["y"] + last_box["height"] <= nav_box["y"] + nav_box["height"] + 4
+
+        # Choosing Risk closes the drawer and leaves the Risk page full-width.
+        risk_nav=page.locator('#navPanel .nav-item[data-page="risk"]')
+        await risk_nav.scroll_into_view_if_needed()
+        await risk_nav.click()
+        await page.wait_for_function("""() => document.querySelector('#navPanel').classList.contains('collapsed')""")
+        await page.locator("#page-risk").wait_for(state="visible")
+        cols=await page.locator("#page-risk .rsig-top-row").evaluate("(el)=>getComputedStyle(el).gridTemplateColumns")
+        assert " " not in cols.strip(), f"phone risk top row is not single-column: {cols}"
+        grid_cols=await page.locator("#riskSignalGrid").evaluate("(el)=>getComputedStyle(el).gridTemplateColumns")
+        assert " " not in grid_cols.strip(), f"phone risk cards are not single-column: {grid_cols}"
+        await assert_no_horizontal_overflow(page, f"{name}/terminal-mobile")
+        await page.screenshot(path=str(OUT/f"{name}-terminal-mobile.png"), full_page=True)
+        report["mobile_drawer"]={"scrollable":True,"auto_closes":True,"risk_single_column":True}
+
     for slug,title in PAGES:
         await page.evaluate(f"navigate('{slug}')")
         active=page.locator(f"#page-{slug}")
@@ -326,6 +362,7 @@ async def main():
         reports=[]
         reports.append(await run_viewport(browser,"desktop",1440,1000))
         reports.append(await run_viewport(browser,"ipad",1024,1366))
+        reports.append(await run_viewport(browser,"iphone",390,844))
         await browser.close()
 
     (OUT/"report.json").write_text(json.dumps(reports,indent=2),encoding="utf-8")
