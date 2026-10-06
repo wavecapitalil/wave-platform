@@ -277,18 +277,19 @@ function pctGrowth(curr:any,prev:any){
 
 function extractInstantFact(facts:any,concepts:string[],forms:string|string[],units=["USD"]){
   const allowed=new Set(Array.isArray(forms)?forms:[forms]);
-  const seen:any={};
   for(const concept of concepts){
+    const seen:any={};
     for(const row of factUnits(facts,concept,units)){
       if(!allowed.has(String(row?.form||"")) || !row?.end)continue;
       const end=String(row.end),filed=String(row.filed||"");
       if(!seen[end] || filed>String(seen[end].filed||""))seen[end]=row;
     }
+    const dates=Object.keys(seen).sort();
+    if(!dates.length)continue;
+    const v=Number(seen[dates[dates.length-1]].val);
+    if(Number.isFinite(v))return v;
   }
-  const dates=Object.keys(seen).sort();
-  if(!dates.length)return null;
-  const v=Number(seen[dates[dates.length-1]].val);
-  return Number.isFinite(v)?v:null;
+  return null;
 }
 
 async function yahooSearch(symbol:string){
