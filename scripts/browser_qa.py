@@ -280,16 +280,31 @@ async def run_viewport(browser, name, width, height):
     await page.locator("#page-risk").screenshot(path=str(OUT/f"{name}-risk.png"))
     report["risk"]={"visible":visible,"canonical":canonical}
 
-    # Company Research: arbitrary ticker not dependent on a pre-warmed cache.
+    # Company Research UI contract. Live BE/CEG endpoint correctness is
+    # covered separately by end_user_logic_qa.py; keep browser rendering
+    # deterministic and independent of cross-origin network conditions.
+    await page.route("**/api/stock-info?symbol=BE", lambda route: route.fulfill(
+        status=200,
+        content_type="application/json",
+        body=json.dumps({
+            "symbol":"BE","name":"Bloom Energy Corporation","sector":"Industrials",
+            "industry":"Electrical Equipment & Parts","exchange":"NYSE",
+            "price":295.78,"market_cap":81050980345,"beta":1.8,"avg_volume":2500000,
+            "fifty_two_low":76.97,"fifty_two_high":345.85,
+            "pe_trailing":357.39,"pe_forward":None,"peg_ratio":None,
+            "ps_ratio":None,"pb_ratio":None,"ev_ebitda":None,
+            "eps_trailing":None,"eps_forward":None,
+            "revenue_growth":38.87,"earnings_growth":-0.14,
+            "gross_margin":29.35,"operating_margin":3.64,"net_margin":-15.09,
+            "roe":-39.31,"roa":-6.87,"debt_to_equity":340.59,
+            "current_ratio":5.98,"quick_ratio":None,"dividend_yield":None,
+            "payout_ratio":None,"total_revenue":2001614000
+        })
+    ))
     await page.evaluate("navigate('research')")
     await page.locator("#page-research").wait_for(state="visible", timeout=15000)
     await page.locator("#researchInput").fill("BE")
-    await page.evaluate("""() => {
-      window.__qaOldApi = window.API;
-      window.API = 'https://nqmtayofbhletydmiujz.supabase.co/functions/v1/wave-data';
-      API = window.API;
-      runResearch();
-    }""")
+    await page.evaluate("runResearch()")
     await page.wait_for_function("""() => {
       const result=document.querySelector('#researchResult');
       const name=document.querySelector('#resNameLine');
@@ -302,9 +317,6 @@ async def run_viewport(browser, name, width, height):
     }""", timeout=90000)
     assert "Industrials" in await page.locator("#resIndustryLine").inner_text()
     report["company_research_dynamic"]={"ticker":"BE","ok":True}
-    await page.evaluate("""() => {
-      if(window.__qaOldApi){ window.API=window.__qaOldApi; API=window.API; delete window.__qaOldApi; }
-    }""")
 
     # Fundamental comparison: two companies, multiple KPIs, real chart + table.
     await page.evaluate("navigate('fundchart')")
