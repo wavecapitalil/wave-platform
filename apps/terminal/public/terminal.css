@@ -995,14 +995,14 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
   /* Mobile navigation is a drawer, never a content column. */
   .nav-panel{
     position:fixed;
-    top:76px;
+    top:var(--wave-mobile-drawer-top,92px);
     bottom:0;
     left:0;
     z-index:140;
     width:min(86vw,320px);
     max-width:320px;
     height:auto;
-    max-height:calc(100dvh - 76px);
+    max-height:calc(100dvh - var(--wave-mobile-drawer-top,92px));
     background:rgba(15,17,23,.985);
     border-right:1px solid var(--border2);
     box-shadow:20px 0 50px rgba(0,0,0,.45);
@@ -1036,7 +1036,7 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
   .nav-section-title{padding-top:12px;padding-bottom:6px}
 
   .nav-reopen{
-    top:88px;
+    top:calc(var(--wave-mobile-drawer-top,92px) + 12px);
     width:34px;height:48px;
     z-index:142;
     background:rgba(20,22,32,.98);
@@ -1045,7 +1045,7 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
   }
   .nav-backdrop{
     position:fixed;
-    top:76px;right:0;bottom:0;
+    top:var(--wave-mobile-drawer-top,92px);right:0;bottom:0;
     left:min(86vw,320px);
     z-index:130;
     background:rgba(0,0,0,.46);
