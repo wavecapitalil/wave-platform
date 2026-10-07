@@ -373,7 +373,7 @@ async function dynamicStockInfo(u:URL){
   const moneyUnits=["USD","EUR","DKK","GBP","CHF","JPY"];
 
   const concepts=taxonomy==="us-gaap" ? {
-    revenue:["RevenueFromContractWithCustomerExcludingAssessedTax","Revenues","SalesRevenueNet","SalesRevenueGoodsNet"],
+    revenue:["RevenueFromContractWithCustomerExcludingAssessedTax","RevenueFromContractWithCustomerIncludingAssessedTax","RegulatedAndUnregulatedOperatingRevenue","SalesRevenueNet","SalesRevenueGoodsNet","SalesRevenueServicesNet","UtilityRevenue","Revenues"],
     gross:["GrossProfit"],
     op:["OperatingIncomeLoss"],
     net:["NetIncomeLoss"],
@@ -465,7 +465,7 @@ async function dynamicStockInfo(u:URL){
     meta:{
       source:["Yahoo Finance public search/chart/timeseries",fd?"SEC EDGAR CompanyFacts via Supabase cache":null].filter(Boolean).join(" + "),
       taxonomy:fd?taxonomy:null,
-      logic_version:"stock_info_dynamic_v1.0",
+      logic_version:"stock_info_dynamic_v1.1",
       fetched_at:new Date().toISOString(),
       sec_cached:Boolean(cached?.cached),
       fields_may_be_null:true
@@ -486,7 +486,7 @@ async function dynamicFundamentals(u:URL){
   if(!["annual","quarterly"].includes(period)) return json({error:"period must be annual or quarterly"},400);
 
   const usGaapConcepts:any={
-    revenue:["RevenueFromContractWithCustomerExcludingAssessedTax","Revenues","SalesRevenueNet","SalesRevenueGoodsNet"],
+    revenue:["RevenueFromContractWithCustomerExcludingAssessedTax","RevenueFromContractWithCustomerIncludingAssessedTax","RegulatedAndUnregulatedOperatingRevenue","SalesRevenueNet","SalesRevenueGoodsNet","SalesRevenueServicesNet","UtilityRevenue","Revenues"],
     gross_profit:["GrossProfit"],
     operating_income:["OperatingIncomeLoss"],
     net_income:["NetIncomeLoss"],
@@ -565,7 +565,7 @@ async function dynamicFundamentals(u:URL){
     meta:{
       source:"SEC EDGAR companyfacts via Supabase cache",
       cik:rec.cik,
-      logic_version:"fundamentals_dynamic_sec_v2.2",
+      logic_version:"fundamentals_dynamic_sec_v2.3",
       taxonomy,
       forms,
       growth_basis:metric.endsWith("_growth")?(period==="quarterly"?"same-quarter YoY":"annual YoY"):null,
