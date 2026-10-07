@@ -216,7 +216,37 @@ for ticker in ("BE","CEG"):
     except Exception as e:
         record(f"company_research_dynamic_{ticker}",False,str(e))
 
-# 12) End-user feature endpoint availability
+# 12) Arbitrary-ticker regression sample across sectors and filing styles
+sample_cases=["PLTR","CRWD","FSLR","ETN","NEE","CELH","MELI"]
+for sym in sample_cases:
+    try:
+        stock=get(f"/api/stock-info?symbol={sym}",60)
+        if stock.get("symbol")!=sym or stock.get("price") is None:
+            raise AssertionError(f"{sym} stock-info incomplete")
+        annual=get(f"/api/fundamentals?symbol={sym}&metric=revenue&period=annual",60)
+        quarterly=get(f"/api/fundamentals?symbol={sym}&metric=revenue&period=quarterly",60)
+        if len(annual.get("data") or [])<5:
+            raise AssertionError(f"{sym} annual history too short")
+        if len(quarterly.get("data") or [])<6:
+            raise AssertionError(f"{sym} quarterly history too short")
+        record("arbitrary_ticker_"+sym,True,
+               f"stock-info + annual({len(annual.get('data') or [])}) + quarterly({len(quarterly.get('data') or [])})")
+    except Exception as e:
+        record("arbitrary_ticker_"+sym,False,str(e))
+
+# Foreign filer example: annual may work while structured quarterly SEC data is legitimately unavailable.
+try:
+    tsm_stock=get("/api/stock-info?symbol=TSM",60)
+    tsm_annual=get("/api/fundamentals?symbol=TSM&metric=revenue&period=annual",60)
+    if tsm_stock.get("symbol")!="TSM" or tsm_stock.get("price") is None:
+        raise AssertionError("TSM stock-info incomplete")
+    if len(tsm_annual.get("data") or [])<5:
+        raise AssertionError("TSM annual history too short")
+    record("foreign_filer_TSM",True,"stock-info + annual IFRS/20-F; quarterly SEC series not required")
+except Exception as e:
+    record("foreign_filer_TSM",False,str(e))
+
+# 13) End-user feature endpoint availability
 endpoint_cases={
     "market_quote":"/api/quote?symbol=SPY",
     "rates":"/api/yields",
