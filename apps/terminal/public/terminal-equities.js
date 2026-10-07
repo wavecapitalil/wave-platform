@@ -229,14 +229,14 @@ function renderStockDetail(d){
     '</div>';
   }
 
-  var html = buildOverviewHtml(d);
+  var html = buildOverviewHtml(d) + forwardPanel(d);
   html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0 32px">';
 
   // Left column
   html += '<div>';
   html += section('Valuation', [
     kpiRow('P/E (Trailing)',  fmtNum(d.pe_trailing, 1),  'Price / trailing 12M earnings'),
-    kpiRow('P/E (Forward)',   fmtNum(d.pe_forward, 1),   'Price / next 12M est. earnings'),
+    kpiRow('P/E (Forward)',   fmtNum(d.pe_forward, 1),   forwardNote(d)),
     kpiRow('PEG Ratio',      fmtNum(d.peg_ratio, 2),    'P/E relative to growth rate'),
     kpiRow('P/S Ratio',      fmtNum(d.ps_ratio, 2),     'Price / revenue (TTM)'),
     kpiRow('P/B Ratio',      fmtNum(d.pb_ratio, 2),     'Price / book value'),
@@ -244,7 +244,7 @@ function renderStockDetail(d){
   ]);
   html += section('Earnings', [
     kpiRow('EPS (Trailing)',  d.eps_trailing != null ? '$' + fmtNum(d.eps_trailing) : '—', 'Last 12 months'),
-    kpiRow('EPS (Forward)',   d.eps_forward  != null ? '$' + fmtNum(d.eps_forward)  : '—', 'Next 12M estimate'),
+    kpiRow('EPS (Forward)',   forwardEpsValue(d), forwardNote(d)),
     kpiRow('Revenue Growth',  fmtPct(d.revenue_growth),  'YoY',  kpiColor(d.revenue_growth, true)),
     kpiRow('Earnings Growth', fmtPct(d.earnings_growth), 'YoY',  kpiColor(d.earnings_growth, true)),
   ]);
@@ -919,12 +919,12 @@ function renderResearchResult(d){
     '</div>';
   }
 
-  var html = buildOverviewHtml(d);
+  var html = buildOverviewHtml(d) + forwardPanel(d);
   html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0 32px">';
   html += '<div>';
   html += section('Valuation', [
     kpiRow('P/E (Trailing)',  fmtNum(d.pe_trailing, 1),  'Price / trailing 12M earnings'),
-    kpiRow('P/E (Forward)',   fmtNum(d.pe_forward, 1),   'Price / next 12M est. earnings'),
+    kpiRow('P/E (Forward)',   fmtNum(d.pe_forward, 1),   forwardNote(d)),
     kpiRow('PEG Ratio',      fmtNum(d.peg_ratio, 2),    'P/E relative to growth rate'),
     kpiRow('P/S Ratio',      fmtNum(d.ps_ratio, 2),     'Price / revenue (TTM)'),
     kpiRow('P/B Ratio',      fmtNum(d.pb_ratio, 2),     'Price / book value'),
@@ -932,7 +932,7 @@ function renderResearchResult(d){
   ]);
   html += section('Earnings', [
     kpiRow('EPS (Trailing)',  d.eps_trailing != null ? '$' + fmtNum(d.eps_trailing) : '—', 'Last 12 months'),
-    kpiRow('EPS (Forward)',   d.eps_forward  != null ? '$' + fmtNum(d.eps_forward)  : '—', 'Next 12M estimate'),
+    kpiRow('EPS (Forward)',   forwardEpsValue(d), forwardNote(d)),
     kpiRow('Revenue Growth',  fmtPct(d.revenue_growth),  'YoY', kpiColor(d.revenue_growth, true)),
     kpiRow('Earnings Growth', fmtPct(d.earnings_growth), 'YoY', kpiColor(d.earnings_growth, true)),
   ]);
@@ -1655,4 +1655,5 @@ function renderSectorDetail(data){
 
   document.getElementById('sectorDetailContent').innerHTML = html;
 }
+
 

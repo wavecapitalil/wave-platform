@@ -1,4 +1,5 @@
 import { createClient } from "npm:@supabase/supabase-js@2.57.4";
+import { collectForward } from "./forward-consensus.ts";
 
 const SUPABASE_URL=Deno.env.get("SUPABASE_URL")!;
 const ANON=Deno.env.get("SUPABASE_ANON_KEY")!;
@@ -318,6 +319,7 @@ async function yahooChartMeta(symbol:string){
     fifty_two_high:closes.length?Math.max(...closes):null,
     exchange:meta.fullExchangeName||meta.exchangeName||null,
     currency:meta.currency||null,
+    price_timestamp:meta.regularMarketTime?new Date(meta.regularMarketTime*1000).toISOString():null,
   };
 }
 
@@ -427,6 +429,8 @@ async function dynamicStockInfo(u:URL){
     industry:search?.industry||search?.industryDisp||null,
     exchange:search?.exchDisp||chart?.exchange||null,
     price,
+    currency:chart?.currency??null,
+    price_timestamp:chart?.price_timestamp??null,
     market_cap:marketCap,
     beta:y.beta??null,
     avg_volume:y.averageDailyVolume3Month??null,
@@ -648,9 +652,27 @@ Deno.serve(async(req:Request)=>{
       return await dynamicFundamentals(u);
     }
     if(p.endsWith("/api/stock-info")){
+      const symbol=String(u.searchParams.get("symbol")||"").trim().toUpperCase().replace(/\./g,"-");
+      if(!/^[A-Z0-9^][A-Z0-9^=-]{0,19}$/.test(symbol)) return json({error:"valid symbol required"},400);
+      u.searchParams.set("symbol",symbol);
       const cached=await genericApiSnapshot(u);
-      if(cached) return cached;
-      return await dynamicStockInfo(u);
+      const base=cached||await dynamicStockInfo(u);
+      if(!base.ok) return base;
+      const body=await base.json();
+      // Snapshots may contain older prices. Refresh the numerator from the same
+      // quote used for all blended ratios and explicitly retain its timestamp.
+      if(cached){
+        const quote=await yahooChartMeta(symbol).catch(()=>null);
+        body.price=quote?.price??null;
+        body.currency=quote?.currency??null;
+        body.price_timestamp=quote?.price_timestamp??null;
+      }
+      const forward=await collectForward(symbol,body.price,body.currency||"");
+      body.forward_consensus=forward;
+      body.eps_forward=forward.selected?.eps??null;
+      body.pe_forward=forward.selected?.pe??null;
+      body.meta={...body.meta,forward_logic_version:forward.logic_version};
+      return json(body,200,{"x-wave-source":"company-research-consensus","cache-control":"no-store"});
     }
 
     // Any Flask route that has a scheduled snapshot is served generically with

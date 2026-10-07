@@ -1,0 +1,28 @@
+name: Forward consensus checks
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/functions/wave-data/**'
+      - 'apps/terminal/public/forward-consensus-ui.js'
+      - 'scripts/forward_consensus_test.mjs'
+      - '.github/workflows/forward-consensus.yml'
+  pull_request:
+    paths:
+      - 'supabase/functions/wave-data/**'
+      - 'apps/terminal/public/forward-consensus-ui.js'
+      - 'scripts/forward_consensus_test.mjs'
+permissions:
+  contents: read
+jobs:
+  consensus:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node --test scripts/forward_consensus_test.mjs
+      - run: node --check supabase/functions/wave-data/index.ts
+      - run: node --check apps/terminal/public/forward-consensus-ui.js
+      - run: node --check apps/terminal/public/terminal-equities.js
