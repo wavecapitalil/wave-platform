@@ -6,14 +6,14 @@ function forwardEscape(value){
 }
 function forwardNote(d){
   var s=d.forward_consensus && d.forward_consensus.selected;
-  return s ? 'FY ending '+forwardEscape(s.period_end)+' · '+forwardEscape(s.basis)+' · '+s.source_count+' source'+(s.source_count===1?'':'s') : 'Verified fiscal-year consensus unavailable';
+  return s ? 'FY ending '+forwardEscape(s.period_end)+' · '+forwardEscape(s.basis) : 'Verified fiscal-year consensus unavailable';
 }
 function forwardEpsValue(d){
   var s=d.forward_consensus && d.forward_consensus.selected;
   if(!s || d.eps_forward==null) return '—';
   return forwardEscape(s.currency)+' '+Number(d.eps_forward).toFixed(2);
 }
-function forwardPanel(d){
+function forwardDetails(d){
   var f=d.forward_consensus;
   if(!f) return '';
   var s=f.selected;
@@ -21,7 +21,7 @@ function forwardPanel(d){
   html+='<div style="font-size:13px;font-weight:700;color:#e2e8f0">Forward EPS · Source comparison</div>';
   if(s){
     html+='<div style="margin:8px 0;color:'+(s.confidence==='low'?'#f59e0b':'#94a3b8')+';font-size:12px">'+
-      forwardNote(d)+' · '+forwardEscape(s.confidence)+' confidence'+
+      forwardNote(d)+' · '+s.source_count+' sources · '+forwardEscape(s.confidence)+' confidence'+
       (s.source_count===1?' · Single source; no average':'')+'</div>';
     html+='<div style="font-size:12px;color:#94a3b8">Range: '+forwardEscape(s.currency)+' '+s.range_low.toFixed(2)+' – '+s.range_high.toFixed(2)+
       ' · Spread: '+(s.spread_pct==null?'undefined near zero':s.spread_pct.toFixed(1)+'%')+'</div>';
@@ -54,4 +54,12 @@ function forwardPanel(d){
     html+='<div style="font-size:11px;color:#94a3b8;margin-top:6px">'+forwardEscape(x.source)+': unavailable · '+forwardEscape(x.detail)+'</div>';
   });
   return html+'</div>';
+}
+
+
+function forwardPanel(d){
+  if(d.forward_consensus && window.WaveSources){
+    WaveSources.html('forward:'+d.symbol,'תחזיות — '+d.symbol,forwardDetails(d));
+  }
+  return '';
 }

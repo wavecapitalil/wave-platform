@@ -283,7 +283,7 @@ function pcrRenderGauge(d){
   if(d.ma20) html += '<div style="background:#0a0f1a;border:1px solid #1e293b;border-radius:6px;padding:8px 14px"><div style="font-size:18px;font-weight:600;color:#e2e8f0">'+d.ma20+'</div><div style="font-size:10px;color:#475569;margin-top:2px">20-DAY AVG</div></div>';
   html += '</div>';
   html += '<div style="font-size:11px;color:#475569">Put vol: <b style="color:#94a3b8">'+(d.put_vol||0).toLocaleString()+'</b> &nbsp;·&nbsp; Call vol: <b style="color:#94a3b8">'+(d.call_vol||0).toLocaleString()+'</b></div>';
-  html += '<div style="font-size:10px;color:#334155;margin-top:4px">Source: CBOE SPX options chain · as of '+d.date+'</div>';
+  html += '<div data-wave-source="Put/Call — sources" style="font-size:10px;color:#334155;margin-top:4px">Source: CBOE SPX options chain · as of '+d.date+'</div>';
   html += '</div>';
   html += '</div>';
 
@@ -754,3 +754,4 @@ async function loadHousingGauge(){
     document.getElementById('hrg-gauge-wrap').innerHTML = '';
   }
 }
+

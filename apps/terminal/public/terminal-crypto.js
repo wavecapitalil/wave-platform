@@ -640,7 +640,8 @@ function _renderOnchainLineChart(data){
 
   var kpiName = {tvl:'TVL',dex_volume:'DEX Volume',fees:'Fees',revenue:'Revenue'}[_onchainKpi];
   document.getElementById('onchainMeta').textContent =
-    protocols.length+' protocols · '+_onchainDays+'D history · '+kpiName+' · Source: DeFiLlama';
+    protocols.length+' protocols · '+_onchainDays+'D history · '+kpiName;
+  WaveSources.record('crypto:onchain','On-chain — sources','DeFiLlama · '+kpiName+' · '+_onchainDays+'D history',[{title:'DeFiLlama',url:'https://defillama.com/'}]);
 }
 
 // ══════════════════════════════════════════════════════════
@@ -720,4 +721,5 @@ function sortScanner(col){
   else { scannerSortCol = col; scannerSortAsc = false; }
   renderScannerTable();
 }
+
 

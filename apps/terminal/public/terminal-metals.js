@@ -64,8 +64,9 @@ function renderGsrMetrics(d){
 
   var meanText=(pctDiff==null)?'':(' It is '+Math.abs(pctDiff).toFixed(1)+'% '+(pctDiff>=0?'above':'below')+' the 10-year mean.');
   banner.innerHTML='<b>Historical context:</b> The Gold/Silver Ratio is '+relation+'.'+meanText
-    +' This is descriptive relative-value context, not a mean-reversion or trade signal.';
+    +'';
 
+  WaveSources.record('metals:methodology','Gold / Silver — methodology','Descriptive relative-value context based on the 10-year distribution; not a mean-reversion or trade signal.');
   var meta=document.getElementById('gsrMeta');
   if(meta) meta.textContent='Source: '+((d.meta&&d.meta.source)||'Yahoo Finance')+' · 10-year lookback · Updated '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
 }
@@ -218,4 +219,5 @@ function renderGsrChart(d){
     'Gold (GC=F) ÷ Silver (SI=F) · Monthly closes · Mean computed over '
     + d.n_years + ' years (' + d.start_date + ' – ' + d.end_date + ') · Source: CME via Yahoo Finance';
 }
+
 

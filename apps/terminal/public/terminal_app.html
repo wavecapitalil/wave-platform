@@ -10,6 +10,7 @@
 <script src="i18n.js"></script>
   <link rel="stylesheet" href="wave-university-theme.css?v=20261007-3">
 <link rel="stylesheet" href="ai-tutor.css">
+<link rel="stylesheet" href="terminal-sources.css?v=20261008-1">
 </head>
 <body>
 
@@ -212,6 +213,9 @@
       </div>
     </div>
 
+    <div class="nav-item" data-page="sources" onclick="navigate('sources')">
+      <span class="nav-item-icon">ⓘ</span><span>מקורות ומתודולוגיה</span>
+    </div>
     </div><!-- end nav-content -->
 
     <!-- Footer: user -->
@@ -513,7 +517,7 @@
           <div style="position:relative;height:430px">
             <canvas id="gsrChart"></canvas>
           </div>
-          <div id="gsrMeta" style="margin-top:8px;font-size:10px;color:#597895;text-align:right"></div>
+          <div data-wave-source="Gold / Silver — sources" id="gsrMeta" style="margin-top:8px;font-size:10px;color:#597895;text-align:right"></div>
         </div>
 
         <div class="callout" style="margin-top:12px">
@@ -576,7 +580,7 @@
         <div class="mini-section" style="margin-bottom:24px">
           <div class="ms-header">
             <div class="ms-title">🌍 Global EV Adoption — Annual Trend</div>
-            <div style="font-size:10px;color:#475569">Source: IEA / BloombergNEF</div>
+            <div data-wave-source="EV — sources">Source: IEA / BloombergNEF</div>
           </div>
           <div style="margin-top:14px;position:relative;height:220px">
             <canvas id="evAdoptionChart"></canvas>
@@ -938,7 +942,7 @@
         <div class="page-header" style="margin-bottom:18px">
           <div class="page-header-tag">Cross-Asset · Positioning & Flows</div>
           <div class="page-header-title">Cross-Asset Flows</div>
-          <div class="page-header-sub">Venue positioning, futures, options and short interest — each metric shown with its own units and source</div>
+          <div class="page-header-sub">Venue positioning, futures, options and short interest — positioning and market activity by asset class</div>
         </div>
 
         <div class="mini-section" style="margin-bottom:14px">
@@ -1472,31 +1476,39 @@
           <div class="td-stat"><div class="td-stat-label">Historical Sample</div><div class="td-stat-val" id="seasSample">—</div><div class="td-stat-sub">completed years</div></div>
         </div>
 
-        <div class="callout" style="margin-top:12px">
+        <div data-wave-source="Seasonality — methodology" class="callout" style="margin-top:12px">
           This view is descriptive context only. It compares the current year's cumulative path with the average path of the prior 10 completed years; it is not a standalone trading signal.
         </div>
       </div>
     </div>
 
+    <div class="page" id="page-sources">
+      <div class="sources-wrap">
+        <div class="page-header-title">מקורות ומתודולוגיה</div>
+        <p style="color:#94a3b8;font-size:13px">מקורות הנתונים, שיטות החישוב, הערכות האמינות והסתייגויות. פרטים מתעדכנים כאן בעת טעינת נתונים במסכי הטרמינל.</p>
+        <div id="sourcesContent"></div>
+      </div>
+    </div>
   </div><!-- end main -->
 </div><!-- end app-body -->
 
-<script src="terminal.js"></script>
-<script src="terminal-market.js"></script>
-<script src="terminal-content.js"></script>
-<script src="terminal-flows.js"></script>
-<script src="terminal-hormuz.js"></script>
-<script src="terminal-metals.js"></script>
-<script src="terminal-confluence.js"></script>
-<script src="terminal-seasonality.js"></script>
-<script src="forward-consensus-ui.js?v=20261007-1"></script>
-<script src="terminal-equities.js?v=20261007-forward1"></script>
-<script src="terminal-risk.js"></script>
-<script src="terminal-crypto.js"></script>
-<script src="terminal-rates.js"></script>
-<script src="terminal-industries.js"></script>
-<script src="terminal-macro.js"></script>
-<script src="terminal-earnings.js"></script>
+<script src="terminal-sources.js?v=20261008-sources1"></script>
+<script src="terminal.js?v=20261008-sources1"></script>
+<script src="terminal-market.js?v=20261008-sources1"></script>
+<script src="terminal-content.js?v=20261008-sources1"></script>
+<script src="terminal-flows.js?v=20261008-sources1"></script>
+<script src="terminal-hormuz.js?v=20261008-sources1"></script>
+<script src="terminal-metals.js?v=20261008-sources1"></script>
+<script src="terminal-confluence.js?v=20261008-sources1"></script>
+<script src="terminal-seasonality.js?v=20261008-sources1"></script>
+<script src="forward-consensus-ui.js?v=20261008-sources1"></script>
+<script src="terminal-equities.js?v=20261008-sources1"></script>
+<script src="terminal-risk.js?v=20261008-sources1"></script>
+<script src="terminal-crypto.js?v=20261008-sources1"></script>
+<script src="terminal-rates.js?v=20261008-sources1"></script>
+<script src="terminal-industries.js?v=20261008-sources1"></script>
+<script src="terminal-macro.js?v=20261008-sources1"></script>
+<script src="terminal-earnings.js?v=20261008-sources1"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1"></script>
 <script src="supabase-config.js"></script>
 <script src="platform.js"></script>
@@ -1522,3 +1534,4 @@
 </div>
 </body>
 </html>
+

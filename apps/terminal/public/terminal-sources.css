@@ -1,0 +1,8 @@
+[data-wave-source]{display:none!important}
+#page-sources .sources-wrap{max-width:960px;margin:0 auto;padding:24px;direction:rtl}
+.sources-card{padding:20px;margin:16px 0;border:1px solid var(--border,#244057);border-radius:12px;background:var(--surface2,#0a1522);overflow-wrap:anywhere}
+.sources-card h2{font-size:16px;color:#e2e8f0;margin:0 0 12px}
+.sources-body{white-space:pre-line;font-size:13px;color:#aebed0;line-height:1.8;unicode-bidi:plaintext}
+.sources-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;direction:ltr}
+.sources-links a{color:#93c5fd;font-size:12px}
+@media(max-width:600px){#page-sources .sources-wrap{padding:16px 10px}.sources-card{padding:16px}}

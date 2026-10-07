@@ -83,9 +83,12 @@ test('UI source details escaped, fiscal year and single-source status explicit',
   const context={};vm.createContext(context);
   vm.runInContext(fs.readFileSync(new URL('../apps/terminal/public/forward-consensus-ui.js',import.meta.url),'utf8'),context);
   const f=blendEstimates([row({source:'<img onerror=alert(1)>',url:'javascript:alert(1)'})],100,'USD',now);
-  const html=context.forwardPanel({forward_consensus:f,eps_forward:2});
+  const html=context.forwardDetails({forward_consensus:f,eps_forward:2});
   assert.match(html,/Single source; no average/);assert.match(html,/FY ending 2026-12-31/);
   assert.ok(!html.includes('<img'));assert.ok(!html.includes('href="javascript:'));assert.match(html,/&lt;img/);
+  let captured; context.window={WaveSources:{}}; context.WaveSources={html:(...args)=>{captured=args;}};
+  assert.equal(context.forwardPanel({symbol:'TEST',forward_consensus:f,eps_forward:2}),'');
+  assert.equal(captured[0],'forward:TEST'); assert.match(captured[2],/Single source; no average/);
 });
 test('cached API refreshes the price and blends instead of returning old forward ratios',async()=>{
   let handler;

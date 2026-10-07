@@ -68,6 +68,8 @@ function navigate(page){
     setTimeout(loadBreadthPage, 50);
   }
 
+  if(page === 'sources') WaveSources.render();
+
   if(page === 'research'){
     setTimeout(function(){ document.getElementById('researchInput').focus(); }, 100);
   }
@@ -203,9 +205,9 @@ function renderMover(d){
       var cc = {high:'#22c55e',medium:'#f59e0b',low:'#64748b'}[c.confidence]||'#64748b';
       html += '<div style="border:1px solid #1e293b;background:#0b1120;border-radius:12px;padding:14px 16px;margin-bottom:10px">'
         + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">'
-        + _moverSrcTag(c.source_type)
+        + ''
         + '<span style="font-weight:700;color:#e2e8f0;font-size:14px">'+(c.title||'')+'</span>'
-        + '<span style="margin-left:auto;font-size:10px;font-weight:700;color:'+cc+'">'+(c.confidence||'').toUpperCase()+'</span>'
+        + ''
         + '</div>'
         + '<div style="color:#94a3b8;font-size:13px;line-height:1.5">'+(c.why||'')+'</div>'
         + '</div>';
@@ -226,21 +228,9 @@ function renderMover(d){
       + (a.sentiment_note ? ' — '+a.sentiment_note : '') + '</div>';
   }
 
-  // Sources
-  if(d.sources && d.sources.length){
-    html += '<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:#64748b;margin:22px 0 10px">SOURCES ('+d.sources.length+')</div>';
-    d.sources.forEach(function(s){
-      html += '<div style="display:flex;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid #131a2a">'
-        + _moverSrcTag(s.source_type)
-        + '<a href="'+s.url+'" target="_blank" style="color:#93c5fd;font-size:13px;text-decoration:none;flex:1">'+s.title+'</a>'
-        + (s.date?'<span style="font-size:10px;color:#475569">'+s.date+'</span>':'')
-        + '</div>';
-    });
-  }
-
-  if(d.disclaimer){
-    html += '<div style="font-size:11px;color:#475569;margin-top:18px;font-style:italic">'+d.disclaimer+'</div>';
-  }
+  WaveSources.record('mover:'+(d.symbol||'latest'), "What's Moving — "+(d.symbol||''),
+    [d.disclaimer||'', (a.catalysts||[]).map(function(c){return (c.title||'')+' · Confidence: '+(c.confidence||'unspecified');}).join('\n')].filter(Boolean).join('\n'),
+    (d.sources||[]).map(function(x){return {title:x.title||x.url,url:x.url};}));
 
   body.innerHTML = html || '<div style="color:#64748b;padding:24px 0">No data returned.</div>';
 }
@@ -435,4 +425,5 @@ window.addEventListener('load', function(){
   setInterval(loadScannerData, 10 * 60 * 1000);
   setInterval(loadSectorPulse, 5 * 60 * 1000);
 });
+
 

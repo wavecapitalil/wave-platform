@@ -71,7 +71,7 @@ async function flowLoad(){
       ];
       content.innerHTML='<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">'
         +blocks.map(function(b){var row=b[1]&&b[1].length?b[1][b[1].length-1]:{};return '<div class="mini-section"><div class="ms-title">'+b[0]+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">'+flowCard('Long',flowPct(row.long_pct))+flowCard('Short',flowPct(row.short_pct))+'</div><div style="font-size:10px;color:#90a8c2;margin-top:10px">L/S ratio: '+flowFmt(row.long_short_ratio,3)+'</div></div>';}).join('')
-        +'</div><div style="font-size:10px;color:#597895;margin-top:8px">Source: '+((d.meta&&d.meta.source)||d.venue||'Binance')+' · '+d.pair+' · '+d.period+'</div>';
+        +'</div><div data-wave-source="Cross-Asset Flows — sources" style="font-size:10px;color:#597895;margin-top:8px">Source: '+((d.meta&&d.meta.source)||d.venue||'Binance')+' · '+d.pair+' · '+d.period+'</div>';
     } else if(_flowTab==='futures'){
       var ctl=document.getElementById('flowControls'); var asset=(ctl&&ctl.dataset.asset)||'gold';
       var d=await fetch(API+'/api/flows/futures?asset='+asset).then(function(r){return r.json();});
@@ -82,7 +82,7 @@ async function flowLoad(){
         +flowCard('Net Contracts',flowFmt(d.net_contracts,0))
         +flowCard('Open Interest',flowFmt(d.open_interest,0))
         +flowCard('Short Share',flowPct(d.short_share_of_group_pct),d.trader_group)
-        +'</div><div class="mini-section" style="margin-top:10px"><div class="ms-title">'+(d.market||asset.toUpperCase())+'</div><div style="font-size:11px;color:#90a8c2;margin-top:8px">Report date: '+(d.report_date||'—')+' · CFTC weekly positioning; not a live flow measure.</div></div>';
+        +'</div><div class="mini-section" style="margin-top:10px"><div class="ms-title">'+(d.market||asset.toUpperCase())+'</div><div data-wave-source="Futures — methodology" style="font-size:11px;color:#90a8c2;margin-top:8px">Report date: '+(d.report_date||'—')+' · CFTC weekly positioning; not a live flow measure.</div></div>';
     } else if(_flowTab==='options'){
       var sym=((document.getElementById('flowOptionSymbol')||{}).value||'SPY').trim().toUpperCase();
       var d=await fetch(API+'/api/flows/options?symbol='+encodeURIComponent(sym)).then(function(r){return r.json();});
@@ -92,7 +92,7 @@ async function flowLoad(){
         +flowCard('Put Open Interest',flowFmt(d.put_open_interest,0))
         +flowCard('Put/Call OI',flowFmt(d.put_call_oi_ratio,3))
         +flowCard('Put/Call Volume',flowFmt(d.put_call_volume_ratio,3))
-        +'</div><div style="font-size:10px;color:#597895;margin-top:8px">'+d.symbol+' · nearest expiry '+(d.expiry||'—')+' · '+((d.meta&&d.meta.note)||'')+'</div>';
+        +'</div><div data-wave-source="Cross-Asset Flows — sources" style="font-size:10px;color:#597895;margin-top:8px">'+d.symbol+' · nearest expiry '+(d.expiry||'—')+' · '+((d.meta&&d.meta.note)||'')+'</div>';
     } else {
       var sym=((document.getElementById('flowShortSymbol')||{}).value||'AAPL').trim().toUpperCase();
       var d=await fetch(API+'/api/flows/short-interest?symbol='+encodeURIComponent(sym)).then(function(r){return r.json();});
@@ -102,7 +102,7 @@ async function flowLoad(){
         +flowCard('Short % Shares Out',flowPct(d.short_outstanding_pct))
         +flowCard('Shares Short',flowFmt(d.shares_short,0))
         +flowCard('MoM Change',flowPct(d.shares_short_change_pct))
-        +'</div><div style="font-size:10px;color:#597895;margin-top:8px">'+d.symbol+' · '+((d.meta&&d.meta.note)||'')+'</div>';
+        +'</div><div data-wave-source="Cross-Asset Flows — sources" style="font-size:10px;color:#597895;margin-top:8px">'+d.symbol+' · '+((d.meta&&d.meta.note)||'')+'</div>';
     }
     if(status) status.textContent='Updated '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
   }catch(e){
@@ -110,4 +110,5 @@ async function flowLoad(){
     if(status) status.textContent='Data unavailable';
   }
 }
+
 

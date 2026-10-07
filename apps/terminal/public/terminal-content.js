@@ -332,18 +332,8 @@ function _renderArticle(d, keepImage){
     }
   }
   var refsHtml = '';
-  if(d.sources && d.sources.length){
-    refsHtml = '<div class="ar-refs">'
-      +'<div class="ar-refs-title">Sources & References</div>'
-      +d.sources.map(function(ref, i){
-        return '<div class="ar-ref-item">'
-          +'<span class="ar-ref-num">['+(i+1)+']</span>'
-          +'<a class="ar-ref-link" href="'+ref.url+'" target="_blank">'+ref.title+'</a>'
-          +'<span class="ar-ref-src">'+ref.source+'</span>'
-          +'</div>';
-      }).join('')
-      +'</div>';
-  }
+  WaveSources.record('article:'+(d.title||'latest'), 'Article — '+(d.title||'Sources'), '',
+    (d.sources||[]).map(function(ref){return {title:(ref.title||'')+' · '+(ref.source||''),url:ref.url};}));
   // Convert simple markdown to HTML
   var content = (d.body||'').replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/^## (.+)$/gm,'<h3>$1</h3>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'</p><p>').replace(/^> (.+)$/gm,'<blockquote>$1</blockquote>');
   body.innerHTML =
@@ -351,3 +341,4 @@ function _renderArticle(d, keepImage){
     +'<div class="ar-content"><p>'+content+'</p></div>'
     +refsHtml;
 }
+
