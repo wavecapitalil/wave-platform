@@ -199,7 +199,7 @@ _EDGAR_ANNUAL_DAYS = (340, 380)
 _EDGAR_Q_DAYS      = (60, 100)
 
 EDGAR_CONCEPTS = {
-    'revenue':          ['RevenueFromContractWithCustomerExcludingAssessedTax','Revenues','SalesRevenueNet','SalesRevenueGoodsNet'],
+    'revenue':          ['RevenueFromContractWithCustomerExcludingAssessedTax','RevenueFromContractWithCustomerIncludingAssessedTax','RegulatedAndUnregulatedOperatingRevenue','SalesRevenueNet','SalesRevenueGoodsNet','SalesRevenueServicesNet','UtilityRevenue','Revenues'],
     'gross_profit':     ['GrossProfit'],
     'operating_income': ['OperatingIncomeLoss'],
     'net_income':       ['NetIncomeLoss'],
