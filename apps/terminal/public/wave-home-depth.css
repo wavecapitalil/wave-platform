@@ -40,3 +40,6 @@ a:focus-visible,[role=button]:focus-visible{outline:2px solid #8bd3ff;outline-of
 @media(max-width:1000px){.nav{left:14px;right:14px;padding:16px 20px}.nav-links{gap:16px}.stats{margin:0 24px;gap:24px}.section,.latest-story-section,.terminal-section{padding:64px 24px}.hero{min-height:760px;min-height:86svh}.features-grid{grid-template-columns:1fr}.terminal-section{gap:36px}}
 @media(max-width:600px){.nav{top:10px;left:10px;right:10px;padding:14px 18px}.nav-logo-text{font-size:11px;letter-spacing:2px}.hero{padding:140px 20px 100px;min-height:76svh}.hero-title{font-size:clamp(39px,11vw,64px);letter-spacing:-.045em}.hero-subtitle{font-size:10px;letter-spacing:2px}.hero-buttons{gap:12px}.btn{padding:14px 20px;font-size:10px}.stats{margin:0 16px;padding:24px 12px;gap:20px 8px}.stat{padding:0 8px 16px}.stat-val{font-size:27px}.stat-label{letter-spacing:1px;font-size:9px}.feature-card{padding:26px}.manifesto{padding:70px 24px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* A quiet horizon under the hero, with no competing decorative shape. */
+.hero::after{height:1px;bottom:6%;transform:translateX(-50%);border:0;border-radius:0;background:linear-gradient(90deg,transparent,#70b8ff55,transparent);box-shadow:0 0 35px 3px #70b8ff12}
