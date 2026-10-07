@@ -23,6 +23,11 @@ jobs:
         with:
           node-version: '24'
       - run: node --test scripts/forward_consensus_test.mjs
-      - run: node --check supabase/functions/wave-data/index.ts
+      - name: Parse TypeScript sources
+        run: >-
+          node --input-type=module -e
+          "import fs from 'node:fs'; import {stripTypeScriptTypes} from 'node:module';
+          for (const p of ['supabase/functions/wave-data/index.ts','supabase/functions/wave-data/forward-consensus.ts'])
+          stripTypeScriptTypes(fs.readFileSync(p,'utf8'));"
       - run: node --check apps/terminal/public/forward-consensus-ui.js
       - run: node --check apps/terminal/public/terminal-equities.js
