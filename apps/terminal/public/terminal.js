@@ -8,26 +8,10 @@
   var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   document.getElementById('greetingDate').textContent = now.toLocaleDateString(lang==='he'?'he-IL':'en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
-  (function updateBriefSession(){
-    var ilNow = new Date(new Date().toLocaleString('en-US', {timeZone:'Asia/Jerusalem'}));
-    var ilH = ilNow.getHours(), ilM = ilNow.getMinutes();
-    var icon, label;
-    if(ilH < 16){ icon='🌅'; label='Morning Brief'; window._briefSession='morning'; }
-    else if(ilH < 23 || (ilH===23 && ilM < 30)){ icon='🔔'; label='Before Open Brief'; window._briefSession='opening'; }
-    else { icon='🌙'; label='End of Day Brief'; window._briefSession='eod'; }
-    var timeStr = String(ilH).padStart(2,'0') + ':' + String(ilM).padStart(2,'0');
-    var el;
-    el = document.getElementById('briefDate');
-    if(el) el.textContent = days[ilNow.getDay()] + ' · ' + months[ilNow.getMonth()] + ' ' + ilNow.getDate() + ', ' + ilNow.getFullYear() + ' · ' + timeStr + ' Israel Time';
-    el = document.getElementById('briefPageTitle');
-    if(el) el.textContent = label;
-    el = document.getElementById('briefNavIcon');
-    if(el) el.textContent = icon;
-    el = document.getElementById('briefNavLabel');
-    if(el) el.textContent = ' ' + label;
-    el = document.getElementById('briefNavBadge');
-    if(el) el.textContent = timeStr;
-  })();
+  window._briefSession = 'morning';
+  document.getElementById('briefNavIcon').textContent = '🌅';
+  document.getElementById('briefNavBadge').textContent = '—';
+
 })();
 
 // ── CLOCK ─────────────────────────────────────────────────
@@ -135,23 +119,8 @@ function navigate(page){
   if(page === 'earnings'){ loadEarningsPage(); earnSetTab(_earnTab); }
   if(page === 'correlation' && !window._corrLoadedOnce){ window._corrLoadedOnce = true; runCorrelation(); }
 
-  // Load brief iframe — pulls from iCloud Trading Briefings folder via Flask
-  if(page === 'brief'){
-    var frame = document.getElementById('briefFrame');
-    frame.src = '';
-    frame.src = API + '/api/daily-brief?t=' + Date.now();
-    // Auto-refresh every 2 minutes while on this page
-    clearInterval(window._briefRefreshTimer);
-    window._briefRefreshTimer = setInterval(function(){
-      if(currentPage === 'brief'){
-        frame.src = API + '/api/daily-brief?t=' + Date.now();
-      } else {
-        clearInterval(window._briefRefreshTimer);
-      }
-    }, 2 * 60 * 1000);
-  } else {
-    clearInterval(window._briefRefreshTimer);
-  }
+  // Editorial editions have their own dated publishing path, separate from snapshots.
+  if(window.WaveBrief){ if(page === 'brief') WaveBrief.open(); else WaveBrief.close(); }
 
   currentPage = page;
   // Keep the valuation deep link truthful without adding a new history/router model.

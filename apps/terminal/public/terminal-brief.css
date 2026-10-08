@@ -1,0 +1,56 @@
+/* Native editorial newspaper. Namespaced to preserve every other Terminal page. */
+#page-brief .brief-wrap{max-width:1240px;padding:30px 32px 80px}
+#page-brief .page-header{margin-bottom:20px}
+#briefStatus{display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:#b7c9dc;font-size:14px;line-height:1.7;margin-bottom:12px}
+#briefStatus:empty{display:none}
+#briefStatus button{border:1px solid #577b9a;background:#0d263b;color:#fff;border-radius:7px;padding:9px 16px;cursor:pointer;font:inherit}
+.brief-paper{background:#f7f5ef;color:#202928;border:1px solid #d7d8ce;padding:clamp(20px,4vw,56px);font-family:Arial,'Noto Sans Hebrew',sans-serif;box-shadow:0 18px 50px #0002}
+.brief-paper *{box-sizing:border-box}
+.brief-masthead{text-align:center;border-top:4px solid #1d302d;border-bottom:1px solid #233832;padding:20px 0 18px}
+.brief-brand{font-family:Georgia,'Times New Roman',serif;direction:ltr;letter-spacing:3px;font-size:clamp(19px,3vw,34px);font-weight:700}
+.brief-edition-line{font-size:13px;margin-top:12px;color:#5b645c;letter-spacing:.3px}
+.brief-contents{display:flex;flex-wrap:wrap;gap:0;justify-content:center;border-bottom:3px double #6d7970;padding:12px 0 14px;margin-bottom:30px}
+.brief-contents button{font:600 10px Arial,sans-serif;letter-spacing:.6px;color:#43645f;border:0;border-inline-end:1px solid #bdc5ba;background:transparent;padding:10px 12px;cursor:pointer;min-height:36px}
+.brief-contents button:last-child{border-inline-end:0}
+.brief-paper button:hover,.brief-paper button:focus-visible{text-decoration:underline;color:#004e47}
+.brief-story{padding:36px 0;border-bottom:1px solid #b6c0b5;scroll-margin-top:18px;outline-offset:6px}
+.brief-story:first-of-type{padding-top:6px}
+.brief-kicker{direction:ltr;text-align:right;color:#267365;font:700 11px Arial,sans-serif;letter-spacing:1.5px;margin-bottom:12px}
+.brief-story h1,.brief-story h2{font-family:Georgia,'Times New Roman',serif;line-height:1.2;letter-spacing:-1px;color:#172a25;margin:0 0 16px;text-wrap:balance}
+.brief-story h1{font-size:clamp(32px,4.2vw,54px)}
+.brief-story h2{font-size:clamp(28px,3.4vw,40px)}
+.brief-deck{font-size:19px;line-height:1.75;color:#57645b;margin:0 0 24px;max-width:880px}
+.brief-chart{margin:24px 0;background:#fff;border:1px solid #e1e4db;padding:clamp(4px,1.2vw,16px)}
+.brief-chart a{display:block}
+.brief-chart img{display:block;width:100%;height:auto;max-width:100%}
+.brief-interactive{padding:20px 22px;background:#f0f3ec}
+.brief-interactive h4{font-size:18px;color:#163b2d;margin:0 0 7px;line-height:1.5}
+.brief-chart-period{font-size:12px;color:#51665b;line-height:1.6;margin:0 0 18px}
+.brief-bar-plot{display:grid;gap:6px}
+.brief-bar-row{display:grid;grid-template-columns:142px minmax(40px,1fr) 90px;align-items:center;gap:14px;min-height:42px;text-align:left;font:14px Arial,sans-serif;border:1px solid transparent;border-radius:5px;background:transparent;padding:7px 8px;cursor:pointer;color:#183b2f}
+.brief-bar-row.selected,.brief-bar-row:hover,.brief-bar-row:focus-visible{background:#e1ebdd;border-color:#8db29a;text-decoration:none!important}
+.brief-bar-track{height:22px;display:block;position:relative;border-bottom:1px solid #c4cebe}
+.brief-bar-zero{position:absolute;top:-5px;bottom:-5px;width:1px;background:#7b9181}
+.brief-bar{position:absolute;top:0;height:21px;min-width:1px;border-radius:2px}
+.brief-bar-value{font-weight:700;text-align:right;font-variant-numeric:tabular-nums;direction:ltr}
+.brief-chart-detail{border-top:1px solid #ced9c8;margin-top:16px;padding-top:12px;min-height:43px;color:#3c6250;font-size:13px;line-height:1.7}
+.brief-series-svg{display:block;width:100%;direction:ltr;touch-action:pan-y;overflow:visible;font-family:Arial,sans-serif}
+.brief-chart-legend{display:flex;gap:10px 18px;flex-wrap:wrap;font:12px Arial,sans-serif;margin:10px 0}
+.brief-chart-legend span{display:flex;align-items:center;gap:5px}.brief-chart-legend i{width:16px;height:3px;display:inline-block}
+.brief-chart-slider{display:block;width:100%;height:28px;margin:5px 0;direction:ltr;accent-color:#24735b}
+.brief-series-detail{display:flex;flex-wrap:wrap;gap:7px 18px;min-height:82px}
+.brief-series-detail strong{flex:0 0 100%;direction:ltr;text-align:right}.brief-series-detail span{font-variant-numeric:tabular-nums}
+.brief-story-body{font-size:17px;line-height:1.95;column-count:2;column-gap:38px;column-rule:1px solid #e0e2d8;overflow-wrap:anywhere}
+.brief-story-body p{margin:0 0 18px}
+.brief-story-body h3{font-size:13px;line-height:1.6;color:#216b60;margin:14px 0 10px;break-after:avoid-column}
+.brief-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:#d7ddd2;border:1px solid #d7ddd2;margin:24px 0}
+.brief-metrics div{background:#f0f3eb;padding:14px 10px;text-align:center}
+.brief-metrics dt{font-size:11px;color:#5c7269;font-weight:bold}.brief-metrics dd{font-size:20px;font-weight:bold;color:#18372c;margin:6px 0 0}
+.brief-table-wrap{overflow:auto;max-width:100%;margin:24px 0}
+.brief-paper table{border-collapse:collapse;width:100%;min-width:510px;font-size:14px;line-height:1.7;text-align:right}
+.brief-paper th{color:#246859;background:#e8eee4}.brief-paper td,.brief-paper th{padding:12px;border-bottom:1px solid #ccd4c8;vertical-align:top}
+.brief-paper-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-top:26px;font-size:12px;color:#5a6d61}
+.brief-source-link{font:inherit;font-size:14px;color:#195f54;background:none;border:0;border-bottom:1px solid #195f54;padding:10px 0;cursor:pointer}
+@media(max-width:1000px){.brief-story-body{column-count:1}.brief-story{padding:28px 0}}
+@media(max-width:600px){#page-brief .brief-wrap{padding:20px 10px 64px}.brief-paper{padding:18px 14px}.brief-story-body{font-size:17px;line-height:1.9}.brief-brand{letter-spacing:1px}.brief-deck{font-size:17px}.brief-contents{justify-content:flex-start}.brief-contents button{padding:9px 8px;font-size:9px}.brief-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.brief-story h1{font-size:34px}.brief-chart{margin:20px -4px}.brief-paper table{font-size:13px}}
+@media(max-width:600px){.brief-interactive{padding:16px 10px}.brief-bar-row{grid-template-columns:82px minmax(32px,1fr) 65px;gap:7px;font-size:12px;padding:7px 3px}.brief-interactive h4{font-size:17px}.brief-bar-label{overflow-wrap:anywhere}}
