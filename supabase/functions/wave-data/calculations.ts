@@ -57,3 +57,19 @@ export function buildInputs(document:any,body:any){
  if(body?.currency!=='USD'){inputs.eps_annual=null;inputs.eps_previous=null;inputs.market_cap=null;}
  return {inputs,trace,balance_date:latest,fiscal_year:fy,previous_fiscal_year:prev};
 }
+
+// Read-only chart research arithmetic. Kept outside DEFINITIONS so owner metric
+// customization cannot change a historical price series or event ranking.
+export const PRICE_HISTORY_DEFINITIONS = Object.freeze([
+ {key:'price_history_return_pct',title:'Close-to-close return %',expression:'(current / previous - 1) * 100',variables:['current','previous'],basis:'Consecutive completed exchange sessions, same price-adjustment basis',read_only:true},
+ {key:'price_history_excess_pp',title:'Return less benchmark, percentage points',expression:'stock_return - benchmark_return',variables:['stock_return','benchmark_return'],basis:'Same two exchange dates and compatible currency/market',read_only:true},
+ {key:'price_history_prominence_pct',title:'Local extremum prominence %',expression:'abs(extreme / reference - 1) * 100',variables:['extreme','reference'],basis:'Price versus both sides of a centered session window; smaller side retained',read_only:true},
+]);
+export function calculatePriceHistory(key:string, inputs:Record<string,unknown>):number|null {
+ const def=PRICE_HISTORY_DEFINITIONS.find(d=>d.key===key);
+ if(!def)throw Error('Unknown read-only price history calculation');
+ if(def.variables.some(k=>typeof inputs[k]!=='number'||!Number.isFinite(inputs[k])))return null;
+ if(key==='price_history_return_pct'&&(!(Number(inputs.previous)>0)||!(Number(inputs.current)>0)))return null;
+ if(key==='price_history_prominence_pct'&&(!(Number(inputs.reference)>0)||!(Number(inputs.extreme)>0)))return null;
+ return evaluate(def.expression,inputs,def.variables);
+}

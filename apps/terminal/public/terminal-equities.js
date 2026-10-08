@@ -136,13 +136,14 @@ function buildOverviewHtml(d){
 }
 
 async function loadOwnership(symbol){
+  var target = document.getElementById('ownershipSection');
   try{
     var r = await fetch(API + '/api/holders?symbol=' + symbol);
     var d = await r.json();
     if(d.error) throw new Error(d.error);
 
     var el = document.getElementById('ownershipSection');
-    if(!el) return;
+    if(!el || el !== target) return;
 
     // Pie chart via Chart.js
     var chartId = 'ownershipChart_' + Date.now();
@@ -222,7 +223,7 @@ async function loadOwnership(symbol){
     }
   }catch(e){
     var el = document.getElementById('ownershipSection');
-    if(el) el.innerHTML = '<span style="color:#475569;font-size:11px">Ownership data unavailable</span>';
+    if(el && el === target) el.innerHTML = '<span style="color:#475569;font-size:11px">Ownership data unavailable</span>';
   }
 }
 
@@ -894,6 +895,7 @@ function renderInstHoldings(d){
 }
 
 // ── Company Research page ─────────────────────────────────
+var _researchRequest = 0;
 function runResearch(){
   var sym = document.getElementById('researchInput').value.trim().toUpperCase();
   if(!sym) return;
@@ -901,6 +903,9 @@ function runResearch(){
 }
 
 function researchTicker(sym){
+  sym = String(sym || '').trim().toUpperCase();
+  var requestId = ++_researchRequest;
+  if(window.WavePriceHistory) WavePriceHistory.load(sym);
   document.getElementById('researchInput').value = sym;
   document.getElementById('researchStatus').textContent = 'Loading ' + sym + '...';
   document.getElementById('researchResult').style.display = 'none';
@@ -908,13 +913,15 @@ function researchTicker(sym){
   document.getElementById('resInsiderSection').innerHTML = '';
   document.getElementById('resAnalystSection').innerHTML = '';
   document.getElementById('resPeersSection').innerHTML  = '';
-  fetch(API + '/api/stock-info?symbol=' + sym)
+  fetch(API + '/api/stock-info?symbol=' + encodeURIComponent(sym))
     .then(function(r){ return r.json(); })
     .then(function(d){
+      if(requestId !== _researchRequest) return;
       if(d.error) throw new Error(d.error);
       renderResearchResult(d);
     })
     .catch(function(e){
+      if(requestId !== _researchRequest) return;
       document.getElementById('researchStatus').textContent = 'Error: ' + e.message;
     });
 }
@@ -991,12 +998,14 @@ function renderResearchResult(d){
 
 // ── Analyst estimates ─────────────────────────────────────
 function loadAnalystEstimates(sym){
+  var researchRequest = _researchRequest;
   var el = document.getElementById('resAnalystSection');
   if(!el) return;
   el.innerHTML = '';
   fetch(API + '/api/analyst-estimates?symbol=' + sym)
     .then(function(r){ return r.json(); })
     .then(function(d){
+      if(researchRequest !== _researchRequest) return;
       if(d.error || (!d.eps_estimates && !d.price_target)) return;
       renderAnalystEstimates(d, el);
     })
@@ -1115,12 +1124,14 @@ function renderAnalystEstimates(d, el){
 
 // ── Peer comparison ───────────────────────────────────────
 function loadPeersComparison(sym){
+  var researchRequest = _researchRequest;
   var el = document.getElementById('resPeersSection');
   if(!el) return;
   el.innerHTML = '<div style="color:#334155;font-size:12px;padding:16px 0">Loading peer comparison...</div>';
   fetch(API + '/api/peers?symbol=' + sym)
     .then(function(r){ return r.json(); })
     .then(function(d){
+      if(researchRequest !== _researchRequest) return;
       if(d.error){
         el.innerHTML =
           '<div style="background:rgba(100,116,139,0.08);border:1px solid var(--border2);border-radius:6px;padding:10px 14px;margin-top:16px;font-size:11px;color:#475569">' +
@@ -1132,7 +1143,7 @@ function loadPeersComparison(sym){
       }
       renderPeers(d, el);
     })
-    .catch(function(){ el.innerHTML = ''; });
+    .catch(function(){ if(researchRequest === _researchRequest) el.innerHTML = ''; });
 }
 
 function renderPeers(d, el){
@@ -1252,12 +1263,14 @@ function renderPeers(d, el){
 
 // ── Research tab — Insider Activity ───────────────────────────────────────────
 function loadResearchInsiders(sym){
+  var researchRequest = _researchRequest;
   var el = document.getElementById('resInsiderSection');
   if(!el) return;
   el.innerHTML = '';
   fetch(API + '/api/insider-activity?symbol=' + sym)
     .then(function(r){ return r.json(); })
     .then(function(d){
+      if(researchRequest !== _researchRequest) return;
       var rows = (d.results||[]).filter(function(r){ return r.text; });
       if(!rows.length) return;
       var html = '<div class="mini-section" style="margin-top:20px">';

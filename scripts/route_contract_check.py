@@ -25,6 +25,7 @@ REQUIRED = {
     "/api/fundamentals",
     "/api/stock-info",
     "/api/valuation-inputs",
+    "/api/price-history",
     "/api/holders",
     "/api/sectors",
     "/api/news",

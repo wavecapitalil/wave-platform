@@ -2,6 +2,7 @@ import { createClient } from "npm:@supabase/supabase-js@2.57.4";
 import { collectForward } from "./forward-consensus.ts";
 import {settings,calculateCompany,adminCalculations} from "./calculation-service.ts";
 import { buildValuationInputs } from "./valuation-inputs.ts";
+import { collectPriceHistory } from "./price-history.ts";
 
 const SUPABASE_URL=Deno.env.get("SUPABASE_URL")!;
 const ANON=Deno.env.get("SUPABASE_ANON_KEY")!;
@@ -647,6 +648,14 @@ Deno.serve(async(req:Request)=>{
       const x=row?.data?.assets?.[symbol];
       if(x) return json({symbol,price:x.price,pct:x.pct_24h,source:"Binance Spot",meta:meta(row)});
       return await proxyCore(req);
+    }
+
+    if(p.endsWith("/api/price-history")){
+      const symbol=String(u.searchParams.get("symbol")||"").trim().toUpperCase();
+      const range=u.searchParams.get("range")||"1y";
+      if(!/^[A-Z0-9^][A-Z0-9.^=-]{0,19}$/.test(symbol))return json({error:"valid symbol required"},400);
+      if(!["1mo","3mo","6mo","1y","5y"].includes(range))return json({error:"unsupported range"},400);
+      return json(await collectPriceHistory(symbol,range),200,{"cache-control":"public, max-age=300","x-wave-source":"price-history"});
     }
 
     // Isolated valuation data contract; does not change stock-info calculations.
