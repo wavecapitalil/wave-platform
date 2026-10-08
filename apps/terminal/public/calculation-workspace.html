@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><title>WAVE • ניהול פרטי בכניסה ישירה</title>
+<link rel="stylesheet" href="calculation-admin.css"></head><body>
+<main><header><a href="terminal_app.html">WAVE CAPITAL ↗</a><span>ניהול חישובים</span><button id="logout" hidden>יציאה</button></header>
+<section id="gate" class="panel"><p class="eyebrow">OWNER WORKSPACE</p><h1>הנוסחאות מאחורי המספרים.</h1><p>מרחב פרטי לבדיקה ולניהול של חישובי מחקר החברות.</p><p>הכניסה נעשית ישירות מהקישור הפרטי. אין צורך בדוא״ל, בקוד או בסיסמה.</p><p id="auth-status" role="status">בודק קישור גישה…</p></section>
+<div id="workspace" hidden><section class="intro"><p class="eyebrow">CALCULATION CONTROL</p><h1>שקיפות מלאה. שינוי מבוקר.</h1><p>ערוך נוסחה, בדוק אותה על חברה, ופרסם. נוסחאות פעילות מחושבות בשרת ומשפיעות על טעינות הנתונים הבאות אצל הלקוחות.</p><p id="revision"></p></section>
+<section class="panel actions"><label>סימול לבדיקה<input id="symbol" value="CSCO" dir="ltr" maxlength="20"></label><button id="preview">בדיקת טיוטה</button><label class="reason">סיבת השינוי<input id="reason" placeholder="מה השתנה ולמה?"></label><button id="publish" disabled>פרסום ללקוחות</button><button id="reload" class="secondary">טעינת גרסה פעילה</button><p id="status" role="status"></p></section>
+<section class="panel"><h2>נוסחאות חיות · מחקר חברות</h2><p>אפשר להשתמש במספרים, במשתנים הרשומים, בסוגריים, ב־<bdi>+ − * /</bdi> וב־<bdi>abs()</bdi>. נתון חסר או חלוקה באפס יחזירו ערך חסר. נוסחאות שנתיות מסומנות בשנת הדוח אצל הלקוחות.</p><div id="formulas"></div></section>
+<section id="results-panel" class="panel" hidden><h2>השוואת תוצאות</h2><p id="preview-meta"></p><div class="scroll"><table><thead><tr><th>מדד</th><th>פעיל עכשיו</th><th>לאחר פרסום</th><th>קלטים, תקופות ומקורות</th></tr></thead><tbody id="results"></tbody></table></div></section>
+<section class="panel"><h2>היסטוריית גרסאות</h2><p>שחזור טוען גרסה לטיוטה. בדיקה ופרסום נדרשים כדי להחיל אותה.</p><div id="history"></div></section>
+<section class="panel"><h2>מנועים נוספים ונתוני ספק</h2><p>העריכה החיה כאן חלה על נוסחאות מחקר החברות המפורטות למעלה. חישובי המנועים הנוספים מופיעים בקוד המקור לקריאה ולבדיקה; שינוי שלהם דורש עדכון קוד ופריסה.</p><p id="provider-fields" dir="ltr"></p><label>חיפוש בקוד החישובים<input id="search" placeholder="למשל PEG, risk, return או שם קובץ" dir="ltr"></label><div id="catalog"></div></section></div></main>
+<script src="supabase-config.js"></script><script src="calculation-admin.js?v=private-link-20261008-1438"></script></body></html>
+
