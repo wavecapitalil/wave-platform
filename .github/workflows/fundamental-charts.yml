@@ -1,0 +1,53 @@
+name: Fundamental Charts Release Checks
+on:
+  push:
+    branches: [feat/fundamental-yoy-png, main]
+    paths:
+      - 'apps/terminal/public/**'
+      - 'scripts/**'
+      - 'supabase/functions/wave-data/calculation-catalog.ts'
+      - '.github/workflows/fundamental-charts.yml'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fundamental-charts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install runtime and browser test dependencies
+        run: |
+          pip install -r services/api/requirements.txt playwright
+          python -m playwright install --with-deps chromium
+      - name: Models, APIs, UI and private-access regressions
+        run: node --test scripts/fundamental_chart_test.cjs scripts/equity_workbook_test.cjs scripts/equity_workbook_ui_test.cjs scripts/valuation_inputs_test.mjs scripts/valuation_route_test.mjs scripts/calculations.test.mjs scripts/calculation-access-link.test.mjs scripts/forward_consensus_test.mjs
+      - name: Syntax and contracts
+        run: |
+          for f in apps/terminal/public/*.js; do node --check "$f"; done
+          python -m py_compile services/api/*.py services/api/core/*.py services/api/services/*.py services/api/modules/*.py scripts/*.py
+          python scripts/static_contract_check.py
+          python scripts/route_contract_check.py
+      - name: Private source catalogue reproducibility
+        run: |
+          python scripts/build-calculation-catalog.py
+          git diff --exit-code -- supabase/functions/wave-data/calculation-catalog.ts
+      - name: Fundamental chart controls, race conditions and PNG downloads
+        run: python scripts/fundamental_chart_browser_qa.py
+      - name: Preserve valuation browser behavior
+        run: python scripts/valuation_browser_qa.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fundamental-charts-browser-qa
+          path: |
+            fundamental_chart_browser_qa/
+            valuation_browser_qa/

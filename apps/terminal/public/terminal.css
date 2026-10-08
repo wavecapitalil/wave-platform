@@ -1152,3 +1152,23 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
   /* Header has a labeled opener; avoid an edge tab covering spreadsheet cells. */
   .nav-reopen.visible{display:none}
 }
+/* Fundamental Charts: wrapping touch-friendly controls without root scroll locks. */
+#page-fundchart .fc-display-controls { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:14px; }
+#page-fundchart .fc-control-label { font-size:10px; color:#94a3b8; letter-spacing:1px; text-transform:uppercase; }
+#fcModeBtns { display:flex; flex-wrap:wrap; gap:4px; }
+#page-fundchart .ratio-btn { min-height:40px; touch-action:manipulation; }
+#fcDownloadPng:disabled { opacity:.45; cursor:default; }
+.fc-chart-header { display:flex; flex-direction:column; align-items:flex-start; gap:12px; margin-bottom:16px; }
+#fcLegend { display:flex; flex-wrap:wrap; gap:10px 16px; font-size:11px; }
+.fc-legend-item { display:flex; align-items:center; gap:6px; color:#cbd5e1; max-width:100%; overflow-wrap:anywhere; }
+.fc-legend-item i { flex:0 0 10px; height:10px; border-radius:2px; }
+.fc-data-status { font-size:12px; color:#cbd5e1; margin:8px 0 14px; }
+.fc-data-table { width:100%; border-collapse:collapse; font-size:12px; }
+.fc-data-table th,.fc-data-table td { padding:9px 10px; text-align:right; border-bottom:1px solid var(--border); min-width:140px; color:#e2e8f0; }
+.fc-data-table th:first-child,.fc-data-table td:first-child { text-align:left; min-width:110px; }
+.fc-data-table small { display:block; font-size:10px; color:#94a3b8; max-width:230px; margin-top:4px; }
+.fc-unavailable { color:#cbd5e1; }
+@media (max-width:600px) { #fcDownloadPng { width:100%; } #fcLegend { gap:8px; } }
+
+#fcTicker1,#fcTicker2,.fc-ticker-controls>div { min-width:0; }
+@media (max-width:1100px) { #page-fundchart .fc-ticker-controls { grid-template-columns:1fr!important; } }

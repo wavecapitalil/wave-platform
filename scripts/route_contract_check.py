@@ -93,3 +93,10 @@ if missing or duplicates:
     raise SystemExit("Route contract check failed")
 
 print("Route contract check passed.")
+
+# The chart model/export must work on both GitHub Pages and Flask hosting.
+with app.test_client() as client:
+    for asset in ('fundamental-chart-model.js', 'terminal-chart-export.js'):
+        response = client.get('/' + asset)
+        assert response.status_code == 200, f'{asset}: {response.status_code}'
+print('Fundamental chart public assets passed.')

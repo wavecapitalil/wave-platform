@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wave Capital — Terminal</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="terminal.css?v=20261008-nav2">
+<link rel="stylesheet" href="terminal.css?v=20261008-nav-yoy-png">
 
 <script src="i18n.js?v=20261008-nav2"></script>
   <link rel="stylesheet" href="wave-university-theme.css?v=20261008-depth1">
@@ -980,7 +980,7 @@
 
         <!-- Controls -->
         <div class="mini-section" style="margin-bottom:20px">
-          <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;flex-wrap:wrap">
+          <div class="fc-ticker-controls" style="display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;flex-wrap:wrap">
 
             <!-- Company 1 -->
             <div>
@@ -989,7 +989,7 @@
                 <input id="fcTicker1" type="text" placeholder="e.g. AAPL" maxlength="8"
                   style="flex:1;background:#0f1117;border:1px solid var(--border2);border-radius:6px;padding:8px 10px;font-size:13px;color:#e2e8f0;font-family:inherit;outline:none;text-transform:uppercase"
                   onfocus="this.style.borderColor='#4a9eff'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"
-                  onkeydown="if(event.key==='Enter') runFundChart()">
+                  oninput="fcInvalidateTicker()" onkeydown="if(event.key==='Enter') runFundChart()">
               </div>
             </div>
 
@@ -999,7 +999,7 @@
               <input id="fcTicker2" type="text" placeholder="e.g. MSFT" maxlength="8"
                 style="width:100%;background:#0f1117;border:1px solid var(--border2);border-radius:6px;padding:8px 10px;font-size:13px;color:#e2e8f0;font-family:inherit;outline:none;text-transform:uppercase"
                 onfocus="this.style.borderColor='#4a9eff'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"
-                onkeydown="if(event.key==='Enter') runFundChart()">
+                oninput="fcInvalidateTicker()" onkeydown="if(event.key==='Enter') runFundChart()">
             </div>
 
             <!-- Period + Run -->
@@ -1040,8 +1040,18 @@
             </div>
           </div>
 
+          <!-- Value mode applies to every selected metric on this same chart. -->
+          <div class="fc-display-controls">
+            <span class="fc-control-label">Display</span>
+            <div id="fcModeBtns" role="group" aria-label="Metric display mode">
+              <button type="button" class="ratio-btn active" aria-pressed="true" onclick="fcSetValueMode('absolute',this)">Value</button>
+              <button type="button" class="ratio-btn" aria-pressed="false" onclick="fcSetValueMode('growth',this)">YoY change %</button>
+            </div>
+            <button type="button" id="fcDownloadPng" class="ratio-btn" onclick="fcDownloadPng()" disabled>Download PNG</button>
+          </div>
+
           <!-- Chart type toggle -->
-          <div style="margin-top:10px;display:flex;align-items:center;gap:10px">
+          <div style="margin-top:10px;display:flex;flex-wrap:wrap;align-items:center;gap:10px">
             <span style="font-size:10px;color:#475569;letter-spacing:1px;text-transform:uppercase">Chart Type</span>
             <div id="fcTypeBtns" style="display:flex;gap:4px">
               <button class="ratio-btn active" onclick="fcSetChartType('bar',this)">Bar</button>
@@ -1060,8 +1070,8 @@
               <div class="fc-range-track"></div>
               <div class="fc-range-fill" id="fcRangeFill"></div>
               <div class="fc-range-wrap">
-                <input type="range" id="fcRangeMin" min="0" max="100" value="0" oninput="fcRangeChange()">
-                <input type="range" id="fcRangeMax" min="0" max="100" value="100" oninput="fcRangeChange()">
+                <input type="range" aria-label="First visible reporting period" id="fcRangeMin" min="0" max="100" value="0" oninput="fcRangeChange()">
+                <input type="range" aria-label="Last visible reporting period" id="fcRangeMax" min="0" max="100" value="100" oninput="fcRangeChange()">
               </div>
             </div>
           </div>
@@ -1081,14 +1091,15 @@
         <div id="fcStatus" style="font-size:12px;color:#334155;margin-bottom:8px"></div>
         <div id="fcChartWrap" style="display:none">
           <div class="mini-section" style="margin-bottom:16px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <div class="fc-chart-header">
               <div id="fcChartTitle" style="font-size:14px;font-weight:600;color:#e2e8f0"></div>
-              <div id="fcLegend" style="display:flex;gap:16px;font-size:11px"></div>
+              <div id="fcLegend"></div>
             </div>
             <div style="position:relative;height:320px">
-              <canvas id="fcCanvas"></canvas>
+              <canvas id="fcCanvas" role="img" aria-label="Selected fundamental metrics by reporting period"></canvas>
             </div>
           </div>
+          <div id="fcDataStatus" role="status" class="fc-data-status"></div>
           <!-- Data table -->
           <div class="mini-section">
             <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:#334155;text-transform:uppercase;margin-bottom:12px">Data Table</div>
@@ -1509,7 +1520,9 @@
 <script src="terminal-confluence.js?v=20261008-sources1"></script>
 <script src="terminal-seasonality.js?v=20261008-sources1"></script>
 <script src="forward-consensus-ui.js?v=20261008-sources1"></script>
-<script src="terminal-equities.js?v=20261008-calculations"></script>
+<script src="fundamental-chart-model.js?v=20261008-yoy-png"></script>
+<script src="terminal-chart-export.js?v=20261008-yoy-png"></script>
+<script src="terminal-equities.js?v=20261008-yoy-png"></script>
 <script src="equity-workbook-model.js?v=20261008-live1"></script>
 <script src="terminal-valuation.js?v=20261008-live1"></script>
 <script src="terminal-risk.js?v=20261008-sources1"></script>
