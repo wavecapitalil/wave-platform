@@ -20,6 +20,7 @@ from modules.system import bp as system_bp
 from modules.macro import bp as macro_bp
 from modules.earnings import bp as earnings_bp
 from modules.equities_core import bp as equities_core_bp
+from modules.valuation import bp as valuation_bp
 from modules.crypto_scanner import bp as crypto_scanner_bp
 from modules.equities_research import bp as equities_research_bp
 from modules.market_risk import bp as market_risk_bp
@@ -41,6 +42,7 @@ BLUEPRINTS = (
     macro_bp,
     earnings_bp,
     equities_core_bp,
+    valuation_bp,
     crypto_scanner_bp,
     equities_research_bp,
     market_risk_bp,

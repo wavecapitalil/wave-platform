@@ -24,6 +24,7 @@ REQUIRED = {
     "/api/sector-detail",
     "/api/fundamentals",
     "/api/stock-info",
+    "/api/valuation-inputs",
     "/api/holders",
     "/api/sectors",
     "/api/news",

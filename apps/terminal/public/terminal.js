@@ -69,6 +69,9 @@ function navigate(page){
   }
 
   if(page === 'sources') WaveSources.render();
+  var mainPane = document.querySelector('.main');
+  if(mainPane) mainPane.classList.toggle('valuation-active', page === 'valuation');
+  if(page === 'valuation' && window.WaveValuation) WaveValuation.open();
 
   if(page === 'research'){
     setTimeout(function(){ document.getElementById('researchInput').focus(); }, 100);

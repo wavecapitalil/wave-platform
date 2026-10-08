@@ -1,0 +1,49 @@
+name: Equity Valuation Release Checks
+on:
+  push:
+    branches: [feat/equity-valuation-live, main]
+    paths:
+      - 'apps/terminal/public/**'
+      - 'supabase/functions/wave-data/**'
+      - 'services/api/**'
+      - 'scripts/**'
+      - 'fixtures/equity-valuation-history.json'
+      - '.github/workflows/equity-valuation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  valuation-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install runtime and browser test dependencies
+        run: |
+          pip install -r services/api/requirements.txt playwright
+          python -m playwright install --with-deps chromium
+      - name: Model, API, UI and private-access regressions
+        run: node --test scripts/equity_workbook_test.cjs scripts/equity_workbook_ui_test.cjs scripts/valuation_inputs_test.mjs scripts/valuation_route_test.mjs scripts/calculations.test.mjs scripts/calculation-access-link.test.mjs scripts/forward_consensus_test.mjs
+      - name: Syntax and contract checks
+        run: |
+          for f in apps/terminal/public/*.js; do node --check "$f"; done
+          python -m py_compile services/api/*.py services/api/core/*.py services/api/services/*.py services/api/modules/*.py scripts/*.py
+          python scripts/static_contract_check.py
+          python scripts/route_contract_check.py
+      - name: Confirm source catalog reproducibility
+        run: |
+          python scripts/build-calculation-catalog.py
+          git diff --exit-code -- supabase/functions/wave-data/calculation-catalog.ts
+      - name: Browser layout and interaction regression
+        run: python scripts/valuation_browser_qa.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: equity-valuation-browser-qa
+          path: valuation_browser_qa/

@@ -41,6 +41,7 @@
 
     'footer.copy':     {en:'© 2026 Wave Capital', he:'© 2026 Wave Capital'},
 
+    'sidebar.valuation': {en:'Equity Valuation', he:'הערכת שווי מניות'},
     'sidebar.overview':   {en:'Overview',        he:'סקירה'},
     'sidebar.home':       {en:'Home',            he:'בית'},
     'sidebar.brief':      {en:'Morning Brief',   he:'תדריך בוקר'},

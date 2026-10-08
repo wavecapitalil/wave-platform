@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="wave-university-theme.css?v=20261008-depth1">
 <link rel="stylesheet" href="ai-tutor.css">
 <link rel="stylesheet" href="terminal-sources.css?v=20261008-1">
+<link rel="stylesheet" href="terminal-valuation.css?v=20261008-live1">
 </head>
 <body>
 
@@ -152,6 +153,9 @@
         <div class="nav-item" data-page="research" onclick="navigate('research')">
           <span class="nav-item-icon">🔎</span> <span data-i18n="sidebar.companyResearch">Company Research</span>
         </div>
+        <button type="button" class="nav-item" data-page="valuation" onclick="navigate('valuation')" style="width:100%;font:inherit;text-align:inherit;background:transparent;border:0">
+          <span class="nav-item-icon">◈</span> <span data-i18n="sidebar.valuation">Equity Valuation</span>
+        </button>
         <div class="nav-item" data-page="mover" onclick="navigate('mover')">
           <span class="nav-item-icon">⚡</span> <span data-i18n="sidebar.whatsMoving">What's Moving</span>
           <span class="nav-item-badge live" data-i18n="sidebar.ai">AI</span>
@@ -1482,6 +1486,8 @@
       </div>
     </div>
 
+    <div class="page" id="page-valuation"><div id="valuationRoot" class="val-wrap"></div></div>
+
     <div class="page" id="page-sources">
       <div class="sources-wrap">
         <div class="page-header-title">מקורות ומתודולוגיה</div>
@@ -1493,7 +1499,7 @@
 </div><!-- end app-body -->
 
 <script src="terminal-sources.js?v=20261008-sources1"></script>
-<script src="terminal.js?v=20261008-sources1"></script>
+<script src="terminal.js?v=20261008-valuation-live1"></script>
 <script src="terminal-market.js?v=20261008-sources1"></script>
 <script src="terminal-content.js?v=20261008-sources1"></script>
 <script src="terminal-flows.js?v=20261008-sources1"></script>
@@ -1503,6 +1509,8 @@
 <script src="terminal-seasonality.js?v=20261008-sources1"></script>
 <script src="forward-consensus-ui.js?v=20261008-sources1"></script>
 <script src="terminal-equities.js?v=20261008-calculations"></script>
+<script src="equity-workbook-model.js?v=20261008-live1"></script>
+<script src="terminal-valuation.js?v=20261008-live1"></script>
 <script src="terminal-risk.js?v=20261008-sources1"></script>
 <script src="terminal-crypto.js?v=20261008-sources1"></script>
 <script src="terminal-rates.js?v=20261008-sources1"></script>

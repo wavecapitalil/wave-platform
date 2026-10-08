@@ -1,6 +1,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2.57.4";
 import { collectForward } from "./forward-consensus.ts";
 import {settings,calculateCompany,adminCalculations} from "./calculation-service.ts";
+import { buildValuationInputs } from "./valuation-inputs.ts";
 
 const SUPABASE_URL=Deno.env.get("SUPABASE_URL")!;
 const ANON=Deno.env.get("SUPABASE_ANON_KEY")!;
@@ -646,6 +647,18 @@ Deno.serve(async(req:Request)=>{
       const x=row?.data?.assets?.[symbol];
       if(x) return json({symbol,price:x.price,pct:x.pct_24h,source:"Binance Spot",meta:meta(row)});
       return await proxyCore(req);
+    }
+
+    // Isolated valuation data contract; does not change stock-info calculations.
+    if(p.endsWith("/api/valuation-inputs")){
+      const symbol=String(u.searchParams.get("symbol")||"").trim().toUpperCase().replace(/\./g,"-");
+      if(!/^[A-Z][A-Z0-9-]{0,14}$/.test(symbol)) return json({error:"valid company symbol required"},400);
+      const [cached,chart]=await Promise.all([
+        admin.rpc("wave_get_companyfacts",{p_ticker:symbol,p_force:false}),
+        yahooChartMeta(symbol).catch(()=>null)
+      ]);
+      if(cached.error || !cached.data?.document) return json({error:"reported valuation data unavailable",symbol},502);
+      return json(buildValuationInputs(symbol,cached.data,chart),200,{"cache-control":"public, max-age=900"});
     }
 
     if(p.endsWith("/api/fundamentals")){

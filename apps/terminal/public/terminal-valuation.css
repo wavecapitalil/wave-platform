@@ -1,0 +1,152 @@
+#page-valuation{background:radial-gradient(ellipse at 70% 0,rgba(40,108,155,.07),transparent 55%)}
+.val-wrap{max-width:1720px;margin:0 auto;padding:28px clamp(12px,2vw,30px) 45px;color:#edf6ff}
+.val-wrap *{box-sizing:border-box}.val-wrap button,.val-wrap input,.val-wrap select{font:inherit}.val-wrap button{cursor:pointer}.val-wrap [hidden]{display:none!important}
+.vw-hero{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:22px}.vw-eyebrow{font-size:9px;letter-spacing:2px;color:#79b8e4;direction:ltr;margin-bottom:12px}.vw-hero h1{font-size:clamp(22px,2.2vw,31px);font-weight:600;letter-spacing:-.4px;margin:0 0 9px}.vw-hero p{font-size:12px;color:#9bb2c6;line-height:1.7;margin:0;max-width:770px}
+.vw-button{padding:8px 13px;border:1px solid #5ca6d6;border-radius:6px;background:#75b8e6;color:#071523;font-size:11px!important;font-weight:600!important;white-space:nowrap}.vw-ghost{background:transparent;color:#a1c8e4;border-color:#29475d}.vw-button[aria-busy=true]{opacity:.55}
+.vw-toolbar{display:flex;align-items:center;gap:20px;flex-wrap:wrap;background:#0c2030;border:1px solid #263f53;padding:13px 16px;border-radius:9px}.vw-toolbar form{display:flex;align-items:center;gap:9px}.vw-toolbar label{font-size:11px;color:#acc2d2}.vw-toolbar input{width:90px;padding:7px 10px;background:#061623;border:1px solid #36526a;color:#e6f3ff;border-radius:5px;letter-spacing:1px;font-size:13px;text-transform:uppercase}.vw-company-shortcuts{display:flex;gap:8px}.vw-quick{background:none;border:1px solid #2c4a61;border-radius:5px;color:#98b6cc;padding:6px 10px;font-size:10px!important}.vw-horizon-label{margin-inline-start:auto;display:flex;align-items:center;gap:9px}.vw-horizon-label select{background:#091a29;color:#dceefa;border:1px solid #34516a;border-radius:5px;padding:5px 7px;font-size:12px}
+.vw-status{font-size:10px;color:#8ba5b9;line-height:1.7;margin:9px 1px 19px;min-height:17px}.vw-company-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}.vw-company-header>div{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.vw-symbol{font-size:14px;letter-spacing:.8px;font-weight:700;color:#a7d8f8}.vw-company-header h2{font-size:13px;font-weight:400;color:#b9ccda;margin:0}.vw-periods{font-size:10px;color:#7f9db5}.vw-unit-pill{font-size:9px;color:#8ca5b9;white-space:nowrap;border:1px solid #213b51;border-radius:20px;padding:4px 9px}
+.vw-scenarios{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}.vw-scenario{--accent:#86a8ba;display:grid;grid-template-columns:auto 1fr auto;gap:4px 9px;align-items:center;text-align:start;background:#0a1c2c;border:1px solid #243d50;border-radius:9px;padding:13px 15px;color:#b8c8d4}.vw-bull{--accent:#6dd2b1}.vw-base{--accent:#82c8f3}.vw-bear{--accent:#e2ad8b}.vw-scenario[aria-selected=true]{border-color:var(--accent);background:linear-gradient(120deg,#13344b,#10273a);box-shadow:inset 0 2px var(--accent)}.vw-case{font-size:8px;letter-spacing:1px;color:var(--accent);grid-row:1}.vw-case-title{font-size:11px;grid-row:1}.vw-scenario strong{font-size:23px;font-variant-numeric:tabular-nums;font-weight:500;color:#e5f2fb;direction:ltr;grid-column:3;grid-row:1/3}.vw-case-sub{font-size:9px;color:#829fb5;grid-column:1/3;grid-row:2}
+.vw-sheet-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:9px;flex-wrap:wrap}.vw-legend{display:flex;gap:13px;flex-wrap:wrap;color:#9bb1c2;font-size:9px}.vw-legend span{display:flex;align-items:center;gap:5px}.vw-legend i{width:7px;height:7px;border-radius:2px;display:inline-block}.vw-actual-dot{background:#536c7e}.vw-input-dot{background:#c69c50}.vw-calc-dot{background:#5cb2e3}.vw-sheet-actions{display:flex;gap:13px}.vw-text-button{background:none;border:0;color:#8ebbd9;font-size:10px!important;padding:3px 0}.vw-text-button:hover{text-decoration:underline}
+.vw-sheet-scroll{position:relative;width:100%;overflow:auto;max-height:76vh;border:1px solid #2a455a;border-radius:9px;background:#081726;scrollbar-color:#335974 #081726;scrollbar-width:thin;overscroll-behavior:contain}.vw-sheet{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%;table-layout:fixed;font-size:11px;font-variant-numeric:tabular-nums;direction:ltr}.vw-sheet th,.vw-sheet td{padding:0;min-width:116px;width:116px;height:41px;border-right:1px solid #21384b;border-bottom:1px solid #1c3245;text-align:right;vertical-align:middle}.vw-sheet th:last-child,.vw-sheet td:last-child{border-right:0}.vw-sheet .vw-metric-cell{width:222px;min-width:222px;max-width:222px;position:sticky;left:0;z-index:3;background:#0d2030;text-align:start;padding:0 12px;border-right:2px solid #36556d;direction:ltr}.vw-sheet .vw-metric-cell>span{display:block;font-size:10px;font-weight:500;color:#c1d3e1}.vw-sheet .vw-metric-cell>small{font-size:8px;color:#738fa5;font-weight:400}.vw-sheet thead{position:sticky;top:0;z-index:5}.vw-sheet thead .vw-metric-cell{z-index:6}.vw-sheet thead th{height:49px;text-align:center;background:#14293a;color:#9fb5c8;font-size:11px;font-weight:500}.vw-sheet thead small{display:block;font-size:8px;line-height:1.6;color:#799ab2;margin-top:2px}.vw-period-band th{height:29px!important;font-size:9px!important;letter-spacing:.5px}.vw-period-band .vw-metric-cell{letter-spacing:0;color:#94aec1}.vw-hist-band{color:#8fa8ba!important;background:#112333!important}.vw-forecast-band{color:#9bceef!important;background:#17344a!important}.vw-future-head{background:#163047!important;color:#b5def6!important;border-top:1px solid #285574}.vw-hist-head{color:#9ab4c7!important}.vw-sheet td>span{display:block;padding:0 12px;white-space:nowrap}.vw-actual{background:#0a1b2a;color:#97b0c3}.vw-computed{background:#0c2437;color:#c8e6f7}.vw-bold .vw-actual{color:#c0d0dc}.vw-bold .vw-computed{color:#d5edfc;font-weight:600}.vw-section .vw-metric-cell{height:29px;background:#152c3e;color:#7fa8c5;font-size:8px;font-weight:600;letter-spacing:.3px}.vw-section td{height:29px;background:#12283a;border-bottom-color:#2b475d}.vw-sub-row td{height:31px;font-size:10px;color:#829daf}.vw-sub-row .vw-metric-cell>span{color:#8da6b8;font-size:9px;padding-inline-start:9px}.vw-sub-row .vw-metric-cell>small{display:none}.vw-editable{position:relative;background:#202b30!important;box-shadow:inset 0 0 0 1px rgba(217,177,95,.07)}.vw-editable input{color:#ebce90;width:100%;height:40px;border:1px solid transparent;background:transparent;text-align:right;padding:8px 22px 8px 7px;font-size:11px!important;font-variant-numeric:tabular-nums;border-radius:0;outline:none;appearance:textfield;-moz-appearance:textfield}.vw-editable input::-webkit-inner-spin-button,.vw-editable input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}.vw-editable input:focus{background:#2d3b41;border:1px solid #b9dced;box-shadow:inset 0 0 0 1px #83c5ee}.vw-editable input[aria-invalid=true]{box-shadow:inset 0 -2px #d88365;color:#f4b293}.vw-fill{position:absolute;right:2px;top:10px;border:0;background:transparent;color:#998a64;width:16px;height:21px;line-height:17px;font-size:16px!important;opacity:.5;padding:0}.vw-editable:hover .vw-fill,.vw-editable:focus-within .vw-fill{opacity:1;color:#efd499}.vw-price-row td,.vw-price-row th{height:47px}.vw-price-row .vw-metric-cell{background:#16344b!important}.vw-price-row .vw-computed{background:#143b57;color:#9fdbff;font-size:14px;font-weight:700}.vw-sheet tr:last-child>*{border-bottom:0}.vw-sheet .vw-future-head[data-column="forecast-0"],.vw-sheet td[data-forecast$="-0"],.vw-sheet td[data-output$="-0"]{border-left:2px solid #527b95}
+.vw-formula-bar{display:flex;align-items:center;gap:11px;background:#102a3d;border:1px solid #315168;border-top:0;border-radius:0 0 7px 7px;margin:0 5px 16px;padding:10px 13px;font-size:10px;color:#aac6d9;line-height:1.6;min-height:45px}.vw-formula-bar>b{font-size:17px;color:#75b8e1;font-style:italic}.vw-formula-value{margin-inline-start:auto;white-space:nowrap;color:#bfe5fa;font-size:14px}.vw-assumption-note{display:flex;gap:8px;align-items:baseline;line-height:1.8;font-size:10px;color:#90aabe;padding:11px 13px;border:1px solid #294252;border-radius:7px;background:#0e2130}.vw-assumption-note b{white-space:nowrap;color:#c2b991;font-weight:500}.vw-footnote{font-size:9px;line-height:1.8;color:#7996ad;margin-top:7px}.vw-errors{color:#e1b994;font-size:10px;line-height:1.8;margin-top:10px}.vw-empty{padding:70px 20px;border:1px dashed #26455c;border-radius:10px;text-align:center;font-size:13px;color:#84a5bc}.vw-sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.val-wrap button:focus-visible,.val-wrap select:focus-visible,.vw-sheet-scroll:focus-visible{outline:2px solid #82c9f2;outline-offset:3px}
+[dir=rtl] .vw-sheet .vw-metric-cell{direction:rtl;text-align:right}[dir=rtl] .vw-sheet .vw-section th{direction:rtl}[dir=rtl] .vw-hero,[dir=rtl] .vw-formula-bar{direction:rtl}
+@media(max-width:1100px){.val-wrap{padding-inline:15px}.vw-toolbar{gap:12px}.vw-company-header{flex-wrap:wrap}.vw-scenario{padding:12px 10px;gap:4px 6px}.vw-scenario strong{font-size:20px}.vw-sheet .vw-metric-cell{min-width:190px;width:190px;max-width:190px}.vw-sheet th,.vw-sheet td{min-width:109px;width:109px}.vw-assumption-note{display:block}.vw-assumption-note b{display:block;margin-bottom:3px}}
+@media(max-width:650px){.val-wrap{padding:20px 10px 35px}.vw-hero{flex-direction:column;gap:10px}.vw-hero h1{font-size:24px}.vw-hero p{font-size:11px}.vw-toolbar{padding:12px;gap:13px}.vw-toolbar form{width:100%}.vw-toolbar form input{flex:1;width:80px}.vw-toolbar .vw-horizon-label{margin-inline-start:auto}.vw-company-shortcuts{gap:5px}.vw-quick{font-size:9px!important;padding:5px 7px}.vw-scenarios{gap:6px}.vw-scenario{display:flex;flex-direction:column;align-items:flex-start;padding:10px 8px;gap:5px}.vw-scenario strong{font-size:21px}.vw-case-title{font-size:10px}.vw-case-sub{font-size:8px;line-height:1.5}.vw-company-header>div{gap:7px}.vw-periods{flex-basis:100%}.vw-unit-pill{font-size:8px}.vw-sheet-scroll{max-height:69vh}.vw-sheet .vw-metric-cell{min-width:152px;width:152px;max-width:152px;padding-inline:8px}.vw-sheet .vw-metric-cell>span{font-size:9px}.vw-section .vw-metric-cell{font-size:7px}.vw-sheet th,.vw-sheet td{min-width:103px;width:103px}.vw-sheet td>span{padding:0 9px}.vw-formula-bar{font-size:9px;gap:8px}.vw-formula-value{font-size:12px}.vw-status{font-size:9px}.vw-legend{gap:8px;font-size:8px}.vw-sheet-toolbar{gap:7px}.vw-assumption-note{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.val-wrap *{scroll-behavior:auto!important}}
+
+/* Chronological worksheet always scrolls left-to-right; labels retain Hebrew RTL. */
+.vw-sheet-scroll{direction:ltr;}
+
+/* Narrow iPad/in-app windows: keep the worksheet in the first screen. */
+.vw-sheet-scroll{-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;}
+.vw-text-button:disabled{opacity:.4;cursor:default;}
+.vw-fallback{padding:12px 0;}.vw-fallback h1{font-size:22px;margin:0 0 10px;}.vw-fallback p{font-size:12px;line-height:1.7;color:#adc5d6;}.vw-fallback a{display:inline-block;background:#88c7ed;color:#092034;text-decoration:none;border-radius:7px;padding:12px 18px;font-weight:600;font-size:13px;min-height:44px;margin-bottom:14px;}
+@media(max-width:1100px){
+ .val-wrap{padding-top:12px;}
+ .vw-hero{display:flex;flex-direction:row;align-items:center;gap:10px;margin-bottom:10px;}
+ .vw-eyebrow{font-size:8px;letter-spacing:1px;margin-bottom:5px;}
+ .vw-hero h1{font-size:21px;line-height:1.3;margin:0;}
+ .vw-hero p{display:none;}
+ .vw-hero>.vw-button{padding:8px;font-size:9px!important;}
+ .vw-toolbar{gap:8px;padding:8px 10px;}
+ .vw-toolbar form{width:auto;flex:1;gap:6px;}
+ .vw-toolbar form>label{display:none;}
+ .vw-toolbar form input{min-width:65px;width:86px;max-width:150px;flex:1;}
+ .vw-company-shortcuts{gap:5px;}
+ .vw-horizon-label{gap:5px;font-size:10px!important;}
+ .vw-status{margin:6px 0 10px;font-size:9px;line-height:1.5;}
+ .vw-company-header{margin-bottom:9px;gap:5px;}
+ .vw-company-header h2{font-size:11px;}
+ .vw-unit-pill{font-size:8px;padding:3px 6px;}
+ .vw-periods{font-size:9px;}
+ .vw-scenarios{gap:7px;margin-bottom:10px;}
+ .vw-scenario{display:grid;grid-template-columns:auto 1fr auto;grid-template-rows:auto;gap:3px 6px;padding:9px 10px;align-items:center;}
+ .vw-case{font-size:7px;grid-row:1;grid-column:1;}
+ .vw-case-title{font-size:10px;grid-row:1;grid-column:2;}
+ .vw-scenario strong{font-size:20px;grid-row:1;grid-column:3;}
+ .vw-case-sub{display:none;}
+ .vw-sheet-toolbar{margin-bottom:6px;gap:6px;}
+ .vw-sheet-actions{gap:13px;}
+ .vw-sheet-scroll{max-height:70vh;max-height:70dvh;}
+ .vw-legend{font-size:8px;gap:9px;}
+ .vw-formula-bar{margin-bottom:9px;padding:8px 10px;}
+}
+@media(max-width:650px){
+ .vw-hero h1{font-size:18px;}.vw-eyebrow{font-size:7px;}
+ .vw-toolbar form{flex-basis:calc(100% - 112px);}.vw-toolbar form input{max-width:none;}
+ .vw-toolbar .vw-horizon-label{margin-inline-start:0;order:0;}
+ .vw-company-shortcuts{order:1;flex-basis:100%;}
+ .vw-quick{padding:5px 10px;}
+ .vw-scenario{padding:8px 7px;grid-template-columns:1fr auto;}
+ .vw-case{display:none;}.vw-case-title{grid-column:1;font-size:9px;}.vw-scenario strong{grid-column:2;font-size:17px;}
+ .vw-sheet-actions{gap:11px;}.vw-text-button{font-size:9px!important;}
+ .vw-company-header>div{gap:5px;}.vw-periods{font-size:8px;}
+}
+@media(pointer:coarse){
+ .vw-editable input{font-size:16px!important;height:44px;padding:9px 8px;}
+ .vw-sheet th,.vw-sheet td{min-width:122px;width:122px;}
+ .vw-sheet .vw-metric-cell{min-width:160px;width:160px;max-width:160px;}
+ .vw-fill{display:none;}
+ .vw-sheet td{height:44px;}
+ .vw-sheet-actions button{min-height:44px;padding-block:8px;}
+ .vw-toolbar input,.vw-toolbar select{font-size:16px!important;min-height:44px;}
+ .vw-quick,.vw-button{min-height:44px;}
+}
+
+/* Container sizing handles narrow embedded viewers on large iPad screens. */
+.val-wrap{container-type:inline-size;container-name:valuation;}
+@container valuation(max-width:1100px){
+ .val-wrap{padding-top:12px;}
+ .vw-hero{display:flex;flex-direction:row;align-items:center;gap:10px;margin-bottom:10px;}
+ .vw-eyebrow{font-size:8px;letter-spacing:1px;margin-bottom:5px;}
+ .vw-hero h1{font-size:21px;line-height:1.3;margin:0;}
+ .vw-hero p{display:none;}
+ .vw-hero>.vw-button{padding:8px;font-size:9px!important;}
+ .vw-toolbar{gap:8px;padding:8px 10px;}
+ .vw-toolbar form{width:auto;flex:1;gap:6px;}
+ .vw-toolbar form>label{display:none;}
+ .vw-toolbar form input{min-width:65px;width:86px;max-width:150px;flex:1;}
+ .vw-company-shortcuts{gap:5px;}
+ .vw-horizon-label{gap:5px;font-size:10px!important;}
+ .vw-status{margin:6px 0 10px;font-size:9px;line-height:1.5;}
+ .vw-company-header{margin-bottom:9px;gap:5px;}
+ .vw-company-header h2{font-size:11px;}
+ .vw-unit-pill{font-size:8px;padding:3px 6px;}
+ .vw-periods{font-size:9px;}
+ .vw-scenarios{gap:7px;margin-bottom:10px;}
+ .vw-scenario{display:grid;grid-template-columns:auto 1fr auto;grid-template-rows:auto;gap:3px 6px;padding:9px 10px;align-items:center;}
+ .vw-case{font-size:7px;grid-row:1;grid-column:1;}
+ .vw-case-title{font-size:10px;grid-row:1;grid-column:2;}
+ .vw-scenario strong{font-size:20px;grid-row:1;grid-column:3;}
+ .vw-case-sub{display:none;}
+ .vw-sheet-toolbar{margin-bottom:6px;gap:6px;}
+ .vw-sheet-actions{gap:13px;}
+ .vw-sheet-scroll{max-height:70vh;max-height:70dvh;}
+ .vw-legend{font-size:8px;gap:9px;}
+ .vw-formula-bar{margin-bottom:9px;padding:8px 10px;}
+}
+@container valuation(max-width:650px){
+ .vw-hero h1{font-size:18px;}.vw-eyebrow{font-size:7px;}
+ .vw-toolbar form{flex-basis:calc(100% - 112px);}.vw-toolbar form input{max-width:none;}
+ .vw-toolbar .vw-horizon-label{margin-inline-start:0;order:0;}
+ .vw-company-shortcuts{order:1;flex-basis:100%;}
+ .vw-quick{padding:5px 10px;}
+ .vw-scenario{padding:8px 7px;grid-template-columns:1fr auto;}
+ .vw-case{display:none;}.vw-case-title{grid-column:1;font-size:9px;}.vw-scenario strong{grid-column:2;font-size:17px;}
+ .vw-sheet-actions{gap:11px;}.vw-text-button{font-size:9px!important;}
+ .vw-company-header>div{gap:5px;}.vw-periods{font-size:8px;}
+}
+
+/* Beginner mode retains all scenarios and hides only optional detail. */
+.vw-mode-badge{font-size:9px;white-space:nowrap;color:#97c9e8;border:1px solid #35566d;border-radius:18px;padding:5px 10px;}
+.vw-mode-control{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0 11px;}
+.vw-mode-control>span{font-size:10px;color:#9ab3c7;}
+.vw-advanced-toggle{border:1px solid #3a627d;background:#14344a;color:#b6ddf4;border-radius:6px;padding:8px 11px;font-size:11px!important;white-space:nowrap;}
+.vw-change-sentence{font-size:11px;line-height:1.6;color:#b2d4e9;background:#0e273b;border-inline-start:2px solid #68a7d1;padding:8px 11px;margin:0 0 8px;min-height:33px;}
+.vw-upside{grid-column:1/-1;grid-row:3;font-size:9px;font-weight:400;color:#a9d1e6;line-height:1.5;white-space:normal;}
+.vw-reference{margin-bottom:8px;border-bottom:1px solid #223e52;padding-bottom:7px;color:#99b8cd;font-size:10px;}
+.vw-reference summary{cursor:pointer;min-height:28px;line-height:1.7;}
+.vw-reference-fields{display:flex;align-items:flex-end;flex-wrap:wrap;gap:10px;margin:8px 0 4px;}
+.vw-reference-fields label{display:flex;flex-direction:column;gap:5px;font-size:10px;color:#b0c6d6;}
+.vw-reference-fields input{background:#0a1b29;border:1px solid #36566e;border-radius:5px;color:#e0edf7;width:155px;padding:8px 9px;font-size:13px;min-height:36px;color-scheme:dark;}
+.vw-reference-fields input[aria-invalid=true]{border-color:#bb8860;}
+.vw-reference-source{font-size:9px;color:#86a2b7;max-width:310px;line-height:1.6;}
+.vw-reference-status{font-size:9px;color:#a7baca;line-height:1.7;}
+.vw-basic-assumptions{font-size:9px;color:#89a2b5;margin:8px 0;line-height:1.6;}
+#vw-advanced-notes{margin-top:10px;}
+#vw-advanced-notes>.vw-button{margin-bottom:9px;}
+.vw-sheet tr[hidden]{display:none!important;}
+@media(max-width:1100px){.vw-upside{grid-column:1/-1;grid-row:2;font-size:8px;}.vw-change-sentence{font-size:10px;padding:7px 9px;margin-bottom:6px;}.vw-mode-control{margin-block:6px;}.vw-mode-control>span{font-size:9px;}.vw-mode-badge{font-size:8px;padding:4px 7px;}}
+@container valuation(max-width:1100px){.vw-upside{grid-column:1/-1;grid-row:2;font-size:8px;}.vw-change-sentence{font-size:10px;padding:7px 9px;margin-bottom:6px;}.vw-mode-control{margin-block:6px;}.vw-mode-control>span{font-size:9px;}.vw-mode-badge{font-size:8px;padding:4px 7px;}}
+@media(max-width:650px){.vw-mode-control{align-items:flex-start;}.vw-mode-control>span{max-width:50%;line-height:1.5;}.vw-advanced-toggle{font-size:10px!important;}.vw-mode-badge{display:none;}.vw-reference-fields input{width:140px;}}
+@container valuation(max-width:650px){.vw-mode-control{align-items:flex-start;}.vw-mode-control>span{max-width:50%;line-height:1.5;}.vw-advanced-toggle{font-size:10px!important;}.vw-mode-badge{display:none;}.vw-reference-fields input{width:140px;}}
+@media(pointer:coarse){.vw-advanced-toggle,.vw-reference summary{min-height:44px;}.vw-reference-fields input{font-size:16px;min-height:44px;}}
+
+.vw-jump-table{display:inline-flex;align-items:center;justify-content:center;min-height:40px;border:1px solid #42728e;border-radius:6px;padding:7px 10px;color:#c4e8ff;text-decoration:none;font-size:11px;white-space:nowrap;background:#16374d;}
+.vw-jump-table:focus-visible{outline:2px solid #87c9f1;outline-offset:3px;}
+
+/* In the full Terminal shell, the existing main pane owns vertical scrolling.
+ * Keep the worksheet horizontal-only so nested scrollers cannot hide lower rows. */
+.main.valuation-active{min-width:0;min-height:0;overflow-y:auto;overflow-x:hidden;}
+.main.valuation-active #page-valuation{height:auto;max-height:none;min-width:0;overflow:visible;}
+.main.valuation-active .vw-sheet-scroll{height:auto;max-height:none;overflow-x:auto;overflow-y:hidden;overscroll-behavior:auto;touch-action:pan-x pan-y;}

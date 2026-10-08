@@ -8,6 +8,7 @@ for path in (root / 'services/api').rglob('*.py'):
     if 'legacy' not in path.parts and not path.name.startswith('test_'):
         paths.add(path)
 paths.update((root / 'apps/terminal/public').glob('terminal*.js'))
+paths.add(root / 'apps/terminal/public/equity-workbook-model.js')
 paths.update(path for path in (root / 'supabase/functions/wave-data').glob('*.ts')
              if path.name != 'calculation-catalog.ts' and '.test.' not in path.name)
 catalog = [{'path': str(path.relative_to(root)), 'source': path.read_text()}
