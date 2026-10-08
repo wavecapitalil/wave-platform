@@ -26,10 +26,21 @@ export async function calculateCompany(db:any,body:any,config:any,withTrace=fals
 export async function adminCalculations(req:Request,db:any,baseURL:string,reply:any){
  const headers={'cache-control':'no-store','vary':'Authorization'};
  const token=req.headers.get('authorization')?.match(/^Bearer\s+(.+)$/i)?.[1];
- if(!token)return reply({error:'Sign in required'},401,headers);
- const {data:auth,error:authError}=await db.auth.getUser(token);
- if(authError||!auth?.user||!auth.user.email_confirmed_at)return reply({error:'Invalid session'},401,headers);
- const {data:owner,error:ownerError}=await db.from('wave_calculation_owners').select('user_id').eq('user_id',auth.user.id).maybeSingle();
+ if(!token)return reply({error:'Private access link required'},401,headers);
+ let actor:string|null=null;
+ if(token.startsWith('wc_')){
+  if(!/^wc_[a-f0-9]{64}$/.test(token))return reply({error:'Invalid access link'},401,headers);
+  const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(token));
+  const tokenHash=Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  const {data:link,error}=await db.from('wave_calculation_links').select('user_id,revoked_at').eq('token_hash',tokenHash).maybeSingle();
+  if(error||!link||link.revoked_at)return reply({error:'Invalid access link'},401,headers);
+  actor=link.user_id;
+ }else{
+  const {data:auth,error:authError}=await db.auth.getUser(token);
+  if(authError||!auth?.user||!auth.user.email_confirmed_at)return reply({error:'Invalid session'},401,headers);
+  actor=auth.user.id;
+ }
+ const {data:owner,error:ownerError}=await db.from('wave_calculation_owners').select('user_id').eq('user_id',actor).maybeSingle();
  if(ownerError||!owner)return reply({error:'Owner access only'},403,headers);
  if(req.method==='GET'){
   const config=await settings(db);
@@ -52,9 +63,10 @@ export async function adminCalculations(req:Request,db:any,baseURL:string,reply:
  }
  if(input.action==='publish'){
   if(typeof input.reason!=='string'||input.reason.trim().length<3)return reply({error:'Change reason required'},400,headers);
-  const {data,error}=await db.rpc('wave_publish_calculations',{p_actor:auth.user.id,p_expected:config.revision,p_formulas:input.formulas,p_reason:input.reason});
+  const {data,error}=await db.rpc('wave_publish_calculations',{p_actor:actor,p_expected:config.revision,p_formulas:input.formulas,p_reason:input.reason});
   if(error)return reply({error:error.message.includes('revision conflict')?'Revision changed. Reload.':'Could not publish'},409,headers);
   return reply({revision:data,published:true},200,headers);
  }
  return reply({error:'Unknown action'},400,headers);
 }
+

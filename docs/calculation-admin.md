@@ -1,6 +1,6 @@
 # Owner calculation workspace
 
-Open `/calculation-admin.html` and sign in using the existing owner account.
+Open the private capability link supplied to the owner. No email, password or OTP is required. The admin page is not linked from the terminal. Anyone holding the complete secret link can use it; hiding a normal URL is not authorization.
 The page shell is static; every registry read, preview and publication is authenticated on the server. No private settings or source catalogue are embedded in the page.
 
 ## Live editing
@@ -27,8 +27,10 @@ Run `python scripts/build-calculation-catalog.py` after changes and deploy the r
 
 ## Authorization and deployment
 
-`wave-data` retains its existing public gateway setting. The `/api/admin/calculations` handler verifies a bearer token using Supabase Auth `getUser`, requires a confirmed account, and checks the private `wave_calculation_owners` table. Browser roles have no table grants or publish-RPC permission; all three registry tables have RLS enabled with no browser policies. The service-role key remains server-side only. Adding owners is a separate privileged database operation; public sign-up or user metadata cannot grant access.
+`wave-data` retains its existing public gateway setting. The admin handler accepts an owner capability token in the Authorization header, hashes it with SHA-256, looks up the private `wave_calculation_links` table, rejects revoked links and rechecks the owner table. Existing verified owner JWTs remain supported server-side. Browser roles have no grants to the registry/link tables or publish RPC. Tokens use 256 bits of cryptographic randomness; only hashes are stored in the database. Never commit a raw token or its complete link.
 
-Apply the recorded schema migration before deploying the edge files. Owner assignment is deliberately not stored in the public repository. Existing Supabase sessions work on the admin page. Email login uses `shouldCreateUser: false`; the exact admin URL must be in the Supabase Auth redirect allowlist for direct magic-link return. Email OTP entry is also supported if the existing email template includes a token.
+The browser receives the key in the URL fragment, removes the fragment from the address bar immediately, and retains it only in sessionStorage for that tab. No third-party scripts load on the admin page. The page uses a no-referrer policy. Bookmark the original complete link. Closing access clears the tab key. To revoke a leaked link, set `revoked_at=now()` for its hash using a privileged database connection; do not expose a public token issuance endpoint.
 
-Tests: `node --test scripts/calculations.test.mjs scripts/forward_consensus_test.mjs` (Node 24). Tests cover SEC fixtures, missingness, period matching, restricted expressions, live field overrides/restoration, owner-only reads/writes and revision conflicts. The Cisco fixture is a public SEC excerpt as of 2026-10-08, not a live-price expectation.
+Apply the recorded migrations before deploying. Owner assignment and link issuance are deliberately absent from the public repository. Publication still records the owning user ID and requires the same validation/revision lock.
+
+Tests: `node --test scripts/calculations.test.mjs scripts/forward_consensus_test.mjs scripts/calculation-access-link.test.mjs` (Node 24).
