@@ -592,6 +592,7 @@
   </style>
 <link rel="stylesheet" href="ai-tutor.css">
 <link rel="stylesheet" href="wave-home-depth.css?v=20261008-2">
+<link rel="stylesheet" href="wave-home-motion.css?v=20261008-1">
 </head>
 <body>
 
@@ -628,9 +629,7 @@
 <section class="hero">
 
   <!-- Animated background waves -->
-  <svg class="hero-bg-waves" viewBox="0 0 1440 200" preserveAspectRatio="none">
-    <path d="M0,100 C240,160,480,40,720,100 C960,160,1200,40,1440,100 L1440,200 L0,200 Z" fill="#4a9eff"/>
-  </svg>
+  <svg class="hero-bg-waves" viewBox="0 0 1440 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0 140 C160 140 210 30 370 90 S560 190 720 100 S950 20 1090 90 S1280 160 1440 40" fill="none" stroke="#70b8ff" stroke-opacity=".13" stroke-width="2"/><path class="wave-scroll-line" pathLength="100" d="M0 140 C160 140 210 30 370 90 S560 190 720 100 S950 20 1090 90 S1280 160 1440 40" fill="none" stroke="#8bd3ff" stroke-width="2"/></svg>
 
   <div class="hero-logo">
     <svg viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -687,7 +686,8 @@
   <h2 class="section-title" data-i18n="features.title">Everything a trader needs. In one place.</h2>
   <p class="section-sub" data-i18n="features.sub">Wave Capital combines real-time market intelligence, AI-powered analysis, and quantitative backtesting into a unified system.</p>
 
-  <div class="features-grid">
+  <div class="wave-carousel-controls" hidden><button type="button" data-prev aria-label="Previous card">←</button><button type="button" data-pause aria-label="Pause carousel" aria-pressed="false">Ⅱ</button><button type="button" data-next aria-label="Next card">→</button></div>
+<div class="features-grid" aria-label="Wave products">
 
     <a href="terminal_app.html" class="feature-card">
       <div class="feature-badge" data-i18n="features.live">Live</div>
@@ -865,5 +865,6 @@
 <script src="platform.js"></script>
 <script src="platform-cloud.js"></script>
 <script src="ai-tutor.js"></script>
+<script src="wave-home-motion.js?v=20261008-1"></script>
 </body>
 </html>
