@@ -125,7 +125,7 @@ async def run_viewport(browser, name, width, height):
           const p=document.querySelector('#navPanel');
           return p && p.classList.contains('collapsed');
         }""", timeout=10000)
-        reopen=page.locator("#navReopen")
+        reopen=page.locator("#terminalMenuButton")
         await reopen.wait_for(state="visible")
         await reopen.click()
         await page.wait_for_function("""() => {
