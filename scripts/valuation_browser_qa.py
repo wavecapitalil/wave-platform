@@ -86,6 +86,7 @@ async def check(browser, name, width, height):
     assert "%" in await page.locator("#vw-upside-base").inner_text()
     assert await page.locator("#vw-summary-base").inner_text() == model_price
     await page.locator("[data-company=MSFT]").click()
+    await page.locator("#vw-company-symbol").filter(has_text="MSFT").wait_for(timeout=30000)
     assert await page.locator("#vw-reference-price").input_value() == ""
     assert "331,839" in await page.locator("#vw-tbody").inner_text()
     # Source navigation and return do not expose private admin navigation.
@@ -107,7 +108,9 @@ async def main():
             browser=await p.chromium.launch()
             results=[]
             for args in [("desktop",1440,900),("narrow-embed",750,650),("ipad-landscape",1024,768),("ipad-portrait",768,1024),("phone",390,844)]:
+                print("Checking viewport: "+args[0],flush=True)
                 results.append(await check(browser,*args))
+                (OUT/"report.json").write_text(json.dumps(results,ensure_ascii=False,indent=2))
             await browser.close()
             (OUT/"report.json").write_text(json.dumps(results,ensure_ascii=False,indent=2))
             print(json.dumps(results,ensure_ascii=False))
