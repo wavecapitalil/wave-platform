@@ -1136,3 +1136,19 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
 
   .ai-tutor-trigger{right:12px!important;bottom:max(12px,env(safe-area-inset-bottom))!important}
 }
+
+/* The full Terminal menu must remain discoverable when its drawer is closed. */
+.terminal-menu-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:0 0 auto;min-height:44px;padding:0 11px;margin-inline-end:10px;border:1px solid var(--border2);border-radius:9px;background:var(--blue-dim);color:#e2e8f0;font:600 12px/1.2 'Inter',sans-serif;cursor:pointer;white-space:nowrap}
+.terminal-menu-button:focus-visible,.nav-reopen:focus-visible,.nav-toggle-btn:focus-visible,.nav-item:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.terminal-menu-button[aria-expanded="true"]{border-color:var(--blue)}
+@media(max-width:1200px){.top-nav-links{display:none}.top-nav-right{margin-left:auto}}
+@media(max-width:800px){
+  .terminal-menu-button{padding:0 9px;margin-inline-end:0}
+  .app-body .nav-panel{width:min(86vw,320px)}
+  .top-nav-logo{border-right:0!important;padding-right:0}
+  .top-nav-logo span{display:none}
+  .top-nav-right{padding-left:0;border-left:0;gap:4px}
+  .top-nav-right .ticker-time,.top-nav-right .ticker-refresh{display:none}
+  /* Header has a labeled opener; avoid an edge tab covering spreadsheet cells. */
+  .nav-reopen.visible{display:none}
+}

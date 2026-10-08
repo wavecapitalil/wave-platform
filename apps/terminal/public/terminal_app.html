@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wave Capital — Terminal</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="terminal.css?v=20261007-2">
+<link rel="stylesheet" href="terminal.css?v=20261008-nav2">
 
-<script src="i18n.js"></script>
+<script src="i18n.js?v=20261008-nav2"></script>
   <link rel="stylesheet" href="wave-university-theme.css?v=20261008-depth1">
 <link rel="stylesheet" href="ai-tutor.css">
 <link rel="stylesheet" href="terminal-sources.css?v=20261008-1">
@@ -20,6 +20,7 @@
 ══════════════════════════════════════ -->
 <!-- TOP NAV BAR -->
 <div class="top-nav">
+  <button type="button" id="terminalMenuButton" class="terminal-menu-button" data-nav-toggle aria-controls="navPanel" aria-expanded="true" onclick="toggleNav()"><span aria-hidden="true">☰</span><span data-i18n="nav.menu">Terminal menu</span></button>
   <a href="index.html" class="top-nav-logo">
     <svg viewBox="0 0 80 30" fill="none" width="22" height="14">
       <path d="M0 20 C10 10,20 10,30 20 C40 30,50 30,60 20 C70 10,80 10,90 20" stroke="#4a9eff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
@@ -57,7 +58,7 @@
 
 
 <!-- re-open tab when nav is collapsed -->
-<div class="nav-reopen" id="navReopen" onclick="toggleNav()">›</div>
+<button type="button" class="nav-reopen" id="navReopen" data-nav-toggle aria-controls="navPanel" aria-expanded="false" aria-label="Open Terminal menu" onclick="toggleNav()">›</button>
 
 <!-- ══════════════════════════════════════
      APP BODY
@@ -65,7 +66,7 @@
 <div class="app-body">
 
   <!-- NAV PANEL -->
-  <div class="nav-panel" id="navPanel">
+  <nav class="nav-panel" id="navPanel" aria-label="Terminal">
 
     <!-- Header: logo + collapse button -->
     <div class="nav-header">
@@ -75,7 +76,7 @@
         </svg>
         <span class="nav-logo-text">Wave</span>
       </a>
-      <button class="nav-toggle-btn" onclick="toggleNav()" title="Collapse menu">‹</button>
+      <button type="button" class="nav-toggle-btn" data-nav-toggle aria-controls="navPanel" aria-expanded="true" onclick="toggleNav()" aria-label="Close Terminal menu" title="Close Terminal menu">‹</button>
     </div>
 
     <div class="nav-content">
@@ -153,9 +154,9 @@
         <div class="nav-item" data-page="research" onclick="navigate('research')">
           <span class="nav-item-icon">🔎</span> <span data-i18n="sidebar.companyResearch">Company Research</span>
         </div>
-        <button type="button" class="nav-item" data-page="valuation" onclick="navigate('valuation')" style="width:100%;font:inherit;text-align:inherit;background:transparent;border:0">
+        <a href="#valuation" class="nav-item" data-page="valuation" onclick="if(!event.ctrlKey &amp;&amp; !event.metaKey &amp;&amp; !event.shiftKey &amp;&amp; !event.altKey){navigate('valuation');return false}">
           <span class="nav-item-icon">◈</span> <span data-i18n="sidebar.valuation">Equity Valuation</span>
-        </button>
+        </a>
         <div class="nav-item" data-page="mover" onclick="navigate('mover')">
           <span class="nav-item-icon">⚡</span> <span data-i18n="sidebar.whatsMoving">What's Moving</span>
           <span class="nav-item-badge live" data-i18n="sidebar.ai">AI</span>
@@ -228,7 +229,7 @@
       <span class="nav-user-name">Daniel</span>
     </div>
 
-  </div>
+  </nav>
 
   <!-- MAIN CONTENT -->
   <div class="main" id="mainContent">
@@ -1499,7 +1500,7 @@
 </div><!-- end app-body -->
 
 <script src="terminal-sources.js?v=20261008-sources1"></script>
-<script src="terminal.js?v=20261008-valuation-live1"></script>
+<script src="terminal.js?v=20261008-nav2"></script>
 <script src="terminal-market.js?v=20261008-sources1"></script>
 <script src="terminal-content.js?v=20261008-sources1"></script>
 <script src="terminal-flows.js?v=20261008-sources1"></script>

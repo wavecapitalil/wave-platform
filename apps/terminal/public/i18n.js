@@ -15,6 +15,7 @@
 (function(global){
   var DICT = {
     'nav.home':        {en:'Home',            he:'בית'},
+    'nav.menu':        {en:'Terminal menu',   he:'תפריט הטרמינל'},
     'nav.terminal':    {en:'Terminal',        he:'טרמינל'},
     'nav.blog':        {en:'Blog',            he:'בלוג'},
     'nav.products':    {en:'Products',        he:'מוצרים'},

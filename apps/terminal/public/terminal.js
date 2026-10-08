@@ -50,9 +50,19 @@ function navigate(page){
   if(el) el.classList.add('active');
 
   document.querySelectorAll('.icon-btn').forEach(function(b){ b.classList.remove('active'); });
-  document.querySelectorAll('.nav-item').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.nav-item').forEach(function(b){ b.classList.remove('active'); b.removeAttribute('aria-current'); });
   var activeNav = document.querySelector('.nav-item[data-page="' + page + '"]');
-  if(activeNav) activeNav.classList.add('active');
+  if(activeNav){
+    activeNav.classList.add('active');
+    activeNav.setAttribute('aria-current','page');
+    var section=activeNav.closest('.nav-items');
+    if(section){
+      section.style.display='';
+      var caret=document.getElementById('caret-'+section.id.replace('items-',''));
+      if(caret){caret.classList.add('open');caret.textContent='▾';}
+    }
+    if(navVisible)requestAnimationFrame(revealActiveNavItem);
+  }
 
   // Load Risk Meter when navigating to that page
   if(page === 'risk'){
@@ -144,6 +154,10 @@ function navigate(page){
   }
 
   currentPage = page;
+  // Keep the valuation deep link truthful without adding a new history/router model.
+  // Other Terminal pages retain their existing in-app navigation behavior.
+  if(page==='valuation'&&location.hash!=='#valuation')history.replaceState(null,'','#valuation');
+  else if(page!=='valuation'&&location.hash==='#valuation')history.replaceState(null,'',location.pathname+location.search);
 
   // On phones the menu is an overlay drawer; close it after choosing a page.
   if(window.matchMedia && window.matchMedia('(max-width:800px)').matches){
@@ -259,21 +273,44 @@ function ensureNavBackdrop(){
   return el;
 }
 
+function revealActiveNavItem(){
+  var panel=document.getElementById('navPanel');
+  var active=panel&&panel.querySelector('.nav-item.active');
+  if(!panel||!active||!navVisible)return;
+  var outer=panel.getBoundingClientRect(),item=active.getBoundingClientRect();
+  if(item.bottom>outer.bottom-16)panel.scrollTop+=item.bottom-outer.bottom+16;
+  else if(item.top<outer.top+16)panel.scrollTop+=item.top-outer.top-16;
+}
+
 function setNavVisible(visible){
   var panel=document.getElementById('navPanel');
   var reopen=document.getElementById('navReopen');
   var backdrop=ensureNavBackdrop();
   navVisible=!!visible;
   if(panel){
+    if(!navVisible&&panel.contains(document.activeElement)){
+      var menuButton=document.getElementById('terminalMenuButton');
+      if(menuButton)menuButton.focus();
+    }
     panel.classList.toggle('collapsed',!navVisible);
     panel.setAttribute('aria-hidden',(!navVisible).toString());
+    panel.inert=!navVisible;
   }
   if(reopen)reopen.classList.toggle('visible',!navVisible);
+  document.querySelectorAll('[data-nav-toggle]').forEach(function(button){button.setAttribute('aria-expanded',String(navVisible));});
+  if(navVisible)requestAnimationFrame(revealActiveNavItem);
   var mobile=window.matchMedia&&window.matchMedia('(max-width:800px)').matches;
   backdrop.classList.toggle('visible',mobile&&navVisible);
 }
 
 function toggleNav(){ setNavVisible(!navVisible); }
+document.addEventListener('keydown',function(event){
+  if(event.key==='Escape'&&navVisible&&window.matchMedia('(max-width:800px)').matches){
+    setNavVisible(false);
+    var button=document.getElementById('terminalMenuButton');
+    if(button)button.focus();
+  }
+});
 
 function syncMobileDrawerTop(){
   var ticker=document.querySelector('.ticker-bar');
