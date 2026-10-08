@@ -55,6 +55,7 @@ async def check(browser, name, width, height, lang="he"):
     assert await panel.get_attribute("aria-hidden") == "false"
     assert await menu.get_attribute("aria-expanded") == "true"
     if width <= 800:
+        await page.wait_for_function("""() => Math.abs(document.querySelector('#navPanel').getBoundingClientRect().right-document.querySelector('#navBackdrop').getBoundingClientRect().left)<1""")
         bounds=await page.evaluate("""() => ({panel:document.querySelector('#navPanel').getBoundingClientRect().right,backdrop:document.querySelector('#navBackdrop').getBoundingClientRect().left})""")
         assert abs(bounds["panel"]-bounds["backdrop"]) <= 1, bounds
         await page.locator("#navBackdrop").click(position={"x":5,"y":5})
