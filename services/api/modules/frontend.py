@@ -53,6 +53,8 @@ PUBLIC_FILES = {
     "terminal-metals.js",
     "terminal-confluence.js",
     "terminal-seasonality.js",    "terminal-equities.js",
+    "fundamental-chart-model.js",
+    "terminal-chart-export.js",
     "terminal-risk.js",
     "terminal-crypto.js",
     "terminal-rates.js",

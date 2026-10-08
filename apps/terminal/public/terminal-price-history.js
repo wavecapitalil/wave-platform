@@ -8,7 +8,14 @@
   function esc(value){return String(value==null?'':value).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
   function finite(v){return typeof v==='number'&&Number.isFinite(v);}
   function pct(v){return finite(v)?(v>0?'+':'')+v.toFixed(2)+'%':'—';}
-  function money(v){if(!finite(v))return '—';var currency=state.data&&state.data.currency;try{return new Intl.NumberFormat('en-US',{style:'currency',currency:currency||'USD',maximumFractionDigits:2}).format(v);}catch(e){return v.toFixed(2)+(currency?' '+currency:'');}}
+  function formatPrice(v,currency){
+    if(!finite(v))return '—';
+    // Provider subunits must never be silently uppercased into major ISO units.
+    var subunits={'GBp':'GBp (pence)','GBX':'GBX (pence)','ZAc':'ZAc (cents)','ILA':'ILA (agorot)'};
+    if(subunits[currency]||!currency||!/^([A-Z]{3})$/.test(currency))return new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(v)+(currency?' '+(subunits[currency]||currency):'');
+    try{return new Intl.NumberFormat('en-US',{style:'currency',currency:currency,maximumFractionDigits:2}).format(v);}catch(e){return v.toFixed(2)+' '+currency;}
+  }
+  function money(v){return formatPrice(v,state.data&&state.data.currency);}
   function date(value){var s=String(value||'');if(!/^\d{4}-\d{2}-\d{2}$/.test(s))return '—';return new Date(s+'T12:00:00Z').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'});}
   function url(value){try{var u=new URL(value);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null;}catch(e){return null;}}
   function destroy(){if(state.chart){state.chart.destroy();state.chart=null;}}
@@ -26,6 +33,7 @@
   function reset(symbol){
     state.symbol=String(symbol||'').trim().toUpperCase();state.request++;if(state.controller)state.controller.abort();state.controller=null;state.data=null;state.selected=null;destroy();
     if(!setup())return;
+    el('resPriceHistory').hidden=!state.symbol;
     el('ph-body').hidden=true;el('ph-period').textContent=state.symbol;el('ph-status').textContent=text('Loading daily prices…','טוען מחירים יומיים…');el('ph-events').replaceChildren();el('ph-detail').replaceChildren();
   }
   function register(data){
@@ -74,7 +82,7 @@
     el('ph-detail').replaceChildren();register(data);destroy();
     if(typeof Chart==='undefined'){el('ph-status').textContent=text('Chart library unavailable. Reload to try again.','ספריית הגרפים אינה זמינה. יש לטעון מחדש.');return;}
     var markers={id:'wavePriceEventLabels',afterDatasetsDraw:function(chart){var ctx=chart.ctx;chart.getDatasetMeta(1).data.forEach(function(point,i){ctx.save();ctx.font='bold 11px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#08111f';ctx.fillText(String(i+1),point.x,point.y);ctx.restore();});}};
-    state.chart=new Chart(el('ph-chart'),{type:'line',data:{labels:points.map(function(p){return p.date;}),datasets:[{label:data.symbol,data:points.map(function(p){return p.close;}),borderColor:'#63b3ff',backgroundColor:'rgba(74,158,255,.08)',fill:true,tension:0,pointRadius:0,pointHitRadius:8,borderWidth:2,spanGaps:false},{type:'scatter',label:text('Key events','אירועים'),data:events.map(function(e){return {x:e.index,y:e.price};}),backgroundColor:function(ctx){var e=events[ctx.dataIndex];return e&&String(e.id)===state.selected?'#f8ce73':'#8fcbff';},borderColor:'#0d1524',borderWidth:2,pointRadius:11,pointHoverRadius:13,pointHitRadius:14}]},plugins:[markers],options:{responsive:true,maintainAspectRatio:false,animation:false,layout:{padding:{top:18,right:12}},interaction:{mode:'nearest',intersect:false},onClick:function(event){var hits=state.chart.getElementsAtEventForMode(event,'nearest',{intersect:true},true);var hit=hits.find(function(h){return h.datasetIndex===1;});if(hit&&events[hit.index])select(events[hit.index].id,true);},plugins:{legend:{display:false},tooltip:{filter:function(item){return item.datasetIndex===0;},callbacks:{title:function(items){return items.length?date(points[items[0].dataIndex].date):'';},label:function(item){var p=points[item.dataIndex];return data.symbol+': '+money(p.close)+' · '+pct(p.change_pct);}}}},scales:{x:{type:'category',grid:{display:false},ticks:{color:'#8294ac',maxTicksLimit:6,maxRotation:0,callback:function(value){var p=points[value];return p?(state.range==='1mo'||state.range==='3mo'?p.date.slice(5):p.date.slice(0,7)):'';}}},y:{grid:{color:'rgba(148,163,184,.09)'},ticks:{color:'#8294ac',maxTicksLimit:5,callback:function(value){return money(value);}}}}}});
+    state.chart=new Chart(el('ph-chart'),{type:'line',data:{labels:points.map(function(p){return p.date;}),datasets:[{label:data.symbol,data:points.map(function(p){return p.close;}),borderColor:'#63b3ff',backgroundColor:'rgba(74,158,255,.08)',fill:true,tension:0,pointRadius:0,pointHitRadius:8,borderWidth:2,spanGaps:false},{type:'scatter',label:text('Key events','אירועים'),data:events.map(function(e){return {x:points[e.index].date,y:e.price};}),backgroundColor:function(ctx){var e=events[ctx.dataIndex];return e&&String(e.id)===state.selected?'#f8ce73':'#8fcbff';},borderColor:'#0d1524',borderWidth:2,pointRadius:11,pointHoverRadius:13,pointHitRadius:14}]},plugins:[markers],options:{responsive:true,maintainAspectRatio:false,animation:false,layout:{padding:{top:18,right:12}},interaction:{mode:'nearest',intersect:false},onClick:function(event){var hits=state.chart.getElementsAtEventForMode(event,'nearest',{intersect:true},true);var hit=hits.find(function(h){return h.datasetIndex===1;});if(hit&&events[hit.index])select(events[hit.index].id,true);},plugins:{legend:{display:false},tooltip:{filter:function(item){return item.datasetIndex===0;},callbacks:{title:function(items){return items.length?date(points[items[0].dataIndex].date):'';},label:function(item){var p=points[item.dataIndex];return data.symbol+': '+money(p.close)+' · '+pct(p.change_pct);}}}},scales:{x:{type:'category',grid:{display:false},ticks:{color:'#8294ac',maxTicksLimit:6,maxRotation:0,callback:function(value){var p=points[value];return p?(state.range==='1mo'||state.range==='3mo'?p.date.slice(5):p.date.slice(0,7)):'';}}},y:{grid:{color:'rgba(148,163,184,.09)'},ticks:{color:'#8294ac',maxTicksLimit:5,callback:function(value){return money(value);}}}}}});
     if(events.length)select(events[0].id,false);
   }
   async function load(symbol){
@@ -92,5 +100,5 @@
       if(window.WaveSources)WaveSources.record('price-history:'+selected,'Price history & events · '+selected,'Request failed: '+String(error.message||error)+'. No cached or synthetic prices were substituted.');
     }finally{clearTimeout(timer);if(id===state.request)state.controller=null;}
   }
-  window.WavePriceHistory={load:load,reset:reset};
+  window.WavePriceHistory={load:load,reset:reset,formatPrice:formatPrice};
 })();

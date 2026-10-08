@@ -23,7 +23,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Price history and regression unit tests
-        run: node --test scripts/price_history_test.mjs scripts/calculations.test.mjs scripts/valuation_inputs_test.mjs scripts/forward_consensus_test.mjs
+        run: node --test scripts/price_history_test.mjs scripts/price_history_ui_test.cjs scripts/calculations.test.mjs scripts/valuation_inputs_test.mjs scripts/forward_consensus_test.mjs
       - name: Syntax and static contracts
         run: |
           node --check apps/terminal/public/terminal-price-history.js

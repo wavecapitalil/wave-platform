@@ -33,9 +33,9 @@ def fixture(symbol="AAPL", selected_range="1y", no_events=False):
         "change_pct": 5.3, "benchmark_change_pct": .2, "excess_change_pp": 5.1,
         "timing": "Date-only publication → next session"} for i in (10, 25, 42)]
     return {"symbol": symbol, "range": selected_range, "currency": "USD", "exchange_timezone": "America/New_York",
-        "price_basis": "split_dividend_adjusted", "points": points, "events": events,
+        "price_basis": "dividend_and_split_adjusted_close", "points": points, "events": events,
         "summary": {"start_date": points[0]["date"], "end_date": points[-1]["date"],
-                    "change_pct": 12.4, "high": max(p["close"] for p in points), "low": min(p["close"] for p in points)},
+                    "change_pct": 12.4, "high": max(points, key=lambda p:p["close"]), "low": min(points, key=lambda p:p["close"])},
         "meta": {"fetched_at": "2026-10-08T18:00:00Z", "news_status": "ok", "news_coverage": "Recent headlines only", "limitations": ["TEST FIXTURE"], "benchmark": "SPY"}}
 
 
@@ -45,7 +45,7 @@ async def check(browser, name, width, height, lang):
     page = await context.new_page()
     errors = []
     page.on("pageerror", lambda e: errors.append(str(e)))
-    settings = {"failure": False, "empty": False, "delay": False, "mismatch": False}
+    settings = {"failure": False, "empty": False, "delay": False, "mismatch": False, "stock_failure": False, "currency": "USD"}
 
     async def api(route):
         u = urlparse(route.request.url)
@@ -59,13 +59,17 @@ async def check(browser, name, width, height, lang):
                 await route.fulfill(status=502, json={"error": "test outage"})
             else:
                 data = fixture(symbol, selected_range, settings["empty"])
+                data["currency"] = settings["currency"]
                 if settings["mismatch"]:
                     data["symbol"] = "WRONG"
                 await route.fulfill(json=data)
         elif u.path.endswith("/api/stock-info"):
             if settings["delay"] and symbol == "AAPL":
                 await asyncio.sleep(.9)
-            await route.fulfill(json={"symbol": symbol, "name": symbol + " Test Company", "price": 180.2, "market_cap": 1e12})
+            if settings["stock_failure"]:
+                await route.fulfill(status=502,json={"error":"test fundamentals outage"})
+            else:
+                await route.fulfill(json={"symbol": symbol, "name": symbol + " Test Company", "price": 180.2, "market_cap": 1e12})
         elif u.path.endswith("/api/peers"):
             await route.fulfill(json={"error": "Fixture does not cover peers"})
         else:
@@ -83,17 +87,20 @@ async def check(browser, name, width, height, lang):
     metrics = await page.evaluate("""() => {const c=Chart.getChart('ph-chart'); const b=document.querySelector('#resPriceHistory').getBoundingClientRect(); return {scroll:document.documentElement.scrollWidth,viewport:innerWidth,width:b.width,canvas:c.width,points:c.data.datasets[0].data.length,events:c.data.datasets[1].data.length};}""")
     assert metrics["scroll"] <= width + 2, metrics
     assert metrics["canvas"] > 150, metrics
+    assert await page.evaluate("""() => {const c=Chart.getChart('ph-chart');return [10,25,42].every((idx,i)=>Math.abs(c.getDatasetMeta(1).data[i].x-c.getDatasetMeta(0).data[idx].x)<1);}""")
     await page.locator("#resPriceHistory").scroll_into_view_if_needed()
     await page.screenshot(path=str(OUT / (name + ".png")), full_page=True)
     await page.locator('[data-ph-event="test-42"]').focus()
     await page.keyboard.press("Enter")
     assert await page.locator('[data-ph-event="test-42"]').get_attribute("aria-pressed") == "true"
     assert "release-42" in await page.locator("#ph-detail a").get_attribute("href")
+    await page.locator("#ph-detail").scroll_into_view_if_needed()
+    await page.screenshot(path=str(OUT / (name + "-event-detail.png")), full_page=True)
     # An actual canvas marker click focuses its corresponding event button.
     await page.locator("#ph-chart").scroll_into_view_if_needed()
     point = await page.evaluate("""() => {const c=Chart.getChart('ph-chart'),p=c.getDatasetMeta(1).data[1],r=c.canvas.getBoundingClientRect();return {x:r.x+p.x,y:r.y+p.y};}""")
     await page.mouse.click(point["x"], point["y"])
-    assert await page.locator('[data-ph-event="test-25"]').get_attribute("aria-pressed") == "true"
+    await page.wait_for_function("document.querySelector('[data-ph-event=\"test-25\"]').getAttribute('aria-pressed')==='true'")
     await page.locator('[data-ph-range="1mo"]').click()
     await page.wait_for_function("Chart.getChart('ph-chart') && document.querySelector('[data-ph-range=\"1mo\"]').getAttribute('aria-pressed')==='true'")
     # Late stock-info and chart responses cannot overwrite a newer stock.
@@ -116,6 +123,17 @@ async def check(browser, name, width, height, lang):
     assert await page.locator("#ph-chart").is_visible()
     assert await page.locator("#ph-detail").is_hidden()
     assert await page.locator("#ph-events button").count() == 0
+    # Fundamentals failure cannot hide independent available price history.
+    settings["stock_failure"] = True
+    settings["currency"] = "GBp"
+    await page.evaluate("researchTicker('VOD.L')")
+    await page.locator("#ph-latest").filter(has_text="GBp (pence)").wait_for()
+    assert await page.locator("#ph-chart").is_visible()
+    assert await page.locator("#researchResult").is_hidden()
+    assert "£" not in await page.locator("#ph-latest").inner_text()
+    assert "fundamentals outage" in await page.locator("#researchStatus").inner_text()
+    settings["stock_failure"] = False
+    settings["currency"] = "USD"
     # Wrong-symbol responses fail closed.
     settings["mismatch"] = True
     await page.locator('[data-ph-range="6mo"]').click()
