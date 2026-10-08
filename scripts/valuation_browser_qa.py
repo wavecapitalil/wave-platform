@@ -68,7 +68,7 @@ async def check(browser, name, width, height):
     await page.locator("#vw-advanced-toggle").click()
     assert await page.locator("[data-row=cash]").is_visible()
     before = await page.locator("#vw-summary-base").inner_text()
-    await page.locator("#vw-cell-claims-4").fill("100")
+    await page.locator("#vw-cell-claims-4").fill("10000")
     assert before != await page.locator("#vw-summary-base").inner_text()
     # Advanced rows can be reached vertically; last forecast year horizontally.
     await page.locator("#vw-cell-claims-4").scroll_into_view_if_needed()
