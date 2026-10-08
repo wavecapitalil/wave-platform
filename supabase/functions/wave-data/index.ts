@@ -1,5 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2.57.4";
 import { collectForward } from "./forward-consensus.ts";
+import {settings,calculateCompany,adminCalculations} from "./calculation-service.ts";
 
 const SUPABASE_URL=Deno.env.get("SUPABASE_URL")!;
 const ANON=Deno.env.get("SUPABASE_ANON_KEY")!;
@@ -10,7 +11,7 @@ const admin=createClient(SUPABASE_URL,SERVICE_KEY,{auth:{persistSession:false}})
 
 const cors={
   "access-control-allow-origin":"*",
-  "access-control-allow-methods":"GET,OPTIONS",
+  "access-control-allow-methods":"GET,POST,OPTIONS",
   "access-control-allow-headers":"content-type,authorization,apikey",
   "content-type":"application/json"
 };
@@ -586,6 +587,7 @@ Deno.serve(async(req:Request)=>{
 
   try{
     const u=new URL(req.url), p=u.pathname;
+    if(p.endsWith("/api/admin/calculations")) return await adminCalculations(req,admin,SUPABASE_URL,json);
 
     if(req.method==="POST"){
       if(p.endsWith("/api/earnings/refresh") || p.endsWith("/api/insider-buying/refresh") || p.endsWith("/api/daily-brief/refresh")){
@@ -672,6 +674,7 @@ Deno.serve(async(req:Request)=>{
       body.eps_forward=forward.selected?.eps??null;
       body.pe_forward=forward.selected?.pe??null;
       body.meta={...body.meta,forward_logic_version:forward.logic_version};
+      await calculateCompany(admin,body,await settings(admin));
       return json(body,200,{"x-wave-source":"company-research-consensus","cache-control":"no-store"});
     }
 
@@ -686,3 +689,4 @@ Deno.serve(async(req:Request)=>{
     return json({error:String(e?.message||e)},502);
   }
 });
+

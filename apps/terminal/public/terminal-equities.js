@@ -1,3 +1,28 @@
+// Calculation details are centralized on Sources & Methodology.
+function calculationPeriod(d,key,fallback){
+  var m=d.calculation_meta||{};
+  if(key==='quick_ratio'||key==='current_ratio')return m.balance_date||fallback;
+  if(key==='pb_ratio')return m.balance_date||fallback;
+  if(key==='ps_ratio')return m.fiscal_year?'FY '+m.fiscal_year:fallback;
+  if(key==='peg_historical')return m.fiscal_year?'FY '+m.fiscal_year+' · EPS YoY':null;
+  if((m.custom_metrics||[]).indexOf(key)>=0){
+    if(key==='pb_ratio')return m.balance_date||null;
+    return m.fiscal_year?'FY '+m.fiscal_year:null;
+  }
+  return fallback;
+}
+function registerCalculationSources(d){
+  if(!window.WaveSources||!d.calculation_meta)return;
+  var m=d.calculation_meta,c=m.custom_metrics||[];
+  var quick=c.indexOf('quick_ratio')>=0?'Owner-configured Quick Ratio.':'Quick Ratio = (cash + short-term investments + net accounts receivable) / current liabilities; financing receivables are excluded.';
+  WaveSources.record('calculation-'+d.symbol,d.symbol+' · Financial calculations',
+    quick+' Balance inputs come from the same SEC reporting date: '+(m.balance_date||'unavailable')+'. Missing inputs remain missing; absent tags are not treated as zero. '+
+    'Historical PEG is separate from provider PEG: trailing P/E divided by positive annual diluted EPS growth in percentage points. FY: '+(m.fiscal_year||'unavailable')+'. '+
+    'Calculation revision '+m.revision+'. Custom metrics: '+(c.join(', ')||'none')+'. '+
+    'Custom annual margin, growth, ROE/ROA and P/S formulas use the fiscal year shown; default provider metrics retain their provider period. ROE/ROA defaults use year-end equity/assets, not averages. '+
+    (m.sec_stale?'SEC cache fallback was used.':''));
+}
+
 // ── Stock detail ──────────────────────────────────────────
 function openStockDetail(symbol, name){
   document.getElementById('sectorDetailView').style.display = 'none';
@@ -202,6 +227,7 @@ async function loadOwnership(symbol){
 }
 
 function renderStockDetail(d){
+  registerCalculationSources(d);
   // Header
   var price = d.price != null ? '$' + d.price.toFixed(2) : '—';
   document.getElementById('stockDetailPrice').textContent = price;
@@ -237,32 +263,33 @@ function renderStockDetail(d){
   html += section('Valuation', [
     kpiRow('P/E (Trailing)',  fmtNum(d.pe_trailing, 1),  'Price / trailing 12M earnings'),
     kpiRow('P/E (Forward)',   fmtNum(d.pe_forward, 1),   forwardNote(d)),
-    kpiRow('PEG Ratio',      fmtNum(d.peg_ratio, 2),    'P/E relative to growth rate'),
-    kpiRow('P/S Ratio',      fmtNum(d.ps_ratio, 2),     'Price / revenue (TTM)'),
-    kpiRow('P/B Ratio',      fmtNum(d.pb_ratio, 2),     'Price / book value'),
+    kpiRow('PEG (Provider)', fmtNum(d.peg_ratio, 2), null),
+    kpiRow('PEG Historical', fmtNum(d.peg_historical, 2), calculationPeriod(d,'peg_historical',null)),
+    kpiRow('P/S Ratio',      fmtNum(d.ps_ratio, 2),     calculationPeriod(d,'ps_ratio','Price / revenue (TTM)')),
+    kpiRow('P/B Ratio',      fmtNum(d.pb_ratio, 2),     calculationPeriod(d,'pb_ratio','Price / book value')),
     kpiRow('EV/EBITDA',      fmtNum(d.ev_ebitda, 1),    'Enterprise value / EBITDA'),
   ]);
   html += section('Earnings', [
     kpiRow('EPS (Trailing)',  d.eps_trailing != null ? '$' + fmtNum(d.eps_trailing) : '—', 'Last 12 months'),
     kpiRow('EPS (Forward)',   forwardEpsValue(d), forwardNote(d)),
-    kpiRow('Revenue Growth',  fmtPct(d.revenue_growth),  'YoY',  kpiColor(d.revenue_growth, true)),
-    kpiRow('Earnings Growth', fmtPct(d.earnings_growth), 'YoY',  kpiColor(d.earnings_growth, true)),
+    kpiRow('Revenue Growth',  fmtPct(d.revenue_growth),  calculationPeriod(d,'revenue_growth','YoY'),  kpiColor(d.revenue_growth, true)),
+    kpiRow('Earnings Growth', fmtPct(d.earnings_growth), calculationPeriod(d,'earnings_growth','YoY'),  kpiColor(d.earnings_growth, true)),
   ]);
   html += '</div>';
 
   // Right column
   html += '<div>';
   html += section('Profitability', [
-    kpiRow('Gross Margin',     fmtPct(d.gross_margin),     null, d.gross_margin > 40 ? '#22c55e' : d.gross_margin > 20 ? '#f59e0b' : '#ef4444'),
-    kpiRow('Operating Margin', fmtPct(d.operating_margin), null, kpiColor(d.operating_margin, true)),
-    kpiRow('Net Margin',       fmtPct(d.net_margin),       null, kpiColor(d.net_margin, true)),
-    kpiRow('ROE',              fmtPct(d.roe),              'Return on equity', kpiColor(d.roe, true)),
-    kpiRow('ROA',              fmtPct(d.roa),              'Return on assets', kpiColor(d.roa, true)),
+    kpiRow('Gross Margin',     fmtPct(d.gross_margin),     calculationPeriod(d,'gross_margin',null), d.gross_margin > 40 ? '#22c55e' : d.gross_margin > 20 ? '#f59e0b' : '#ef4444'),
+    kpiRow('Operating Margin', fmtPct(d.operating_margin), calculationPeriod(d,'operating_margin',null), kpiColor(d.operating_margin, true)),
+    kpiRow('Net Margin',       fmtPct(d.net_margin),       calculationPeriod(d,'net_margin',null), kpiColor(d.net_margin, true)),
+    kpiRow('ROE',              fmtPct(d.roe),              calculationPeriod(d,'roe','Return on equity'), kpiColor(d.roe, true)),
+    kpiRow('ROA',              fmtPct(d.roa),              calculationPeriod(d,'roa','Return on assets'), kpiColor(d.roa, true)),
   ]);
   html += section('Balance Sheet & Dividends', [
     kpiRow('Debt / Equity',   fmtNum(d.debt_to_equity, 2), null, d.debt_to_equity != null ? (d.debt_to_equity > 200 ? '#ef4444' : d.debt_to_equity > 100 ? '#f59e0b' : '#22c55e') : '#64748b'),
-    kpiRow('Current Ratio',   fmtNum(d.current_ratio, 2),  'Current assets / liabilities', d.current_ratio != null ? (d.current_ratio > 1.5 ? '#22c55e' : d.current_ratio > 1 ? '#f59e0b' : '#ef4444') : '#64748b'),
-    kpiRow('Quick Ratio',     fmtNum(d.quick_ratio, 2),    'Liquid assets / liabilities'),
+    kpiRow('Current Ratio',   fmtNum(d.current_ratio, 2),  calculationPeriod(d,'current_ratio',null), d.current_ratio != null ? (d.current_ratio > 1.5 ? '#22c55e' : d.current_ratio > 1 ? '#f59e0b' : '#ef4444') : '#64748b'),
+    kpiRow('Quick Ratio',     fmtNum(d.quick_ratio, 2),    calculationPeriod(d,'quick_ratio',null)),
     kpiRow('Dividend Yield',  d.dividend_yield != null ? d.dividend_yield.toFixed(2) + '%' : '—',    null, d.dividend_yield > 0 ? '#4a9eff' : '#64748b'),
     kpiRow('Payout Ratio',    fmtPct(d.payout_ratio)),
   ]);
@@ -893,6 +920,7 @@ function researchTicker(sym){
 }
 
 function renderResearchResult(d){
+  registerCalculationSources(d);
   document.getElementById('researchResult').style.display = 'block';
   document.getElementById('researchStatus').textContent = '';
 
@@ -925,30 +953,31 @@ function renderResearchResult(d){
   html += section('Valuation', [
     kpiRow('P/E (Trailing)',  fmtNum(d.pe_trailing, 1),  'Price / trailing 12M earnings'),
     kpiRow('P/E (Forward)',   fmtNum(d.pe_forward, 1),   forwardNote(d)),
-    kpiRow('PEG Ratio',      fmtNum(d.peg_ratio, 2),    'P/E relative to growth rate'),
-    kpiRow('P/S Ratio',      fmtNum(d.ps_ratio, 2),     'Price / revenue (TTM)'),
-    kpiRow('P/B Ratio',      fmtNum(d.pb_ratio, 2),     'Price / book value'),
+    kpiRow('PEG (Provider)', fmtNum(d.peg_ratio, 2), null),
+    kpiRow('PEG Historical', fmtNum(d.peg_historical, 2), calculationPeriod(d,'peg_historical',null)),
+    kpiRow('P/S Ratio',      fmtNum(d.ps_ratio, 2),     calculationPeriod(d,'ps_ratio','Price / revenue (TTM)')),
+    kpiRow('P/B Ratio',      fmtNum(d.pb_ratio, 2),     calculationPeriod(d,'pb_ratio','Price / book value')),
     kpiRow('EV/EBITDA',      fmtNum(d.ev_ebitda, 1),    'Enterprise value / EBITDA'),
   ]);
   html += section('Earnings', [
     kpiRow('EPS (Trailing)',  d.eps_trailing != null ? '$' + fmtNum(d.eps_trailing) : '—', 'Last 12 months'),
     kpiRow('EPS (Forward)',   forwardEpsValue(d), forwardNote(d)),
-    kpiRow('Revenue Growth',  fmtPct(d.revenue_growth),  'YoY', kpiColor(d.revenue_growth, true)),
-    kpiRow('Earnings Growth', fmtPct(d.earnings_growth), 'YoY', kpiColor(d.earnings_growth, true)),
+    kpiRow('Revenue Growth',  fmtPct(d.revenue_growth),  calculationPeriod(d,'revenue_growth','YoY'), kpiColor(d.revenue_growth, true)),
+    kpiRow('Earnings Growth', fmtPct(d.earnings_growth), calculationPeriod(d,'earnings_growth','YoY'), kpiColor(d.earnings_growth, true)),
   ]);
   html += '</div>';
   html += '<div>';
   html += section('Profitability', [
-    kpiRow('Gross Margin',     fmtPct(d.gross_margin),     null, d.gross_margin > 40 ? '#22c55e' : d.gross_margin > 20 ? '#f59e0b' : '#ef4444'),
-    kpiRow('Operating Margin', fmtPct(d.operating_margin), null, kpiColor(d.operating_margin, true)),
-    kpiRow('Net Margin',       fmtPct(d.net_margin),       null, kpiColor(d.net_margin, true)),
-    kpiRow('ROE',              fmtPct(d.roe),              'Return on equity', kpiColor(d.roe, true)),
-    kpiRow('ROA',              fmtPct(d.roa),              'Return on assets', kpiColor(d.roa, true)),
+    kpiRow('Gross Margin',     fmtPct(d.gross_margin),     calculationPeriod(d,'gross_margin',null), d.gross_margin > 40 ? '#22c55e' : d.gross_margin > 20 ? '#f59e0b' : '#ef4444'),
+    kpiRow('Operating Margin', fmtPct(d.operating_margin), calculationPeriod(d,'operating_margin',null), kpiColor(d.operating_margin, true)),
+    kpiRow('Net Margin',       fmtPct(d.net_margin),       calculationPeriod(d,'net_margin',null), kpiColor(d.net_margin, true)),
+    kpiRow('ROE',              fmtPct(d.roe),              calculationPeriod(d,'roe','Return on equity'), kpiColor(d.roe, true)),
+    kpiRow('ROA',              fmtPct(d.roa),              calculationPeriod(d,'roa','Return on assets'), kpiColor(d.roa, true)),
   ]);
   html += section('Balance Sheet & Dividends', [
     kpiRow('Debt / Equity',  fmtNum(d.debt_to_equity, 2), null, d.debt_to_equity != null ? (d.debt_to_equity > 200 ? '#ef4444' : d.debt_to_equity > 100 ? '#f59e0b' : '#22c55e') : '#64748b'),
-    kpiRow('Current Ratio',  fmtNum(d.current_ratio, 2),  'Current assets / liabilities', d.current_ratio != null ? (d.current_ratio > 1.5 ? '#22c55e' : d.current_ratio > 1 ? '#f59e0b' : '#ef4444') : '#64748b'),
-    kpiRow('Quick Ratio',    fmtNum(d.quick_ratio, 2),    'Liquid assets / liabilities'),
+    kpiRow('Current Ratio',  fmtNum(d.current_ratio, 2),  calculationPeriod(d,'current_ratio',null), d.current_ratio != null ? (d.current_ratio > 1.5 ? '#22c55e' : d.current_ratio > 1 ? '#f59e0b' : '#ef4444') : '#64748b'),
+    kpiRow('Quick Ratio',    fmtNum(d.quick_ratio, 2),    calculationPeriod(d,'quick_ratio',null)),
     kpiRow('Dividend Yield', d.dividend_yield != null ? d.dividend_yield.toFixed(2) + '%' : '—',    null, d.dividend_yield > 0 ? '#4a9eff' : '#64748b'),
     kpiRow('Payout Ratio',   fmtPct(d.payout_ratio)),
   ]);
@@ -1655,5 +1684,6 @@ function renderSectorDetail(data){
 
   document.getElementById('sectorDetailContent').innerHTML = html;
 }
+
 
 

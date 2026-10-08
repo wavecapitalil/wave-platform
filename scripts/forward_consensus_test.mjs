@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import {stripTypeScriptTypes} from 'node:module';
 import {numeric, parseNasdaq, parseYahoo, parseStockAnalysis, blendEstimates, collectForward} from '../supabase/functions/wave-data/forward-consensus.ts';
+import {settings,calculateCompany} from '../supabase/functions/wave-data/calculation-service.ts';
 const now = Date.parse('2026-10-07T14:00:00Z');
 function row(overrides={}) {return {source:'Test A',provider:'Provider A',url:'https://example.com',eps:2,
   period_end:'2026-12-31',basis:'adjusted',currency:'USD',fetched_at:new Date(now).toISOString(),
@@ -98,8 +99,8 @@ test('cached API refreshes the price and blends instead of returning old forward
     return new Response('unavailable',{status:401});
   };
   const original=globalThis.fetch;globalThis.fetch=fetchMock;
-  const builder={select(){return this},eq(){return this},maybeSingle:async()=>({data:{status:'ok',data:{_response_type:'json',payload:{symbol:'TEST',price:90,pe_forward:99,eps_forward:8}},logic_version:'test'},error:null})};
-  const context={Deno:{env:{get:()=>''},serve:h=>{handler=h}},createClient:()=>({from:()=>builder}),collectForward,fetch:fetchMock,Response,URL,URLSearchParams,Date,console,Set,Map};
+  const builder={single:async()=>({data:{revision:1,formulas:{}}}),select(){return this},eq(){return this},maybeSingle:async()=>({data:{status:'ok',data:{_response_type:'json',payload:{symbol:'TEST',price:90,pe_forward:99,eps_forward:8}},logic_version:'test'},error:null})};
+  const context={Deno:{env:{get:()=>''},serve:h=>{handler=h}},createClient:()=>({from:()=>builder,rpc:async()=>({data:null})}),settings,calculateCompany,collectForward,fetch:fetchMock,Response,URL,URLSearchParams,Date,console,Set,Map};
   const source=fs.readFileSync(new URL('../supabase/functions/wave-data/index.ts',import.meta.url),'utf8').replace(/^import.*\n/gm,'');
   vm.runInNewContext(stripTypeScriptTypes(source),context);
   try{
