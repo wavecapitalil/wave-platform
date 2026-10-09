@@ -39,7 +39,8 @@
       },
       "notOffered": [],
       "missingReason": null,
-      "note": "51 is the total survey sample. The own-reserves question denominator has not been independently verified."
+      "note": "51 is the total survey sample. The own-reserves question denominator has not been independently verified.",
+      "noteHe": "51 הוא מספר המשיבים בסקר כולו. מספר המשיבים לשאלה על יתרות המוסד עצמו לא אומת באופן עצמאי."
     },
     {
       "year": 2021,
@@ -98,7 +99,8 @@
         "dontKnow"
       ],
       "missingReason": null,
-      "note": "The own-reserves question denominator is reported as 57 in executive Chart 5 and 58 in detailed Q6, so it remains unverified. The Don’t know answer option was removed in 2023."
+      "note": "The own-reserves question denominator is reported as 57 in executive Chart 5 and 58 in detailed Q6, so it remains unverified. The Don’t know answer option was removed in 2023.",
+      "noteHe": "מספר המשיבים לשאלה מדווח כ־57 בתרשים 5 בתקציר וכ־58 בשאלה 6 המפורטת, ולכן נותר לא מאומת. האפשרות לא יודע הוסרה ב־2023."
     },
     {
       "year": 2024,

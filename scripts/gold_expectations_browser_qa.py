@@ -14,7 +14,7 @@ OUT.mkdir(exist_ok=True)
 DATA = json.loads((PUBLIC / 'data/gold-expectations.json').read_text())
 
 async def check(browser, label, width, height):
-    context = await browser.new_context(viewport={'width':width,'height':height},has_touch=width<=1024)
+    context = await browser.new_context(viewport={'width':width,'height':height},has_touch=width<=1024 or 'ipad' in label)
     page = await context.new_page()
     errors=[]
     page.on('pageerror',lambda e: errors.append(str(e)))
@@ -63,6 +63,33 @@ async def check(browser, label, width, height):
     await page.evaluate("navigate('commodities');navigate('welcome');navigate('commodities')")
     assert await panel.locator('svg').count()==1
     assert await page.locator('#page-commodities').is_visible()
+    # The scoped chart follows the terminal toggle, preserves year selection,
+    # and exposes touch-equivalent details without relying on hover.
+    await page.evaluate("setLang('he')")
+    assert await panel.get_attribute('dir')=='rtl'
+    assert 'ציפיות הבנקים המרכזיים לזהב' in await panel.inner_text()
+    button=panel.locator('button').filter(has_text='2020')
+    if width<=1024 or 'ipad' in label:
+        await button.tap()
+    else:
+        await button.click()
+    assert 'סכום האחוזים שפורסם: 101%' in await panel.inner_text()
+    assert 'הגדלה' in await panel.inner_text()
+    assert await panel.locator('svg').get_attribute('direction')=='ltr'
+    he_bounds=await panel.locator('svg').evaluate('e=>({w:e.viewBox.baseVal.width,labels:[...e.querySelectorAll("text")].map(t=>({text:t.textContent,x:t.getBBox().x,right:t.getBBox().x+t.getBBox().width}))})')
+    assert all(t['x']>=0 and t['right']<=he_bounds['w'] for t in he_bounds['labels']),he_bounds
+    assert await panel.evaluate('e=>e.scrollWidth<=e.clientWidth+2')
+    await panel.evaluate('e=>e.scrollIntoView({block:"start"})')
+    await page.screenshot(path=str(OUT/f'{label}-he-chart-top.png'))
+    await panel.locator('.gold-expectations-detail').evaluate('e=>e.scrollIntoView({block:"start"})')
+    await page.screenshot(path=str(OUT/f'{label}-he-detail.png'))
+    await page.evaluate("navigate('sources')")
+    he_source=page.locator('.sources-card').filter(has_text='ציפיות הבנקים המרכזיים לזהב')
+    assert await he_source.locator('a').count()>=len(DATA['rows'])
+    await page.evaluate("navigate('commodities');setLang('en')")
+    assert await panel.get_attribute('dir')=='ltr'
+    assert 'Central-bank gold expectations' in await panel.inner_text()
+    assert 'Published total: 101%' in await panel.inner_text()
     # A failed initial load is recoverable by explicit Retry.
     await page.route('**/data/gold-expectations.json',lambda r:r.fulfill(status=503,body='unavailable'))
     await page.reload(wait_until='load')

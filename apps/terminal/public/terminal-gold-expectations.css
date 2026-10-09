@@ -10,3 +10,5 @@
 @media(max-width:700px){.gold-expectations-axis{font-size:22px}.gold-expectations-segment-value{font-size:24px}.gold-expectations-legend{gap:10px 16px}.gold-expectations-years button{flex:1 0 20%;padding:8px 7px}.gold-expectations-chart{overflow:hidden}}
 
 .gold-expectations-break-note{font-size:11px;line-height:1.5;color:#a7b9ce;margin:4px 0 8px}@media(max-width:700px){#page-commodities .welcome-wrap{padding-bottom:90px}}
+
+.gold-expectations-chart svg{direction:ltr}.gold-expectations[dir=rtl] .gold-expectations-detail,.gold-expectations[dir=rtl] .gold-expectations-heading{text-align:right}.gold-expectations-response strong{unicode-bidi:plaintext}
