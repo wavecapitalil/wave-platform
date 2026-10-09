@@ -13,7 +13,7 @@ const context={console,URL,getLang:()=>lang,onLangChange(){previousLanguageHookC
 (async()=>{
  fail=true;await context.WaveGoldExpectations.load();assert.match(host.textContent,/could not be loaded/);assert.equal(host.querySelectorAll('button')[0].textContent,'Retry');
  fail=false;await Promise.all([context.WaveGoldExpectations.load(),context.WaveGoldExpectations.load()]);assert.equal(calls,2,'single in-flight request');
- assert.equal(host.querySelectorAll('svg').length,1);assert.match(host.textContent,/own institution/);assert.match(host.textContent,/2023 · “Don’t know” removed/);assert.match(host.textContent,/not scaled/);assert.match(host.textContent,/Not offered/);assert.match(host.textContent,/Not verified/);assert.ok(!host.textContent.includes('54%'));
+ assert.equal(host.querySelectorAll('svg').length,1);assert.match(host.textContent,/own institution/);assert.match(host.textContent,/2023 · “Don’t know” removed/);assert.equal(host.querySelectorAll('.gold-expectations-rounding').length,0);assert.equal(host.querySelectorAll('details').length,1);assert.match(host.textContent,/Not offered/);assert.match(host.textContent,/Not verified/);assert.ok(!host.textContent.includes('54%'));
  const groups=host.querySelectorAll('g');assert.equal(groups.length,3);
  for(const g of groups.slice(0,2)){assert.ok(Math.abs(g.querySelectorAll('rect').reduce((s,r)=>s+Number(r.getAttribute('height')),0)-200)<1e-6,'complete distributions exactly 100% visually');}
  assert.equal(groups[2].querySelectorAll('rect').reduce((s,r)=>s+Number(r.getAttribute('height')),0),92,'partial stack remains unscaled');
