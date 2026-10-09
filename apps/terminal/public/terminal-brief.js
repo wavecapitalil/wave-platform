@@ -2,7 +2,7 @@
  * snapshot is deliberately separate and can never replace this newspaper. */
 (function () {
   'use strict';
-  var loadedDate = null, loadedVersion = null, pending = null, timer = null, observers = [];
+  var loadedDate = null, loadedVersion = null, pending = null, timer = null, observers = [], cleanupReader = function(){};
   function node(tag, cls, text) {
     var el = document.createElement(tag);
     if (cls) el.className = cls;
@@ -42,6 +42,17 @@
     });
     return line;
   }
+  // Lift source color lightness only. Never change series order, values or labels.
+  // The same mapped color is shared by marks and their legend swatch.
+  function chartColor(color) {
+    if (!/^#[a-f0-9]{6}$/i.test(color || '')) color = '#85c6ef';
+    var rgb = [1,3,5].map(function(i){return parseInt(color.slice(i,i+2),16);});
+    function luminance(values){return values.reduce(function(sum,v,i){v/=255;return sum+[.2126,.7152,.0722][i]*(v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4));},0);}
+    while ((luminance(rgb)+.05)/(luminance([10,10,15])+.05)<4.5) {
+      rgb=rgb.map(function(v){return Math.min(255,v+8);});
+    }
+    return '#'+rgb.map(function(v){return v.toString(16).padStart(2,'0');}).join('');
+  }
   function interactiveChart(c) {
     var figure=node('figure','brief-chart brief-interactive');
     figure.appendChild(node('h4','',c.title));
@@ -61,7 +72,7 @@
       var track=node('span','brief-bar-track'),axis=node('span','brief-bar-zero');axis.style.left=zero+'%';track.appendChild(axis);
       if(known){
         var bar=node('span','brief-bar');bar.style.left=((Math.min(0,r.value)-low)/range*100)+'%';
-        bar.style.width=(Math.abs(r.value)/range*100)+'%';bar.style.background=r.color||(r.value<0?'#bd443b':'#237760');track.appendChild(bar);
+        bar.style.width=(Math.abs(r.value)/range*100)+'%';bar.style.background=chartColor(r.color||(r.value<0?'#bd443b':'#237760'));track.appendChild(bar);
       }
       row.appendChild(track);row.appendChild(node('span','brief-bar-value',formatted));
       function select(){
@@ -77,7 +88,7 @@
     figure.appendChild(node('h4','',c.title));
     figure.appendChild(periodLine(c));
     var legend=node('div','brief-chart-legend');legend.dir='ltr';
-    c.series.forEach(function(s){var label=node('span','',s.label),swatch=node('i');swatch.style.background=s.color;label.prepend(swatch);legend.appendChild(label);});
+    c.series.forEach(function(s){var label=node('span','',s.label),swatch=node('i');swatch.style.background=chartColor(s.color);label.prepend(swatch);legend.appendChild(label);});
     figure.appendChild(legend);
     var ns='http://www.w3.org/2000/svg';
     function svgNode(tag,attrs,text){var e=document.createElementNS(ns,tag);Object.keys(attrs||{}).forEach(function(k){e.setAttribute(k,String(attrs[k]));});if(text!=null)e.textContent=text;return e;}
@@ -109,22 +120,22 @@
       svg.setAttribute('viewBox','0 0 '+width+' '+height);svg.style.height=height+'px';svg.replaceChildren();
       for(var tick=0;tick<=4;tick++){
         var v=min+(max-min)*tick/4,yy=y(v);
-        svg.appendChild(svgNode('line',{x1:L,x2:width-R,y1:yy,y2:yy,stroke:'#d7ded3','stroke-width':1}));
-        svg.appendChild(svgNode('text',{x:L-8,y:yy+4,'text-anchor':'end',fill:'#56695c','font-size':11},fmt(v)));
+        svg.appendChild(svgNode('line',{x1:L,x2:width-R,y1:yy,y2:yy,stroke:'#526174','stroke-width':1}));
+        svg.appendChild(svgNode('text',{x:L-8,y:yy+4,'text-anchor':'end',fill:'#aebed0','font-size':11},fmt(v)));
       }
       var ticks=width<450?[0,c.labels.length-1]:[0,Math.floor((c.labels.length-1)/2),c.labels.length-1];
-      ticks.forEach(function(i,n){svg.appendChild(svgNode('text',{x:x(i),y:height-12,'text-anchor':n===0?'start':n===ticks.length-1?'end':'middle',fill:'#56695c','font-size':11},c.tickLabels[i]));});
+      ticks.forEach(function(i,n){svg.appendChild(svgNode('text',{x:x(i),y:height-12,'text-anchor':n===0?'start':n===ticks.length-1?'end':'middle',fill:'#aebed0','font-size':11},c.tickLabels[i]));});
       if(c.type==='stacked'){
         var barW=Math.min(38,plotW/c.labels.length*.64);
-        c.labels.forEach(function(_,i){var positive=0,negative=0;c.series.forEach(function(s){var value=s.values[i];if(value!=null){var base=value>=0?positive:negative;svg.appendChild(svgNode('rect',{x:x(i)-barW/2,y:y(Math.max(base,base+value)),width:barW,height:Math.abs(y(base)-y(base+value)),fill:s.color}));if(value>=0)positive+=value;else negative+=value;}});});
+        c.labels.forEach(function(_,i){var positive=0,negative=0;c.series.forEach(function(s){var value=s.values[i];if(value!=null){var base=value>=0?positive:negative;svg.appendChild(svgNode('rect',{x:x(i)-barW/2,y:y(Math.max(base,base+value)),width:barW,height:Math.abs(y(base)-y(base+value)),fill:chartColor(s.color)}));if(value>=0)positive+=value;else negative+=value;}});});
       }else{
         c.series.forEach(function(s,si){var d='',previous=null;s.values.forEach(function(v,i){
           if(v==null||!Number.isFinite(v)){previous=null;return;}
           var connected=previous!=null&&(!c.gapAfterMs||c.x[i]-c.x[previous]<=c.gapAfterMs);
           d+=(connected?'L':'M')+x(i).toFixed(2)+','+y(v).toFixed(2)+' ';previous=i;
-        });svg.appendChild(svgNode('path',{d:d,fill:'none',stroke:s.color,'stroke-width':2.2,'stroke-linejoin':'round','stroke-dasharray':si>4?'5 3':'none'}));});
+        });svg.appendChild(svgNode('path',{d:d,fill:'none',stroke:chartColor(s.color),'stroke-width':2.2,'stroke-linejoin':'round','stroke-dasharray':si>4?'5 3':'none'}));});
       }
-      cursor=svgNode('line',{x1:x(selected),x2:x(selected),y1:T,y2:height-B,stroke:'#233f30','stroke-width':1,'stroke-dasharray':'3 3'});svg.appendChild(cursor);select(selected);
+      cursor=svgNode('line',{x1:x(selected),x2:x(selected),y1:T,y2:height-B,stroke:'#dbe4ef','stroke-width':1,'stroke-dasharray':'3 3'});svg.appendChild(cursor);select(selected);
     }
     function nearest(event){if(!geometry)return;var rect=svg.getBoundingClientRect(),px=(event.clientX-rect.left)*geometry.width/rect.width;
       var best=0;for(var i=1;i<c.x.length;i++)if(Math.abs(geometry.x(i)-px)<Math.abs(geometry.x(best)-px))best=i;select(best);}
@@ -144,12 +155,12 @@
     article.appendChild(masthead);
     var contents = node('nav', 'brief-contents'); contents.setAttribute('aria-label','מדורי המהדורה');
     data.sections.forEach(function(s, i) {
-      contents.appendChild(button(s.kicker, function(){
+      contents.appendChild(button(s.kicker.split(' · ')[0], function(){
         var target=document.getElementById('brief-story-'+i);
-        if(target) {target.scrollIntoView({behavior:'smooth',block:'start'});target.focus({preventScroll:true});}
+        if(target) jumpTo(target);
       }));
     });
-    article.appendChild(contents);
+
     data.sections.forEach(function(s, i) {
       var section=node('section','brief-story'+(i===0?' brief-lead-story':''));
       section.id='brief-story-'+i; section.tabIndex=-1;
@@ -162,6 +173,8 @@
         if(c.type==='bars'){section.appendChild(interactiveChart(c));return;}
         if(c.type==='line'||c.type==='stacked'){section.appendChild(timeChart(c));return;}
         var figure=node('figure','brief-chart'), img=node('img');
+        figure.tabIndex=0;figure.setAttribute('role','region');figure.setAttribute('aria-label',c.alt||s.title);
+        figure.appendChild(node('figcaption','brief-original-hint','גרף מקור · גללו אופקית או הקישו לפתיחה בגודל מלא'));
         img.src=asset(c.src,'image');img.alt=c.alt||s.title;
         img.width=c.width;img.height=c.height;img.loading=i===0?'eager':'lazy';img.decoding='async';
         var link=node('a');link.href=img.src;link.target='_blank';link.rel='noopener';
@@ -185,7 +198,43 @@
     var footer=node('footer','brief-paper-footer');
     footer.appendChild(button('מקורות, שיטות ומגבלות הכיסוי',sources,'brief-source-link'));
     footer.appendChild(node('span','',dateText(data.date)));article.appendChild(footer);
-    var host=document.getElementById('briefArticle');host.replaceChildren(article);
+    var host=document.getElementById('briefArticle');
+    var rail=node('aside','brief-reader-rail');rail.dir='rtl';
+    var progressTitle=node('div','brief-progress-title','מיקום בבריף');
+    var progressLabel=node('div','brief-progress-label','0% · נותרו 100%');
+    var progress=node('progress','brief-progress');progress.max=100;progress.value=0;
+    progress.setAttribute('aria-label','מיקום הגלילה בבריף');
+    rail.appendChild(progressTitle);rail.appendChild(progressLabel);rail.appendChild(progress);
+    rail.appendChild(contents);
+    var current=0,sections=article.querySelectorAll('.brief-story');
+    var next=button('לפרק הבא ↓',function(){if(current<sections.length-1)jumpTo(sections[current+1]);},'brief-next-chapter');
+    rail.appendChild(next);cleanupReader();host.replaceChildren(rail,article);
+    // Use the actual Terminal scrolling pane, not document/window scroll.
+    var scroller=host.closest('.main')||document.scrollingElement;
+    var raf=0;
+    function offset(){return window.matchMedia('(max-width:1000px)').matches?rail.getBoundingClientRect().height+16:20;}
+    function jumpTo(target){
+      var top=target.getBoundingClientRect().top-scroller.getBoundingClientRect().top+scroller.scrollTop-offset();
+      scroller.scrollTo({top:Math.max(0,top),behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+      target.focus({preventScroll:true});
+    }
+    function updateReader(){
+      raf=0;if(!article.isConnected||!article.getClientRects().length)return;
+      var pane=scroller.getBoundingClientRect(),rect=article.getBoundingClientRect();
+      var start=rect.top-pane.top+scroller.scrollTop-offset();
+      var end=rect.bottom-pane.top+scroller.scrollTop-scroller.clientHeight;
+      var value=end<=start?100:Math.round(Math.max(0,Math.min(1,(scroller.scrollTop-start)/(end-start)))*100);
+      progress.value=value;progressLabel.textContent=value+'% · נותרו '+(100-value)+'%';
+      current=0;sections.forEach(function(section,i){if(section.getBoundingClientRect().top<=pane.top+offset()+24)current=i;});
+      contents.querySelectorAll('button').forEach(function(b,i){if(i===current)b.setAttribute('aria-current','location');else b.removeAttribute('aria-current');});
+      next.disabled=current===sections.length-1;
+    }
+    function scheduleReader(){if(!raf)raf=requestAnimationFrame(updateReader);}
+    scroller.addEventListener('scroll',scheduleReader,{passive:true});window.addEventListener('resize',scheduleReader);
+    var readerObserver=new ResizeObserver(scheduleReader);readerObserver.observe(article);readerObserver.observe(rail);
+    article.addEventListener('load',scheduleReader,true);
+    cleanupReader=function(){scroller.removeEventListener('scroll',scheduleReader);window.removeEventListener('resize',scheduleReader);article.removeEventListener('load',scheduleReader,true);readerObserver.disconnect();if(raf)cancelAnimationFrame(raf);};
+    scheduleReader();
     document.getElementById('briefDate').textContent='מהדורת '+dateText(data.date);
     document.getElementById('briefPageTitle').textContent='בריף הבוקר';
     document.getElementById('briefNavIcon').textContent='🌅';
