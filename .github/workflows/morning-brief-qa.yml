@@ -1,0 +1,44 @@
+name: Morning Brief QA
+
+on:
+  pull_request:
+    paths:
+      - "apps/terminal/public/briefs/**"
+      - "apps/terminal/public/terminal-brief.*"
+      - "apps/terminal/public/terminal.js"
+      - "apps/terminal/public/terminal_app.html"
+      - "scripts/brief_browser_qa.py"
+      - "scripts/validate_morning_brief.py"
+      - "scripts/brief_dom_test.cjs"
+      - ".github/workflows/morning-brief-qa.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  newspaper:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate publication contract
+        run: |
+          python scripts/validate_morning_brief.py
+          node scripts/brief_dom_test.cjs
+      - name: Install browser test tools
+        run: |
+          pip install playwright==1.58.0
+          python -m playwright install --with-deps chromium
+      - name: Test desktop, iPad and phone reader
+        run: python scripts/brief_browser_qa.py
+      - name: Save browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: morning-brief-browser-evidence
+          path: brief_browser_qa/
+          retention-days: 7

@@ -150,3 +150,17 @@ test('non-US exact timestamp without verified close uses the next session',()=>{
  const a=alignArticleSession({published_at:'2026-10-02T08:00:00Z',timing:'exact'},c);
  assert.equal(a.index,2);assert.equal(a.rule,'unknown_close_next_session');
 });
+
+
+test('range clipping never moves an earlier trading-day article onto the first visible session',async()=>{
+ const ds=['2026-09-03','2026-09-04','2026-09-08','2026-09-09','2026-09-10','2026-10-08'],raw=[100,101,102,115,114,113];
+ const old=providerNews({providerPublishTime:Date.parse('2026-09-04T12:00:00Z')/1000});
+ const r=await collectPriceHistory('TEST','1mo',{now:NOW,fetcher:mockFetch({stock:payload({ds,raw}),news:{news:[old]}}),reviewedEvents:[]});
+ assert.equal(r.points[0].date,'2026-09-09');assert.ok(r.points[0].change_pct>10);assert.deepEqual(r.events,[]);
+});
+test('an after-close article before the range retains its true next-session alignment',async()=>{
+ const ds=['2026-09-03','2026-09-04','2026-09-08','2026-09-09','2026-09-10','2026-10-08'],raw=[100,101,102,115,114,113];
+ const old=providerNews({providerPublishTime:Date.parse('2026-09-08T21:00:00Z')/1000});
+ const r=await collectPriceHistory('TEST','1mo',{now:NOW,fetcher:mockFetch({stock:payload({ds,raw}),news:{news:[old]}}),reviewedEvents:[]});
+ assert.equal(r.events.length,1);assert.equal(r.events[0].index,0);assert.equal(r.events[0].date,'2026-09-09');assert.equal(r.events[0].alignment_rule,'after_close_next_session');
+});

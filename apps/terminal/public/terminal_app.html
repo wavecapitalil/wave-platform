@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="terminal-sources.css?v=20261008-1">
 <link rel="stylesheet" href="terminal-valuation.css?v=20261008-live1">
 <link rel="stylesheet" href="terminal-price-history.css?v=20261008-price-events">
+<link rel="stylesheet" href="terminal-brief.css?v=20261009-dark-reader1">
 </head>
 <body>
 
@@ -398,9 +399,8 @@
           <div class="page-header-title" id="briefPageTitle">Morning Brief</div>
           <div class="page-header-sub" id="briefDate"></div>
         </div>
-        <div class="iframe-container">
-          <iframe src="" id="briefFrame" title="Morning Intelligence Dashboard"></iframe>
-        </div>
+        <div id="briefStatus" role="status" aria-live="polite" dir="rtl"></div>
+        <div id="briefArticle"></div>
       </div>
     </div>
 
@@ -1515,7 +1515,8 @@
 </div><!-- end app-body -->
 
 <script src="terminal-sources.js?v=20261008-sources1"></script>
-<script src="terminal.js?v=20261008-nav2"></script>
+<script src="terminal-brief.js?v=20261009-dark-reader1"></script>
+<script src="terminal.js?v=20261008-brief-paper1"></script>
 <script src="terminal-market.js?v=20261008-sources1"></script>
 <script src="terminal-content.js?v=20261008-sources1"></script>
 <script src="terminal-flows.js?v=20261008-sources1"></script>
@@ -1524,10 +1525,10 @@
 <script src="terminal-confluence.js?v=20261008-sources1"></script>
 <script src="terminal-seasonality.js?v=20261008-sources1"></script>
 <script src="forward-consensus-ui.js?v=20261008-sources1"></script>
-<script src="fundamental-chart-model.js?v=20261008-yoy-png"></script>
+<script src="fundamental-chart-model.js?v=20261008-reporting"></script>
 <script src="terminal-chart-export.js?v=20261008-yoy-png"></script>
 <script src="terminal-price-history.js?v=20261008-price-events2"></script>
-<script src="terminal-equities.js?v=20261008-price-events2"></script>
+<script src="terminal-equities.js?v=20261009-price-reporting"></script>
 <script src="equity-workbook-model.js?v=20261008-live1"></script>
 <script src="terminal-valuation.js?v=20261008-live1"></script>
 <script src="terminal-risk.js?v=20261008-sources1"></script>

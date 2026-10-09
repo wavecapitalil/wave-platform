@@ -146,10 +146,10 @@ export function alignBenchmark(stock:ParsedChart,benchmark:ParsedChart|null):{st
  for(let i=1;i<stock.points.length;i++){const p=stock.points[i],b=map.get(p.date);if(p.change_pct==null||!b||b.previous!==stock.points[i-1].date||b.point.change_pct==null)continue;p.benchmark_change_pct=b.point.change_pct;p.excess_change_pp=calculatePriceHistory('price_history_excess_pp',{stock_return:p.change_pct,benchmark_return:b.point.change_pct});matched++;}
  return {status:matched?'available':'no_aligned_sessions',matched};
 }
-export function selectPriceEvents(chart:ParsedChart,articles:Article[],range:PriceRange):any[]{
+export function selectPriceEvents(chart:ParsedChart,articles:Article[],range:PriceRange,visibleStartIndex=0):any[]{
  const points=chart.points,n=points.length,window=range==='1mo'?2:range==='5y'?10:4;
  const candidates=new Map<number,{reason:string;score:number}>();
- for(let i=0;i<n;i++){
+ for(let i=visibleStartIndex;i<n;i++){
   const p=points[i],move=p.change_pct==null?0:Math.abs(p.change_pct);
   if(move>=2.5)candidates.set(i,{reason:'large_move',score:move});
   if(i<window||i>=n-window)continue;
@@ -165,13 +165,13 @@ export function selectPriceEvents(chart:ParsedChart,articles:Article[],range:Pri
   const aligned=alignArticleSession(article,chart);if(!aligned)continue;
   // Only the first eligible session or the immediately following session can be
   // linked. A move before publication is never selected as that article's event.
-  const choices=[aligned.index,aligned.index+1].filter(i=>i<n&&candidates.has(i));
+  const choices=[aligned.index,aligned.index+1].filter(i=>i>=visibleStartIndex&&i<n&&candidates.has(i));
   if(!choices.length)continue;
   const index=choices.sort((a,b)=>(candidates.get(b)!.score-(b===aligned.index?0:1))-(candidates.get(a)!.score-(a===aligned.index?0:1)))[0],p=points[index],candidate=candidates.get(index)!;
   const relationship=article.reviewed&&article.relationship==='reported_driver'&&!aligned.shifted&&article.timing==='exact'&&index===aligned.index?'reported_driver':'context';
   pool.push({id:article.id,date:p.date,index,price:p.close,title:article.title,summary:article.summary,url:article.url,source:article.source,published_at:article.published_at,relationship,reason:candidate.reason,change_pct:p.change_pct,benchmark_change_pct:p.benchmark_change_pct,excess_change_pp:p.excess_change_pp,timing:article.timing,timing_label:article.timing==='date_only'?'Publication date only; next session or later':aligned.rule==='after_close_next_session'?'Published after close; next session or later':aligned.rule==='unknown_close_next_session'?'Close unverified; next session or later':aligned.rule==='nontrading_day_next_session'?'Published on a non-trading day; next session or later':index>aligned.index?'Session after first eligible session':'Published before session close; daily change may include moves before publication',alignment_rule:aligned.rule,reviewed:article.reviewed,_score:candidate.score+(article.reviewed?1:0)});
  }
- const max=range==='1mo'?6:8,spacing=Math.max(2,Math.min(10,Math.floor(n/35))),selected:any[]=[];
+ const max=range==='1mo'?6:8,spacing=Math.max(2,Math.min(10,Math.floor((n-visibleStartIndex)/35))),selected:any[]=[];
  for(const event of pool.sort((a,b)=>b._score-a._score||a.index-b.index||a.url.localeCompare(b.url))){if(selected.length>=max)break;if(selected.some(s=>Math.abs(s.index-event.index)<spacing))continue;const {_score,...result}=event;selected.push(result);}
  return selected.sort((a,b)=>a.index-b.index);
 }
@@ -197,18 +197,23 @@ export async function collectPriceHistory(symbolInput:string,rangeInput:string,o
   let benchmark:ParsedChart|null=null;
   if(chart.isUS){try{benchmark=symbol==='SPY'?{...chart,points:chart.points.map(p=>({...p}))}:parsePriceChart(await fetchJson(chartUrl('SPY',range,now),fetcher),'SPY',now);}catch{/* A benchmark failure must not remove valid stock prices. */}}
   const benchmarkResult=alignBenchmark(chart,benchmark),news=await newsPromise;
-  const start=rangeStartDate(now,range,chart.timezone);chart.points=chart.points.filter(p=>p.date>=start);
+  const start=rangeStartDate(now,range,chart.timezone),visibleStartIndex=chart.points.findIndex(p=>p.date>=start);
+  if(visibleStartIndex<0||chart.points.length-visibleStartIndex<2)throw new PriceHistoryError('Not enough completed sessions in the requested range');
+  const reviewed=reviewedArticles(opts.reviewedEvents??REVIEWED_PRICE_EVENTS,symbol,now,chart.isUS),articles=[...reviewed,...news.articles];
+  // Resolve publication timing against the full fetched session buffer. Clipping
+  // first could turn an earlier trading day into an apparent non-trading day and
+  // incorrectly attach its article to the first visible session.
+  const events=selectPriceEvents(chart,articles,range,visibleStartIndex).map(e=>({...e,index:e.index-visibleStartIndex}));
+  const coveredReviewed=reviewed.filter(e=>{const aligned=alignArticleSession(e,chart);return aligned!=null&&aligned.index+1>=visibleStartIndex;});
+  chart.points=chart.points.slice(visibleStartIndex);
   benchmarkResult.matched=chart.points.filter(p=>p.benchmark_change_pct!=null).length;
   if(benchmarkResult.status==='available'&&!benchmarkResult.matched)benchmarkResult.status='no_aligned_sessions';
-  if(chart.points.length<2)throw new PriceHistoryError('Not enough completed sessions in the requested range');
-  const reviewed=reviewedArticles(opts.reviewedEvents??REVIEWED_PRICE_EVENTS,symbol,now,chart.isUS),articles=[...reviewed,...news.articles],events=selectPriceEvents(chart,articles,range);
   const first=chart.points[0],last=chart.points.at(-1)!,high=chart.points.reduce((a,b)=>a.close>b.close?a:b),low=chart.points.reduce((a,b)=>a.close<b.close?a:b);
   const limitations=[...chart.limitations,'Yahoo search supplies a rolling recent headline sample (eligible publications within 45 days), not a historical news archive. Reviewed historical events are a limited sample and do not cover every ticker or move.','Annotations are dated context near large moves or local extrema; temporal proximity does not establish causation. Date-only publications are conservatively placed on the next trading session or later.'];
   if(benchmarkResult.status!=='available')limitations.push(`SPY comparison unavailable (${benchmarkResult.status}); no benchmark return or excess return is inferred.`);
   if(news.status!=='available')limitations.push(`Recent ticker-tagged news is ${news.status}; valid historical prices remain available.`);
   if(chart.basis==='dividend_and_split_adjusted_close')limitations.push('Adjusted close is the provider’s dividend-and-split-adjusted series, not the originally traded price. Raw close is provider split-adjusted close. Range high/low are closing-price extrema, not intraday highs/lows.');
   else limitations.push('Range high/low are closing-price extrema, not intraday highs/lows.');
-  const coveredReviewed=reviewed.filter(e=>alignArticleSession(e,chart)!=null);
   return {symbol,range,currency:chart.currency,exchange_timezone:chart.timezone,price_basis:chart.basis,points:chart.points,events,summary:{start_date:first.date,end_date:last.date,change_pct:calculatePriceHistory('price_history_return_pct',{current:last.close,previous:first.close}),high:{date:high.date,close:high.close},low:{date:low.date,close:low.close}},meta:{fetched_at:new Date(now).toISOString(),price_source:'Yahoo Finance chart daily',price_url:`https://finance.yahoo.com/quote/${encodeURIComponent(symbol)}/history/`,news_source:'Yahoo Finance ticker-tagged recent search + reviewed primary-source sample',news_status:news.status,news_coverage:{type:'recent_sample_plus_reviewed_history',recent_max_age_days:45,recent_valid_articles:news.articles.length,recent_rejected_articles:news.rejected,historical_archive:false,range_coverage:'partial',reviewed_articles_in_range:coveredReviewed.length},reviewed_event_count:coveredReviewed.length,selected_event_count:events.length,benchmark:{symbol:chart.isUS?'SPY':null,...benchmarkResult,currency:chart.isUS?'USD':null,price_basis:benchmark?.basis??null},cache_ttl_seconds:CACHE_TTL/1000,limitations}};
  };
  const promise=run();if(useCache)inflight.set(key,promise);
