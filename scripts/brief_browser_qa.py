@@ -49,7 +49,11 @@ async def check(browser, label, width, height):
         await page.wait_for_function("document.querySelector('.brief-series-svg path, .brief-series-svg rect') !== null")
     layout=await page.evaluate('({width:innerWidth,scroll:document.documentElement.scrollWidth,article:document.querySelector(".brief-paper").getBoundingClientRect().width})')
     assert layout['scroll']<=width+2,layout
-    assert await page.locator('#briefArticle').evaluate('el=>el.scrollWidth<=el.clientWidth+2')
+    article_layout=await page.locator('#briefArticle').evaluate('el=>({scroll:el.scrollWidth,width:el.clientWidth})')
+    await page.screenshot(path=str(OUT/f'{label}-layout.png'))
+    assert article_layout['scroll']<=article_layout['width']+2,(label,article_layout)
+    await page.wait_for_function("document.querySelector('.brief-progress').value === 0")
+    assert await page.locator('.brief-contents button').count()==len(SECTIONS)
     # The copy is actual selectable text, not a PDF/plugin/page-image viewer.
     selected=await page.locator('.brief-story-body p').first.evaluate('el=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);return s.toString();}')
     first_text = next(p['text'] for section in SECTIONS for p in section['paragraphs'] if p['kind'] == 'text')
@@ -74,8 +78,10 @@ async def check(browser, label, width, height):
     assert all('invert(1)' in value for value in theme['imageFilter']),theme
     await page.screenshot(path=str(OUT/f'{label}-top.png'))
     if await page.locator('.brief-chart img').count():
-        await page.locator('.brief-chart img').first.scroll_into_view_if_needed()
-        await page.screenshot(path=str(OUT/f'{label}-original-chart.png'))
+        for i, image in enumerate(await page.locator('.brief-chart img').all()):
+            await image.scroll_into_view_if_needed()
+            await image.evaluate('el=>el.decode()')
+            await page.screenshot(path=str(OUT/f'{label}-original-chart-{i+1}.png'))
     if BAR_CHARTS:
         first_chart=page.locator('.brief-interactive:not(.brief-time-series)').first
         index=min(1,len(BAR_CHARTS[0]['rows'])-1)
@@ -140,6 +146,8 @@ async def check(browser, label, width, height):
         'revision':hashlib.sha256(archived_bytes).hexdigest()}))
     await page.evaluate('WaveBrief.reload()')
     await page.wait_for_function("document.querySelector('.brief-series-svg path') !== null")
+    assert await page.locator('.brief-contents button').count()==9
+    assert await page.locator('.brief-reader-rail').count()==1
     await page.locator('.brief-time-series').first.scroll_into_view_if_needed()
     await page.screenshot(path=str(OUT/f'{label}-archived-series.png'))
     assert await page.locator('.brief-series-svg text').first.get_attribute('fill')=='#aebed0'

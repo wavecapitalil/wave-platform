@@ -52,13 +52,13 @@
 .brief-paper-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-top:26px;font-size:12px;color:#adb9c1}
 .brief-source-link{font:inherit;font-size:14px;color:#c3dfce;background:none;border:0;border-bottom:1px solid #c3dfce;padding:10px 0;cursor:pointer}
 @media(max-width:1000px){.brief-story-body{column-count:1}.brief-story{padding:28px 0}}
-@media(max-width:600px){#page-brief .brief-wrap{padding:20px 10px 64px}.brief-paper{padding:0}.brief-story-body{font-size:17px;line-height:1.9}.brief-brand{letter-spacing:1px}.brief-deck{font-size:17px}.brief-contents{justify-content:flex-start}.brief-contents button{padding:9px 8px;font-size:10px}.brief-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.brief-story h1{font-size:34px}.brief-chart{margin:20px -4px}.brief-paper table{font-size:13px}}
+@media(max-width:600px){#page-brief .brief-wrap{padding:20px 10px 64px}.brief-paper{padding:0}.brief-story-body{font-size:17px;line-height:1.9}.brief-brand{letter-spacing:1px}.brief-deck{font-size:17px}.brief-contents{justify-content:flex-start}.brief-contents button{padding:9px 8px;font-size:10px}.brief-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.brief-story h1{font-size:34px}.brief-chart{margin:20px 0}.brief-paper table{font-size:13px}}
 @media(max-width:600px){.brief-interactive{padding:16px 0}.brief-bar-row{grid-template-columns:82px minmax(32px,1fr) 65px;gap:7px;font-size:12px;padding:7px 3px}.brief-interactive h4{font-size:17px}.brief-bar-label{overflow-wrap:anywhere}}
 
 /* Original raster graphs retain every pixel and open in their unmodified form.
    Presentation-only inversion lightens labels; hue rotation retains color families.
    Screen blending lets the darkened paper merge with the Terminal background. */
-.brief-chart:not(.brief-interactive){padding:0;isolation:isolate}
+.brief-chart:not(.brief-interactive){padding:0}
 .brief-chart img{filter:invert(1) hue-rotate(180deg);mix-blend-mode:screen}
 .brief-paper :is(button,a,input,[tabindex]):focus-visible{outline:2px solid #c3dfce;outline-offset:4px}
 .brief-bar-row.selected,.brief-bar-row:hover,.brief-bar-row:focus-visible{color:#eef4fa!important}
@@ -79,9 +79,9 @@
 .brief-next-chapter:disabled{opacity:.45;cursor:default}
 .brief-reader-rail :is(button,progress):focus-visible{outline:2px solid #c3dfce;outline-offset:2px}
 @media(max-width:1100px){#briefArticle{grid-template-columns:minmax(0,1fr) 120px;gap:18px}.brief-story-body{column-count:1}}
-@media(max-width:700px){
+@media(max-width:1000px){
   #briefArticle{display:flex;flex-direction:column;gap:16px}
-  .brief-reader-rail{top:0;z-index:5;width:100%;padding:10px 0;background:#0a0a0f;display:grid;grid-template-columns:1fr auto;column-gap:14px}
+  .brief-reader-rail{top:0;z-index:5;width:100%;min-width:0;padding:10px 0;background:var(--black,#0a0a0f);display:grid;grid-template-columns:1fr auto;column-gap:14px}
   .brief-progress-title{margin:0}.brief-progress-label{margin:0;text-align:left}
   .brief-progress{grid-column:1/-1;margin:8px 0}
   .brief-reader-rail .brief-contents{grid-column:1/-1;flex-direction:row;overflow-x:auto;flex-wrap:nowrap;max-width:100%;gap:4px}

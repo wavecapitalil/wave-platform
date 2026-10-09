@@ -210,7 +210,7 @@
     // Use the actual Terminal scrolling pane, not document/window scroll.
     var scroller=host.closest('.main')||document.scrollingElement;
     var raf=0;
-    function offset(){return window.matchMedia('(max-width:700px)').matches?rail.getBoundingClientRect().height+16:20;}
+    function offset(){return window.matchMedia('(max-width:1000px)').matches?rail.getBoundingClientRect().height+16:20;}
     function jumpTo(target){
       var top=target.getBoundingClientRect().top-scroller.getBoundingClientRect().top+scroller.scrollTop-offset();
       scroller.scrollTo({top:Math.max(0,top),behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
