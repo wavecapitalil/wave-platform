@@ -34,6 +34,8 @@ async def check(browser, label, width, height):
     positions=await page.evaluate('({ratio:document.querySelector("#gsrSection").getBoundingClientRect().bottom,panel:document.querySelector("#goldExpectationsPanel").getBoundingClientRect().top})')
     assert positions['panel']>positions['ratio']
     assert await panel.evaluate('e=>e.scrollWidth<=e.clientWidth+2')
+    assert await panel.locator('.gold-expectations-chart').evaluate('e=>e.scrollWidth<=e.clientWidth+2')
+    assert await panel.locator('button').first.evaluate('e=>e.getBoundingClientRect().height>=44')
     assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
     assert 'own institution' in await panel.inner_text()
     assert '2023 · “Don’t know” removed' in await panel.inner_text()
@@ -71,7 +73,7 @@ async def main():
     threading.Thread(target=server.serve_forever,daemon=True).start()
     async with async_playwright() as p:
         browser=await p.chromium.launch(headless=True,executable_path=shutil.which('chromium'),args=['--no-sandbox'])
-        reports=[await check(browser,*v) for v in [('desktop',1440,1000),('ipad',834,1194),('phone',390,844)]]
+        reports=[await check(browser,*v) for v in [('desktop',1440,1000),('ipad-portrait',834,1194),('ipad-landscape',1194,834),('phone',390,844),('phone-small',360,780)]]
         await browser.close()
     server.shutdown()
     (OUT/'report.json').write_text(json.dumps(reports,indent=2))

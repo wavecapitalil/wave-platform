@@ -1,7 +1,7 @@
 /* Annual survey expectations only. No purchase-volume or price inference. */
 (function(root){
   'use strict';
-  var host, loading=null, saved=null, selected=null;
+  var host, loading=null, saved=null, selected=null, resizeTimer=null;
   var NS='http://www.w3.org/2000/svg';
   var categories=[['increase','Increase','#47bd96'],['unchanged','Unchanged','#e6b65c'],['decrease','Decrease','#dc737a'],['dontKnow','Don’t know','#8996a9']];
   function node(tag,text,cls){var e=document.createElement(tag);if(text!=null)e.textContent=text;if(cls)e.className=cls;return e;}
@@ -45,10 +45,11 @@
     var rows=data.rows.slice().sort(function(a,b){return a.year-b.year;});
     if(!rows.length){host.appendChild(node('p',data.statusText||'Historical survey series is not available yet.','gold-expectations-status'));return;}
     var wrap=node('div',null,'gold-expectations-chart');
-    var chart=svg('svg',{viewBox:'0 0 900 300',role:'group','aria-label':'Own-institution gold reserve expectations by survey year. Stacked response shares. Percentage scale 0 to 100.'});
-    var width=810,step=width/rows.length,left=62,base=244,height=200;
+    var compact=(host.clientWidth||900)<650,chartWidth=compact?600:900;
+    var chart=svg('svg',{viewBox:'0 0 '+chartWidth+' 300',role:'group','aria-label':'Own-institution gold reserve expectations by survey year. Stacked response shares. Percentage scale 0 to 100.'});
+    var left=compact?52:62,width=chartWidth-left-28,step=width/rows.length,base=244,height=200;
     var defs=svg('defs');categories.forEach(function(c){var g=svg('linearGradient',{id:'gold-expectations-'+c[0],x1:'0%',y1:'0%',x2:'100%',y2:'0%'});g.appendChild(svg('stop',{offset:'0%','stop-color':c[2],'stop-opacity':'.72'}));g.appendChild(svg('stop',{offset:'25%','stop-color':c[2]}));g.appendChild(svg('stop',{offset:'78%','stop-color':c[2]}));g.appendChild(svg('stop',{offset:'100%','stop-color':c[2],'stop-opacity':'.76'}));defs.appendChild(g);});chart.appendChild(defs);
-    [0,25,50,75,100].forEach(function(t){var y=base-t*height/100;chart.appendChild(svg('line',{x1:left,y1:y,x2:872,y2:y,class:'gold-expectations-grid'}));chart.appendChild(svg('text',{x:52,y:y+4,'text-anchor':'end',class:'gold-expectations-axis'},t+'%'));});
+    [0,25,50,75,100].forEach(function(t){var y=base-t*height/100;chart.appendChild(svg('line',{x1:left,y1:y,x2:chartWidth-28,y2:y,class:'gold-expectations-grid'}));chart.appendChild(svg('text',{x:left-10,y:y+4,'text-anchor':'end',class:'gold-expectations-axis'},t+'%'));});
     var breakIndex=rows.findIndex(function(r){return (r.notOffered||[]).indexOf('dontKnow')>=0;});
     if(breakIndex>0){var bx=left+breakIndex*step;chart.appendChild(svg('line',{x1:bx,y1:28,x2:bx,y2:base,class:'gold-expectations-break'}));chart.appendChild(svg('text',{x:bx+7,y:18,class:'gold-expectations-axis'},rows[breakIndex].year+' · “Don’t know” removed'));}
     var legend=node('div',null,'gold-expectations-legend');categories.forEach(function(c){var item=node('span',c[1]);item.style.color=c[2];legend.appendChild(item);});host.appendChild(legend);
@@ -67,7 +68,7 @@
     }
     rows.forEach(function(r,i){var group=svg('g',{role:'button',tabindex:'0','aria-label':r.year+' survey; select to read all response shares'});group.appendChild(svg('title',{},r.year+' · '+categories.map(function(c){return c[1]+': '+(r.shares[c[0]]==null?((r.notOffered||[]).includes(c[0])?'not offered':'not verified'):r.shares[c[0]]+'%');}).join(' · ')+' · World Gold Council / YouGov · '+r.sourceUrl));group.addEventListener('click',function(){select(r);});group.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();select(r);}});chart.appendChild(group);var x=left+step*(i+.5),barWidth=Math.min(54,step*.58);
       var complete=categories.every(function(c){return r.shares[c[0]]!=null||(r.notOffered||[]).includes(c[0]);}),sum=categories.reduce(function(v,c){return v+(r.shares[c[0]]||0);},0),scale=complete&&sum?100/sum:1;
-      var cumulative=0;categories.forEach(function(c){var value=r.shares[c[0]];if(value==null)return;var y=base-(cumulative+value)*scale*height/100;group.appendChild(svg('rect',{x:x-barWidth/2,y:y,width:barWidth,height:value*scale*height/100,fill:'url(#gold-expectations-'+c[0]+')',class:'gold-expectations-segment'}));if(value>=10)group.appendChild(svg('text',{x:x,y:y+value*scale*height/200+4,'text-anchor':'middle',class:'gold-expectations-segment-value'},value+'%'));cumulative+=value;});
+      var cumulative=0;categories.forEach(function(c){var value=r.shares[c[0]];if(value==null)return;var y=base-(cumulative+value)*scale*height/100;group.appendChild(svg('rect',{x:x-barWidth/2,y:y,width:barWidth,height:value*scale*height/100,fill:'url(#gold-expectations-'+c[0]+')',class:'gold-expectations-segment'}));if(value>=8)group.appendChild(svg('text',{x:x,y:y+value*scale*height/200+4,'text-anchor':'middle',class:'gold-expectations-segment-value'},value+'%'));cumulative+=value;});
       if(categories.some(function(c){return r.shares[c[0]]==null&&(r.notOffered||[]).indexOf(c[0])<0;}))group.appendChild(svg('text',{x:x,y:base-cumulative*height/100-10,'text-anchor':'middle',class:'gold-expectations-axis'},'Partial'));
       group.appendChild(svg('text',{x:x,y:base+25,'text-anchor':'middle',class:'gold-expectations-axis'},r.year));
       var b=node('button',r.year);b.type='button';b.dataset.year=r.year;b.addEventListener('click',function(){select(r);});buttons.push(b);controls.appendChild(b);
@@ -83,5 +84,6 @@
     host.textContent='Loading annual central-bank expectations…';
     loading=fetch('data/gold-expectations.json',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('Unavailable');return r.json();}).then(render).catch(function(){host.replaceChildren(node('h2','Central-bank gold expectations'),node('p','The annual survey series could not be loaded.','gold-expectations-status'));var retry=node('button','Retry');retry.type='button';retry.addEventListener('click',load);host.appendChild(retry);}).finally(function(){loading=null;});return loading;
   }
+  if(root.addEventListener)root.addEventListener('resize',function(){clearTimeout(resizeTimer);resizeTimer=setTimeout(function(){if(saved&&host&&host.clientWidth)render(saved);},120);});
   root.WaveGoldExpectations={load:load,render:render,validate:validate};
 })(typeof window!=='undefined'?window:globalThis);
