@@ -155,7 +155,7 @@
     article.appendChild(masthead);
     var contents = node('nav', 'brief-contents'); contents.setAttribute('aria-label','מדורי המהדורה');
     data.sections.forEach(function(s, i) {
-      contents.appendChild(button(s.kicker, function(){
+      contents.appendChild(button(s.kicker.split(' · ')[0], function(){
         var target=document.getElementById('brief-story-'+i);
         if(target) jumpTo(target);
       }));
@@ -173,6 +173,8 @@
         if(c.type==='bars'){section.appendChild(interactiveChart(c));return;}
         if(c.type==='line'||c.type==='stacked'){section.appendChild(timeChart(c));return;}
         var figure=node('figure','brief-chart'), img=node('img');
+        figure.tabIndex=0;figure.setAttribute('role','region');figure.setAttribute('aria-label',c.alt||s.title);
+        figure.appendChild(node('figcaption','brief-original-hint','גרף מקור · גללו אופקית או הקישו לפתיחה בגודל מלא'));
         img.src=asset(c.src,'image');img.alt=c.alt||s.title;
         img.width=c.width;img.height=c.height;img.loading=i===0?'eager':'lazy';img.decoding='async';
         var link=node('a');link.href=img.src;link.target='_blank';link.rel='noopener';

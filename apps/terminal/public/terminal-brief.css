@@ -84,8 +84,18 @@
   .brief-reader-rail{top:0;z-index:5;width:100%;min-width:0;padding:10px 0;background:var(--black,#0a0a0f);display:grid;grid-template-columns:1fr auto;column-gap:14px}
   .brief-progress-title{margin:0}.brief-progress-label{margin:0;text-align:left}
   .brief-progress{grid-column:1/-1;margin:8px 0}
-  .brief-reader-rail .brief-contents{grid-column:1/-1;flex-direction:row;overflow-x:auto;flex-wrap:nowrap;max-width:100%;gap:4px}
-  .brief-reader-rail .brief-contents button{flex:none;border-inline-start:0;border-bottom:2px solid #293647;white-space:nowrap;font-size:10px;padding:8px}
+  .brief-reader-rail .brief-contents{grid-column:1/-1;flex-direction:row;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;max-width:100%;gap:4px}
+  .brief-reader-rail .brief-contents button{flex:none;max-width:220px;border-inline-start:0;border-bottom:2px solid #293647;white-space:normal;line-height:1.4;font-size:11px;padding:8px}
   .brief-next-chapter{grid-column:1/-1;justify-self:end;width:auto;margin-top:4px;min-height:36px;padding:6px 10px}
   #briefArticle .brief-paper{width:100%}
+}
+
+/* Keep original bitmap labels legible on touch screens; pan inside the figure. */
+.brief-original-hint{display:none;color:#adb9c1;font-size:12px;line-height:1.6;margin:0 0 8px}
+@media(max-width:1000px){
+ .brief-chart:not(.brief-interactive){overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
+ .brief-chart:not(.brief-interactive) img{min-width:720px}
+ .brief-original-hint{display:block;position:sticky;right:0}
+ .brief-reader-rail{grid-template-columns:minmax(0,1fr) auto}
+ .brief-reader-rail .brief-contents{min-width:0}
 }

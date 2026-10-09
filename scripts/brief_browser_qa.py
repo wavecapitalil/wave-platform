@@ -109,6 +109,7 @@ async def check(browser, label, width, height):
     await page.locator('.brief-paper-footer').scroll_into_view_if_needed()
     await page.wait_for_function("document.querySelector('.brief-progress').value === 100")
     assert 'נותרו 0%' in await page.locator('.brief-progress-label').inner_text()
+    await page.screenshot(path=str(OUT/f'{label}-reader-at-end.png'))
     await page.locator('.brief-contents button').first.click()
     await page.wait_for_function("document.querySelector('.brief-contents button:first-child').getAttribute('aria-current') === 'location'")
     await page.locator('.brief-next-chapter').click()
@@ -165,7 +166,7 @@ async def main():
     async with async_playwright() as p:
         browser=await p.chromium.launch(headless=True,executable_path=shutil.which('chromium'),args=['--no-sandbox'])
         reports=[]
-        for spec in [('desktop',1440,1000),('ipad',834,1194),('ipad-landscape',1194,834),('phone',390,844)]:
+        for spec in [('desktop',1440,1000),('ipad',834,1194),('ipad-landscape',1194,834),('phone',390,844),('phone-small',360,780)]:
             reports.append(await check(browser,*spec))
         await browser.close()
     server.shutdown()
