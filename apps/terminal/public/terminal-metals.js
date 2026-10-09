@@ -12,6 +12,7 @@ function setGsrPeriod(period, btn){
 }
 
 async function loadCommodities(){
+  if(window.WaveGoldExpectations) window.WaveGoldExpectations.load();
   var canvas = document.getElementById('gsrChart');
   if(!canvas) return;
 
