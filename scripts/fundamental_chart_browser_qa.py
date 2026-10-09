@@ -46,8 +46,8 @@ VIEWPORTS = [
 
 def fixture(symbol, metric, period):
     """Reported-date fixtures; different annual fiscal ends must align by year."""
-    if symbol in {"REPORTAPPLE", "REPORTNVDA"}:
-        apple = symbol == "REPORTAPPLE"
+    if symbol in {"RPAPPLE", "RPNVDA"}:
+        apple = symbol == "RPAPPLE"
         annual = [
             {"fiscal_year": 2024, "fiscal_quarter": None, "period_end": "2024-09-28" if apple else "2024-01-28"},
             {"fiscal_year": 2025, "fiscal_quarter": None, "period_end": "2025-09-27" if apple else "2025-01-26"},
@@ -502,7 +502,7 @@ async def check(browser, base, chart_bytes, name, width, height, touch):
             report["multi_export"] = await download_png(page, name + "-multi", ["AAPL", "MSFT", "Revenue", "Margin", "Quarterly", "YoY", "2023"])
         # Same annual view as the reported AAPL/NVDA issue. A null is a
         # explained full-year reporting status, not a false missing-data error.
-        await load(page, "REPORTAPPLE", second="REPORTNVDA", mode="growth")
+        await load(page, "RPAPPLE", second="RPNVDA", mode="growth")
         details = await table_details(page)
         assert "Full-year report pending" in details["text"], details
         assert "FY2026 Q3" in details["text"] and "2026-06-27" in details["text"], details
