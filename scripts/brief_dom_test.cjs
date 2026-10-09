@@ -1,6 +1,11 @@
 /* Dependency-free renderer logic test. This is not a visual/browser substitute. */
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'../apps/terminal/public');
+// The archived edition is the fixed regression fixture; publishing tomorrow's
+// content must not mutate this fixture or its known numeric expectations.
+const fixturePath='briefs/2026-10-08/edition.json';
+const fixtureBytes=fs.readFileSync(path.join(root,fixturePath));
+const fixtureManifest={schemaVersion:1,date:'2026-10-08',path:fixturePath,revision:require('node:crypto').createHash('sha256').update(fixtureBytes).digest('hex')};
 class Element{
   constructor(tag){this.tagName=tag;this.children=[];this.attributes={};this.style={};this.className='';this.events={};this._text='';this.clientWidth=800;this.isConnected=true;}
   set textContent(t){this._text=String(t);this.children=[];}
@@ -19,7 +24,7 @@ const ids={};['briefArticle','briefDate','briefPageTitle','briefNavIcon','briefN
 let records=[],frames=[],fail=false,revisionOverride=null,dataOverride=null;
 const context={console,AbortController,setTimeout,clearTimeout,setInterval(){return 1;},clearInterval(){},requestAnimationFrame(fn){frames.push(fn);},ResizeObserver:class{observe(){}disconnect(){}},
  document:{hidden:false,createElement:t=>new Element(t),createElementNS:(ns,t)=>new Element(t),getElementById:id=>ids[id]},
- fetch:async url=>{if(fail)return {ok:false};let data=JSON.parse(fs.readFileSync(path.join(root,url),'utf8'));if(url.endsWith('latest.json')&&revisionOverride)data.revision=revisionOverride;if(url.endsWith('edition.json')&&dataOverride)data=dataOverride;return {ok:true,json:async()=>data};},
+ fetch:async url=>{if(fail)return {ok:false};let data=url.endsWith('latest.json')?{...fixtureManifest}:JSON.parse(fixtureBytes);if(url.endsWith('latest.json')&&revisionOverride)data.revision=revisionOverride;if(url.endsWith('edition.json')&&dataOverride)data=dataOverride;return {ok:true,json:async()=>data};},
  WaveSources:{record(...args){records.push(args);}},navigate(){}};
 context.window=context;vm.createContext(context);vm.runInContext(fs.readFileSync(path.join(root,'terminal-brief.js'),'utf8'),context);
 async function load(){await context.WaveBrief.reload();while(frames.length)frames.shift()();}

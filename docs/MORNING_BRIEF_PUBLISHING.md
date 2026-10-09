@@ -10,7 +10,7 @@ The hourly Data Engine market snapshot remains separate and cannot overwrite it.
 2. Adapt its financial content faithfully into the schema below. Preserve numbers, dates, observations, material uncertainty, headings, and source links. Export original charts at their native resolution. Keep paragraphs selectable Hebrew text. Do not render entire PDF pages as images or add a PDF/Drive iframe.
 3. Exclude private account details, email addresses/messages, mailbox scan counts, internal research bookkeeping, and credentials. Do not upload an original PDF that contains such information. Do not add a global partial-edition banner; preserve specific financial coverage limitations.
 4. Write `briefs/YYYY-MM-DD/edition.json` and its chart assets, then update `briefs/latest.json` to that exact date/path in the SAME commit. Never delete prior editions or relabel an older edition as today's.
-5. Run `python scripts/validate_morning_brief.py`, JavaScript syntax checks, and `python scripts/brief_browser_qa.py`. Verify desktop, iPad, phone, source navigation, loading failures and repeat entry.
+5. Run `python scripts/validate_morning_brief.py`, `node scripts/brief_dom_test.cjs`, JavaScript syntax checks, and `python scripts/brief_browser_qa.py`. Verify desktop, iPad, phone, source navigation, loading failures and repeat entry.
 6. Publish through the authorized repository workflow. Verify Pages deployment for the exact commit and anonymously open the site, manifest and each referenced asset before reporting success.
 7. If creation or publication fails, leave the last valid edition and its original date intact. Report the specific publishing blocker; do not substitute invented content or a fresh-looking timestamp.
 
@@ -34,3 +34,7 @@ Edition fields:
 - `methodology`: readable plain text containing chart provenance, units, source dates, coverage limitations and disclaimers; registered on the final Sources & Methodology page, linked from the end of the article
 
 The renderer uses text nodes for editorial text and restricts assets to the dated folder pattern. It does not execute markup from editions. The source PDF is a private source for editorial transformation, not a public dependency.
+
+## Content-only daily change boundary
+
+For a new morning, change only `apps/terminal/public/briefs/YYYY-MM-DD/edition.json`, its reviewed public chart assets if any, and `apps/terminal/public/briefs/latest.json`. Preserve the prior dated editions, especially the 8 October renderer regression fixture. The browser check reads the current manifest and verifies that edition; the DOM test intentionally uses the archived 8 October fixture. Do not edit application code, tests, the calculation catalogue, data-engine schedules, credentials, or access controls as part of routine daily publication. If the schema cannot faithfully represent new content, stop and report the specific needed change.
