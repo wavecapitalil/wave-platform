@@ -7,4 +7,6 @@
 
 .gold-expectations-detail{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.gold-expectations-detail>strong,.gold-expectations-detail>span{grid-column:1/-1}.gold-expectations-response{padding:11px 13px;border-radius:8px;background:#ffffff04;border:1px solid #50617630;display:flex;flex-direction:column;gap:5px}.gold-expectations-response strong{font-size:20px}.gold-expectations-response span{font-size:11px}@media(max-width:600px){.gold-expectations-detail{grid-template-columns:repeat(2,minmax(0,1fr))}.gold-expectations-response strong{font-size:18px}}
 
-@media(max-width:700px){.gold-expectations-axis{font-size:17px}.gold-expectations-segment-value{font-size:19px}.gold-expectations-legend{gap:10px 16px}.gold-expectations-years button{flex:1 0 20%;padding:8px 7px}.gold-expectations-chart{overflow:hidden}}
+@media(max-width:700px){.gold-expectations-axis{font-size:22px}.gold-expectations-segment-value{font-size:24px}.gold-expectations-legend{gap:10px 16px}.gold-expectations-years button{flex:1 0 20%;padding:8px 7px}.gold-expectations-chart{overflow:hidden}}
+
+.gold-expectations-break-note{font-size:11px;line-height:1.5;color:#a7b9ce;margin:4px 0 8px}@media(max-width:700px){#page-commodities .welcome-wrap{padding-bottom:90px}}
