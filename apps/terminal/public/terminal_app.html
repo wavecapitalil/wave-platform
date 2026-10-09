@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 22430)
-Total output lines: 1565
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -733,7 +730,161 @@ Total output lines: 1565
 
 
           <div class="mini-section">
-            <div class…2430 tokens truncated…lor='#475569'">META</span>·
+            <div class="ms-header" style="margin-bottom:16px">
+              <div class="ms-title">📊 Daily % Change — SPDR Sector ETFs</div>
+              <button onclick="loadSectors()" style="font-size:10px;padding:2px 8px;border-radius:4px;border:1px solid var(--border2);background:transparent;color:var(--gray);cursor:pointer">↻ Refresh</button>
+            </div>
+            <div id="sectorBars"></div>
+          </div>
+        </div>
+
+        <!-- ── SECTOR DETAIL VIEW ── -->
+        <div id="sectorDetailView" style="display:none">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+            <div style="display:flex;align-items:center;gap:16px">
+              <button onclick="closeSectorDetail()" style="font-size:12px;padding:5px 12px;border-radius:6px;border:1px solid var(--border2);background:transparent;color:var(--gray);cursor:pointer">← Back</button>
+              <div>
+                <div class="page-header-tag" style="margin-bottom:2px">Equities · Sub-Sector Drill-Down</div>
+                <div class="page-header-title" id="detailSectorTitle" style="font-size:20px">—</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:4px" id="detailPeriodBtns">
+              <button class="ratio-btn active" onclick="switchDetailPeriod('1d',this)">1D</button>
+              <button class="ratio-btn" onclick="switchDetailPeriod('1w',this)">1W</button>
+              <button class="ratio-btn" onclick="switchDetailPeriod('1m',this)">1M</button>
+              <button class="ratio-btn" onclick="switchDetailPeriod('3m',this)">3M</button>
+            </div>
+          </div>
+          <div id="sectorDetailStatus" style="font-size:11px;color:#334155;margin-bottom:16px">Loading...</div>
+          <div id="sectorDetailContent"></div>
+        </div>
+
+        <!-- ── STOCK DETAIL VIEW ── -->
+        <div id="stockDetailView" style="display:none">
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px">
+            <button onclick="closeStockDetail()" style="font-size:12px;padding:5px 12px;border-radius:6px;border:1px solid var(--border2);background:transparent;color:var(--gray);cursor:pointer">← Back</button>
+            <div>
+              <div class="page-header-tag" style="margin-bottom:2px" id="stockDetailBreadcrumb">Equities</div>
+              <div style="display:flex;align-items:baseline;gap:10px">
+                <div class="page-header-title" id="stockDetailName" style="font-size:20px">—</div>
+                <div id="stockDetailSym" style="font-size:13px;color:#475569;font-weight:600">—</div>
+              </div>
+              <div id="stockDetailIndustry" style="font-size:11px;color:#334155;margin-top:2px">—</div>
+            </div>
+            <div style="margin-left:auto;text-align:right">
+              <div id="stockDetailPrice" style="font-size:22px;font-weight:800;color:#e2e8f0">—</div>
+              <div id="stockDetailMcap" style="font-size:11px;color:#475569;margin-top:2px">—</div>
+            </div>
+          </div>
+          <div id="stockDetailStatus" style="font-size:11px;color:#334155;margin-bottom:16px">Loading...</div>
+          <div id="stockDetailContent"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ─── MARKET BREADTH PAGE ─── -->
+    <div class="page" id="page-breadth">
+      <div class="welcome-wrap" style="max-width:800px">
+
+        <div class="page-header" style="margin-bottom:24px">
+          <div class="page-header-tag">Equities</div>
+          <div class="page-header-title">Market Breadth</div>
+          <div class="page-header-sub" id="bpStatus">Loading...</div>
+        </div>
+
+        <!-- SPY vs RSP card -->
+        <div class="mini-section" style="margin-bottom:20px">
+          <div class="ms-header" style="margin-bottom:16px">
+            <div class="ms-title">📡 Cap-Weight vs Equal-Weight</div>
+            <button onclick="loadBreadthPage()" style="font-size:10px;padding:2px 8px;border-radius:4px;border:1px solid var(--border2);background:transparent;color:var(--gray);cursor:pointer">↻ Refresh</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+            <div style="flex:1;min-width:120px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+                <span style="font-size:11px;color:#94a3b8;letter-spacing:1px">SPY (Cap-Weighted)</span>
+                <span id="bpSpyPct" style="font-size:12px;font-weight:700">—</span>
+              </div>
+              <div style="background:#1e293b;border-radius:4px;height:8px;overflow:hidden">
+                <div id="bpSpyBar" style="height:100%;width:0%;border-radius:4px;transition:width 0.6s"></div>
+              </div>
+            </div>
+            <div style="text-align:center;min-width:110px">
+              <div id="bpVerdict" style="font-size:11px;font-weight:700;letter-spacing:2px;padding:6px 14px;border-radius:20px;background:rgba(100,116,139,0.15);color:#64748b">—</div>
+              <div id="bpSpread" style="font-size:10px;color:#475569;margin-top:4px">spread: —</div>
+            </div>
+            <div style="flex:1;min-width:120px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+                <span style="font-size:11px;color:#94a3b8;letter-spacing:1px">RSP (Equal-Weight)</span>
+                <span id="bpRspPct" style="font-size:12px;font-weight:700">—</span>
+              </div>
+              <div style="background:#1e293b;border-radius:4px;height:8px;overflow:hidden">
+                <div id="bpRspBar" style="height:100%;width:0%;border-radius:4px;transition:width 0.6s"></div>
+              </div>
+            </div>
+          </div>
+          <div id="bpInterpret" style="margin-top:12px;font-size:11px;color:#64748b;font-style:italic"></div>
+        </div>
+
+        <!-- Cap Tier breakdown -->
+        <div class="mini-section" style="margin-bottom:20px">
+          <div class="ms-header" style="margin-bottom:16px">
+            <div class="ms-title">📐 Cap Tier Performance</div>
+          </div>
+          <div id="bpTierBars"></div>
+          <div id="bpDiagnosis" style="margin-top:14px;font-size:11px;color:#94a3b8;padding:8px 12px;background:rgba(255,255,255,0.03);border-radius:6px;border-left:2px solid #334155"></div>
+        </div>
+
+        <!-- Summary cards -->
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <div class="summary-card" style="flex:1;min-width:120px;text-align:center">
+            <div class="sc-label">QQQ vs SPY</div>
+            <div class="sc-val" id="bpQvS">—</div>
+            <div style="font-size:10px;color:#64748b;margin-top:4px">Mega-cap premium</div>
+          </div>
+          <div class="summary-card" style="flex:1;min-width:120px;text-align:center">
+            <div class="sc-label">MDY vs SPY</div>
+            <div class="sc-val" id="bpMvS">—</div>
+            <div style="font-size:10px;color:#64748b;margin-top:4px">Mid-cap spread</div>
+          </div>
+          <div class="summary-card" style="flex:1;min-width:120px;text-align:center">
+            <div class="sc-label">IWM vs SPY</div>
+            <div class="sc-val" id="bpIvS">—</div>
+            <div style="font-size:10px;color:#64748b;margin-top:4px">Small-cap spread</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ─── COMPANY RESEARCH PAGE ─── -->
+    <div class="page" id="page-research">
+      <div class="welcome-wrap" style="max-width:760px">
+
+        <div class="page-header" style="margin-bottom:24px">
+          <div class="page-header-tag">Equities</div>
+          <div class="page-header-title">Company Research</div>
+          <div class="page-header-sub">Financial KPIs for any stock — valuation, profitability, growth, balance sheet</div>
+        </div>
+
+        <!-- Search box -->
+        <div class="mini-section" style="margin-bottom:20px">
+          <div style="display:flex;gap:10px;align-items:center">
+            <input id="researchInput" type="text" placeholder="Enter ticker (e.g. AAPL, MSFT, NVDA)..."
+              style="flex:1;background:#0f1117;border:1px solid var(--border2);border-radius:8px;padding:10px 14px;font-size:14px;color:#e2e8f0;font-family:inherit;outline:none"
+              onkeydown="if(event.key==='Enter') runResearch()"
+              onfocus="this.style.borderColor='#4a9eff'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+            <button onclick="runResearch()"
+              style="background:#4a9eff;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;flex-shrink:0">
+              Research
+            </button>
+          </div>
+          <div style="margin-top:10px;font-size:11px;color:#334155">
+            Quick access:
+            <span onclick="researchTicker('AAPL')" style="color:#475569;cursor:pointer;margin:0 4px" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#475569'">AAPL</span>·
+            <span onclick="researchTicker('MSFT')" style="color:#475569;cursor:pointer;margin:0 4px" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#475569'">MSFT</span>·
+            <span onclick="researchTicker('NVDA')" style="color:#475569;cursor:pointer;margin:0 4px" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#475569'">NVDA</span>·
+            <span onclick="researchTicker('META')" style="color:#475569;cursor:pointer;margin:0 4px" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#475569'">META</span>·
             <span onclick="researchTicker('GOOGL')" style="color:#475569;cursor:pointer;margin:0 4px" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#475569'">GOOGL</span>·
             <span onclick="researchTicker('AMZN')" style="color:#475569;cursor:pointer;margin:0 4px" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#475569'">AMZN</span>·
             <span onclick="researchTicker('TSLA')" style="color:#475569;cursor:pointer;margin:0 4px" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#475569'">TSLA</span>·
