@@ -74,12 +74,14 @@
     function select(r){selected=r.year;buttons.forEach(function(b){b.setAttribute('aria-pressed',String(Number(b.dataset.year)===selected));});detail.replaceChildren();
       detail.appendChild(node('strong',r.year+L(' · Own-institution expectations',' · ציפיות לגבי המוסד עצמו')));
       categories.forEach(function(c){var answer=node('div',null,'gold-expectations-response');answer.appendChild(node('span',c[1]));var value=node('strong',r.shares[c[0]]==null?((r.notOffered||[]).indexOf(c[0])>=0?'Not offered':'Not verified'):r.shares[c[0]]+'%');value.style.color=c[2];answer.appendChild(value);detail.appendChild(answer);});
-      detail.appendChild(node('span',L('Published ','פורסם ב־')+(r.publishedAt||L('date unverified','תאריך לא אומת'))+L(' · Next 12 months from survey response',' · 12 החודשים ממועד המענה לסקר')));
-      if(r.fieldworkStart&&r.fieldworkEnd)detail.appendChild(node('span',L('Fieldwork ','תקופת הסקר: ')+r.fieldworkStart+L(' to ',' עד ')+r.fieldworkEnd));
-      detail.appendChild(node('span',L('Question n = ','משיבים לשאלה: ')+(r.questionRespondents==null?L('not verified','לא אומת'):r.questionRespondents)+L(' · Total survey n = ',' · משיבים בסקר: ')+(r.totalRespondents==null?L('not verified','לא אומת'):r.totalRespondents)));
-      if(r.missingReason)detail.appendChild(node('span',r.missingReason));
-      var rawTotal=categories.reduce(function(v,c){return v+(r.shares[c[0]]||0);},0);if(categories.every(function(c){return r.shares[c[0]]!=null||(r.notOffered||[]).includes(c[0]);}))detail.appendChild(node('span',L('Published total: ','סכום האחוזים שפורסם: ')+rawTotal+'%'+(rawTotal!==100?L(' · Segment heights scaled to 100% for display only.',' · גובה המקטעים מותאם ל־100% לצורך התצוגה בלבד.'):'')));
-      if(r.note)detail.appendChild(node('span',isHebrew()&&r.noteHe?r.noteHe:r.note));
+      var metadata=node('details',null,'gold-expectations-metadata');metadata.appendChild(node('summary',L('Survey details','פרטי הסקר')));
+      metadata.appendChild(node('span',L('Published ','פורסם ב־')+(r.publishedAt||L('date unverified','תאריך לא אומת'))+L(' · Next 12 months from survey response',' · 12 החודשים ממועד המענה לסקר')));
+      if(r.fieldworkStart&&r.fieldworkEnd)metadata.appendChild(node('span',L('Fieldwork ','תקופת הסקר: ')+r.fieldworkStart+L(' to ',' עד ')+r.fieldworkEnd));
+      metadata.appendChild(node('span',L('Question n = ','משיבים לשאלה: ')+(r.questionRespondents==null?L('not verified','לא אומת'):r.questionRespondents)+L(' · Total survey n = ',' · משיבים בסקר: ')+(r.totalRespondents==null?L('not verified','לא אומת'):r.totalRespondents)));
+      if(r.missingReason)metadata.appendChild(node('span',r.missingReason));
+      var rawTotal=categories.reduce(function(v,c){return v+(r.shares[c[0]]||0);},0);if(categories.every(function(c){return r.shares[c[0]]!=null||(r.notOffered||[]).includes(c[0]);}))metadata.appendChild(node('span',L('Published total: ','סכום האחוזים שפורסם: ')+rawTotal+'%'+(rawTotal!==100?L(' · Segment heights scaled to 100% for display only.',' · גובה המקטעים מותאם ל־100% לצורך התצוגה בלבד.'):'')));
+      if(r.note)metadata.appendChild(node('span',isHebrew()&&r.noteHe?r.noteHe:r.note));
+      detail.appendChild(metadata);
     }
     rows.forEach(function(r,i){var group=svg('g',{role:'button',tabindex:'0','aria-label':r.year+L(' survey; select to read all response shares',' · בחירה להצגת אחוזי כל התשובות')});group.appendChild(svg('title',{},r.year+' · '+categories.map(function(c){return tr(c[1])+': '+(r.shares[c[0]]==null?((r.notOffered||[]).includes(c[0])?L('not offered','לא הוצע'):L('not verified','לא אומת')):r.shares[c[0]]+'%');}).join(' · ')+' · World Gold Council / YouGov · '+r.sourceUrl));group.addEventListener('click',function(){select(r);});group.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();select(r);}});chart.appendChild(group);var x=left+step*(i+.5),barWidth=Math.min(54,step*(compact?.78:.58));
       var complete=categories.every(function(c){return r.shares[c[0]]!=null||(r.notOffered||[]).includes(c[0]);}),sum=categories.reduce(function(v,c){return v+(r.shares[c[0]]||0);},0),scale=complete&&sum?100/sum:1;
@@ -89,7 +91,7 @@
       var b=node('button',r.year);b.type='button';b.dataset.year=r.year;b.addEventListener('click',function(){select(r);});buttons.push(b);controls.appendChild(b);
     });
     wrap.appendChild(chart);host.appendChild(wrap);
-    if(rows.some(function(r){var sum=categories.reduce(function(v,c){return v+(r.shares[c[0]]||0);},0);return sum>=98&&sum<=102&&sum!==100;}))host.appendChild(node('p','Complete bars are scaled to 100% height; labels keep the published percentages. Rounding: 2020 totals 101%, 2023 totals 99%. Partial bars are not scaled.','gold-expectations-rounding'));
+
     host.appendChild(controls);host.appendChild(detail);
     select(rows.find(function(r){return r.year===selected;})||rows[rows.length-1]);
   }

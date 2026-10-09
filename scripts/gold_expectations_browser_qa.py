@@ -42,10 +42,14 @@ async def check(browser, label, width, height):
     assert 'own institution' in await panel.inner_text()
     assert '2023 · “Don’t know” removed' in await panel.inner_text()
     await panel.locator('button').filter(has_text='2020').click()
+    assert not await panel.locator('.gold-expectations-rounding').count()
+    assert not await panel.locator('.gold-expectations-metadata').get_attribute('open')
+    await panel.locator('summary').click()
     assert 'Published total: 101%' in await panel.inner_text()
     assert '20%' in await panel.inner_text()
     await panel.locator('button').filter(has_text='2023').focus()
     await page.keyboard.press('Enter')
+    await panel.locator('summary').click()
     assert 'Published total: 99%' in await panel.inner_text()
     assert 'Not offered' in await panel.inner_text()
     await panel.locator('button').last.click()
@@ -73,6 +77,7 @@ async def check(browser, label, width, height):
         await button.tap()
     else:
         await button.click()
+    await panel.locator('summary').click()
     assert 'סכום האחוזים שפורסם: 101%' in await panel.inner_text()
     assert 'הגדלה' in await panel.inner_text()
     assert await panel.locator('svg').get_attribute('direction')=='ltr'
@@ -89,6 +94,7 @@ async def check(browser, label, width, height):
     await page.evaluate("navigate('commodities');setLang('en')")
     assert await panel.get_attribute('dir')=='ltr'
     assert 'Central-bank gold expectations' in await panel.inner_text()
+    await panel.locator('summary').click()
     assert 'Published total: 101%' in await panel.inner_text()
     # A failed initial load is recoverable by explicit Retry.
     await page.route('**/data/gold-expectations.json',lambda r:r.fulfill(status=503,body='unavailable'))
