@@ -1,6 +1,7 @@
 """Scoped native-brief browser regression, isolated from external market APIs."""
 import asyncio
 import functools
+import hashlib
 import json
 import shutil
 import threading
@@ -54,7 +55,27 @@ async def check(browser, label, width, height):
     first_text = next(p['text'] for section in SECTIONS for p in section['paragraphs'] if p['kind'] == 'text')
     assert selected == first_text
     await page.evaluate('getSelection().removeAllRanges()')
+    theme=await page.evaluate(r"""() => {
+      const article = document.querySelector('.brief-paper');
+      const rgb = c => c.match(/[\d.]+/g).slice(0,3).map(Number);
+      const lum = values => values.reduce((sum,v,i) => {
+        v/=255; return sum+[.2126,.7152,.0722][i]*(v<=.04045?v/12.92:((v+.055)/1.055)**2.4);
+      },0);
+      const ratio = color => (lum(rgb(color))+.05)/(lum([10,10,15])+.05);
+      const selectors=['.brief-story h1','.brief-deck','.brief-edition-line','.brief-kicker','.brief-story-body','.brief-chart-period','.brief-chart-detail'];
+      return {background:getComputedStyle(article).backgroundColor,
+        text:selectors.map(s=>({selector:s,contrast:ratio(getComputedStyle(article.querySelector(s)).color)})),
+        marks:[...article.querySelectorAll('.brief-bar')].map(el=>ratio(getComputedStyle(el).backgroundColor)),
+        imageFilter:[...article.querySelectorAll('img')].map(el=>getComputedStyle(el).filter)};
+    }""")
+    assert theme['background']=='rgba(0, 0, 0, 0)',theme
+    assert all(item['contrast']>=4.5 for item in theme['text']),theme
+    assert all(ratio>=4.5 for ratio in theme['marks']),theme
+    assert all('invert(1)' in value for value in theme['imageFilter']),theme
     await page.screenshot(path=str(OUT/f'{label}-top.png'))
+    if await page.locator('.brief-chart img').count():
+        await page.locator('.brief-chart img').first.scroll_into_view_if_needed()
+        await page.screenshot(path=str(OUT/f'{label}-original-chart.png'))
     if BAR_CHARTS:
         first_chart=page.locator('.brief-interactive:not(.brief-time-series)').first
         index=min(1,len(BAR_CHARTS[0]['rows'])-1)
@@ -74,7 +95,18 @@ async def check(browser, label, width, height):
         assert TIME_CHARTS[0]['labels'][0] in await time_chart.locator('.brief-chart-detail').inner_text()
         await page.keyboard.press('End')
         assert TIME_CHARTS[0]['labels'][-1] in await time_chart.locator('.brief-chart-detail').inner_text()
+    await page.locator('.brief-interactive').first.scroll_into_view_if_needed()
+    await page.screenshot(path=str(OUT/f'{label}-interactive.png'))
     await page.locator('.brief-contents button').last.click()
+    await page.wait_for_function("document.querySelector('.brief-contents button:last-child').getAttribute('aria-current') === 'location'")
+    assert await page.locator('.brief-next-chapter').is_disabled()
+    await page.locator('.brief-paper-footer').scroll_into_view_if_needed()
+    await page.wait_for_function("document.querySelector('.brief-progress').value === 100")
+    assert 'נותרו 0%' in await page.locator('.brief-progress-label').inner_text()
+    await page.locator('.brief-contents button').first.click()
+    await page.wait_for_function("document.querySelector('.brief-contents button:first-child').getAttribute('aria-current') === 'location'")
+    await page.locator('.brief-next-chapter').click()
+    await page.wait_for_function("document.querySelector('.brief-contents button:nth-child(2)').getAttribute('aria-current') === 'location'")
     await page.locator('.brief-story').last.scroll_into_view_if_needed()
     await page.screenshot(path=str(OUT/f'{label}-risk.png'))
     # Source details remain reachable from the article itself.
@@ -100,7 +132,21 @@ async def check(browser, label, width, height):
     await page.reload(wait_until='load')
     await page.locator('.brief-paper h1').wait_for()
     assert await page.locator('.brief-story').count()==len(SECTIONS)
-    report={'viewport':label,'size':[width,height],'passed':True,'layout':layout,'isolated_external_errors':errors}
+    # The archived fixture exercises line/stacked marks that today's edition may not contain.
+    archived_path='briefs/2026-10-08/edition.json'
+    archived_bytes=(PUBLIC/archived_path).read_bytes()
+    await page.route('**/briefs/latest.json',lambda route:route.fulfill(json={
+        'schemaVersion':1,'date':'2026-10-08','path':archived_path,
+        'revision':hashlib.sha256(archived_bytes).hexdigest()}))
+    await page.evaluate('WaveBrief.reload()')
+    await page.wait_for_function("document.querySelector('.brief-series-svg path') !== null")
+    await page.locator('.brief-time-series').first.scroll_into_view_if_needed()
+    await page.screenshot(path=str(OUT/f'{label}-archived-series.png'))
+    assert await page.locator('.brief-series-svg text').first.get_attribute('fill')=='#aebed0'
+    await page.locator('.brief-chart-slider').first.focus()
+    await page.keyboard.press('Home')
+    assert '01.10.2026 05:00 UTC' in await page.locator('.brief-series-detail').first.inner_text()
+    report={'viewport':label,'theme':theme,'size':[width,height],'passed':True,'layout':layout,'isolated_external_errors':errors}
     await context.close()
     return report
 
@@ -111,7 +157,7 @@ async def main():
     async with async_playwright() as p:
         browser=await p.chromium.launch(headless=True,executable_path=shutil.which('chromium'),args=['--no-sandbox'])
         reports=[]
-        for spec in [('desktop',1440,1000),('ipad',834,1194),('phone',390,844)]:
+        for spec in [('desktop',1440,1000),('ipad',834,1194),('ipad-landscape',1194,834),('phone',390,844)]:
             reports.append(await check(browser,*spec))
         await browser.close()
     server.shutdown()

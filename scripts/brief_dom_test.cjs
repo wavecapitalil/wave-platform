@@ -13,6 +13,10 @@ class Element{
   appendChild(c){this.children.push(c);return c;}
   prepend(c){this.children.unshift(c);}
   replaceChildren(...c){this._text='';this.children=c;}
+  closest(){return ids.briefArticle;}
+  getClientRects(){return [];}
+  removeAttribute(k){delete this.attributes[k];}
+  removeEventListener(){}
   setAttribute(k,v){this.attributes[k]=String(v);}
   getAttribute(k){return this.attributes[k];}
   addEventListener(k,fn){this.events[k]=fn;}
@@ -22,7 +26,7 @@ class Element{
 }
 const ids={};['briefArticle','briefDate','briefPageTitle','briefNavIcon','briefNavBadge','briefStatus'].forEach(x=>ids[x]=new Element('div'));
 let records=[],frames=[],fail=false,revisionOverride=null,dataOverride=null;
-const context={console,AbortController,setTimeout,clearTimeout,setInterval(){return 1;},clearInterval(){},requestAnimationFrame(fn){frames.push(fn);},ResizeObserver:class{observe(){}disconnect(){}},
+const context={console,AbortController,setTimeout,clearTimeout,setInterval(){return 1;},clearInterval(){},requestAnimationFrame(fn){frames.push(fn);return frames.length;},cancelAnimationFrame(){},addEventListener(){},removeEventListener(){},ResizeObserver:class{observe(){}disconnect(){}},
  document:{hidden:false,createElement:t=>new Element(t),createElementNS:(ns,t)=>new Element(t),getElementById:id=>ids[id]},
  fetch:async url=>{if(fail)return {ok:false};let data=url.endsWith('latest.json')?{...fixtureManifest}:JSON.parse(fixtureBytes);if(url.endsWith('latest.json')&&revisionOverride)data.revision=revisionOverride;if(url.endsWith('edition.json')&&dataOverride)data=dataOverride;return {ok:true,json:async()=>data};},
  WaveSources:{record(...args){records.push(args);}},navigate(){}};
