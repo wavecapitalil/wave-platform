@@ -2,6 +2,7 @@ import { createClient } from "npm:@supabase/supabase-js@2.57.4";
 import { collectForward } from "./forward-consensus.ts";
 import {settings,calculateCompany,adminCalculations} from "./calculation-service.ts";
 import { buildValuationInputs } from "./valuation-inputs.ts";
+import { withFundamentalReporting } from "./fundamental-reporting.ts";
 
 const SUPABASE_URL=Deno.env.get("SUPABASE_URL")!;
 const ANON=Deno.env.get("SUPABASE_ANON_KEY")!;
@@ -175,6 +176,25 @@ const SEC_HEADERS={
   "accept-encoding":"gzip, deflate",
   "accept":"application/json"
 };
+const reportingFilingCache=new Map<string,{document:any,fetched_at:string}>();
+const reportingFilingPending=new Map<string,Promise<any>>();
+async function reportingFilings(cik:string){
+  if(!/^\d{1,10}$/.test(cik))return null;
+  cik=cik.padStart(10,'0');
+  const cached=reportingFilingCache.get(cik);
+  if(cached&&Date.now()-Date.parse(cached.fetched_at)<15*60000)return cached;
+  if(reportingFilingPending.has(cik))return reportingFilingPending.get(cik);
+  const pending=(async()=>{
+    const response=await fetch('https://data.sec.gov/submissions/CIK'+cik+'.json',{
+      headers:SEC_HEADERS,signal:AbortSignal.timeout(8000)
+    });
+    if(!response.ok)return null;
+    const value={document:await response.json(),fetched_at:new Date().toISOString()};
+    if(reportingFilingCache.size>=200)reportingFilingCache.delete(reportingFilingCache.keys().next().value!);
+    reportingFilingCache.set(cik,value);return value;
+  })().catch(()=>null).finally(()=>reportingFilingPending.delete(cik));
+  reportingFilingPending.set(cik,pending);return pending;
+}
 let secTickerCache:any=null;
 let secTickerCacheAt=0;
 
@@ -663,8 +683,22 @@ Deno.serve(async(req:Request)=>{
 
     if(p.endsWith("/api/fundamentals")){
       const cached=await genericApiSnapshot(u);
-      if(cached) return cached;
-      return await dynamicFundamentals(u);
+      const base=cached||await dynamicFundamentals(u);
+      if(!base.ok) return base;
+      const body=await base.json();
+      // Enrich both paths: scheduled snapshots take precedence in production.
+      // A metadata failure must preserve values and remain an unknown status.
+      let companyFacts:any=null;
+      try{
+        const result=await admin.rpc("wave_get_companyfacts",{
+          p_ticker:String(u.searchParams.get("symbol")||"").trim().toUpperCase(),p_force:false
+        });
+        if(!result.error)companyFacts=result.data;
+      }catch(_e){ /* Reporting metadata is optional; never invent a reason. */ }
+      const filings=companyFacts?await reportingFilings(String(companyFacts.cik||'')):null;
+      const headers=new Headers(base.headers);
+      headers.set("x-wave-reporting-version","fiscal-reporting-v1");
+      return new Response(JSON.stringify(withFundamentalReporting(body,companyFacts,Date.now(),filings)),{status:base.status,headers});
     }
     if(p.endsWith("/api/stock-info")){
       const symbol=String(u.searchParams.get("symbol")||"").trim().toUpperCase().replace(/\./g,"-");

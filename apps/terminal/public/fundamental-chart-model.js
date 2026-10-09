@@ -161,6 +161,9 @@
       if (!info) return;
       var normalized = {
         info: info, rawValue: numeric(row.value),
+        reportedFiscalYear: row.period_verified === true ? integer(row.reportedFiscalYear, 1900, 2200) : null,
+        reportedFiscalQuarter: row.period_verified === true ? integer(row.reportedFiscalQuarter, 1, 4) : null,
+        actualPeriodEnd: row.period_verified === true && typeof row.period_end === 'string' ? row.period_end : null,
         sourceReason: typeof row.reason === 'string' && row.reason ? row.reason : null,
         sourceStatus: typeof row.status === 'string' && row.status !== 'ok' ? row.status : null
       };
@@ -188,10 +191,14 @@
         key: key, date: ambiguous ? null : info.date, periodBasis: info.basis,
         fiscalYear: info.fiscal ? info.year : null,
         fiscalQuarter: info.fiscal && period === 'quarterly' ? info.quarter : null,
+        reportedFiscalYear: ambiguous ? null : row.reportedFiscalYear,
+        reportedFiscalQuarter: ambiguous ? null : row.reportedFiscalQuarter,
+        actualPeriodEnd: ambiguous ? null : row.actualPeriodEnd,
         sourceDates: group.map(function (item) { return item.info.date; }).sort(),
         value: mode === 'growth' ? growth.value : rawValue,
         rawValue: rawValue, priorValue: prior ? prior.rawValue : null,
         priorDate: prior ? prior.info.date : null, priorKey: prior ? prior.info.key : null,
+        priorActualPeriodEnd: prior ? prior.actualPeriodEnd : null,
         growthPct: growth.value, comparisonBasis: match.basis,
         valueStatus: valueStatus, valueReason: valueReason,
         growthStatus: growth.status, growthReason: growth.reason,
@@ -227,9 +234,73 @@
     return label + (isPercentageMetric(metric) ? ' · YoY relative change (%)' : ' · YoY growth (%)');
   }
 
+  function reportingPeriod(period) {
+    if (!period || !integer(period.fiscal_year, 1900, 2200) || !period.period_end) return '';
+    return 'FY' + period.fiscal_year + (period.fiscal_quarter ? ' Q' + period.fiscal_quarter : '') +
+      ' · ended ' + period.period_end;
+  }
+
+  function reportingSummary(result, period) {
+    var r = ownObject(result.reporting), latest = period === 'annual' ? r.latest_annual : r.latest_quarterly;
+    if (r.status === 'verified' && latest) {
+      var text = 'Latest verified ' + (period === 'annual' ? 'full year: ' : 'quarter: ') + reportingPeriod(latest) + '.';
+      var filing = period === 'annual' ? r.latest_annual_filing : r.latest_quarterly_filing;
+      if (filing && filing.period_end > latest.period_end) text += ' A newer SEC filing exists (period ended ' + filing.period_end + '); its fiscal-period metadata is not available here.';
+      if (period === 'annual' && r.filing_coverage_verified && r.latest_quarterly && r.latest_quarterly.fiscal_year > latest.fiscal_year) {
+        text += ' FY' + r.latest_quarterly.fiscal_year + ' quarterly results exist through Q' + r.latest_quarterly.fiscal_quarter +
+          '; that full-year report is not yet available in the retrieved reports.';
+      }
+      return text;
+    }
+    return r.status === 'stale' ? 'Reporting calendar check is out of date; publication status is unconfirmed.' :
+      'Verified fiscal reporting dates are unavailable; shown dates are provider period labels.';
+  }
+
+  function missingPoint(result, key, period) {
+    var r = ownObject(result.reporting), year = integer(key, 1900, 2200);
+    var point = {value:null, status:'source-unavailable', reason:'No value is available from the data source for this period; publication status is unconfirmed.'};
+    if (r.status !== 'verified') {
+      if (r.status === 'stale') point.reason = 'The reporting calendar check is out of date; publication status is unconfirmed.';
+      return point;
+    }
+    var periods = period === 'annual' ? r.annual_periods : r.quarterly_periods;
+    var fiscalKeys = (result.data || []).length && result.data.every(function(row){return row.fiscalYear && (period === 'annual' || row.fiscalQuarter);});
+    var reported = (Array.isArray(periods) ? periods : []).find(function(p){
+      return (fiscalKeys ? String(p.fiscal_year) + (period === 'quarterly' ? ' Q' + p.fiscal_quarter : '') : periodKey(p.period_end,period)) === key;
+    });
+    if (reported) {
+      point.status = 'metric-unavailable';
+      point.reason = 'The ' + reportingPeriod(reported) + ' report is available, but this metric is missing from the data source.';
+      return point;
+    }
+    var latestFiling = period === 'annual' ? r.latest_annual_filing : r.latest_quarterly_filing;
+    if (!fiscalKeys && latestFiling && periodKey(latestFiling.period_end,period) === key) {
+      point.status = 'metric-unavailable';
+      point.reason = 'A SEC filing for a period ended ' + latestFiling.period_end + ' is available, but this metric or its fiscal-period metadata is unavailable.';
+      return point;
+    }
+    var annual = r.latest_annual, quarter = r.latest_quarterly;
+    var alignedAnnualLabels = fiscalKeys || (r.annual_periods || []).every(function(p){return String(p.fiscal_year) === String(p.period_end).slice(0,4);});
+    if (period === 'annual' && year && annual && quarter && r.filing_coverage_verified && alignedAnnualLabels && annual.fiscal_year < year && quarter.fiscal_year === year) {
+      point.status = 'annual-not-yet-available';
+      point.reason = 'Full-year FY' + year + ' report not yet available in the retrieved reports. Quarterly results exist through FY' +
+        quarter.fiscal_year + ' Q' + quarter.fiscal_quarter + ' (ended ' + quarter.period_end + '). Latest full year: ' + reportingPeriod(annual) + '.';
+    }
+    return point;
+  }
+
+  function pointPeriod(point) {
+    var year = point.reportedFiscalYear || point.fiscalYear;
+    var quarter = point.reportedFiscalQuarter || point.fiscalQuarter;
+    var end = point.actualPeriodEnd || point.date;
+    if (year) return 'FY' + year + (quarter ? ' Q' + quarter : '') + (end ? ' · ended ' + end : '');
+    return point.date ? 'Provider period: ' + point.date : '';
+  }
+
   return {
     buildSeries: buildSeries, periodKey: periodKey, relativeGrowth: relativeGrowth,
     numeric: numeric, isPercentageMetric: isPercentageMetric,
-    formatValue: formatValue, formatPercent: formatPercent, metricLabel: metricLabel
+    formatValue: formatValue, formatPercent: formatPercent, metricLabel: metricLabel,
+    missingPoint: missingPoint, reportingSummary: reportingSummary, pointPeriod: pointPeriod
   };
 });

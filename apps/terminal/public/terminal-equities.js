@@ -538,7 +538,9 @@ async function runFundChart(){
         if(FC_GROWTH_BASE[metric]){
           data = WaveFundamentalChart.buildSeries(data, {metric:baseMetric,period:period,mode:'growth'}).map(function(p){
             return {date:p.date || p.key, key:p.key, value:p.value, status:p.status, reason:p.reason,
-              fiscalYear:p.fiscalYear, fiscalQuarter:p.fiscalQuarter};
+              fiscalYear:p.fiscalYear, fiscalQuarter:p.fiscalQuarter,
+              reportedFiscalYear:p.reportedFiscalYear,reportedFiscalQuarter:p.reportedFiscalQuarter,
+              period_end:p.actualPeriodEnd,period_verified:!!p.actualPeriodEnd};
           });
         }
         return {metric:metric,ticker:ticker,result:Object.assign({},result,{data:data})};
@@ -615,7 +617,8 @@ function fcDrawChart(dates){
     var byKey={};points.forEach(function(p){byKey[p.key]=p;});
     var mi=_fcMetrics.indexOf(f.metric),ti=_fcTickers.indexOf(f.ticker);
     var color=_fcTickers.length>1?FC_TICKER_COLORS[ti][mi%FC_TICKER_COLORS[ti].length]:FC_COLORS[mi%FC_COLORS.length];
-    return {f:f,byKey:byKey,points:dates.map(function(d){return byKey[d]||{value:null,reason:'No reported value for this period.'};}),color:color,label:fcSeriesLabel(f),unit:fcUnit(f)};
+    dates.forEach(function(d){if(!byKey[d])byKey[d]=WaveFundamentalChart.missingPoint(f.result,d,_fcPeriod);});
+    return {f:f,byKey:byKey,points:dates.map(function(d){return byKey[d];}),color:color,label:fcSeriesLabel(f),unit:fcUnit(f)};
   });
   var units=[];series.forEach(function(s){if(units.indexOf(s.unit)<0)units.push(s.unit);});
   // Percentage rates and mixed-unit quantities are never added into a stack.
@@ -640,17 +643,32 @@ function fcDrawChart(dates){
     options:{responsive:true,maintainAspectRatio:false,animation:false,devicePixelRatio:Math.max(2,window.devicePixelRatio||1),
       interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'#0f172a',titleColor:'#e2e8f0',bodyColor:'#e2e8f0',callbacks:{
         label:function(c){return c.dataset.label+': '+fcFmt(c.raw,series[c.datasetIndex].f.metric);},
-        afterLabel:function(c){var p=series[c.datasetIndex].points[c.dataIndex];return growth && p.priorDate ? 'Compared with '+p.priorDate : '';}
+        afterLabel:function(c){
+          var p=series[c.datasetIndex].points[c.dataIndex],max=window.innerWidth<600?38:76;
+          return [p.value==null?p.reason:WaveFundamentalChart.pointPeriod(p),growth&&p.priorDate?'Compared with '+(p.priorActualPeriodEnd||p.priorDate):''].filter(Boolean).flatMap(function(text){
+            var lines=[''];String(text).split(' ').forEach(function(word){var last=lines.length-1;if(lines[last]&&(lines[last]+' '+word).length>max)lines.push(word);else lines[last]+=(lines[last]?' ':'')+word;});return lines;
+          });
+        }
       }}},scales:scales}
   });
-  var title=_fcTickers.join(' vs ')+' · '+(_fcPeriod==='annual'?'Annual':'Quarterly')+' · '+(growth?'YoY change %':'Values');
+  var title=_fcTickers.join(' vs ')+' · '+(_fcPeriod==='annual'?'Annual · full years':'Quarterly')+' · '+(growth?'YoY change %':'Values');
   document.getElementById('fcChartTitle').textContent=title;
   document.getElementById('fcLegend').innerHTML=series.map(function(s){return '<div class="fc-legend-item"><i style="background:'+s.color.line+'"></i><span>'+fcEscape(s.label)+'</span></div>';}).join('');
   var unavailable=series.reduce(function(n,s){return n+s.points.filter(function(p){return p.value==null;}).length;},0);
   var summary=unavailable ? unavailable+' unavailable value'+(unavailable===1?'':'s')+'; reasons appear in the data table.' : '';
   if(_fcChartType==='stacked'&&!stacked)summary+=' Grouped bars: these units or percentage rates cannot be added.';
-  document.getElementById('fcDataStatus').textContent=summary;
-  document.getElementById('fcTable').innerHTML='<table class="fc-data-table"><thead><tr><th>Reporting period</th>'+series.map(function(s){return '<th style="color:'+s.color.line+'">'+fcEscape(s.label)+'</th>';}).join('')+'</tr></thead><tbody>'+dates.slice().reverse().map(function(d){return '<tr><td>'+fcEscape(d)+'</td>'+series.map(function(s){var p=s.byKey[d]||{value:null,reason:'No reported value for this period.'};return '<td>'+ (p.value==null?'<span class="fc-unavailable">N/A</span><small>'+fcEscape(p.reason||'Value unavailable.')+'</small>':fcFmt(p.value,s.f.metric))+(growth&&p.priorDate?'<small>'+fcEscape(p.date)+' vs '+fcEscape(p.priorDate)+'</small>':'')+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table>';
+  var reporting=_fcTickers.map(function(ticker){var f=_fcFetched.find(function(x){return x.ticker===ticker;});return ticker+' · '+WaveFundamentalChart.reportingSummary(f.result,_fcPeriod);});
+  if(window.WaveSources)_fcTickers.forEach(function(ticker){
+    var f=_fcFetched.find(function(x){return x.ticker===ticker;}),r=f.result.reporting||{};
+    WaveSources.record('fundamental-reporting:'+ticker,ticker+' · Fiscal reporting calendar',
+      'SEC submissions reportDate and matching CompanyFacts accession establish verified fiscal labels. Provider chart keys and financial values are unchanged. Nearby month-end provider labels are reconciled only to a unique SEC period within seven days in the same month, for display. Historical labels without matched filing coverage remain unverified. Annual-filing pending status requires fresh submissions coverage and a matching latest annual filing, not just missing revenue facts. '+
+      'Metadata status: '+(r.status||'unavailable')+'. CompanyFacts fetched: '+(r.fetched_at||'unknown')+'. Filings checked: '+(r.filing_checked_at||'unknown')+'. Latest annual accession: '+(r.latest_annual&&r.latest_annual.accession||'unknown')+'.',
+      r.source_url?[{title:'SEC submissions',url:r.source_url}]:[]);
+  });
+  if(_fcPeriod==='annual'&&_fcTickers.length>1)reporting.push('Companies can have different fiscal-year end dates; the same year label can cover different months.');
+  document.getElementById('fcDataStatus').textContent=reporting.join('\n')+(summary?'\n'+summary:'');
+  document.getElementById('fcDataStatus').style.whiteSpace='pre-line';
+  document.getElementById('fcTable').innerHTML='<table class="fc-data-table"><thead><tr><th>Reporting period</th>'+series.map(function(s){return '<th style="color:'+s.color.line+'">'+fcEscape(s.label)+'</th>';}).join('')+'</tr></thead><tbody>'+dates.slice().reverse().map(function(d){return '<tr><td>'+fcEscape(d)+'</td>'+series.map(function(s){var p=s.byKey[d];return '<td>'+ (p.value==null?'<span class="fc-unavailable">'+(p.status==='annual-not-yet-available'?'Full-year report pending':'N/A')+'</span><small>'+fcEscape(p.reason||'Value unavailable.')+'</small>':fcFmt(p.value,s.f.metric))+(p.date?'<small>'+fcEscape(WaveFundamentalChart.pointPeriod(p))+'</small>':'')+(growth&&p.priorDate?'<small>Compared with '+fcEscape(p.priorActualPeriodEnd||p.priorDate)+'</small>':'')+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table>';
   var sources=Array.from(new Set(_fcFetched.map(function(f){return f.result.meta&&f.result.meta.source||f.result.source;}).filter(Boolean)));
   var timestamps=Array.from(new Set(_fcFetched.map(function(f){return f.result.meta&&(f.result.meta.provider_fetched_at||f.result.meta.fetched_at)||f.result.as_of;}).filter(Boolean)));
   _fcRenderMeta={title:title,tickers:_fcTickers.slice(),metrics:_fcMetrics.slice(),period:_fcPeriod,mode:_fcValueMode,chartType:stacked?'stacked':(line?'line':'bar'),range:dates[0]+' to '+dates[dates.length-1],
