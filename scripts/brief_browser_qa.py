@@ -73,6 +73,8 @@ async def check(browser, label, width, height):
     await page.evaluate("navigate('brief'); navigate('brief'); navigate('home'); navigate('brief')")
     assert await page.locator('.brief-story').count()==9
     assert await page.locator('#page-brief').is_visible()
+    # Finish the coalesced navigation refresh before installing the failure fixture.
+    await page.evaluate('WaveBrief.reload()')
     # Failed refresh preserves the actual previously loaded date/content.
     await page.route('**/briefs/latest.json',lambda route:route.fulfill(status=503,body='unavailable'))
     await page.evaluate('WaveBrief.reload()')
