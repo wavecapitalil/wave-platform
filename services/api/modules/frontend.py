@@ -5,6 +5,7 @@ generic filesystem catch-all.
 """
 
 import os
+import re
 from flask import Blueprint, jsonify, send_from_directory
 
 bp = Blueprint("frontend", __name__)
@@ -38,6 +39,8 @@ PUBLIC_FILES = {
     "wave-university-theme.css",
     "terminal.css",
     "terminal.js",
+    "terminal-brief.js",
+    "terminal-brief.css",
     "terminal-sources.js",
     "terminal-sources.css",
     "forward-consensus-ui.js",
@@ -86,6 +89,8 @@ def serve_data_health():
 
 @bp.get("/<path:filename>")
 def serve_public_file(filename):
-    if filename not in PUBLIC_FILES:
+    published_brief = filename == 'briefs/latest.json' or bool(re.fullmatch(
+        r'briefs/\d{4}-\d{2}-\d{2}/(?:edition\.json|[A-Za-z0-9_-]+\.(?:png|webp|jpg))', filename))
+    if filename not in PUBLIC_FILES and not published_brief:
         return jsonify({"error": "not found"}), 404
     return send_from_directory(PUBLIC_DIR, filename)
