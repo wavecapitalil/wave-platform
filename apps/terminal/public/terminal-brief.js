@@ -34,10 +34,18 @@
     var p = node(item.kind === 'heading' ? 'h3' : 'p', '', item.text);
     p.dir = 'rtl'; parent.appendChild(p);
   }
+  function periodLine(c) {
+    var line=node('p','brief-chart-period');
+    (c.period+' · '+c.unit).split(' · ').forEach(function(part,i){
+      if(i)line.appendChild(node('span','',' · '));
+      var text=node('bdi','',part);text.dir=/[\u0590-\u05ff]/.test(part)?'rtl':'ltr';line.appendChild(text);
+    });
+    return line;
+  }
   function interactiveChart(c) {
     var figure=node('figure','brief-chart brief-interactive');
     figure.appendChild(node('h4','',c.title));
-    figure.appendChild(node('p','brief-chart-period',c.period+' · '+c.unit));
+    figure.appendChild(periodLine(c));
     var values=c.rows.filter(function(r){return typeof r.value==='number'&&Number.isFinite(r.value);}).map(function(r){return r.value;});
     var low=Math.min.apply(null,[0].concat(values)),high=Math.max.apply(null,[0].concat(values));
     if(low===high)high=low+1;
@@ -67,7 +75,7 @@
   function timeChart(c) {
     var figure=node('figure','brief-chart brief-interactive brief-time-series');
     figure.appendChild(node('h4','',c.title));
-    figure.appendChild(node('p','brief-chart-period',c.period+' · '+c.unit));
+    figure.appendChild(periodLine(c));
     var legend=node('div','brief-chart-legend');legend.dir='ltr';
     c.series.forEach(function(s){var label=node('span','',s.label),swatch=node('i');swatch.style.background=s.color;label.prepend(swatch);legend.appendChild(label);});
     figure.appendChild(legend);
