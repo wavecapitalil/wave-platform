@@ -39,7 +39,7 @@
       },
       "notOffered": [],
       "missingReason": null,
-      "note": "51 is total respondents from WGC presentation, not independently verified Q5 denominator."
+      "note": "51 is the total survey sample. The own-reserves question denominator has not been independently verified."
     },
     {
       "year": 2021,
@@ -98,7 +98,7 @@
         "dontKnow"
       ],
       "missingReason": null,
-      "note": "Own-reserves question base conflict: executive PDF Chart5 says57; detailed Q6 says58. Keep null pending reconciliation. Own-reserves dont_know option removed in2023, explicitly stated in2023Q6,2024Chart4 and2025Chart4."
+      "note": "The own-reserves question denominator is reported as 57 in executive Chart 5 and 58 in detailed Q6, so it remains unverified. The Don’t know answer option was removed in 2023."
     },
     {
       "year": 2024,

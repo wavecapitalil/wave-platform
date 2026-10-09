@@ -36,6 +36,8 @@ async def check(browser, label, width, height):
     assert await panel.evaluate('e=>e.scrollWidth<=e.clientWidth+2')
     assert await panel.locator('.gold-expectations-chart').evaluate('e=>e.scrollWidth<=e.clientWidth+2')
     assert await panel.locator('button').first.evaluate('e=>e.getBoundingClientRect().height>=44')
+    bounds=await panel.locator('svg').evaluate('e=>({w:e.viewBox.baseVal.width,labels:[...e.querySelectorAll("text")].map(t=>({text:t.textContent,x:t.getBBox().x,right:t.getBBox().x+t.getBBox().width}))})')
+    assert all(t['x']>=0 and t['right']<=bounds['w'] for t in bounds['labels']),bounds
     assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
     assert 'own institution' in await panel.inner_text()
     assert '2023 · “Don’t know” removed' in await panel.inner_text()
