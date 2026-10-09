@@ -1,5 +1,6 @@
 import {DEFINITIONS,buildInputs,runMetric,validateConfig} from './calculations.ts';
 import {SOURCE_CATALOG} from './calculation-catalog.ts';
+import {PROCESS_REGISTRY} from './process-registry.ts';
 
 export async function settings(db:any){const {data,error}=await db.from('wave_calculation_settings').select('revision,formulas,updated_at').eq('id',1).single();if(error||!data)throw Error('Calculation settings unavailable');validateConfig(data.formulas);return data;}
 export async function factsFor(db:any,symbol:string){const {data,error}=await db.rpc('wave_get_companyfacts',{p_ticker:symbol,p_force:false});if(error)throw Error('SEC data unavailable');return data;}
@@ -43,6 +44,7 @@ export async function adminCalculations(req:Request,db:any,baseURL:string,reply:
  const {data:owner,error:ownerError}=await db.from('wave_calculation_owners').select('user_id').eq('user_id',actor).maybeSingle();
  if(ownerError||!owner)return reply({error:'Owner access only'},403,headers);
  if(req.method==='GET'){
+  if(new URL(req.url).searchParams.get('view')==='processes')return reply({schema_version:'wave.process-workspace/1',registry:PROCESS_REGISTRY,runs:[],run_store:{status:'not_connected',message:'No private ingestion service is enabled. Inspect a sanitized runner artifact locally. No historical runs are inferred.'}},200,headers);
   const config=await settings(db);
   const {data:history,error}=await db.from('wave_calculation_history').select('revision,formulas,changed_at,reason').order('revision',{ascending:false}).limit(50);
   if(error)throw Error('History unavailable');

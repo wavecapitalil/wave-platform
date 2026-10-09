@@ -10,6 +10,7 @@ for path in (root / 'services/api').rglob('*.py'):
 paths.update((root / 'apps/terminal/public').glob('terminal*.js'))
 paths.add(root / 'apps/terminal/public/equity-workbook-model.js')
 paths.add(root / 'apps/terminal/public/fundamental-chart-model.js')
+paths.add(root / 'supabase/functions/wave-data/process-contract.js')
 paths.update(path for path in (root / 'supabase/functions/wave-data').glob('*.ts')
              if path.name != 'calculation-catalog.ts' and '.test.' not in path.name)
 catalog = [{'path': str(path.relative_to(root)), 'source': path.read_text()}

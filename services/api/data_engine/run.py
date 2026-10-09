@@ -20,6 +20,7 @@ from collectors import (
 )
 from flask_snapshots import route_registry
 from page_snapshots import page_registry
+from process_manifest import Recorder
 
 UTC=timezone.utc
 SUPABASE_URL=os.getenv("WAVE_SUPABASE_URL","https://nqmtayofbhletydmiujz.supabase.co")
@@ -78,7 +79,8 @@ def due(key,row,now,ttl,force=False):
 
 
 def build_snapshot(key,group,ttl,collector,now):
-    fetched=now
+    # Timestamp the actual collector dispatch, not the common run/queue start.
+    fetched=datetime.now(UTC)
     refresh_minutes=effective_refresh_minutes(ttl)
     result=collector()
     calculated=datetime.now(UTC)
@@ -109,10 +111,20 @@ def build_snapshot(key,group,ttl,collector,now):
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--output",default="artifacts/data_snapshots.json")
+    ap.add_argument("--manifest", default="artifacts/process_manifest.json")
     ap.add_argument("--force",action="store_true")
     ap.add_argument("--only",action="append",default=[])
     args=ap.parse_args()
 
+    manifest=Recorder(args.manifest)
+    try:
+        return execute(args, manifest)
+    except BaseException:
+        manifest.finish(fatal=True)
+        raise
+
+
+def execute(args, manifest):
     now=datetime.now(UTC)
     current=existing_expiries()
     selected=set(args.only)
@@ -120,8 +132,10 @@ def main():
     due_items=[]
     for key,(group,ttl,collector) in REGISTRY.items():
         if selected and key not in selected and group not in selected:
+            manifest.skip(key, "not_selected")
             continue
         if not due(key,current.get(key),now,ttl,args.force):
+            manifest.skip(key, "fresh")
             print(f"SKIP {key}: fresh")
             continue
         due_items.append((key,group,ttl,collector))
@@ -134,14 +148,14 @@ def main():
     for key,group,ttl,collector in core_items:
         print(f"RUN  {key}")
         try:
-            snapshots.append(build_snapshot(key,group,ttl,collector,now))
+            snapshots.append(manifest.collect(key, lambda: build_snapshot(key,group,ttl,collector,now)))
         except Exception as exc:
             failures.append({"dataset_key":key,"error":str(exc)})
             print(f"FAIL {key}: {exc}",file=sys.stderr)
 
     def _run(item):
         key,group,ttl,collector=item
-        return key,build_snapshot(key,group,ttl,collector,now)
+        return key,manifest.collect(key, lambda: build_snapshot(key,group,ttl,collector,now))
 
     if api_items:
         workers=min(4,len(api_items))
@@ -162,6 +176,7 @@ def main():
     payload={"generated_at":iso(datetime.now(UTC)),"snapshots":snapshots,"failures":failures}
     out.write_text(json.dumps(payload,separators=(",",":"),ensure_ascii=False),encoding="utf-8")
     print(json.dumps({"snapshots":len(snapshots),"failures":len(failures),"output":str(out)}))
+    manifest.finish()
     if failures and not snapshots:return 2
     return 0
 

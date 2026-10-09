@@ -59,7 +59,7 @@ jobs:
 
       - name: Unit-test canonical calculations
         working-directory: services/api/data_engine
-        run: python -m unittest -v test_calculations.py test_route_registry.py test_resilience.py test_fundamentals.py test_sec_concept_merge.py test_flows.py
+        run: python -m unittest -v test_calculations.py test_route_registry.py test_resilience.py test_fundamentals.py test_sec_concept_merge.py test_flows.py test_process_manifest.py
 
       - name: Build due snapshots
         shell: bash
@@ -96,6 +96,17 @@ jobs:
         env:
           OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
         run: python services/api/data_engine/publish.py artifacts/data_snapshots.json --batch-size 25
+
+      - name: Upload sanitized process evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wave-process-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            artifacts/process_manifest.json
+            artifacts/process_manifest.jsonl
+          retention-days: 7
+          if-no-files-found: warn
 
       - name: Upload engine artifact
         uses: actions/upload-artifact@v4
