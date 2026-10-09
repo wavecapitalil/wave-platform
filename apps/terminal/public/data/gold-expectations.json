@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-10-09",
+  "comparabilityNote": "The own-reserves question removed the Don’t know answer option from 2023 onward. This is not a fixed panel of banks. The 2018 allocated-bullion question is not spliced into this series. For complete distributions, visual segment heights alone are scaled to 100%; labels preserve published rounded percentages (2020 sum 101%, 2023 sum 99%).",
+  "rows": [
+    {
+      "year": 2019,
+      "publishedAt": "2019-07-18",
+      "fieldworkStart": null,
+      "fieldworkEnd": null,
+      "questionRespondents": null,
+      "totalRespondents": null,
+      "sourceUrl": "https://www.gold.org/goldhub/data/2019-central-bank-gold-reserve-survey",
+      "distributionSourceUrl": "https://treasurer.utah.gov/wp-content/uploads/5-29-2024-Other-Meeting-Materials-World-Gold-Council.pdf#page=64",
+      "shares": {
+        "increase": 8,
+        "unchanged": 74,
+        "decrease": 3,
+        "dontKnow": 15
+      },
+      "notOffered": [],
+      "missingReason": null,
+      "note": ""
+    },
+    {
+      "year": 2020,
+      "publishedAt": "2020-05-18",
+      "fieldworkStart": null,
+      "fieldworkEnd": null,
+      "questionRespondents": null,
+      "totalRespondents": 51,
+      "sourceUrl": "https://www.gold.org/goldhub/data/2020-central-bank-gold-reserve-survey",
+      "distributionSourceUrl": "https://treasurer.utah.gov/wp-content/uploads/5-29-2024-Other-Meeting-Materials-World-Gold-Council.pdf#page=64",
+      "shares": {
+        "increase": 20,
+        "unchanged": 57,
+        "decrease": 4,
+        "dontKnow": 20
+      },
+      "notOffered": [],
+      "missingReason": null,
+      "note": "51 is total respondents from WGC presentation, not independently verified Q5 denominator."
+    },
+    {
+      "year": 2021,
+      "publishedAt": "2021-06-08",
+      "fieldworkStart": null,
+      "fieldworkEnd": null,
+      "questionRespondents": 56,
+      "totalRespondents": null,
+      "sourceUrl": "https://www.gold.org/goldhub/data/2021-central-bank-gold-reserve-survey",
+      "distributionSourceUrl": "https://treasurer.utah.gov/wp-content/uploads/5-29-2024-Other-Meeting-Materials-World-Gold-Council.pdf#page=64",
+      "shares": {
+        "increase": 21,
+        "unchanged": 68,
+        "decrease": 0,
+        "dontKnow": 11
+      },
+      "notOffered": [],
+      "missingReason": null,
+      "note": ""
+    },
+    {
+      "year": 2022,
+      "publishedAt": "2022-06-08",
+      "fieldworkStart": null,
+      "fieldworkEnd": null,
+      "questionRespondents": 56,
+      "totalRespondents": 57,
+      "sourceUrl": "https://www.gold.org/goldhub/data/2022-central-bank-gold-reserve-survey",
+      "distributionSourceUrl": "https://treasurer.utah.gov/wp-content/uploads/5-29-2024-Other-Meeting-Materials-World-Gold-Council.pdf#page=64",
+      "shares": {
+        "increase": 25,
+        "unchanged": 70,
+        "decrease": 0,
+        "dontKnow": 5
+      },
+      "notOffered": [],
+      "missingReason": null,
+      "note": ""
+    },
+    {
+      "year": 2023,
+      "publishedAt": "2023-05-30",
+      "fieldworkStart": "2023-02-07",
+      "fieldworkEnd": "2023-04-07",
+      "questionRespondents": null,
+      "totalRespondents": 59,
+      "sourceUrl": "https://www.gold.org/goldhub/data/2023-central-bank-gold-reserves-survey",
+      "distributionSourceUrl": "https://treasurer.utah.gov/wp-content/uploads/5-29-2024-Other-Meeting-Materials-World-Gold-Council.pdf#page=64",
+      "shares": {
+        "increase": 24,
+        "unchanged": 72,
+        "decrease": 3,
+        "dontKnow": null
+      },
+      "notOffered": [
+        "dontKnow"
+      ],
+      "missingReason": null,
+      "note": "Own-reserves question base conflict: executive PDF Chart5 says57; detailed Q6 says58. Keep null pending reconciliation. Own-reserves dont_know option removed in2023, explicitly stated in2023Q6,2024Chart4 and2025Chart4."
+    },
+    {
+      "year": 2024,
+      "publishedAt": "2024-06-18",
+      "fieldworkStart": "2024-02-19",
+      "fieldworkEnd": "2024-04-30",
+      "questionRespondents": 69,
+      "totalRespondents": 70,
+      "sourceUrl": "https://www.gold.org/goldhub/data/2024-central-bank-gold-reserves-survey",
+      "distributionSourceUrl": "https://treasurer.utah.gov/wp-content/uploads/5-29-2024-Other-Meeting-Materials-World-Gold-Council.pdf#page=64",
+      "shares": {
+        "increase": 29,
+        "unchanged": 68,
+        "decrease": 3,
+        "dontKnow": null
+      },
+      "notOffered": [
+        "dontKnow"
+      ],
+      "missingReason": null,
+      "note": ""
+    },
+    {
+      "year": 2025,
+      "publishedAt": "2025-06-17",
+      "fieldworkStart": "2025-02-25",
+      "fieldworkEnd": "2025-05-20",
+      "questionRespondents": 72,
+      "totalRespondents": 73,
+      "sourceUrl": "https://www.gold.org/goldhub/research/central-bank-gold-reserves-survey-2025",
+      "distributionSourceUrl": "https://files.aurica.cl/pdf/encuesta-sobre-reservas-de-oro-bancos-centrales-ingles.pdf#page=25",
+      "shares": {
+        "increase": 43,
+        "unchanged": 57,
+        "decrease": 0,
+        "dontKnow": null
+      },
+      "notOffered": [
+        "dontKnow"
+      ],
+      "missingReason": null,
+      "note": ""
+    },
+    {
+      "year": 2026,
+      "publishedAt": "2026-06-16",
+      "fieldworkStart": "2026-02-05",
+      "fieldworkEnd": "2026-05-19",
+      "questionRespondents": 74,
+      "totalRespondents": 76,
+      "sourceUrl": "https://www.gold.org/goldhub/research/central-bank-gold-reserves-survey-2026",
+      "distributionSourceUrl": "https://www.gold.org/goldhub/gold-focus/2026/07/central-bank-gold-statistics-central-banks-remain-committed-gold",
+      "shares": {
+        "increase": 45,
+        "unchanged": 54,
+        "decrease": 1,
+        "dontKnow": null
+      },
+      "notOffered": [
+        "dontKnow"
+      ],
+      "missingReason": null,
+      "note": ""
+    }
+  ]
+}
