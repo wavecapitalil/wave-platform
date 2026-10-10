@@ -75,11 +75,16 @@ async def check(browser, label, width, height):
     assert theme['background']=='rgba(0, 0, 0, 0)',theme
     assert all(item['contrast']>=4.5 for item in theme['text']),theme
     assert all(ratio>=4.5 for ratio in theme['marks']),theme
-    assert all('invert(1)' in value for value in theme['imageFilter']),theme
+    assert all('invert(1)' in value and 'brightness(1.18)' in value for value in theme['imageFilter']),theme
     await page.screenshot(path=str(OUT/f'{label}-top.png'))
     if await page.locator('.brief-chart img').count():
         for i, image in enumerate(await page.locator('.brief-chart img').all()):
             await image.scroll_into_view_if_needed()
+            # Later sections use native lazy loading; wait for the actual image
+            # before decoding, without hiding failed or unavailable assets.
+            await page.wait_for_function(
+                'img => img.complete && img.naturalWidth > 0',
+                arg=await image.element_handle(), timeout=10000)
             await image.evaluate('el=>el.decode()')
             await page.screenshot(path=str(OUT/f'{label}-original-chart-{i+1}.png'))
     if BAR_CHARTS:
@@ -151,7 +156,7 @@ async def check(browser, label, width, height):
     assert await page.locator('.brief-reader-rail').count()==1
     await page.locator('.brief-time-series').first.scroll_into_view_if_needed()
     await page.screenshot(path=str(OUT/f'{label}-archived-series.png'))
-    assert await page.locator('.brief-series-svg text').first.get_attribute('fill')=='#aebed0'
+    assert await page.locator('.brief-series-svg text').first.evaluate('e=>getComputedStyle(e).fill')=='rgb(203, 214, 226)'
     await page.locator('.brief-chart-slider').first.focus()
     await page.keyboard.press('Home')
     assert '01.10.2026 05:00 UTC' in await page.locator('.brief-series-detail').first.inner_text()
