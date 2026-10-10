@@ -42,6 +42,8 @@ PUBLIC_FILES = {
     "terminal-brief.js",
     "terminal-brief.css",
     "terminal-sources.js",
+    "terminal-price-history.js",
+    "terminal-price-history.css",
     "terminal-sources.css",
     "forward-consensus-ui.js",
     "equity-workbook-model.js",

@@ -1,0 +1,46 @@
+name: Company price history checks
+on:
+  pull_request:
+    paths:
+      - 'apps/terminal/public/**'
+      - 'supabase/functions/wave-data/**'
+      - 'services/api/modules/price_history.py'
+      - 'scripts/price_history*'
+      - '.github/workflows/price-history.yml'
+  push:
+    branches: ['feature/company-price-events']
+permissions:
+  contents: read
+jobs:
+  price-history:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Price history and regression unit tests
+        run: node --test scripts/price_history_test.mjs scripts/price_history_ui_test.cjs scripts/calculations.test.mjs scripts/valuation_inputs_test.mjs scripts/forward_consensus_test.mjs
+      - name: Syntax and static contracts
+        run: |
+          node --check apps/terminal/public/terminal-price-history.js
+          node --check apps/terminal/public/terminal-equities.js
+          python -m py_compile services/api/modules/price_history.py scripts/price_history_browser_qa.py
+          python scripts/static_contract_check.py
+          node --input-type=module -e "import fs from 'node:fs'; import {stripTypeScriptTypes} from 'node:module'; stripTypeScriptTypes(fs.readFileSync('supabase/functions/wave-data/index.ts','utf8'));"
+      - name: Install browser test dependencies
+        run: |
+          pip install playwright==1.58.0
+          python -m playwright install --with-deps chromium
+          curl -fL --retry 2 https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js -o /tmp/wave-chart-4.4.0.js
+          echo '0e2326c6868072bec1592760c6729043caeea2960a2b46cee6a2192aac6abff0  /tmp/wave-chart-4.4.0.js' | sha256sum -c
+      - name: Desktop, iPad and phone interaction tests
+        run: python scripts/price_history_browser_qa.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: price-history-browser-qa
+          path: /tmp/wave-price-events-qa

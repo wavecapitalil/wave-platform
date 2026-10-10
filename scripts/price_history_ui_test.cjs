@@ -1,0 +1,12 @@
+const test=require('node:test');
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const vm=require('node:vm');
+const source=fs.readFileSync('apps/terminal/public/terminal-price-history.js','utf8');
+const ctx={window:{},Intl,Number,URL};vm.runInNewContext(source,ctx);
+const format=ctx.window.WavePriceHistory.formatPrice;
+test('major quote currency is formatted without changing value',()=>{assert.equal(format(2000,'GBP'),'£2,000.00');assert.equal(format(2000,'USD'),'$2,000.00');});
+test('pence and other quote subunits never become 100-times-larger major currency values',()=>{assert.equal(format(2000,'GBp'),'2,000 GBp (pence)');assert.equal(format(2000,'GBX'),'2,000 GBX (pence)');assert.equal(format(2000,'ZAc'),'2,000 ZAc (cents)');assert.equal(format(2000,'ILA'),'2,000 ILA (agorot)');});
+test('unknown currency is explicit and missing currency never defaults to USD',()=>{assert.equal(format(2000,'xyz'),'2,000 xyz');assert.equal(format(2000,null),'2,000');});
+test('missing and invalid price are unavailable, never zero',()=>{for(const v of [null,undefined,NaN,Infinity,'20',false])assert.equal(format(v,'USD'),'—');});
+test('price section is outside fundamentals success gates and its scripts are allowlisted',()=>{const html=fs.readFileSync('apps/terminal/public/terminal_app.html','utf8');const section=html.indexOf('<section id="resPriceHistory"');assert.ok(section>html.indexOf('id="researchResult"')&&section<html.indexOf('id="researchDetails"'));assert.ok(html.slice(html.indexOf('id="researchResult"'),section).trimEnd().endsWith('</div>'));const allow=fs.readFileSync('services/api/modules/frontend.py','utf8');for(const f of ['terminal-price-history.js','terminal-price-history.css'])assert.ok(allow.includes(f));});
