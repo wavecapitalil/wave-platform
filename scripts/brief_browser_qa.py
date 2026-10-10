@@ -80,6 +80,11 @@ async def check(browser, label, width, height):
     if await page.locator('.brief-chart img').count():
         for i, image in enumerate(await page.locator('.brief-chart img').all()):
             await image.scroll_into_view_if_needed()
+            # Later sections use native lazy loading; wait for the actual image
+            # before decoding, without hiding failed or unavailable assets.
+            await page.wait_for_function(
+                'img => img.complete && img.naturalWidth > 0',
+                arg=await image.element_handle(), timeout=10000)
             await image.evaluate('el=>el.decode()')
             await page.screenshot(path=str(OUT/f'{label}-original-chart-{i+1}.png'))
     if BAR_CHARTS:
