@@ -177,7 +177,7 @@ function renderGsrChart(d){
           display: true,
           position: 'top',
           align: 'end',
-          labels:{ color:'#475569', font:{size:10,weight:'700'}, boxWidth:20, padding:14,
+          labels:{ color:'#b7c9dc', font:{size:10,weight:'700'}, boxWidth:20, padding:14,
             filter: function(item){ return item.text !== '+1σ' && item.text !== '−1σ'; }
           }
         },
@@ -203,14 +203,14 @@ function renderGsrChart(d){
         x:{
           grid:{color:'rgba(255,255,255,0.04)'}, border:{color:'transparent'},
           ticks:{
-            color:'#475569', maxRotation:0, maxTicksLimit:10,
+            color:'#b7c9dc', maxRotation:0, maxTicksLimit:10,
             callback: function(val, idx){ return idx % step === 0 ? displayLabels[idx] : ''; }
           }
         },
         y:{
           grid:{color:'rgba(255,255,255,0.04)'}, border:{color:'transparent'},
-          ticks:{color:'#475569', callback:function(v){ return v.toFixed(0)+'x'; }},
-          title:{display:true, text:'Oz of Silver per Oz of Gold', color:'#334155', font:{size:10}}
+          ticks:{color:'#b7c9dc', callback:function(v){ return v.toFixed(0)+'x'; }},
+          title:{display:true, text:'Oz of Silver per Oz of Gold', color:'#b7c9dc', font:{size:10}}
         }
       }
     }
