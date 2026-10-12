@@ -77,3 +77,17 @@ export function calculatePriceHistory(key:string, inputs:Record<string,unknown>)
  if(key==='price_history_prominence_pct'&&(!(Number(inputs.reference)>0)||!(Number(inputs.extreme)>0)))return null;
  return evaluate(def.expression,inputs,def.variables);
 }
+
+// Read-only SEC cash-flow arithmetic, outside owner-editable company formulas.
+export const STATEMENT_DEFINITIONS=Object.freeze([
+ {key:'statement_free_cash_flow',title:'SEC free cash flow',expression:'operating_cash_flow - capital_expenditure',variables:['operating_cash_flow','capital_expenditure'],basis:'Matching statement periods and filing versions; CapEx is payments for property, plant and equipment',read_only:true},
+ {key:'statement_historical_pe',title:'Historical fiscal-year-end P/E',expression:'price / eps',variables:['price','eps'],basis:'Actual fiscal-year-end close and reported annual diluted EPS with compatible currency and verified split basis; restated historical view',read_only:true},
+ {key:'statement_quarter_difference',title:'Standalone cash-flow quarter',expression:'cumulative - previous_cumulative',variables:['cumulative','previous_cumulative'],basis:'Same issuer, concept, unit and fiscal-year start; adjacent cumulative periods and compatible filing versions',read_only:true}
+]);
+export function calculateStatement(key:string,inputs:Record<string,unknown>):number|null {
+ const def=STATEMENT_DEFINITIONS.find(d=>d.key===key);
+ if(!def)throw Error('Unknown read-only statement calculation');
+ if(key==='statement_historical_pe'&&(!(Number(inputs.price)>0)||!(Number(inputs.eps)>0)))return null;
+ if(def.variables.some(k=>typeof inputs[k]!=='number'||!Number.isFinite(inputs[k])))return null;
+ return evaluate(def.expression,inputs,def.variables);
+}

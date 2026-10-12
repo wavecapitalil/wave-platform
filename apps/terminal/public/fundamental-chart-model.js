@@ -164,6 +164,10 @@
         reportedFiscalYear: row.period_verified === true ? integer(row.reportedFiscalYear, 1900, 2200) : null,
         reportedFiscalQuarter: row.period_verified === true ? integer(row.reportedFiscalQuarter, 1, 4) : null,
         actualPeriodEnd: row.period_verified === true && typeof row.period_end === 'string' ? row.period_end : null,
+        statementPeriod: row.statement_period === true,
+        actualPeriodStart: row.statement_period === true ? row.period_start : null,
+        statementFiled: row.statement_period === true ? row.filed : null,
+        derivedStatement: row.statement_period === true && row.derived === true,
         sourceReason: typeof row.reason === 'string' && row.reason ? row.reason : null,
         sourceStatus: typeof row.status === 'string' && row.status !== 'ok' ? row.status : null
       };
@@ -194,6 +198,10 @@
         reportedFiscalYear: ambiguous ? null : row.reportedFiscalYear,
         reportedFiscalQuarter: ambiguous ? null : row.reportedFiscalQuarter,
         actualPeriodEnd: ambiguous ? null : row.actualPeriodEnd,
+        statementPeriod: !ambiguous && row.statementPeriod,
+        actualPeriodStart: ambiguous ? null : row.actualPeriodStart,
+        statementFiled: ambiguous ? null : row.statementFiled,
+        derivedStatement: !ambiguous && row.derivedStatement,
         sourceDates: group.map(function (item) { return item.info.date; }).sort(),
         value: mode === 'growth' ? growth.value : rawValue,
         rawValue: rawValue, priorValue: prior ? prior.rawValue : null,
@@ -290,6 +298,7 @@
   }
 
   function pointPeriod(point) {
+    if(point.statementPeriod && point.actualPeriodStart && point.date)return 'Quarter '+point.actualPeriodStart+' to '+point.date+' · '+(point.derivedStatement?'Derived':'Reported')+(point.statementFiled?' · filed '+point.statementFiled:'');
     var year = point.reportedFiscalYear || point.fiscalYear;
     var quarter = point.reportedFiscalQuarter || point.fiscalQuarter;
     var end = point.actualPeriodEnd || point.date;

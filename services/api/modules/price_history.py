@@ -26,6 +26,8 @@ def price_history():
         return jsonify({"error": "price history unavailable", "symbol": symbol}), 502
 
 
+@bp.get("/api/research-insider-filings")
+@bp.get("/api/research-historical-pe")
 @bp.get("/api/research-seasonality")
 @bp.get("/api/research-statements")
 @bp.get("/api/research-tape")

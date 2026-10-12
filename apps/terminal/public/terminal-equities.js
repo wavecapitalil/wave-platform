@@ -538,7 +538,7 @@ async function runFundChart(){
         if(!requests[key]) requests[key] = fetch(API + (window.WaveResearch && WaveResearch.extraMetrics.indexOf(baseMetric)>=0 ? '/api/research-statements?symbol=' : '/api/fundamentals?symbol=') + encodeURIComponent(ticker) + '&metric=' + baseMetric + '&period=' + period)
           .then(async function(r){ var d = await r.json(); if(!r.ok || d.error) throw new Error(ticker + ': ' + (d.error || 'Data request failed')); return d; });
         var result = await requests[key];
-        if(window.WaveSources&&result.meta)WaveSources.record('statements:'+ticker+':'+baseMetric,ticker+' · '+(FC_LABELS[baseMetric]||baseMetric),JSON.stringify(result.meta),(result.data||[]).filter(function(r){return r.source_url;}).slice(-10).map(function(r){return {title:r.date+' · filed '+r.filed,url:r.source_url};}));
+        if(window.WaveSources&&result.meta)WaveSources.record('statements:'+ticker+':'+baseMetric,ticker+' · '+(FC_LABELS[baseMetric]||baseMetric),JSON.stringify({meta:result.meta,quarter_inputs:(result.data||[]).filter(function(r){return r.statement_period;}).map(function(r){return {date:r.date,calculation:r.calculation,inputs:r.source_periods};}),unavailable:result.unavailable||[] }),(result.data||[]).filter(function(r){return r.source_url;}).slice(-10).map(function(r){return {title:r.date+' · filed '+r.filed,url:r.source_url};}));
         var data = result.data || [];
         if(FC_GROWTH_BASE[metric]){
           data = WaveFundamentalChart.buildSeries(data, {metric:baseMetric,period:period,mode:'growth'}).map(function(p){

@@ -130,7 +130,7 @@ class Fixtures:
         if "chart.js@4.4.0" in route.request.url:
             return await route.fulfill(status=200, content_type="text/javascript", body=self.chart_bytes)
         if "/api/" in url.path:
-            if url.path.endswith("/api/fundamentals"):
+            if url.path.endswith(("/api/fundamentals", "/api/research-statements")):
                 query = parse_qs(url.query)
                 symbol = query.get("symbol", ["AAPL"])[0]
                 metric = query.get("metric", ["revenue"])[0]

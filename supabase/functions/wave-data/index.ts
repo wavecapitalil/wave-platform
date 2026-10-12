@@ -4,7 +4,8 @@ import {settings,calculateCompany,adminCalculations} from "./calculation-service
 import { buildValuationInputs } from "./valuation-inputs.ts";
 import { withFundamentalReporting } from "./fundamental-reporting.ts";
 import { collectPriceHistory } from "./price-history.ts";
-import {statementSeries,collectResearchSeasonality,collectDailyTape} from './research-data.ts';
+import {collectHistoricalPE} from './historical-pe.ts';
+import {insiderFilingLinks,statementSeries,collectResearchSeasonality,collectDailyTape} from './research-data.ts';
 
 const SUPABASE_URL=Deno.env.get("SUPABASE_URL")!;
 const ANON=Deno.env.get("SUPABASE_ANON_KEY")!;
@@ -671,6 +672,22 @@ Deno.serve(async(req:Request)=>{
       return await proxyCore(req);
     }
 
+    if(p.endsWith("/api/research-insider-filings")){
+      const symbol=String(u.searchParams.get('symbol')||'').trim().toUpperCase();
+      if(!/^[A-Z0-9][A-Z0-9.=-]{0,19}$/.test(symbol))return json({error:'Invalid symbol'},400);
+      const r=await admin.rpc('wave_get_companyfacts',{p_ticker:symbol,p_force:false});
+      if(r.error||!r.data?.cik)return json({error:'Verified issuer CIK unavailable'},502);
+      const filings=await reportingFilings(String(r.data.cik));
+      if(!filings)return json({error:'SEC submissions unavailable'},502);
+      return json({symbol,filings:insiderFilingLinks(filings.document,String(r.data.cik)),meta:{source:'SEC submissions',fetched_at:filings.fetched_at,coverage:'Latest 20 Form4/4A filing records, not matched to provider transaction rows'}});
+    }
+    if(p.endsWith("/api/research-historical-pe")){
+      const symbol=String(u.searchParams.get('symbol')||'').trim().toUpperCase();
+      if(!/^[A-Z0-9][A-Z0-9.=-]{0,19}$/.test(symbol))return json({error:'Invalid symbol'},400);
+      const r=await admin.rpc('wave_get_companyfacts',{p_ticker:symbol,p_force:false});
+      if(r.error||!r.data?.document)return json({error:'SEC companyfacts unavailable'},502);
+      return json(await collectHistoricalPE(r.data,symbol));
+    }
     if(p.endsWith("/api/research-tape")){
       const symbol=String(u.searchParams.get('symbol')||'').trim().toUpperCase();
       if(!['SPY','QQQ','^VIX','BTC-USD','GC=F','DX-Y.NYB','^TNX','CL=F'].includes(symbol))return json({error:'Unsupported tape symbol'},400);
@@ -684,7 +701,7 @@ Deno.serve(async(req:Request)=>{
     if(p.endsWith("/api/research-statements")){
       const symbol=String(u.searchParams.get('symbol')||'').trim().toUpperCase();
       if(!/^[A-Z0-9][A-Z0-9.=-]{0,19}$/.test(symbol))return json({error:'Invalid symbol'},400);
-      if(!['assets','liabilities','equity','cash','operating_cash_flow','stock_compensation','shares_outstanding','repurchased_shares'].includes(u.searchParams.get('metric')||'assets')||!['annual','quarterly'].includes(u.searchParams.get('period')||'annual'))return json({error:'Unsupported statement metric or period'},400);
+      if(!['assets','liabilities','equity','cash','capex','free_cash_flow','operating_cash_flow','stock_compensation','shares_outstanding','repurchased_shares'].includes(u.searchParams.get('metric')||'assets')||!['annual','quarterly'].includes(u.searchParams.get('period')||'annual'))return json({error:'Unsupported statement metric or period'},400);
       const r=await admin.rpc('wave_get_companyfacts',{p_ticker:symbol,p_force:false});
       if(r.error||!r.data?.document)return json({error:'SEC companyfacts unavailable'},502);
       return json({...statementSeries(r.data,u.searchParams.get('metric')||'assets',u.searchParams.get('period')||'annual'),symbol});
