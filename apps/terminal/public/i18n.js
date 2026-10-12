@@ -60,7 +60,7 @@
     'sidebar.equities':   {en:'Equities',        he:'מניות'},
     'sidebar.sectorStrength': {en:'Sector Strength', he:'עוצמת סקטורים'},
     'sidebar.marketBreadth':  {en:'Market Breadth', he:'רוחב שוק'},
-    'sidebar.companyResearch':{en:'Company Research', he:'מחקר חברות'},
+    'sidebar.companyResearch':{en:'Equity Research', he:'מחקר חברות'},
     'sidebar.whatsMoving':{en:"What's Moving",  he:'מה זז'},
     'sidebar.institutions':{en:'Institutional Holdings', he:'אחזקות מוסדיות'},
     'sidebar.fundChart':  {en:'Fundamental Chart', he:'גרף פונדמנטלי'},

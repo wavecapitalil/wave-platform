@@ -30,7 +30,7 @@ test('strict finite values never coerce nulls, booleans or numeric strings',()=>
  assert.equal(calculatePriceHistory('price_history_return_pct',{current:2,previous:0}),null);
 });
 test('read-only research formulas do not join editable company metric definitions',()=>{
- assert.equal(PRICE_HISTORY_DEFINITIONS.length,3);assert.ok(PRICE_HISTORY_DEFINITIONS.every(d=>d.read_only));
+ assert.equal(PRICE_HISTORY_DEFINITIONS.length,5);assert.ok(PRICE_HISTORY_DEFINITIONS.every(d=>d.read_only));
  assert.ok(!DEFINITIONS.some(d=>d.key.startsWith('price_history_')));
  assert.equal(calculatePriceHistory('price_history_return_pct',{current:110,previous:100}).toFixed(8),'10.00000000');
  assert.equal(calculatePriceHistory('price_history_excess_pp',{stock_return:10,benchmark_return:3}),7);

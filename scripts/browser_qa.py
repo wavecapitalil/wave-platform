@@ -313,7 +313,7 @@ async def run_viewport(browser, name, width, height):
 
     # Fundamental comparison: two companies, multiple KPIs, real chart + table.
     await page.evaluate("navigate('fundchart')")
-    await page.locator("#page-fundchart").wait_for(state="visible", timeout=15000)
+    await page.locator("#erFinancialEngine").wait_for(state="visible", timeout=15000)
     await page.locator("#fcTicker1").fill("MSFT")
     await page.locator("#fcTicker2").fill("HOOD")
     net_margin=page.locator("#fcMetricPills button", has_text="Net Margin")
@@ -335,14 +335,14 @@ async def run_viewport(browser, name, width, height):
       return {width:r?.width||0,height:r?.height||0,hasChart:!!window._fcChart};
     }""")
     assert chart_state["width"] > 100 and chart_state["height"] > 100 and chart_state["hasChart"], f"Fundamental chart not rendered: {chart_state}"
-    await page.locator("#page-fundchart").screenshot(path=str(OUT/f"{name}-fundamentals.png"))
+    await page.locator("#erFinancialEngine").screenshot(path=str(OUT/f"{name}-fundamentals.png"))
     report["fundamentals"]={"pair":"MSFT vs HOOD","metrics":["revenue","net_margin"],"ok":True}
 
     # Broad page activation regression after JS domain extraction.
     generic_page_failures=[]
     for slug in ALL_NAV_PAGES:
         await page.evaluate(f"navigate('{slug}')")
-        active_page=page.locator(f"#page-{slug}")
+        active_page=page.locator("#page-research" if slug == "fundchart" else f"#page-{slug}")
         await active_page.wait_for(state="visible", timeout=10000)
         await page.wait_for_timeout(350)
         body=(await active_page.inner_text()).lower()

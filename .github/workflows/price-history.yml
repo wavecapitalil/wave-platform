@@ -6,6 +6,7 @@ on:
       - 'supabase/functions/wave-data/**'
       - 'services/api/modules/price_history.py'
       - 'scripts/price_history*'
+      - 'scripts/research*'
       - '.github/workflows/price-history.yml'
   push:
     branches: ['feature/company-price-events']
@@ -23,7 +24,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Price history and regression unit tests
-        run: node --test scripts/price_history_test.mjs scripts/price_history_ui_test.cjs scripts/calculations.test.mjs scripts/valuation_inputs_test.mjs scripts/forward_consensus_test.mjs
+        run: node --test scripts/research_data_test.mjs scripts/price_history_test.mjs scripts/price_history_ui_test.cjs scripts/calculations.test.mjs scripts/valuation_inputs_test.mjs scripts/forward_consensus_test.mjs
       - name: Syntax and static contracts
         run: |
           node --check apps/terminal/public/terminal-price-history.js
@@ -34,13 +35,18 @@ jobs:
       - name: Install browser test dependencies
         run: |
           pip install playwright==1.58.0
+          npm install --prefix /tmp/wave-research-qa-deps playwright@1.58.0
           python -m playwright install --with-deps chromium
           curl -fL --retry 2 https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js -o /tmp/wave-chart-4.4.0.js
           echo '0e2326c6868072bec1592760c6729043caeea2960a2b46cee6a2192aac6abff0  /tmp/wave-chart-4.4.0.js' | sha256sum -c
       - name: Desktop, iPad and phone interaction tests
-        run: python scripts/price_history_browser_qa.py
+        run: |
+          python scripts/price_history_browser_qa.py
+          PLAYWRIGHT_MODULE=/tmp/wave-research-qa-deps/node_modules/playwright node scripts/research_browser_qa.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: price-history-browser-qa
-          path: /tmp/wave-price-events-qa
+          path: |
+            /tmp/wave-price-events-qa
+            /tmp/wave-research-qa

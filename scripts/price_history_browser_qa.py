@@ -84,10 +84,12 @@ async def check(browser, name, width, height, lang):
     assert await page.locator("#ph-events button").count() == 3
     assert await page.locator("#ph-detail h4").inner_text() == "Fixture earnings release <not HTML>"
     assert await page.locator("#ph-detail a").get_attribute("rel") == "noopener noreferrer"
-    metrics = await page.evaluate("""() => {const c=Chart.getChart('ph-chart'); const b=document.querySelector('#resPriceHistory').getBoundingClientRect(); return {scroll:document.documentElement.scrollWidth,viewport:innerWidth,width:b.width,canvas:c.width,points:c.data.datasets[0].data.length,events:c.data.datasets[1].data.length};}""")
+    metrics = await page.evaluate("""() => {const c=Chart.getChart('ph-chart'); const b=document.querySelector('#resPriceHistory').getBoundingClientRect(); return {scroll:document.documentElement.scrollWidth,viewport:innerWidth,width:b.width,canvas:c.width,points:c.data.datasets[0].data.length,events:document.querySelectorAll('#ph-marker-rail [data-ph-marker]').length};}""")
     assert metrics["scroll"] <= width + 2, metrics
     assert metrics["canvas"] > 150, metrics
-    assert await page.evaluate("""() => {const c=Chart.getChart('ph-chart');return [10,25,42].every((idx,i)=>Math.abs(c.getDatasetMeta(1).data[i].x-c.getDatasetMeta(0).data[idx].x)<1);}""")
+    assert metrics["events"] == 3, metrics
+    # Dated controls occupy a separate lane, never obscuring the candles.
+    assert await page.locator('[data-ph-marker="test-25"]').count() == 1
     await page.locator("#resPriceHistory").scroll_into_view_if_needed()
     await page.screenshot(path=str(OUT / (name + ".png")), full_page=True)
     await page.locator('[data-ph-event="test-42"]').focus()
@@ -96,10 +98,8 @@ async def check(browser, name, width, height, lang):
     assert "release-42" in await page.locator("#ph-detail a").get_attribute("href")
     await page.locator("#ph-detail").scroll_into_view_if_needed()
     await page.screenshot(path=str(OUT / (name + "-event-detail.png")), full_page=True)
-    # An actual canvas marker click focuses its corresponding event button.
-    await page.locator("#ph-chart").scroll_into_view_if_needed()
-    point = await page.evaluate("""() => {const c=Chart.getChart('ph-chart'),p=c.getDatasetMeta(1).data[1],r=c.canvas.getBoundingClientRect();return {x:r.x+p.x,y:r.y+p.y};}""")
-    await page.mouse.click(point["x"], point["y"])
+    # Touch/click a dated marker and verify its corresponding article selection.
+    await page.locator('[data-ph-marker="test-25"]').click()
     await page.wait_for_function("document.querySelector('[data-ph-event=\"test-25\"]').getAttribute('aria-pressed')==='true'")
     await page.locator('[data-ph-range="1mo"]').click()
     await page.wait_for_function("Chart.getChart('ph-chart') && document.querySelector('[data-ph-range=\"1mo\"]').getAttribute('aria-pressed')==='true'")

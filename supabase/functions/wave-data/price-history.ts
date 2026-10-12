@@ -6,7 +6,7 @@ export type PriceRange = typeof PRICE_RANGES[number];
 type Fetcher = typeof fetch;
 export type ReviewedEvent = {id:string;symbols:string[];published_at:string;timing:'exact'|'date_only';title:string;summary:string;url:string;source:string;relationship:'reported_driver'|'context';reviewed_at:string};
 type Article = {id:string;published_at:string;timing:'exact'|'date_only';title:string;summary:string;url:string;source:string;relationship:'reported_driver'|'context';reviewed:boolean};
-export type PricePoint = {date:string;close:number;raw_close:number|null;change_pct:number|null;benchmark_change_pct:number|null;excess_change_pp:number|null};
+export type PricePoint = {date:string;close:number;raw_close:number|null;open?:number|null;high?:number|null;low?:number|null;change_pct:number|null;benchmark_change_pct:number|null;excess_change_pp:number|null};
 type ParsedChart = {symbol:string;currency:string;timezone:string;basis:string;points:PricePoint[];sessionEnds:Map<string,number>;isUS:boolean;limitations:string[];dropped:number};
 export class PriceHistoryError extends Error {status:number;constructor(message:string,status=502){super(message);this.name='PriceHistoryError';this.status=status;}}
 const DAY=86400000, NEWS_MAX_AGE=45*DAY, CACHE_TTL=5*60000, MAX_CACHE=96;
@@ -77,12 +77,22 @@ export function parsePriceChart(payload:any,symbol:string,now=Date.now()):Parsed
   // A raw Yahoo series normally has no split discontinuity. Reject a response
   // contradicting its own split metadata instead of manufacturing adjusted data.
   if(split!=null&&previous!=null&&(split>=1.5||split<=2/3)&&Math.abs((close/previous)*split-1)<0.12)throw new PriceHistoryError('Historical price series contains an unresolved split discontinuity');
-  return {date:row.date,close,raw_close:row.raw,change_pct:i>0&&row.original===unique[i-1].original+1?calculatePriceHistory('price_history_return_pct',{current:close,previous}):null,benchmark_change_pct:null,excess_change_pp:null};
+  const quote=r.indicators?.quote?.[0]||{};
+  const o=strictNumber(quote.open?.[row.original]),h=strictNumber(quote.high?.[row.original]),l=strictNumber(quote.low?.[row.original]);
+  const valid=o!=null&&h!=null&&l!=null&&o>0&&l>0&&h>=Math.max(o,row.raw)&&l<=Math.min(o,row.raw);
+  // Scale every OHLC component on this session's same adjustment basis.
+  const scale=(value:number)=>calculatePriceHistory('price_history_adjust_ohlc',{value,adjusted_close:close,raw_close:row.raw});
+  return {date:row.date,close,raw_close:row.raw,open:valid?scale(o!):null,high:valid?scale(h!):null,low:valid?scale(l!):null,change_pct:i>0&&row.original===unique[i-1].original+1?calculatePriceHistory('price_history_return_pct',{current:close,previous}):null,benchmark_change_pct:null,excess_change_pp:null};
  });
  if(dropped)limitations.push(`${dropped} missing, invalid, future or incomplete provider observations were excluded; returns across missing observations remain unavailable.`);
  limitations.push('Daily completed-session observations only. The current session is withheld until ten minutes after the available session close.');
  limitations.push(isUS?'Event alignment uses provider session ends where supplied, otherwise a conservative New York close schedule (13:00 around potential early-close holidays; 16:00 otherwise). Historical exchange exceptions may not be covered.':'Without a provider session end, exact-time news is conservatively assigned to the next trading date. No cross-market benchmark is substituted.');
  return {symbol,currency,timezone,basis,points,sessionEnds:ends,isUS,limitations,dropped};
+}
+export function weeklyCandles(points:PricePoint[]){
+ const groups=new Map<string,PricePoint[]>();
+ for(const p of points){const d=new Date(p.date+'T12:00:00Z');d.setUTCDate(d.getUTCDate()-(d.getUTCDay()+6)%7);const key=d.toISOString().slice(0,10);groups.set(key,[...(groups.get(key)||[]),p]);}
+ return [...groups.entries()].map(([week,rows])=>{const complete=rows.every(p=>p.open!=null&&p.high!=null&&p.low!=null);return {date:rows[0].date,end_date:rows.at(-1)!.date,week,close:rows.at(-1)!.close,open:complete?rows[0].open:null,high:complete?Math.max(...rows.map(p=>p.high!)):null,low:complete?Math.min(...rows.map(p=>p.low!)):null,change_pct:null,session_count:rows.length};});
 }
 export function safeArticleUrl(value:unknown):string|null{
  if(typeof value!=='string'||value.length>2500)return null;
@@ -214,7 +224,7 @@ export async function collectPriceHistory(symbolInput:string,rangeInput:string,o
   if(news.status!=='available')limitations.push(`Recent ticker-tagged news is ${news.status}; valid historical prices remain available.`);
   if(chart.basis==='dividend_and_split_adjusted_close')limitations.push('Adjusted close is the provider’s dividend-and-split-adjusted series, not the originally traded price. Raw close is provider split-adjusted close. Range high/low are closing-price extrema, not intraday highs/lows.');
   else limitations.push('Range high/low are closing-price extrema, not intraday highs/lows.');
-  return {symbol,range,currency:chart.currency,exchange_timezone:chart.timezone,price_basis:chart.basis,points:chart.points,events,summary:{start_date:first.date,end_date:last.date,change_pct:calculatePriceHistory('price_history_return_pct',{current:last.close,previous:first.close}),high:{date:high.date,close:high.close},low:{date:low.date,close:low.close}},meta:{fetched_at:new Date(now).toISOString(),price_source:'Yahoo Finance chart daily',price_url:`https://finance.yahoo.com/quote/${encodeURIComponent(symbol)}/history/`,news_source:'Yahoo Finance ticker-tagged recent search + reviewed primary-source sample',news_status:news.status,news_coverage:{type:'recent_sample_plus_reviewed_history',recent_max_age_days:45,recent_valid_articles:news.articles.length,recent_rejected_articles:news.rejected,historical_archive:false,range_coverage:'partial',reviewed_articles_in_range:coveredReviewed.length},reviewed_event_count:coveredReviewed.length,selected_event_count:events.length,benchmark:{symbol:chart.isUS?'SPY':null,...benchmarkResult,currency:chart.isUS?'USD':null,price_basis:benchmark?.basis??null},cache_ttl_seconds:CACHE_TTL/1000,limitations}};
+  return {symbol,range,currency:chart.currency,exchange_timezone:chart.timezone,price_basis:chart.basis,points:chart.points,weekly_candles:weeklyCandles(chart.points),events,summary:{start_date:first.date,end_date:last.date,change_pct:calculatePriceHistory('price_history_return_pct',{current:last.close,previous:first.close}),high:{date:high.date,close:high.close},low:{date:low.date,close:low.close}},meta:{fetched_at:new Date(now).toISOString(),price_source:'Yahoo Finance chart daily',price_url:`https://finance.yahoo.com/quote/${encodeURIComponent(symbol)}/history/`,news_source:'Yahoo Finance ticker-tagged recent search + reviewed primary-source sample',news_status:news.status,news_coverage:{type:'recent_sample_plus_reviewed_history',recent_max_age_days:45,recent_valid_articles:news.articles.length,recent_rejected_articles:news.rejected,historical_archive:false,range_coverage:'partial',reviewed_articles_in_range:coveredReviewed.length},reviewed_event_count:coveredReviewed.length,selected_event_count:events.length,benchmark:{symbol:chart.isUS?'SPY':null,...benchmarkResult,currency:chart.isUS?'USD':null,price_basis:benchmark?.basis??null},cache_ttl_seconds:CACHE_TTL/1000,limitations}};
  };
  const promise=run();if(useCache)inflight.set(key,promise);
  try{const value=await promise;if(useCache){if(cache.size>=MAX_CACHE)cache.delete(cache.keys().next().value!);cache.set(key,{at:now,value});}return value;}finally{if(useCache)inflight.delete(key);}

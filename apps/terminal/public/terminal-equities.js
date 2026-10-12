@@ -136,6 +136,7 @@ function buildOverviewHtml(d){
 }
 
 async function loadOwnership(symbol){
+  if(window.WaveResearch){var target=document.getElementById("ownershipSection")||document.getElementById("erHolders");if(target)return WaveResearch.holders(symbol,target);}
   var target = document.getElementById('ownershipSection');
   try{
     var r = await fetch(API + '/api/holders?symbol=' + symbol);
@@ -388,6 +389,7 @@ function fcFmt(v, metric){
 }
 
 function fcSetValueMode(mode, btn){
+  if(mode==='growth'&&_fcMetrics.some(function(m){return m==='shares_outstanding'||m==='repurchased_shares';})){document.getElementById('fcStatus').textContent='Share-count YoY unavailable: split comparability is unverified.';return;}
   _fcValueMode = mode === 'growth' ? 'growth' : 'absolute';
   document.querySelectorAll('#fcModeBtns button').forEach(function(b){
     var active = b === btn;
@@ -512,6 +514,7 @@ async function runFundChart(){
   var t1 = document.getElementById('fcTicker1').value.trim().toUpperCase();
   var t2 = document.getElementById('fcTicker2').value.trim().toUpperCase();
   var metrics = _fcMetrics.slice(), period = _fcPeriod;
+  if(_fcValueMode==='growth'&&metrics.some(function(m){return m==='shares_outstanding'||m==='repurchased_shares';}))fcSetValueMode('absolute',document.querySelector('#fcModeBtns button'));
   var status = document.getElementById('fcStatus');
   if(_fcChart){ _fcChart.destroy(); _fcChart = null; }
   _fcFetched = [];
@@ -532,9 +535,10 @@ async function runFundChart(){
       return tickers.map(async function(ticker){
         var baseMetric = FC_GROWTH_BASE[metric] || metric;
         var key = ticker + ':' + baseMetric;
-        if(!requests[key]) requests[key] = fetch(API + '/api/fundamentals?symbol=' + encodeURIComponent(ticker) + '&metric=' + baseMetric + '&period=' + period)
+        if(!requests[key]) requests[key] = fetch(API + (window.WaveResearch && WaveResearch.extraMetrics.indexOf(baseMetric)>=0 ? '/api/research-statements?symbol=' : '/api/fundamentals?symbol=') + encodeURIComponent(ticker) + '&metric=' + baseMetric + '&period=' + period)
           .then(async function(r){ var d = await r.json(); if(!r.ok || d.error) throw new Error(ticker + ': ' + (d.error || 'Data request failed')); return d; });
         var result = await requests[key];
+        if(window.WaveSources&&result.meta)WaveSources.record('statements:'+ticker+':'+baseMetric,ticker+' · '+(FC_LABELS[baseMetric]||baseMetric),JSON.stringify(result.meta),(result.data||[]).filter(function(r){return r.source_url;}).slice(-10).map(function(r){return {title:r.date+' · filed '+r.filed,url:r.source_url};}));
         var data = result.data || [];
         if(FC_GROWTH_BASE[metric]){
           data = WaveFundamentalChart.buildSeries(data, {metric:baseMetric,period:period,mode:'growth'}).map(function(p){
@@ -598,6 +602,7 @@ function fcEscape(value){ return String(value == null ? '' : value).replace(/[&<
 function fcUnit(f){
   if(_fcValueMode==='growth') return 'YoY relative change (%)';
   if(FC_IS_MARGIN[f.metric] || FC_IS_GROWTH[f.metric]) return '%';
+  if(f.result.unit==='shares')return 'shares';
   var currency=f.result.currency || (f.result.meta && f.result.meta.currency);
   var unit=currency && /^[A-Z]{3}$/.test(currency) ? currency : 'Reported currency'+(_fcTickers.length>1?' ['+f.ticker+']':'');
   return unit + (f.metric==='eps_diluted' ? ' / share' : '');
@@ -863,11 +868,12 @@ function runResearch(){
 function researchTicker(sym){
   sym = String(sym || '').trim().toUpperCase();
   var requestId = ++_researchRequest;
+  if(window.WaveResearch)WaveResearch.begin(sym);
   if(window.WavePriceHistory) WavePriceHistory.load(sym);
   document.getElementById('researchInput').value = sym;
   document.getElementById('researchStatus').textContent = 'Loading ' + sym + '...';
   document.getElementById('researchResult').style.display = 'none';
-  document.getElementById('researchDetails').style.display = 'none';
+  document.getElementById('researchDetails').style.display = window.WaveResearch ? 'block' : 'none';
   document.getElementById('resKpiContent').innerHTML    = '';
   document.getElementById('resInsiderSection').innerHTML = '';
   document.getElementById('resAnalystSection').innerHTML = '';
@@ -882,6 +888,7 @@ function researchTicker(sym){
     .catch(function(e){
       if(requestId !== _researchRequest) return;
       document.getElementById('researchStatus').textContent = 'Error: ' + e.message;
+      if(window.WaveResearch)WaveResearch.fail();
     });
 }
 
@@ -914,7 +921,7 @@ function renderResearchResult(d){
     '</div>';
   }
 
-  var html = buildOverviewHtml(d) + forwardPanel(d);
+  var html = forwardPanel(d);
   html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0 32px">';
   html += '<div>';
   html += section('Valuation', [
@@ -950,6 +957,7 @@ function renderResearchResult(d){
   ]);
   html += '</div></div>';
   document.getElementById('resKpiContent').innerHTML = html;
+  if(window.WaveResearch)WaveResearch.update(d);
   loadOwnership(d.symbol);
   loadResearchInsiders(d.symbol);
   loadAnalystEstimates(d.symbol);
@@ -958,6 +966,7 @@ function renderResearchResult(d){
 
 // ── Analyst estimates ─────────────────────────────────────
 function loadAnalystEstimates(sym){
+  if(window.WaveResearch)return WaveResearch.analysts(sym);
   var researchRequest = _researchRequest;
   var el = document.getElementById('resAnalystSection');
   if(!el) return;
@@ -1102,6 +1111,7 @@ function loadPeersComparison(sym){
         return;
       }
       renderPeers(d, el);
+      if(window.WaveResearch){var choices=document.createElement('div');choices.className='er-peer-choices';(d.peers||[]).filter(function(p){return !p.is_target&&/^[A-Z0-9][A-Z0-9.=-]{0,19}$/.test(p.symbol||p.ticker||'');}).forEach(function(p){var b=document.createElement('button');b.type='button';b.dataset.erPeer=p.symbol||p.ticker;b.textContent='Compare '+b.dataset.erPeer;choices.appendChild(b);});el.prepend(choices);}
     })
     .catch(function(){ if(researchRequest === _researchRequest) el.innerHTML = ''; });
 }
@@ -1223,6 +1233,7 @@ function renderPeers(d, el){
 
 // ── Research tab — Insider Activity ───────────────────────────────────────────
 function loadResearchInsiders(sym){
+  if(window.WaveResearch)return WaveResearch.insiders(sym);
   var researchRequest = _researchRequest;
   var el = document.getElementById('resInsiderSection');
   if(!el) return;

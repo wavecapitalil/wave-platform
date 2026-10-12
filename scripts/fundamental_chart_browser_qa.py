@@ -188,7 +188,7 @@ async def load(page, symbol="AAPL", metrics=("revenue",), period="annual", secon
     await set_metrics(page, metrics)
     await page.locator("#fcPeriodBtns").get_by_role("button", name=period.capitalize(), exact=True).click()
     await set_mode(page, mode)
-    await page.locator('#page-fundchart button[onclick="runFundChart()"]').click()
+    await page.locator('#erFinancialEngine button[onclick="runFundChart()"]').click()
     await ready(page)
 
 
@@ -377,7 +377,7 @@ async def exhaustive(page, router):
     await page.locator("#fcTicker2").fill("")
     await set_metrics(page, ["revenue"])
     gate = router.hold("SLOW", "annual")
-    await page.locator('#page-fundchart button[onclick="runFundChart()"]').click()
+    await page.locator('#erFinancialEngine button[onclick="runFundChart()"]').click()
     await asyncio.wait_for(gate.seen.wait(), 10)
     assert await page.locator("#fcDownloadPng").is_disabled()
     await load(page, "MSFT")
@@ -415,7 +415,7 @@ async def exhaustive(page, router):
     # refetching or exposing/exporting stale data.
     gate = router.hold("SLOW", "annual")
     await page.locator("#fcTicker1").fill("SLOW")
-    await page.locator('#page-fundchart button[onclick="runFundChart()"]').click()
+    await page.locator('#erFinancialEngine button[onclick="runFundChart()"]').click()
     await asyncio.wait_for(gate.seen.wait(), 10)
     count = len(router.requests)
     for mode in ["growth", "absolute"] * 5 + ["growth"]:
@@ -429,7 +429,7 @@ async def exhaustive(page, router):
 
     # Failure is terminal and recoverable; never offer an old chart download.
     await page.locator("#fcTicker1").fill("FAIL")
-    await page.locator('#page-fundchart button[onclick="runFundChart()"]').click()
+    await page.locator('#erFinancialEngine button[onclick="runFundChart()"]').click()
     await page.wait_for_function("/error|fail/i.test(document.querySelector('#fcStatus').textContent)")
     assert await page.locator("#fcDownloadPng").is_disabled()
     assert not await page.locator("#fcChartWrap").is_visible()
@@ -437,7 +437,7 @@ async def exhaustive(page, router):
     equal_values(await values(page), [100, 200, 300])
     result["error_recovery"] = "failed fetch disabled export; subsequent load recovered"
     await page.locator("#fcTicker1").fill("EMPTY")
-    await page.locator('#page-fundchart button[onclick="runFundChart()"]').click()
+    await page.locator('#erFinancialEngine button[onclick="runFundChart()"]').click()
     await page.wait_for_function("/no reported periods/i.test(document.querySelector('#fcStatus').textContent)")
     assert await page.locator("#fcDownloadPng").is_disabled()
     assert not await page.locator("#fcChartWrap").is_visible()
@@ -469,7 +469,7 @@ async def check(browser, base, chart_bytes, name, width, height, touch):
               "browser": browser.version, "real_ipad_test": False}
     try:
         await page.goto(base + "/terminal_app.html#page=fundchart", wait_until="domcontentloaded")
-        await page.locator("#page-fundchart").wait_for(state="visible")
+        await page.locator("#erFinancialEngine").wait_for(state="visible")
         await page.wait_for_function("typeof Chart==='function' && Chart.version==='4.4.0'")
         assert await page.locator("#fcDownloadPng").is_disabled()
         assert await page.locator("#fcModeBtns").get_by_role("button").count() == 2

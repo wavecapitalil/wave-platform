@@ -24,3 +24,20 @@ def price_history():
         return jsonify(payload)
     except (requests.RequestException, ValueError):
         return jsonify({"error": "price history unavailable", "symbol": symbol}), 502
+
+
+@bp.get("/api/research-seasonality")
+@bp.get("/api/research-statements")
+@bp.get("/api/research-tape")
+def research_adapter():
+    symbol = request.args.get("symbol", "").strip().upper()
+    if not re.fullmatch(r"[A-Z0-9^][A-Z0-9.^=-]{0,19}", symbol):
+        return jsonify({"error": "valid symbol required"}), 400
+    params = {"symbol": symbol}
+    if request.path.endswith("research-statements"):
+        params.update(metric=request.args.get("metric", "assets"), period=request.args.get("period", "annual"))
+    try:
+        response = requests.get(GATEWAY + request.path, params=params, timeout=28)
+        return jsonify(response.json()), response.status_code
+    except (requests.RequestException, ValueError):
+        return jsonify({"error": "research data unavailable", "symbol": symbol}), 502
