@@ -192,6 +192,7 @@ async def run_viewport(browser, name, width, height):
 
         # Product-level checks
         if slug=="seasonality":
+            await page.locator(".er-season-legacy > summary").click()
             await page.locator("#seas-line-chart").wait_for(state="visible")
             await page.wait_for_function("""() => {
                 return window._seasLineChart &&
