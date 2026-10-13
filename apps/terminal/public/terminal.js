@@ -20,7 +20,7 @@ function updateClock(){
   var h = String(now.getHours()).padStart(2,'0');
   var m = String(now.getMinutes()).padStart(2,'0');
   var s = String(now.getSeconds()).padStart(2,'0');
-  document.getElementById('tickerTime').textContent = '🕐 ' + h + ':' + m + ':' + s + ' IL';
+  document.getElementById('tickerTime').textContent = '🕐 ' + now.toLocaleTimeString('en-GB',{timeZone:'Asia/Jerusalem',hour12:false}) + ' IL';
 }
 setInterval(updateClock, 1000);
 updateClock();
@@ -29,6 +29,7 @@ updateClock();
 var currentPage = 'welcome';
 
 function navigate(page){
+  if(page==='fundchart' && window.WaveResearch){navigate('research');WaveResearch.select('compare');return;}
   document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   var el = document.getElementById('page-' + page);
   if(el) el.classList.add('active');
@@ -101,6 +102,7 @@ function navigate(page){
   if(page === 'home') { loadNews(); loadSectorPulse(); loadCalendar(); }
   if(page === 'pcr') loadPcrSection();
   if(page === 'housing') setTimeout(loadHousingGauge, 50);
+  if(page === 'seasonality' && window.WaveResearchMarkets)WaveResearchMarkets.open();
   if(page === 'seasonality') setTimeout(function(){ seasLoad('SPY','S&P 500', document.querySelector('.seas-asset-btn')); }, 50);
   if(page === 'ev')  loadEvPage();
 

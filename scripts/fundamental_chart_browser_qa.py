@@ -46,6 +46,21 @@ VIEWPORTS = [
 
 def fixture(symbol, metric, period):
     """Reported-date fixtures; different annual fiscal ends must align by year."""
+    if symbol in {"RPAPPLE", "RPNVDA"}:
+        apple = symbol == "RPAPPLE"
+        annual = [
+            {"fiscal_year": 2024, "fiscal_quarter": None, "period_end": "2024-09-28" if apple else "2024-01-28"},
+            {"fiscal_year": 2025, "fiscal_quarter": None, "period_end": "2025-09-27" if apple else "2025-01-26"},
+        ]
+        if not apple:
+            annual.append({"fiscal_year": 2026, "fiscal_quarter": None, "period_end": "2026-01-25"})
+        quarterly = {"fiscal_year": 2026 if apple else 2027, "fiscal_quarter": 3 if apple else 2,
+                     "period_end": "2026-06-27" if apple else "2026-07-26"}
+        return {"symbol": symbol, "metric": metric, "period": period, "currency": "USD",
+                "data": [{"date": p["period_end"], "fiscalYear": p["fiscal_year"], "value": v}
+                         for p, v in zip(annual, [391035000000, 416161000000] if apple else [60922000000, 130497000000, 215938000000])],
+                "reporting": {"status": "verified", "filing_coverage_verified": True, "latest_annual": annual[-1], "latest_quarterly": quarterly,
+                              "annual_periods": annual, "quarterly_periods": [quarterly]}}
     if symbol == "FAIL":
         return {"error": "Deliberate fundamentals fixture failure"}
     if symbol == "EMPTY":
@@ -115,7 +130,7 @@ class Fixtures:
         if "chart.js@4.4.0" in route.request.url:
             return await route.fulfill(status=200, content_type="text/javascript", body=self.chart_bytes)
         if "/api/" in url.path:
-            if url.path.endswith("/api/fundamentals"):
+            if url.path.endswith(("/api/fundamentals", "/api/research-statements")):
                 query = parse_qs(url.query)
                 symbol = query.get("symbol", ["AAPL"])[0]
                 metric = query.get("metric", ["revenue"])[0]
@@ -173,7 +188,7 @@ async def load(page, symbol="AAPL", metrics=("revenue",), period="annual", secon
     await set_metrics(page, metrics)
     await page.locator("#fcPeriodBtns").get_by_role("button", name=period.capitalize(), exact=True).click()
     await set_mode(page, mode)
-    await page.locator('#page-fundchart button[onclick="runFundChart()"]').click()
+    await page.locator('#erFinancialEngine button[onclick="runFundChart()"]').click()
     await ready(page)
 
 
@@ -362,7 +377,7 @@ async def exhaustive(page, router):
     await page.locator("#fcTicker2").fill("")
     await set_metrics(page, ["revenue"])
     gate = router.hold("SLOW", "annual")
-    await page.locator('#page-fundchart button[onclick="runFundChart()"]').click()
+    await page.locator('#erFinancialEngine button[onclick="runFundChart()"]').click()
     await asyncio.wait_for(gate.seen.wait(), 10)
     assert await page.locator("#fcDownloadPng").is_disabled()
     await load(page, "MSFT")
@@ -400,7 +415,7 @@ async def exhaustive(page, router):
     # refetching or exposing/exporting stale data.
     gate = router.hold("SLOW", "annual")
     await page.locator("#fcTicker1").fill("SLOW")
-    await page.locator('#page-fundchart button[onclick="runFundChart()"]').click()
+    await page.locator('#erFinancialEngine button[onclick="runFundChart()"]').click()
     await asyncio.wait_for(gate.seen.wait(), 10)
     count = len(router.requests)
     for mode in ["growth", "absolute"] * 5 + ["growth"]:
@@ -414,7 +429,7 @@ async def exhaustive(page, router):
 
     # Failure is terminal and recoverable; never offer an old chart download.
     await page.locator("#fcTicker1").fill("FAIL")
-    await page.locator('#page-fundchart button[onclick="runFundChart()"]').click()
+    await page.locator('#erFinancialEngine button[onclick="runFundChart()"]').click()
     await page.wait_for_function("/error|fail/i.test(document.querySelector('#fcStatus').textContent)")
     assert await page.locator("#fcDownloadPng").is_disabled()
     assert not await page.locator("#fcChartWrap").is_visible()
@@ -422,7 +437,7 @@ async def exhaustive(page, router):
     equal_values(await values(page), [100, 200, 300])
     result["error_recovery"] = "failed fetch disabled export; subsequent load recovered"
     await page.locator("#fcTicker1").fill("EMPTY")
-    await page.locator('#page-fundchart button[onclick="runFundChart()"]').click()
+    await page.locator('#erFinancialEngine button[onclick="runFundChart()"]').click()
     await page.wait_for_function("/no reported periods/i.test(document.querySelector('#fcStatus').textContent)")
     assert await page.locator("#fcDownloadPng").is_disabled()
     assert not await page.locator("#fcChartWrap").is_visible()
@@ -454,7 +469,7 @@ async def check(browser, base, chart_bytes, name, width, height, touch):
               "browser": browser.version, "real_ipad_test": False}
     try:
         await page.goto(base + "/terminal_app.html#page=fundchart", wait_until="domcontentloaded")
-        await page.locator("#page-fundchart").wait_for(state="visible")
+        await page.locator("#erFinancialEngine").wait_for(state="visible")
         await page.wait_for_function("typeof Chart==='function' && Chart.version==='4.4.0'")
         assert await page.locator("#fcDownloadPng").is_disabled()
         assert await page.locator("#fcModeBtns").get_by_role("button").count() == 2
@@ -485,6 +500,20 @@ async def check(browser, base, chart_bytes, name, width, height, touch):
             report["multi_layout"] = await assert_layout(page)
             await page.screenshot(path=str(OUT / f"{name}-quarterly-multi.png"), full_page=True)
             report["multi_export"] = await download_png(page, name + "-multi", ["AAPL", "MSFT", "Revenue", "Margin", "Quarterly", "YoY", "2023"])
+        # Same annual view as the reported AAPL/NVDA issue. A null is a
+        # explained full-year reporting status, not a false missing-data error.
+        await load(page, "RPAPPLE", second="RPNVDA", mode="growth")
+        details = await table_details(page)
+        assert "Full-year report pending" in details["text"], details
+        assert "FY2026 Q3" in details["text"] and "2026-06-27" in details["text"], details
+        assert "FY2026 · ended 2026-01-25" in details["text"], details
+        status = await page.locator("#fcDataStatus").inner_text()
+        assert "full-year report is not yet available" in status and "different fiscal-year end dates" in status, status
+        assert await values(page) == [None, (416161000000 / 391035000000 - 1) * 100, None]
+        assert (await values(page, 1))[-1] > 65
+        report["reporting_status"] = {"status": status, "table": details, "layout": await assert_layout(page)}
+        await page.locator("#fcDataStatus").scroll_into_view_if_needed()
+        await page.screenshot(path=str(OUT / f"{name}-reporting-status.png"), full_page=True)
         assert not errors, errors
         report.update({"passed": True, "page_errors": errors, "financial_requests": router.requests,
                        "isolated_external_requests": sorted(set(router.external))})

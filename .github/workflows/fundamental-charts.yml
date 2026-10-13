@@ -29,7 +29,7 @@ jobs:
           pip install -r services/api/requirements.txt playwright
           python -m playwright install --with-deps chromium
       - name: Models, APIs, UI and private-access regressions
-        run: node --test scripts/fundamental_chart_test.cjs scripts/equity_workbook_test.cjs scripts/equity_workbook_ui_test.cjs scripts/valuation_inputs_test.mjs scripts/valuation_route_test.mjs scripts/calculations.test.mjs scripts/calculation-access-link.test.mjs scripts/forward_consensus_test.mjs
+        run: node --test scripts/fundamental_chart_test.cjs scripts/fundamental_reporting_test.mjs scripts/equity_workbook_test.cjs scripts/equity_workbook_ui_test.cjs scripts/valuation_inputs_test.mjs scripts/valuation_route_test.mjs scripts/calculations.test.mjs scripts/calculation-access-link.test.mjs scripts/forward_consensus_test.mjs
       - name: Syntax and contracts
         run: |
           for f in apps/terminal/public/*.js; do node --check "$f"; done

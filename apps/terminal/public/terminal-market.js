@@ -292,8 +292,8 @@ async function loadTickerData(){
   if(btcLive){
     var el = document.getElementById('t-btc');
     var ec = document.getElementById('tc-btc');
-    if(el) el.textContent = fmt(btcLive.price, '$');
-    if(ec) ec.innerHTML = chgHtml(btcLive.pct);
+    if(el && !window.WaveTape) el.textContent = fmt(btcLive.price, '$');
+    if(ec && !window.WaveTape) ec.innerHTML = chgHtml(btcLive.pct);
     var sv = document.getElementById('s-btc');
     var sc = document.getElementById('sc-btc');
     if(sv) sv.textContent = fmt(btcLive.price, '$');
@@ -324,8 +324,8 @@ async function loadTickerData(){
       // Ticker bar
       var el = document.getElementById('t-' + t.id);
       var ec = document.getElementById('tc-' + t.id);
-      if(el) el.textContent = fmt(q.price, t.pre);
-      if(ec) ec.innerHTML = chgHtml(q.pct);
+      if(el && !window.WaveTape) el.textContent = fmt(q.price, t.pre);
+      if(ec && !window.WaveTape) ec.innerHTML = chgHtml(q.pct);
   
       // Summary card
       if(t.card){

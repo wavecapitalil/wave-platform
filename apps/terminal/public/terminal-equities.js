@@ -136,13 +136,15 @@ function buildOverviewHtml(d){
 }
 
 async function loadOwnership(symbol){
+  if(window.WaveResearch){var target=document.getElementById("ownershipSection")||document.getElementById("erHolders");if(target)return WaveResearch.holders(symbol,target);}
+  var target = document.getElementById('ownershipSection');
   try{
     var r = await fetch(API + '/api/holders?symbol=' + symbol);
     var d = await r.json();
     if(d.error) throw new Error(d.error);
 
     var el = document.getElementById('ownershipSection');
-    if(!el) return;
+    if(!el || el !== target) return;
 
     // Pie chart via Chart.js
     var chartId = 'ownershipChart_' + Date.now();
@@ -222,7 +224,7 @@ async function loadOwnership(symbol){
     }
   }catch(e){
     var el = document.getElementById('ownershipSection');
-    if(el) el.innerHTML = '<span style="color:#475569;font-size:11px">Ownership data unavailable</span>';
+    if(el && el === target) el.innerHTML = '<span style="color:#475569;font-size:11px">Ownership data unavailable</span>';
   }
 }
 
@@ -387,6 +389,7 @@ function fcFmt(v, metric){
 }
 
 function fcSetValueMode(mode, btn){
+  if(mode==='growth'&&_fcMetrics.some(function(m){return m==='shares_outstanding'||m==='repurchased_shares';})){document.getElementById('fcStatus').textContent='Share-count YoY unavailable: split comparability is unverified.';return;}
   _fcValueMode = mode === 'growth' ? 'growth' : 'absolute';
   document.querySelectorAll('#fcModeBtns button').forEach(function(b){
     var active = b === btn;
@@ -511,6 +514,7 @@ async function runFundChart(){
   var t1 = document.getElementById('fcTicker1').value.trim().toUpperCase();
   var t2 = document.getElementById('fcTicker2').value.trim().toUpperCase();
   var metrics = _fcMetrics.slice(), period = _fcPeriod;
+  if(_fcValueMode==='growth'&&metrics.some(function(m){return m==='shares_outstanding'||m==='repurchased_shares';}))fcSetValueMode('absolute',document.querySelector('#fcModeBtns button'));
   var status = document.getElementById('fcStatus');
   if(_fcChart){ _fcChart.destroy(); _fcChart = null; }
   _fcFetched = [];
@@ -531,14 +535,17 @@ async function runFundChart(){
       return tickers.map(async function(ticker){
         var baseMetric = FC_GROWTH_BASE[metric] || metric;
         var key = ticker + ':' + baseMetric;
-        if(!requests[key]) requests[key] = fetch(API + '/api/fundamentals?symbol=' + encodeURIComponent(ticker) + '&metric=' + baseMetric + '&period=' + period)
+        if(!requests[key]) requests[key] = fetch(API + (window.WaveResearch && WaveResearch.extraMetrics.indexOf(baseMetric)>=0 ? '/api/research-statements?symbol=' : '/api/fundamentals?symbol=') + encodeURIComponent(ticker) + '&metric=' + baseMetric + '&period=' + period)
           .then(async function(r){ var d = await r.json(); if(!r.ok || d.error) throw new Error(ticker + ': ' + (d.error || 'Data request failed')); return d; });
         var result = await requests[key];
+        if(window.WaveSources&&result.meta)WaveSources.record('statements:'+ticker+':'+baseMetric,ticker+' · '+(FC_LABELS[baseMetric]||baseMetric),JSON.stringify({meta:result.meta,quarter_inputs:(result.data||[]).filter(function(r){return r.statement_period;}).map(function(r){return {date:r.date,calculation:r.calculation,inputs:r.source_periods};}),unavailable:result.unavailable||[] }),(result.data||[]).filter(function(r){return r.source_url;}).slice(-10).map(function(r){return {title:r.date+' · filed '+r.filed,url:r.source_url};}));
         var data = result.data || [];
         if(FC_GROWTH_BASE[metric]){
           data = WaveFundamentalChart.buildSeries(data, {metric:baseMetric,period:period,mode:'growth'}).map(function(p){
             return {date:p.date || p.key, key:p.key, value:p.value, status:p.status, reason:p.reason,
-              fiscalYear:p.fiscalYear, fiscalQuarter:p.fiscalQuarter};
+              fiscalYear:p.fiscalYear, fiscalQuarter:p.fiscalQuarter,
+              reportedFiscalYear:p.reportedFiscalYear,reportedFiscalQuarter:p.reportedFiscalQuarter,
+              period_end:p.actualPeriodEnd,period_verified:!!p.actualPeriodEnd};
           });
         }
         return {metric:metric,ticker:ticker,result:Object.assign({},result,{data:data})};
@@ -595,6 +602,7 @@ function fcEscape(value){ return String(value == null ? '' : value).replace(/[&<
 function fcUnit(f){
   if(_fcValueMode==='growth') return 'YoY relative change (%)';
   if(FC_IS_MARGIN[f.metric] || FC_IS_GROWTH[f.metric]) return '%';
+  if(f.result.unit==='shares')return 'shares';
   var currency=f.result.currency || (f.result.meta && f.result.meta.currency);
   var unit=currency && /^[A-Z]{3}$/.test(currency) ? currency : 'Reported currency'+(_fcTickers.length>1?' ['+f.ticker+']':'');
   return unit + (f.metric==='eps_diluted' ? ' / share' : '');
@@ -615,7 +623,8 @@ function fcDrawChart(dates){
     var byKey={};points.forEach(function(p){byKey[p.key]=p;});
     var mi=_fcMetrics.indexOf(f.metric),ti=_fcTickers.indexOf(f.ticker);
     var color=_fcTickers.length>1?FC_TICKER_COLORS[ti][mi%FC_TICKER_COLORS[ti].length]:FC_COLORS[mi%FC_COLORS.length];
-    return {f:f,byKey:byKey,points:dates.map(function(d){return byKey[d]||{value:null,reason:'No reported value for this period.'};}),color:color,label:fcSeriesLabel(f),unit:fcUnit(f)};
+    dates.forEach(function(d){if(!byKey[d])byKey[d]=WaveFundamentalChart.missingPoint(f.result,d,_fcPeriod);});
+    return {f:f,byKey:byKey,points:dates.map(function(d){return byKey[d];}),color:color,label:fcSeriesLabel(f),unit:fcUnit(f)};
   });
   var units=[];series.forEach(function(s){if(units.indexOf(s.unit)<0)units.push(s.unit);});
   // Percentage rates and mixed-unit quantities are never added into a stack.
@@ -640,17 +649,32 @@ function fcDrawChart(dates){
     options:{responsive:true,maintainAspectRatio:false,animation:false,devicePixelRatio:Math.max(2,window.devicePixelRatio||1),
       interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'#0f172a',titleColor:'#e2e8f0',bodyColor:'#e2e8f0',callbacks:{
         label:function(c){return c.dataset.label+': '+fcFmt(c.raw,series[c.datasetIndex].f.metric);},
-        afterLabel:function(c){var p=series[c.datasetIndex].points[c.dataIndex];return growth && p.priorDate ? 'Compared with '+p.priorDate : '';}
+        afterLabel:function(c){
+          var p=series[c.datasetIndex].points[c.dataIndex],max=window.innerWidth<600?38:76;
+          return [p.value==null?p.reason:WaveFundamentalChart.pointPeriod(p),growth&&p.priorDate?'Compared with '+(p.priorActualPeriodEnd||p.priorDate):''].filter(Boolean).flatMap(function(text){
+            var lines=[''];String(text).split(' ').forEach(function(word){var last=lines.length-1;if(lines[last]&&(lines[last]+' '+word).length>max)lines.push(word);else lines[last]+=(lines[last]?' ':'')+word;});return lines;
+          });
+        }
       }}},scales:scales}
   });
-  var title=_fcTickers.join(' vs ')+' · '+(_fcPeriod==='annual'?'Annual':'Quarterly')+' · '+(growth?'YoY change %':'Values');
+  var title=_fcTickers.join(' vs ')+' · '+(_fcPeriod==='annual'?'Annual · full years':'Quarterly')+' · '+(growth?'YoY change %':'Values');
   document.getElementById('fcChartTitle').textContent=title;
   document.getElementById('fcLegend').innerHTML=series.map(function(s){return '<div class="fc-legend-item"><i style="background:'+s.color.line+'"></i><span>'+fcEscape(s.label)+'</span></div>';}).join('');
   var unavailable=series.reduce(function(n,s){return n+s.points.filter(function(p){return p.value==null;}).length;},0);
   var summary=unavailable ? unavailable+' unavailable value'+(unavailable===1?'':'s')+'; reasons appear in the data table.' : '';
   if(_fcChartType==='stacked'&&!stacked)summary+=' Grouped bars: these units or percentage rates cannot be added.';
-  document.getElementById('fcDataStatus').textContent=summary;
-  document.getElementById('fcTable').innerHTML='<table class="fc-data-table"><thead><tr><th>Reporting period</th>'+series.map(function(s){return '<th style="color:'+s.color.line+'">'+fcEscape(s.label)+'</th>';}).join('')+'</tr></thead><tbody>'+dates.slice().reverse().map(function(d){return '<tr><td>'+fcEscape(d)+'</td>'+series.map(function(s){var p=s.byKey[d]||{value:null,reason:'No reported value for this period.'};return '<td>'+ (p.value==null?'<span class="fc-unavailable">N/A</span><small>'+fcEscape(p.reason||'Value unavailable.')+'</small>':fcFmt(p.value,s.f.metric))+(growth&&p.priorDate?'<small>'+fcEscape(p.date)+' vs '+fcEscape(p.priorDate)+'</small>':'')+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table>';
+  var reporting=_fcTickers.map(function(ticker){var f=_fcFetched.find(function(x){return x.ticker===ticker;});return ticker+' · '+WaveFundamentalChart.reportingSummary(f.result,_fcPeriod);});
+  if(window.WaveSources)_fcTickers.forEach(function(ticker){
+    var f=_fcFetched.find(function(x){return x.ticker===ticker;}),r=f.result.reporting||{};
+    WaveSources.record('fundamental-reporting:'+ticker,ticker+' · Fiscal reporting calendar',
+      'SEC submissions reportDate and matching CompanyFacts accession establish verified fiscal labels. Provider chart keys and financial values are unchanged. Nearby month-end provider labels are reconciled only to a unique SEC period within seven days in the same month, for display. Historical labels without matched filing coverage remain unverified. Annual-filing pending status requires fresh submissions coverage and a matching latest annual filing, not just missing revenue facts. '+
+      'Metadata status: '+(r.status||'unavailable')+'. CompanyFacts fetched: '+(r.fetched_at||'unknown')+'. Filings checked: '+(r.filing_checked_at||'unknown')+'. Latest annual accession: '+(r.latest_annual&&r.latest_annual.accession||'unknown')+'.',
+      r.source_url?[{title:'SEC submissions',url:r.source_url}]:[]);
+  });
+  if(_fcPeriod==='annual'&&_fcTickers.length>1)reporting.push('Companies can have different fiscal-year end dates; the same year label can cover different months.');
+  document.getElementById('fcDataStatus').textContent=reporting.join('\n')+(summary?'\n'+summary:'');
+  document.getElementById('fcDataStatus').style.whiteSpace='pre-line';
+  document.getElementById('fcTable').innerHTML='<table class="fc-data-table"><thead><tr><th>Reporting period</th>'+series.map(function(s){return '<th style="color:'+s.color.line+'">'+fcEscape(s.label)+'</th>';}).join('')+'</tr></thead><tbody>'+dates.slice().reverse().map(function(d){return '<tr><td>'+fcEscape(d)+'</td>'+series.map(function(s){var p=s.byKey[d];return '<td>'+ (p.value==null?'<span class="fc-unavailable">'+(p.status==='annual-not-yet-available'?'Full-year report pending':'N/A')+'</span><small>'+fcEscape(p.reason||'Value unavailable.')+'</small>':fcFmt(p.value,s.f.metric))+(p.date?'<small>'+fcEscape(WaveFundamentalChart.pointPeriod(p))+'</small>':'')+(growth&&p.priorDate?'<small>Compared with '+fcEscape(p.priorActualPeriodEnd||p.priorDate)+'</small>':'')+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table>';
   var sources=Array.from(new Set(_fcFetched.map(function(f){return f.result.meta&&f.result.meta.source||f.result.source;}).filter(Boolean)));
   var timestamps=Array.from(new Set(_fcFetched.map(function(f){return f.result.meta&&(f.result.meta.provider_fetched_at||f.result.meta.fetched_at)||f.result.as_of;}).filter(Boolean)));
   _fcRenderMeta={title:title,tickers:_fcTickers.slice(),metrics:_fcMetrics.slice(),period:_fcPeriod,mode:_fcValueMode,chartType:stacked?'stacked':(line?'line':'bar'),range:dates[0]+' to '+dates[dates.length-1],
@@ -834,6 +858,7 @@ function renderInstHoldings(d){
 }
 
 // ── Company Research page ─────────────────────────────────
+var _researchRequest = 0;
 function runResearch(){
   var sym = document.getElementById('researchInput').value.trim().toUpperCase();
   if(!sym) return;
@@ -841,27 +866,36 @@ function runResearch(){
 }
 
 function researchTicker(sym){
+  sym = String(sym || '').trim().toUpperCase();
+  var requestId = ++_researchRequest;
+  if(window.WaveResearch)WaveResearch.begin(sym);
+  if(window.WavePriceHistory) WavePriceHistory.load(sym);
   document.getElementById('researchInput').value = sym;
   document.getElementById('researchStatus').textContent = 'Loading ' + sym + '...';
   document.getElementById('researchResult').style.display = 'none';
+  document.getElementById('researchDetails').style.display = window.WaveResearch ? 'block' : 'none';
   document.getElementById('resKpiContent').innerHTML    = '';
   document.getElementById('resInsiderSection').innerHTML = '';
   document.getElementById('resAnalystSection').innerHTML = '';
   document.getElementById('resPeersSection').innerHTML  = '';
-  fetch(API + '/api/stock-info?symbol=' + sym)
+  fetch(API + '/api/stock-info?symbol=' + encodeURIComponent(sym))
     .then(function(r){ return r.json(); })
     .then(function(d){
+      if(requestId !== _researchRequest) return;
       if(d.error) throw new Error(d.error);
       renderResearchResult(d);
     })
     .catch(function(e){
+      if(requestId !== _researchRequest) return;
       document.getElementById('researchStatus').textContent = 'Error: ' + e.message;
+      if(window.WaveResearch)WaveResearch.fail();
     });
 }
 
 function renderResearchResult(d){
   registerCalculationSources(d);
   document.getElementById('researchResult').style.display = 'block';
+  document.getElementById('researchDetails').style.display = 'block';
   document.getElementById('researchStatus').textContent = '';
 
   document.getElementById('resNameLine').textContent = d.name || d.symbol;
@@ -887,7 +921,7 @@ function renderResearchResult(d){
     '</div>';
   }
 
-  var html = buildOverviewHtml(d) + forwardPanel(d);
+  var html = forwardPanel(d);
   html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0 32px">';
   html += '<div>';
   html += section('Valuation', [
@@ -923,6 +957,7 @@ function renderResearchResult(d){
   ]);
   html += '</div></div>';
   document.getElementById('resKpiContent').innerHTML = html;
+  if(window.WaveResearch)WaveResearch.update(d);
   loadOwnership(d.symbol);
   loadResearchInsiders(d.symbol);
   loadAnalystEstimates(d.symbol);
@@ -931,12 +966,15 @@ function renderResearchResult(d){
 
 // ── Analyst estimates ─────────────────────────────────────
 function loadAnalystEstimates(sym){
+  if(window.WaveResearch)return WaveResearch.analysts(sym);
+  var researchRequest = _researchRequest;
   var el = document.getElementById('resAnalystSection');
   if(!el) return;
   el.innerHTML = '';
   fetch(API + '/api/analyst-estimates?symbol=' + sym)
     .then(function(r){ return r.json(); })
     .then(function(d){
+      if(researchRequest !== _researchRequest) return;
       if(d.error || (!d.eps_estimates && !d.price_target)) return;
       renderAnalystEstimates(d, el);
     })
@@ -1055,12 +1093,14 @@ function renderAnalystEstimates(d, el){
 
 // ── Peer comparison ───────────────────────────────────────
 function loadPeersComparison(sym){
+  var researchRequest = _researchRequest;
   var el = document.getElementById('resPeersSection');
   if(!el) return;
   el.innerHTML = '<div style="color:#334155;font-size:12px;padding:16px 0">Loading peer comparison...</div>';
   fetch(API + '/api/peers?symbol=' + sym)
     .then(function(r){ return r.json(); })
     .then(function(d){
+      if(researchRequest !== _researchRequest) return;
       if(d.error){
         el.innerHTML =
           '<div style="background:rgba(100,116,139,0.08);border:1px solid var(--border2);border-radius:6px;padding:10px 14px;margin-top:16px;font-size:11px;color:#475569">' +
@@ -1071,8 +1111,9 @@ function loadPeersComparison(sym){
         return;
       }
       renderPeers(d, el);
+      if(window.WaveResearch){var choices=document.createElement('div');choices.className='er-peer-choices';(d.peers||[]).filter(function(p){return !p.is_target&&/^[A-Z0-9][A-Z0-9.=-]{0,19}$/.test(p.symbol||p.ticker||'');}).forEach(function(p){var b=document.createElement('button');b.type='button';b.dataset.erPeer=p.symbol||p.ticker;b.textContent='Compare '+b.dataset.erPeer;choices.appendChild(b);});el.prepend(choices);}
     })
-    .catch(function(){ el.innerHTML = ''; });
+    .catch(function(){ if(researchRequest === _researchRequest) el.innerHTML = ''; });
 }
 
 function renderPeers(d, el){
@@ -1192,12 +1233,15 @@ function renderPeers(d, el){
 
 // ── Research tab — Insider Activity ───────────────────────────────────────────
 function loadResearchInsiders(sym){
+  if(window.WaveResearch)return WaveResearch.insiders(sym);
+  var researchRequest = _researchRequest;
   var el = document.getElementById('resInsiderSection');
   if(!el) return;
   el.innerHTML = '';
   fetch(API + '/api/insider-activity?symbol=' + sym)
     .then(function(r){ return r.json(); })
     .then(function(d){
+      if(researchRequest !== _researchRequest) return;
       var rows = (d.results||[]).filter(function(r){ return r.text; });
       if(!rows.length) return;
       var html = '<div class="mini-section" style="margin-top:20px">';
