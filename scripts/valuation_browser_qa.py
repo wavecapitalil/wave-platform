@@ -38,7 +38,8 @@ async def check(browser, name, width, height, lang="he"):
     await page.route("**/api/**", route_api)
     # Prove the actual homepage -> Terminal -> Equities path, not just a deep link.
     await page.goto("http://127.0.0.1:8765/index.html", wait_until="domcontentloaded")
-    await page.locator('a[data-i18n="hero.enter"]').click()
+    await page.wait_for_function("() => /terminal_app\\.html$/.test(document.querySelector('a.btn--fill[data-app]')?.getAttribute('href')||'')")
+    await page.evaluate("document.querySelector('a.btn--fill[data-app]').click()")
     await page.wait_for_url("**/terminal_app.html")
     assert await page.locator("#page-welcome").is_visible()
     menu = page.locator("#terminalMenuButton")

@@ -236,7 +236,7 @@ function openArticleFromStory(story){
   var catColor = {MACRO:'#f59e0b',MARKETS:'#4a9eff',EARNINGS:'#22c55e',CRYPTO:'#a78bfa',GEO:'#fb923c',TECH:'#38bdf8',ENERGY:'#f59e0b'}[cat]||'#4a9eff';
   arContent.innerHTML =
     '<div style="width:100%;overflow:hidden;border-radius:0 0 16px 16px;position:relative">'
-    +'<img id="arHeroImg" style="width:100%;height:420px;object-fit:cover;display:block;filter:brightness(.75) saturate(1.1)" src="'+storyImageUrl(story)+'" alt="" onerror="this.style.height=\'120px\'">'
+    +'<img id="arHeroImg" style="width:100%;height:420px;object-fit:cover;display:block;filter:brightness(.75) saturate(1.1)" src="'+storyImageUrl(story)+'" alt="" onerror="_arHeroFail(this)">'
     +'<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(2,4,16,1) 0%,transparent 60%)"></div>'
     +'</div>'
     +'<div class="ar-body">'
@@ -265,7 +265,7 @@ function openArticleReader(idx){
   var catColor = {MACRO:'#f59e0b',MARKETS:'#4a9eff',EARNINGS:'#22c55e',CRYPTO:'#a78bfa',GEO:'#fb923c',TECH:'#38bdf8',ENERGY:'#f59e0b'}[cat]||'#4a9eff';
   arContent.innerHTML =
     '<div style="width:100%;overflow:hidden;border-radius:0 0 16px 16px;position:relative">'
-    +'<img id="arHeroImg" style="width:100%;height:420px;object-fit:cover;display:block;filter:brightness(.75) saturate(1.1)" src="'+storyImageUrl(s)+'" alt="" onerror="this.style.height=\'120px\'">'
+    +'<img id="arHeroImg" style="width:100%;height:420px;object-fit:cover;display:block;filter:brightness(.75) saturate(1.1)" src="'+storyImageUrl(s)+'" alt="" onerror="_arHeroFail(this)">'
     +'<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(2,4,16,1) 0%,transparent 60%)"></div>'
     +'</div>'
     +'<div class="ar-body">'
@@ -306,13 +306,45 @@ async function _fetchArticle(s){
       var r2 = await fetch(API+'/api/article?'+params.toString());
       d = await r2.json();
     }
-    if(d.error){
-      body.innerHTML = '<div style="padding:24px 0;color:#ef4444;font-size:13px">'+d.error+'</div>';
-      return;
-    }
+    if(d.error || !d.body){ _articleFallback(s); return; }
     _renderArticle(d, !!(s.id || s.image_url));
   }catch(e){
-    if(body) body.innerHTML = '<div style="padding:24px 0;color:#ef4444;font-size:13px">Failed to generate article. '+e.message+'</div>';
+    _articleFallback(s);
+  }
+}
+
+// Hero image failed to load: drop the frame (no empty box with a broken-image icon) and keep the text clear of Close.
+function _arHeroFail(img){
+  var wrap = img.parentNode, next = wrap && wrap.nextElementSibling;
+  if(wrap) wrap.style.display = 'none';
+  if(next) next.style.marginTop = '72px';
+}
+
+// The full article isn't available (e.g. the edge API has no article route): show the wire summary and a
+// clean link to the original story instead of a raw error code.
+function _articleFallback(s){
+  var body = document.getElementById('arArticleBody');
+  if(!body) return;
+  var he = (typeof getLang === 'function' ? getLang() : 'en') === 'he';
+  var src = s.source || (he ? 'המקור' : 'the source');
+  var link = /^https?:\/\//i.test(s.link || '') ? s.link : '';
+  body.innerHTML = '';
+  var desc = String(s.desc || '').replace(/<[^>]*>/g, '').trim();
+  if(desc){
+    var lead = document.createElement('div');
+    lead.className = 'ar-lead'; lead.textContent = desc;
+    body.appendChild(lead);
+  }
+  if(link){
+    var a = document.createElement('a');
+    a.className = 'ar-source-link'; a.href = link; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    a.textContent = (he ? 'לכתבה המלאה ב-' : 'Read the full story on ') + src + ' ↗';
+    body.appendChild(a);
+  } else if(!desc){
+    var p = document.createElement('div');
+    p.style.cssText = 'padding:24px 0;color:#94a3b8;font-size:14px';
+    p.textContent = he ? 'הכתבה המלאה אינה זמינה כרגע.' : 'The full story is not available right now.';
+    body.appendChild(p);
   }
 }
 

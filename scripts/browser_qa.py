@@ -61,29 +61,15 @@ async def run_viewport(browser, name, width, height):
 
     report={"viewport":name,"pages":[]}
 
-    # Public Home: live terminal preview + sourced market story.
+    # Public Home: the Wave opener (scroll film landing). Market data is checked on the Terminal below.
     await page.goto(BASE + "/index.html", wait_until="domcontentloaded", timeout=60000)
-    await page.locator("#latestStoryTitle").wait_for(state="visible", timeout=30000)
     await page.wait_for_function("""() => {
-      const t=document.querySelector('#latestStoryTitle');
-      const s=document.querySelector('#latestStorySummary');
-      const src=document.querySelector('#latestStorySource');
-      const a=document.querySelector('#latestStoryLink');
-      return t && s && src && a &&
-             t.innerText.trim() && !t.innerText.includes('Fetching') &&
-             s.innerText.trim() && s.innerText.trim() !== '—' &&
-             src.innerText.trim() && src.innerText.trim() !== '—' &&
-             a.href.startsWith('https://');
-    }""", timeout=60000)
-    await page.wait_for_function("""() => {
-      const v=document.querySelector('#tpVix');
-      const b=document.querySelector('#tpBtc');
-      const g=document.querySelector('#tpGold');
-      return [v,b,g].every(x => x && x.innerText.trim() && x.innerText.trim() !== '—');
-    }""", timeout=60000)
+      const a=document.querySelector('a[data-app]');
+      return a && /terminal_app\.html$/.test(a.getAttribute('href')||'');
+    }""", timeout=30000)
     await assert_no_horizontal_overflow(page, f"{name}/home")
-    await page.screenshot(path=str(OUT/f"{name}-home.png"), full_page=True)
-    report["home"]={"ok":True,"story":await page.locator("#latestStoryTitle").inner_text()}
+    await page.screenshot(path=str(OUT/f"{name}-home.png"))
+    report["home"]={"ok":True,"opener":True}
 
     # Terminal application.
     await page.goto(BASE + "/terminal_app.html", wait_until="domcontentloaded", timeout=60000)
