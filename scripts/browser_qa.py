@@ -55,6 +55,7 @@ async def wait_not_loading(page, selector, timeout=45000):
 
 async def run_viewport(browser, name, width, height):
     context=await browser.new_context(viewport={"width":width,"height":height}, has_touch=(width <= 480), is_mobile=(width <= 480))
+    await context.add_init_script("localStorage.setItem('wc_lang','en')")  # these checks assert the English UI
     page=await context.new_page()
     page_errors=[]
     page.on("pageerror", lambda exc: page_errors.append(str(exc)))

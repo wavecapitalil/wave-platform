@@ -23,6 +23,7 @@ TIME_CHARTS = [chart for chart in CHARTS if chart.get('type') in ('line', 'stack
 
 async def check(browser, label, width, height):
     context = await browser.new_context(viewport={'width': width, 'height': height}, has_touch=width <= 1024)
+    await context.add_init_script("localStorage.setItem('wc_lang','en')")  # these checks assert the English UI
     page = await context.new_page()
     errors=[]
     page.on('pageerror',lambda e:errors.append(str(e)))

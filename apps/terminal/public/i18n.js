@@ -136,7 +136,7 @@
   };
 
   function getLang(){
-    try { return localStorage.getItem('wc_lang') || 'en'; } catch(e){ return 'en'; }
+    try { return localStorage.getItem('wc_lang') || 'he'; } catch(e){ return 'he'; }   // Hebrew by default; EN when the visitor picks it
   }
 
   function t(key, fallback){
