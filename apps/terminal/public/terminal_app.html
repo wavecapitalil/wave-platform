@@ -12,8 +12,8 @@
 <link rel="stylesheet" href="ai-tutor.css">
 <link rel="stylesheet" href="terminal-sources.css?v=20261008-1">
 <link rel="stylesheet" href="terminal-gold-expectations.css?v=20261009-2">
-<link rel="stylesheet" href="terminal-valuation.css?v=20261008-live1">
-<link rel="stylesheet" href="terminal-price-history.css?v=20261012-equity">
+<link rel="stylesheet" href="terminal-valuation.css?v=20261013-research-markers">
+<link rel="stylesheet" href="terminal-price-history.css?v=20261013-research-markers">
 <link rel="stylesheet" href="terminal-research.css?v=20261013-tape">
 <link rel="stylesheet" href="terminal-brief.css?v=20261009-brighter-reader1">
 </head>
@@ -158,9 +158,7 @@
         <div class="nav-item" data-page="research" onclick="navigate('research')">
           <span class="nav-item-icon">🔎</span> <span data-i18n="sidebar.companyResearch">Equity Research</span>
         </div>
-        <a href="#valuation" class="nav-item" data-page="valuation" onclick="if(!event.ctrlKey &amp;&amp; !event.metaKey &amp;&amp; !event.shiftKey &amp;&amp; !event.altKey){navigate('valuation');return false}">
-          <span class="nav-item-icon">◈</span> <span data-i18n="sidebar.valuation">Equity Valuation</span>
-        </a>
+
         <div class="nav-item" data-page="mover" onclick="navigate('mover')">
           <span class="nav-item-icon">⚡</span> <span data-i18n="sidebar.whatsMoving">What's Moving</span>
           <span class="nav-item-badge live" data-i18n="sidebar.ai">AI</span>
@@ -1517,7 +1515,7 @@
 
 <script src="terminal-sources.js?v=20261008-sources1"></script>
 <script src="terminal-brief.js?v=20261009-dark-reader1"></script>
-<script src="terminal.js?v=20261012-equity"></script>
+<script src="terminal.js?v=20261013-research-markers"></script>
 <script src="terminal-market.js?v=20261012-equity"></script>
 <script src="terminal-content.js?v=20261008-sources1"></script>
 <script src="terminal-flows.js?v=20261008-sources1"></script>
@@ -1540,12 +1538,12 @@ if (window.Chart) Chart.register({
   }
 });
 </script>
-<script src="terminal-price-history.js?v=20261012-equity"></script>
+<script src="terminal-price-history.js?v=20261013-research-markers"></script>
 <script src="terminal-equities.js?v=20261012-research-followup"></script>
-<script src="terminal-research.js?v=20261012-research-followup"></script>
+<script src="terminal-research.js?v=20261013-research-markers"></script>
 <script src="terminal-research-markets.js?v=20261013-tape"></script>
 <script src="equity-workbook-model.js?v=20261008-live1"></script>
-<script src="terminal-valuation.js?v=20261008-live1"></script>
+<script src="terminal-valuation.js?v=20261013-research-markers"></script>
 <script src="terminal-risk.js?v=20261008-sources1"></script>
 <script src="terminal-crypto.js?v=20261008-sources1"></script>
 <script src="terminal-rates.js?v=20261008-sources1"></script>

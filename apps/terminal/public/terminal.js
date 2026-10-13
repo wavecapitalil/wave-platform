@@ -29,6 +29,7 @@ updateClock();
 var currentPage = 'welcome';
 
 function navigate(page){
+  if(page==='valuation' && window.WaveResearch){navigate('research');WaveResearch.select('valuation');return;}
   if(page==='fundchart' && window.WaveResearch){navigate('research');WaveResearch.select('compare');return;}
   document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   var el = document.getElementById('page-' + page);
@@ -69,6 +70,7 @@ function navigate(page){
   if(page === 'valuation' && window.WaveValuation) WaveValuation.open();
 
   if(page === 'research'){
+    if(window.WaveResearch)WaveResearch.select('general');
     setTimeout(function(){ document.getElementById('researchInput').focus(); }, 100);
   }
 

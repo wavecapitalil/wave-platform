@@ -88,8 +88,9 @@ async def check(browser, name, width, height, lang):
     assert metrics["scroll"] <= width + 2, metrics
     assert metrics["canvas"] > 150, metrics
     assert metrics["events"] == 3, metrics
-    # Dated controls occupy a separate lane, never obscuring the candles.
-    assert await page.locator('[data-ph-marker="test-25"]').count() == 1
+    # Both chart-positioned markers and the separate accessible event rail are present.
+    assert await page.locator('#ph-plot-markers [data-ph-marker="test-25"]').count() == 1
+    assert await page.locator("#ph-marker-rail [data-ph-marker]").count() == 3
     await page.locator("#resPriceHistory").scroll_into_view_if_needed()
     await page.screenshot(path=str(OUT / (name + ".png")), full_page=True)
     await page.locator('[data-ph-event="test-42"]').focus()
@@ -99,7 +100,7 @@ async def check(browser, name, width, height, lang):
     await page.locator("#ph-detail").scroll_into_view_if_needed()
     await page.screenshot(path=str(OUT / (name + "-event-detail.png")), full_page=True)
     # Touch/click a dated marker and verify its corresponding article selection.
-    await page.locator('[data-ph-marker="test-25"]').click()
+    await page.locator('#ph-plot-markers [data-ph-marker="test-25"]').click()
     await page.wait_for_function("document.querySelector('[data-ph-event=\"test-25\"]').getAttribute('aria-pressed')==='true'")
     await page.locator('[data-ph-range="1mo"]').click()
     await page.wait_for_function("Chart.getChart('ph-chart') && document.querySelector('[data-ph-range=\"1mo\"]').getAttribute('aria-pressed')==='true'")
