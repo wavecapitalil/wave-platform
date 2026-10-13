@@ -136,3 +136,12 @@ test('latest history must match fiscal model base before forecast years are labe
 test('stale cache warnings are recorded in the centralized source registry',()=>{
  const data=JSON.parse(JSON.stringify(snapshots));data.snapshots.AAPL.warnings.push({field:'cache',status:'missing',reason:'STALE_FIXTURE_WARNING'});const a=app({snapshots:data});assert.match(a.sourceRecords.get('valuation:AAPL')[2],/STALE_FIXTURE_WARNING/);
 });
+
+test('late valuation response cannot switch Research back after a company change',async()=>{
+ const a=app();a.input('growth',0,23);a.c.WAVE_VALUATION_SNAPSHOTS=null;a.c.API='https://fixture';let resolve,signal;const synced=[];a.c.WaveResearch={syncValuation:s=>synced.push(s)};
+ a.c.fetch=(_url,options)=>{signal=options.signal;return new Promise(r=>{resolve=r;});};
+ const pending=a.c.WaveValuation.loadCompany('MSFT');a.c.WaveValuation.selectionChanged('NVDA');assert.equal(signal.aborted,true);
+ resolve({ok:true,json:async()=>snapshots.snapshots.MSFT});await pending;
+ assert.deepEqual(synced,[]);assert.equal(a.byId.get('vw-company-symbol').textContent,'AAPL');assert.equal(a.byId.get('vw-loaded').hidden,true);
+ a.c.WaveValuation.open('AAPL');assert.equal(a.byId.get('vw-loaded').hidden,false);assert.equal(a.byId.get('vw-cell-growth-0').value,'23');
+});
