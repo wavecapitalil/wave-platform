@@ -94,7 +94,8 @@
     if(typeof Chart==='undefined'){el('ph-status').textContent=text('Chart library unavailable. Reload to try again.','ספריית הגרפים אינה זמינה. יש לטעון מחדש.');return;}
     el('ph-marker-rail').replaceChildren();
     var coverage=data.meta&&data.meta.news_coverage||{},sources=coverage.sources||[];
-    el('ph-coverage').textContent=allEvents.length+' plotted events'+(awaiting.length?' · '+awaiting.length+' awaiting a completed session':'')+' · '+date(data.points[0].date)+' – '+date(last.date)+'. '+sources.map(function(c){return c.source+': '+(c.status==='available'?(c.from+' – '+String(c.to||'').slice(0,10)):c.status);}).join(' · ')+'. Partial coverage: newsroom history and unavailable feeds leave gaps. Gray means uncertain sentiment; no price causation is implied.';
+    var gaps=sources.filter(function(c){return !['available','empty'].includes(c.status);}).length;
+    el('ph-coverage').textContent=allEvents.length+' plotted events'+(awaiting.length?' · '+awaiting.length+' awaiting a completed session':'')+' · Partial archive: newsroom history has gaps'+(gaps?' · '+gaps+' source gap(s)':'')+'. Source windows and details: Sources & methodology. Gray means uncertain sentiment.';
 
     var plotted={id:'waveEventPositions',afterDraw:function(chart){
       var area=chart.chartArea,slots=Math.max(3,Math.floor(area.width/60)),groups=new Map();
