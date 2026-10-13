@@ -1,30 +1,42 @@
-/* Wave Capital — "back to the landing page" button for the platform pages (terminal, university, account...).
-   Add ONE line before </body> of terminal_app.html (and any other page):  <script src="wave-back.js" defer></script>
-   On every screen size it shows a small floating "← דף הבית" pill at the bottom-left (the AI button sits bottom-right).
-   It follows the platform language (localStorage 'wc_lang'), links to index.html (the opener), touches nothing else. */
+/* Wave Capital: "back to the home page" bar for the platform pages (terminal, university, account, blog, products).
+   Add ONE line before </body>:  <script src="wave-back.js" defer></script>
+   13/10 (Yogi): a clear bar at the very top of every platform page, on every screen size, that stays in view.
+   It links to index.html (the opener), which then lands on "יתרון מחקרי. ביצוע שיטתי." (see site.js).
+   Follows the platform language (localStorage 'wc_lang', Hebrew by default). Only shifts the pages' own top bars down. */
 (function () {
   if (document.getElementById('wave-back')) return;
-  var he = true; try { he = (localStorage.getItem('wc_lang') || 'he') === 'he'; } catch (e) {}   // same default as the platform's i18n.js (Hebrew)
+  var he = true; try { he = (localStorage.getItem('wc_lang') || 'he') === 'he'; } catch (e) {}
+  var H = 44;
+
+  var bar = document.createElement('div');
+  bar.id = 'wave-back'; bar.dir = he ? 'rtl' : 'ltr';
   var a = document.createElement('a');
-  a.id = 'wave-back'; a.href = 'index.html';
-  var ar = document.createElement('span'), tx = document.createElement('span');
-  ar.setAttribute('aria-hidden', 'true'); ar.textContent = he ? '→' : '←'; tx.textContent = he ? 'דף הבית' : 'Home';
-  a.appendChild(ar); a.appendChild(tx);          // flex: the first item sits at the start side (right in Hebrew)
+  a.href = 'index.html';
   a.setAttribute('aria-label', he ? 'חזרה לדף הבית של Wave Capital' : 'Back to the Wave Capital home page');
-  a.dir = he ? 'rtl' : 'ltr';
+  var ar = document.createElement('span'); ar.className = 'wb-arr'; ar.setAttribute('aria-hidden', 'true'); ar.textContent = he ? '→' : '←';
+  var tx = document.createElement('span'); tx.textContent = he ? 'חזרה לדף הבית' : 'Back to home';
+  var br = document.createElement('span'); br.className = 'wb-brand'; br.textContent = 'Wave Capital';
+  a.appendChild(ar); a.appendChild(tx); a.appendChild(br);
+  bar.appendChild(a);
+
   var s = document.createElement('style');
-  s.textContent = '#wave-back{position:fixed;z-index:2147483000;left:16px;bottom:calc(18px + env(safe-area-inset-bottom));display:inline-flex;align-items:center;gap:6px;' +
-    'padding:11px 16px;border-radius:999px;font:600 14px/1 "IBM Plex Sans Hebrew",system-ui,-apple-system,sans-serif;color:#E9EFF7;text-decoration:none;' +
-    'background:rgba(5,12,24,.86);border:1px solid rgba(111,178,255,.5);box-shadow:0 10px 30px rgba(0,0,0,.45);-webkit-tap-highlight-color:transparent}' +
-    '#wave-back[dir=rtl]{direction:rtl!important;unicode-bidi:isolate!important}#wave-back[dir=ltr]{direction:ltr!important;unicode-bidi:isolate!important}#wave-back:active{transform:scale(.97)}#wave-back:hover{border-color:#6FB2FF;background:rgba(10,22,40,.92)}@media (min-width:901px){#wave-back{left:24px;bottom:24px}}';
+  s.textContent =
+    '#wave-back{position:sticky;top:0;z-index:95;flex:0 0 auto;box-sizing:border-box;height:' + H + 'px;width:100%;display:flex;align-items:center;justify-content:center;' +
+    'background:linear-gradient(90deg,#040b16,#0a1a31 50%,#040b16);border-bottom:1px solid rgba(111,178,255,.22);font:600 13.5px/1 "IBM Plex Sans Hebrew",system-ui,-apple-system,sans-serif}' +
+    '#wave-back a{display:inline-flex;align-items:center;gap:9px;height:30px;padding:0 16px;border-radius:999px;color:#E9EFF7;text-decoration:none;' +
+    'border:1px solid rgba(111,178,255,.5);background:rgba(47,128,255,.10);transition:background .25s,border-color .25s;-webkit-tap-highlight-color:transparent}' +
+    '#wave-back a:hover,#wave-back a:focus-visible{background:rgba(47,128,255,.22);border-color:#6FB2FF}' +
+    '#wave-back a:focus-visible{outline:2px solid #6FB2FF;outline-offset:2px}' +
+    '#wave-back .wb-arr{color:#6FB2FF;font-size:15px}' +
+    '#wave-back .wb-brand{color:rgba(233,239,247,.55);font-weight:500;padding-inline-start:9px;border-inline-start:1px solid rgba(233,239,247,.18)}' +
+    '#wave-back[dir=rtl]{direction:rtl}#wave-back[dir=ltr]{direction:ltr}' +
+    '@media (max-width:420px){#wave-back .wb-brand{display:none}}' +
+    // the pages' own top bars sit right under it
+    'body>nav.nav{top:' + H + 'px!important}body>nav.nav~.page{margin-top:' + H + 'px}' +   // blog, products (fixed nav)
+    '.wp-topbar{top:' + H + 'px!important}';                                                   // university, account (sticky header)
   document.head.appendChild(s);
-  // came here from the opener? step back in history instead: the browser restores it instantly, at the same scroll spot
-  a.addEventListener('click', function (e) {
-    try {
-      var r = document.referrer && new URL(document.referrer), home = new URL('index.html', location.href);
-      var fromOpener = r && r.origin === location.origin && (r.pathname === home.pathname || r.pathname === home.pathname.replace(/index\.html$/, ''));
-      if (fromOpener && history.length > 1) { e.preventDefault(); history.back(); }
-    } catch (x) {}
-  });
-  (document.body || document.documentElement).appendChild(a);
+
+  document.body.insertBefore(bar, document.body.firstChild);
+  // the terminal's phone menu measures where its header ends; let it measure again now that the bar is in
+  try { dispatchEvent(new Event('resize')); } catch (e) {}
 })();

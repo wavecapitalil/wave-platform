@@ -13,6 +13,22 @@
   ScrollTrigger.config({ ignoreMobileResize: true });
   if (!reduced) { lenis = new Lenis({ lerp: 0.09, smoothWheel: true }); lenis.on('scroll', ScrollTrigger.update); gsap.ticker.add(function (t) { lenis.raf(t * 1000); }); gsap.ticker.lagSmoothing(0); }
 
+  /* ---------- back from the platform (13/10, Yogi): land on "יתרון מחקרי. ביצוע שיטתי." instead of the start of the film.
+     A referrer from another page of this site = a return trip. Instant, and only before the visitor touches anything. ---------- */
+  (function () {
+    var back = false, norm = function (p) { return p.replace(/index\.html$/, ''); };
+    try { var rf = document.referrer && new URL(document.referrer); back = !!rf && rf.origin === location.origin && norm(rf.pathname) !== norm(location.pathname); } catch (e) {}
+    if (!back || still || location.hash) return;
+    var touched = false;
+    ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(function (ev) { addEventListener(ev, function () { touched = true; }, { passive: true, once: true }); });
+    var land = function () {
+      if (touched) return;
+      var h = $('.hero'), y = Math.round(h.offsetTop + Math.max(0, h.offsetHeight - innerHeight) * 0.95);   // all words of the headline are in by 0.935
+      scrollTo({ top: y, behavior: 'instant' }); if (lenis) lenis.scrollTo(y, { immediate: true, force: true });
+    };
+    history.scrollRestoration = 'manual'; land(); addEventListener('load', land, { once: true });
+  })();
+
   /* ---------- dialog + nav ---------- */
   var dlg = $('#talk'), sheet = $('#sheetnav'), menuBtn = $('.hd__menu');
   function closeSheet() { sheet.classList.remove('is-open'); menuBtn.setAttribute('aria-expanded', 'false'); }
