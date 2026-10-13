@@ -5,6 +5,13 @@
 // for an individual security. Publication dates have no invented intraday time.
 export const REVIEWED_PRICE_EVENTS = [
   {
+    id: 'aapl-2026-04-20-ceo-succession', symbols: ['AAPL'], published_at: '2026-04-20', timing: 'date_only',
+    title: 'Apple announces Tim Cook / John Ternus succession plan', category: 'leadership', effective_date: '2026-09-01',
+    summary: 'Apple announced that Tim Cook would become executive chairman and John Ternus chief executive officer, effective September 1, 2026. This marker uses the April 20 public announcement date, not the earlier board decision or the later effective date. Direction is uncertain.',
+    url: 'https://www.apple.com/ie/newsroom/2026/04/tim-cook-to-become-apple-executive-chairman-john-ternus-to-become-apple-ceo/',
+    source: 'Apple Newsroom', relationship: 'context', reviewed_at: '2026-10-13',
+  },
+  {
     id: 'meta-2024-02-01-first-dividend',
     symbols: ['META'],
     published_at: '2024-02-01',

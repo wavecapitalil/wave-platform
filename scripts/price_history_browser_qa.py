@@ -84,13 +84,15 @@ async def check(browser, name, width, height, lang):
     assert await page.locator("#ph-events button").count() == 3
     assert await page.locator("#ph-detail h4").inner_text() == "Fixture earnings release <not HTML>"
     assert await page.locator("#ph-detail a").get_attribute("rel") == "noopener noreferrer"
-    metrics = await page.evaluate("""() => {const c=Chart.getChart('ph-chart'); const b=document.querySelector('#resPriceHistory').getBoundingClientRect(); return {scroll:document.documentElement.scrollWidth,viewport:innerWidth,width:b.width,canvas:c.width,points:c.data.datasets[0].data.length,events:document.querySelectorAll('#ph-marker-rail [data-ph-marker]').length};}""")
+    metrics = await page.evaluate("""() => {const c=Chart.getChart('ph-chart'); const b=document.querySelector('#resPriceHistory').getBoundingClientRect(); return {scroll:document.documentElement.scrollWidth,viewport:innerWidth,width:b.width,canvas:c.width,points:c.data.datasets[0].data.length,events:document.querySelectorAll('#ph-plot-markers [data-ph-cluster]').length};}""")
     assert metrics["scroll"] <= width + 2, metrics
     assert metrics["canvas"] > 150, metrics
-    assert metrics["events"] == 3, metrics
-    # Both chart-positioned markers and the separate accessible event rail are present.
-    assert await page.locator('#ph-plot-markers [data-ph-marker="test-25"]').count() == 1
-    assert await page.locator("#ph-marker-rail [data-ph-marker]").count() == 3
+    assert 1 <= metrics["events"] <= 3, metrics
+    assert await page.locator("[data-ph-extremum]").count() == 0
+    assert not await page.locator("#researchResult").is_visible()
+    # Clustered chart bubbles retain keyboard-accessible event details; extrema controls are absent.
+    assert await page.locator('#ph-plot-markers [data-ph-cluster="1"]').count() == 1
+    assert 1 <= await page.locator("#ph-plot-markers [data-ph-cluster]").count() <= 3
     await page.locator("#resPriceHistory").scroll_into_view_if_needed()
     await page.screenshot(path=str(OUT / (name + ".png")), full_page=True)
     await page.locator('[data-ph-event="test-42"]').focus()
@@ -100,14 +102,14 @@ async def check(browser, name, width, height, lang):
     await page.locator("#ph-detail").scroll_into_view_if_needed()
     await page.screenshot(path=str(OUT / (name + "-event-detail.png")), full_page=True)
     # Touch/click a dated marker and verify its corresponding article selection.
-    await page.locator('#ph-plot-markers [data-ph-marker="test-25"]').click()
+    await page.locator('#ph-plot-markers [data-ph-cluster="1"]').click()
     await page.wait_for_function("document.querySelector('[data-ph-event=\"test-25\"]').getAttribute('aria-pressed')==='true'")
     await page.locator('[data-ph-range="1mo"]').click()
     await page.wait_for_function("Chart.getChart('ph-chart') && document.querySelector('[data-ph-range=\"1mo\"]').getAttribute('aria-pressed')==='true'")
     # Late stock-info and chart responses cannot overwrite a newer stock.
     settings["delay"] = True
     await page.evaluate("researchTicker('AAPL'); researchTicker('MSFT')")
-    await page.locator("#resNameLine").filter(has_text="MSFT").wait_for()
+    await page.wait_for_function("document.querySelector('#resNameLine').textContent.includes('MSFT')")
     await page.wait_for_timeout(1100)
     assert "MSFT" in await page.locator("#ph-period").inner_text()
     assert "MSFT" in await page.locator("#resNameLine").inner_text()
