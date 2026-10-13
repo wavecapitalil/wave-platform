@@ -2,3 +2,14 @@
 .er-season-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.er-season-tile{min-width:0;border:1px solid #293d54;border-radius:10px;overflow:hidden}.er-season-toggle{width:100%;min-height:44px;text-align:left;padding:12px;background:#132237;color:#d2e7fb;border:0;font-weight:600;cursor:pointer}.er-season-body .er-card{border:0;margin:0;padding:12px}.er-season-body .er-card h3{display:none}.er-season-body .er-chart{height:165px}.er-season-body .er-kv{font-size:11px}.er-season-body .er-card p{font-size:11px}.er-season-tile.expanded{grid-column:1/-1}.er-season-tile.expanded .er-chart{height:400px}.er-season-legacy{margin-top:20px}.er-daily-tape{overflow:auto!important;scroll-behavior:auto}.ticker-bar{overflow:hidden}#erTapePause{flex-shrink:0;background:#17283d;color:#bcd6ee;border:1px solid #37516a;border-radius:5px;min-height:30px;margin:0 8px;font-size:10px}.er-daily-tape .ticker-item{flex-shrink:0}.er-daily-tape .ticker-chg{white-space:nowrap}@media(max-width:1000px){.er-season-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.er-season-grid{grid-template-columns:1fr}.er-season-tile.expanded .er-chart{height:300px}}@media(prefers-reduced-motion:reduce){.er-daily-tape{scroll-behavior:auto}}
 
 .er-peer-choices{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.er-peer-choices button{min-height:44px;background:#17283d;color:#d5edff;border:1px solid #315370;border-radius:6px;padding:8px 12px}
+
+/* Two identical groups travel one group-width, making the daily tape loop seamless. */
+.ticker-bar{background-color:#0b1520;background-image:radial-gradient(circle,rgba(103,175,203,.15) .7px,transparent .9px);background-size:5px 5px}
+.er-daily-tape{flex:1 1 0!important;min-width:0;width:0!important;overflow:auto!important;scrollbar-width:none;direction:ltr}
+.er-daily-tape::-webkit-scrollbar{display:none}
+.er-tape-track{display:flex;width:max-content;animation:erTapeScroll var(--er-tape-duration,70s) linear infinite;will-change:transform}
+.er-tape-group{display:flex;align-items:center;flex-shrink:0}
+.er-daily-tape.paused .er-tape-track,.er-daily-tape:hover .er-tape-track,.er-daily-tape:focus-within .er-tape-track{animation-play-state:paused}
+.er-daily-tape .ticker-item{font-variant-numeric:tabular-nums;text-shadow:0 1px 2px #000}
+@keyframes erTapeScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.er-tape-track{animation:none;transform:none;will-change:auto}.er-tape-group[aria-hidden]{display:none}}

@@ -1,6 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {parsePriceChart,weeklyCandles} from '../supabase/functions/wave-data/price-history.ts';
-import {insiderFilingLinks,statementSeries,seasonalityFromPoints} from '../supabase/functions/wave-data/research-data.ts';
+import {collectDailyTape,insiderFilingLinks,statementSeries,seasonalityFromPoints} from '../supabase/functions/wave-data/research-data.ts';
 const now=Date.parse('2026-10-12T10:00:00Z');
 function payload(quote){return {chart:{result:[{meta:{symbol:'TEST',currency:'GBp',exchangeTimezoneName:'Europe/London'},timestamp:['2026-10-05','2026-10-06','2026-10-09'].map(d=>Date.parse(d+'T09:00:00Z')/1000),indicators:{quote:[quote],adjclose:[{adjclose:[50,55,60]}]}}]}};}
 test('all OHLC components use one session adjustment factor, retaining GBp',()=>{const d=parsePriceChart(payload({open:[98,100,110],high:[104,112,125],low:[96,99,108],close:[100,110,120]}),'TEST',now);assert.equal(d.currency,'GBp');assert.equal(d.points[0].open,49);assert.equal(d.points[0].high,52);assert.equal(d.points[0].low,48);const w=weeklyCandles(d.points);assert.equal(w.length,1);assert.equal(w[0].open,49);assert.equal(w[0].close,60);assert.equal(w[0].high,62.5);assert.equal(w[0].session_count,3);});
@@ -12,3 +12,17 @@ test('seasonal mean excludes current and partial listing years and aligns compar
 test('duration facts without valid start dates fail closed',()=>{const c={document:{facts:{'us-gaap':{ShareBasedCompensation:{units:{USD:[{end:'2025-12-31',filed:'2026-02-01',form:'10-K',accn:'1',val:100}]}}}}}};assert.equal(statementSeries(c,'stock_compensation','annual',now).data.length,0);});
 
 test('SEC insider filing URLs preserve exact source accession, issuer and document',()=>{const d={cik:320193,filings:{recent:{form:['4','4/A','4'],accessionNumber:['0001140361-26-039158','0001140361-26-039159','0001140361-26-039160'],primaryDocument:['xslF345X06/form4.xml','../bad.xml','form4.xml'],filingDate:['2026-10-08','2026-10-08','2027-01-01'],reportDate:['2026-10-06','2026-10-06','2026-12-31']}}};const r=insiderFilingLinks(d,'320193',now);assert.equal(r.length,1);assert.equal(r[0].source_url,'https://www.sec.gov/Archives/edgar/data/320193/000114036126039158/xslF345X06/form4.xml');assert.equal(insiderFilingLinks(d,'1',now).length,0);});
+
+
+test('daily tape identifies the research client and preserves completed daily sessions',async()=>{
+ const body=payload({open:[98,100,110],high:[104,112,125],low:[96,99,108],close:[100,110,120]});body.chart.result[0].meta.symbol='SPY';
+ const result=await collectDailyTape('SPY',now,async(url,options)=>{
+  const u=new URL(url);assert.equal(u.searchParams.get('interval'),'1d');assert.equal(u.searchParams.get('includePrePost'),'false');
+  assert.equal(new Headers(options.headers).get('user-agent'),'Wave-Research/1.0');assert.equal(new Headers(options.headers).get('accept'),'application/json');
+  assert.ok(options.signal instanceof AbortSignal);return new Response(JSON.stringify(body),{status:200});
+ });
+ assert.equal(result.session_date,'2026-10-09');assert.equal(result.previous_session_date,'2026-10-06');assert.equal(result.price,120);assert.ok(Math.abs(result.change_pct-(60/55-1)*100)<1e-9);assert.match(result.performance_basis,/completed exchange session/);
+});
+test('daily tape retains upstream status and never substitutes a quote after rejection',async()=>{
+ let calls=0;await assert.rejects(collectDailyTape('SPY',now,async()=>{calls++;return new Response('Too Many Requests',{status:429});}),/Tape provider unavailable \(HTTP 429\)/);assert.equal(calls,1);
+});

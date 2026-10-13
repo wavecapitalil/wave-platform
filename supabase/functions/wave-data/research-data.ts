@@ -107,7 +107,7 @@ export function seasonalityFromPoints(points:any[],symbol:string,timezone:string
 export async function collectDailyTape(symbol:string,now=Date.now(),fetcher=fetch){
  if(!['SPY','QQQ','^VIX','BTC-USD','GC=F','DX-Y.NYB','^TNX','CL=F'].includes(symbol))throw Error('Unsupported tape symbol');
  const url='https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(symbol)+'?'+new URLSearchParams({period1:String(Math.floor((now-14*DAY)/1000)),period2:String(Math.floor(now/1000)),interval:'1d',includeAdjustedClose:'true',events:'div,splits',includePrePost:'false'});
- const r=await fetcher(url,{signal:AbortSignal.timeout(10000)});if(!r.ok)throw Error('Tape provider unavailable');const chart=parsePriceChart(await r.json(),symbol,now);const last=chart.points.at(-1)!,previous=chart.points.at(-2)!;
+ const r=await fetcher(url,{headers:{'accept':'application/json','user-agent':'Wave-Research/1.0'},signal:AbortSignal.timeout(10000)});if(!r.ok)throw Error('Tape provider unavailable (HTTP '+r.status+')');const chart=parsePriceChart(await r.json(),symbol,now);const last=chart.points.at(-1)!,previous=chart.points.at(-2)!;
  return {symbol,price:last.raw_close,currency:chart.currency,change_pct:last.change_pct,session_date:last.date,previous_session_date:previous.date,exchange_timezone:chart.timezone,basis:chart.basis,price_basis:'provider split-adjusted close',performance_basis:'completed exchange session versus preceding completed session',fetched_at:new Date(now).toISOString()};
 }
 
