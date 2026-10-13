@@ -6,6 +6,7 @@ import { withFundamentalReporting } from "./fundamental-reporting.ts";
 import { collectPriceHistory } from "./price-history.ts";
 import {collectHistoricalPE} from './historical-pe.ts';
 import {insiderFilingLinks,statementSeries,collectResearchSeasonality,collectDailyTape} from './research-data.ts';
+import {createCompanyFactsLoader} from './company-facts.ts';
 
 const SUPABASE_URL=Deno.env.get("SUPABASE_URL")!;
 const ANON=Deno.env.get("SUPABASE_ANON_KEY")!;
@@ -13,6 +14,7 @@ const SERVICE_KEY=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const CORE=SUPABASE_URL+"/functions/v1/wave-core";
 const db=createClient(SUPABASE_URL,ANON,{auth:{persistSession:false}});
 const admin=createClient(SUPABASE_URL,SERVICE_KEY,{auth:{persistSession:false}});
+const companyFacts=createCompanyFactsLoader(symbol=>admin.rpc('wave_get_companyfacts',{p_ticker:symbol,p_force:false}));
 
 const cors={
   "access-control-allow-origin":"*",
@@ -386,7 +388,7 @@ async function dynamicStockInfo(u:URL){
 
   let cachedRes:any={data:null,error:null};
   try{
-    cachedRes=await admin.rpc("wave_get_companyfacts",{p_ticker:symbol,p_force:false});
+    cachedRes=await companyFacts(symbol);
   }catch(_e){
     cachedRes={data:null,error:null};
   }
@@ -507,7 +509,7 @@ async function dynamicStockInfo(u:URL){
   return json(body,200,{"x-wave-source":"dynamic-company-research","cache-control":"public, max-age=900"});
 }
 
-async function dynamicFundamentals(u:URL){
+async function dynamicFundamentals(u:URL,context?:{companyFacts?:any}){
   const symbol=String(u.searchParams.get("symbol")||"").trim().toUpperCase();
   const metric=String(u.searchParams.get("metric")||"revenue").trim();
   const period=String(u.searchParams.get("period")||"annual").trim();
@@ -537,13 +539,13 @@ async function dynamicFundamentals(u:URL){
   const valid=new Set(["revenue","gross_profit","operating_income","net_income","eps_diluted","rd_expense","free_cash_flow","capex","gross_margin","operating_margin","net_margin","revenue_growth","op_income_growth","net_income_growth"]);
   if(!valid.has(metric)) return json({error:"unknown metric"},400);
 
-  const {data:cachedFacts,error:factsError}=await admin.rpc("wave_get_companyfacts",{
-    p_ticker:symbol,
-    p_force:false
-  });
+  const {data:cachedFacts,error:factsError}=await companyFacts(symbol);
   if(factsError || !cachedFacts?.document){
     return json({error:factsError?.message||"SEC companyfacts cache unavailable",symbol},502);
   }
+  // Reuse this exact document for reporting metadata within this request.
+  // Fetching it again serializes several megabytes through PostgREST twice.
+  if(context)context.companyFacts=cachedFacts;
   const rec={
     cik:String(cachedFacts.cik||"").padStart(10,"0"),
     name:String(cachedFacts.company_name||symbol)
@@ -675,7 +677,7 @@ Deno.serve(async(req:Request)=>{
     if(p.endsWith("/api/research-insider-filings")){
       const symbol=String(u.searchParams.get('symbol')||'').trim().toUpperCase();
       if(!/^[A-Z0-9][A-Z0-9.=-]{0,19}$/.test(symbol))return json({error:'Invalid symbol'},400);
-      const r=await admin.rpc('wave_get_companyfacts',{p_ticker:symbol,p_force:false});
+      const r=await companyFacts(symbol);
       if(r.error||!r.data?.cik)return json({error:'Verified issuer CIK unavailable'},502);
       const filings=await reportingFilings(String(r.data.cik));
       if(!filings)return json({error:'SEC submissions unavailable'},502);
@@ -684,7 +686,7 @@ Deno.serve(async(req:Request)=>{
     if(p.endsWith("/api/research-historical-pe")){
       const symbol=String(u.searchParams.get('symbol')||'').trim().toUpperCase();
       if(!/^[A-Z0-9][A-Z0-9.=-]{0,19}$/.test(symbol))return json({error:'Invalid symbol'},400);
-      const r=await admin.rpc('wave_get_companyfacts',{p_ticker:symbol,p_force:false});
+      const r=await companyFacts(symbol);
       if(r.error||!r.data?.document)return json({error:'SEC companyfacts unavailable'},502);
       return json(await collectHistoricalPE(r.data,symbol));
     }
@@ -702,7 +704,7 @@ Deno.serve(async(req:Request)=>{
       const symbol=String(u.searchParams.get('symbol')||'').trim().toUpperCase();
       if(!/^[A-Z0-9][A-Z0-9.=-]{0,19}$/.test(symbol))return json({error:'Invalid symbol'},400);
       if(!['assets','liabilities','equity','cash','capex','free_cash_flow','operating_cash_flow','stock_compensation','shares_outstanding','repurchased_shares'].includes(u.searchParams.get('metric')||'assets')||!['annual','quarterly'].includes(u.searchParams.get('period')||'annual'))return json({error:'Unsupported statement metric or period'},400);
-      const r=await admin.rpc('wave_get_companyfacts',{p_ticker:symbol,p_force:false});
+      const r=await companyFacts(symbol);
       if(r.error||!r.data?.document)return json({error:'SEC companyfacts unavailable'},502);
       return json({...statementSeries(r.data,u.searchParams.get('metric')||'assets',u.searchParams.get('period')||'annual'),symbol});
     }
@@ -719,7 +721,7 @@ Deno.serve(async(req:Request)=>{
       const symbol=String(u.searchParams.get("symbol")||"").trim().toUpperCase().replace(/\./g,"-");
       if(!/^[A-Z][A-Z0-9-]{0,14}$/.test(symbol)) return json({error:"valid company symbol required"},400);
       const [cached,chart]=await Promise.all([
-        admin.rpc("wave_get_companyfacts",{p_ticker:symbol,p_force:false}),
+        companyFacts(symbol),
         yahooChartMeta(symbol).catch(()=>null)
       ]);
       if(cached.error || !cached.data?.document) return json({error:"reported valuation data unavailable",symbol},502);
@@ -728,22 +730,21 @@ Deno.serve(async(req:Request)=>{
 
     if(p.endsWith("/api/fundamentals")){
       const cached=await genericApiSnapshot(u);
-      const base=cached||await dynamicFundamentals(u);
+      const context:{companyFacts?:any}={};
+      const base=cached||await dynamicFundamentals(u,context);
       if(!base.ok) return base;
       const body=await base.json();
       // Enrich both paths: scheduled snapshots take precedence in production.
       // A metadata failure must preserve values and remain an unknown status.
-      let companyFacts:any=null;
-      try{
-        const result=await admin.rpc("wave_get_companyfacts",{
-          p_ticker:String(u.searchParams.get("symbol")||"").trim().toUpperCase(),p_force:false
-        });
-        if(!result.error)companyFacts=result.data;
+      let reportingFacts:any=context.companyFacts||null;
+      if(!reportingFacts)try{
+        const result=await companyFacts(String(u.searchParams.get("symbol")||""));
+        if(!result.error)reportingFacts=result.data;
       }catch(_e){ /* Reporting metadata is optional; never invent a reason. */ }
-      const filings=companyFacts?await reportingFilings(String(companyFacts.cik||'')):null;
+      const filings=reportingFacts?await reportingFilings(String(reportingFacts.cik||'')):null;
       const headers=new Headers(base.headers);
       headers.set("x-wave-reporting-version","fiscal-reporting-v1");
-      return new Response(JSON.stringify(withFundamentalReporting(body,companyFacts,Date.now(),filings)),{status:base.status,headers});
+      return new Response(JSON.stringify(withFundamentalReporting(body,reportingFacts,Date.now(),filings)),{status:base.status,headers});
     }
     if(p.endsWith("/api/stock-info")){
       const symbol=String(u.searchParams.get("symbol")||"").trim().toUpperCase().replace(/\./g,"-");

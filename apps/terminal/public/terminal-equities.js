@@ -313,6 +313,7 @@ var _fcTickers   = [];
 var _fcValueMode = 'absolute';
 var _fcRequestId = 0;
 var _fcLoading = false;
+var _fcAbort = null;
 var _fcVisibleDates = [];
 var _fcRenderMeta = null;
 var FC_GROWTH_BASE = {revenue_growth:'revenue', op_income_growth:'operating_income', net_income_growth:'net_income'};
@@ -402,6 +403,7 @@ function fcSetValueMode(mode, btn){
 function fcInvalidateTicker(){
   // Invalidate before a new request: old data must never look like this ticker.
   ++_fcRequestId;
+  if(_fcAbort)_fcAbort.abort();
   _fcLoading = false;
   _fcFetched = [];
   _fcRenderMeta = null;
@@ -511,6 +513,8 @@ async function runCorrelation(){
 
 async function runFundChart(){
   var requestId = ++_fcRequestId;
+  if(_fcAbort)_fcAbort.abort();
+  var controller = _fcAbort = new AbortController();
   var t1 = document.getElementById('fcTicker1').value.trim().toUpperCase();
   var t2 = document.getElementById('fcTicker2').value.trim().toUpperCase();
   var metrics = _fcMetrics.slice(), period = _fcPeriod;
@@ -531,11 +535,16 @@ async function runFundChart(){
   status.textContent = 'Loading ' + tickers.join(' & ') + '...';
   try{
     var requests = {};
-    var fetched = await Promise.all(metrics.flatMap(function(metric){
-      return tickers.map(async function(ticker){
+    var series = metrics.flatMap(function(metric){return tickers.map(function(ticker){return {metric:metric,ticker:ticker};});});
+    var fetched = new Array(series.length), next = 0;
+    // Bound requests from this browser and discard queued superseded work.
+    await Promise.all(Array.from({length:Math.min(2,series.length)},async function(){
+      while(next<series.length){
+        if(controller.signal.aborted)throw new Error('Superseded chart request');
+        var i=next++, metric=series[i].metric, ticker=series[i].ticker;
         var baseMetric = FC_GROWTH_BASE[metric] || metric;
         var key = ticker + ':' + baseMetric;
-        if(!requests[key]) requests[key] = fetch(API + (window.WaveResearch && WaveResearch.extraMetrics.indexOf(baseMetric)>=0 ? '/api/research-statements?symbol=' : '/api/fundamentals?symbol=') + encodeURIComponent(ticker) + '&metric=' + baseMetric + '&period=' + period)
+        if(!requests[key]) requests[key] = fetch(API + (window.WaveResearch && WaveResearch.extraMetrics.indexOf(baseMetric)>=0 ? '/api/research-statements?symbol=' : '/api/fundamentals?symbol=') + encodeURIComponent(ticker) + '&metric=' + baseMetric + '&period=' + period,{signal:controller.signal})
           .then(async function(r){ var d = await r.json(); if(!r.ok || d.error) throw new Error(ticker + ': ' + (d.error || 'Data request failed')); return d; });
         var result = await requests[key];
         if(window.WaveSources&&result.meta)WaveSources.record('statements:'+ticker+':'+baseMetric,ticker+' · '+(FC_LABELS[baseMetric]||baseMetric),JSON.stringify({meta:result.meta,quarter_inputs:(result.data||[]).filter(function(r){return r.statement_period;}).map(function(r){return {date:r.date,calculation:r.calculation,inputs:r.source_periods};}),unavailable:result.unavailable||[] }),(result.data||[]).filter(function(r){return r.source_url;}).slice(-10).map(function(r){return {title:r.date+' · filed '+r.filed,url:r.source_url};}));
@@ -548,8 +557,8 @@ async function runFundChart(){
               period_end:p.actualPeriodEnd,period_verified:!!p.actualPeriodEnd};
           });
         }
-        return {metric:metric,ticker:ticker,result:Object.assign({},result,{data:data})};
-      });
+        fetched[i]={metric:metric,ticker:ticker,result:Object.assign({},result,{data:data})};
+      }
     }));
     if(requestId !== _fcRequestId) return;
     _fcLoading = false;
@@ -566,6 +575,7 @@ async function runFundChart(){
     fcDrawChart(_fcAllDates);
     status.textContent = '';
   }catch(e){
+    controller.abort();
     if(requestId !== _fcRequestId) return;
     _fcLoading = false;
     _fcFetched = [];
