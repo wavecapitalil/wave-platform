@@ -9,8 +9,8 @@ function payload({symbol='TEST',ds=dates,raw=[100,104,102,97,103,101,105],adj=ra
  return {chart:{result:[{meta:{symbol,currency:'USD',exchangeTimezoneName:'America/New_York',exchangeName:'NMS',tradingPeriods:{regular:ends},...meta},timestamp:ds.map(d=>Date.parse(d+'T13:30:00Z')/1000),indicators:{quote:[{close:raw}],adjclose:[{adjclose:adj}]},events:{splits}}]}};
 }
 function chart(opts={}){return parsePriceChart(payload(opts),opts.symbol||'TEST',NOW);}
-function article(overrides={}){return {id:'one',published_at:'2026-10-06T13:00:00Z',timing:'exact',title:'Verified publisher headline',summary:'Source-backed event context.',url:'https://example.com/article/one',source:'Publisher',relationship:'context',reviewed:false,...overrides};}
-function providerNews(overrides={}){return {uuid:'n1',providerPublishTime:Date.parse('2026-10-06T13:00:00Z')/1000,link:'https://example.com/news/one',title:'Actual headline',publisher:'Publisher',relatedTickers:['TEST'],...overrides};}
+function article(overrides={}){return {id:'one',published_at:'2026-10-06T13:00:00Z',timing:'exact',title:'Company announces quarterly results',summary:'Source-backed event context.',url:'https://example.com/article/one',source:'Publisher',relationship:'context',reviewed:false,...overrides};}
+function providerNews(overrides={}){return {uuid:'n1',providerPublishTime:Date.parse('2026-10-06T13:00:00Z')/1000,link:'https://example.com/news/one',title:'Company announces quarterly results',publisher:'Publisher',relatedTickers:['TEST'],...overrides};}
 function mockFetch({stock=payload(),spy=payload({symbol:'SPY',raw:[500,503,505,506,507,504,510]}),news={news:[]},failNews=false,failBenchmark=false,calls=[]}={}){
  return async url=>{calls.push(url);if(url.includes('/finance/search')){if(failNews)return new Response('No news',{status:429});return Response.json(news);}
  if(url.includes('/chart/SPY')){if(failBenchmark)return new Response('No benchmark',{status:503});return Response.json(spy);}return Response.json(stock);};
@@ -104,8 +104,8 @@ test('non-US market, currency and adjustment basis suppress incompatible benchma
  assert.equal(alignBenchmark(chart({meta:{currency:'EUR',exchangeTimezoneName:'Europe/Paris',exchangeName:'PAR'}}),chart({symbol:'SPY'})).status,'incompatible_market');
  assert.equal(alignBenchmark(chart(),chart({symbol:'SPY',adj:[]})).status,'incompatible_basis_or_market');assert.equal(alignBenchmark(chart(),null).status,'unavailable');
 });
-test('events require real articles and significant price moves; quiet or unreported charts stay empty',()=>{
- assert.deepEqual(selectPriceEvents(chart(),[],'1mo'),[]);assert.deepEqual(selectPriceEvents(chart({raw:[100,100.1,100.2,100.3,100.4,100.5,100.6]}),[article()],'1mo'),[]);
+test('material events remain visible on quiet charts; unreported charts stay empty',()=>{
+ assert.deepEqual(selectPriceEvents(chart(),[],'1mo'),[]);assert.equal(selectPriceEvents(chart({raw:[100,100.1,100.2,100.3,100.4,100.5,100.6]}),[article()],'1mo').length,1);
  const events=selectPriceEvents(chart(),[article()],'1mo');assert.equal(events.length,1);assert.ok(events[0].date>='2026-10-06');assert.equal(events[0].price,chart().points[events[0].index].close);
 });
 test('date-only reported driver is downgraded to context and cannot explain a prior move',()=>{
@@ -115,11 +115,11 @@ test('date-only reported driver is downgraded to context and cannot explain a pr
 test('after-close reported driver cannot be labeled cause of the following session',()=>{
  const e=selectPriceEvents(chart(),[article({published_at:'2026-10-02T21:30:00Z',timing:'exact',reviewed:true,relationship:'reported_driver'})],'1mo')[0];assert.equal(e.relationship,'context');assert.ok(e.date>='2026-10-05');
 });
-test('event caps and minimum spacing are deterministic; duplicate URLs never repeated',()=>{
+test('all material events remain accessible for UI clustering; duplicate URLs never repeated',()=>{
  const ds=[],raw=[];for(let i=0;i<110;i++){const d=new Date(Date.UTC(2026,4,1+i));if([0,6].includes(d.getUTCDay()))continue;ds.push(d.toISOString().slice(0,10));raw.push(100+(i%3)*7);}
  const c=chart({ds,raw}),articles=ds.map((d,i)=>article({id:String(i),published_at:d+'T12:00:00Z',url:`https://example.com/news/${i}`}));
- const events=selectPriceEvents(c,[...articles,articles[1]],'1y');assert.ok(events.length<=8);assert.ok(events.length>=4);assert.equal(new Set(events.map(e=>e.url)).size,events.length);for(let i=1;i<events.length;i++)assert.ok(events[i].index-events[i-1].index>=2);
- assert.ok(selectPriceEvents(c,articles,'1mo').length<=6);
+ const events=selectPriceEvents(c,[...articles,articles[1]],'1y');assert.equal(events.length,articles.length);assert.equal(new Set(events.map(e=>e.url)).size,events.length);for(let i=1;i<events.length;i++)assert.ok(events[i].index>=events[i-1].index);
+ assert.equal(selectPriceEvents(c,articles,'1mo').length,articles.length);
 });
 test('collector returns real values, full contract and completed-session range summary',async()=>{
  const calls=[],r=await collectPriceHistory('test','1mo',{now:NOW,fetcher:mockFetch({calls,news:{news:[providerNews()]}}),reviewedEvents:[]});
