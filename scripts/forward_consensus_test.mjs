@@ -1,3 +1,4 @@
+import {createCompanyFactsLoader} from '../supabase/functions/wave-data/company-facts.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -100,7 +101,7 @@ test('cached API refreshes the price and blends instead of returning old forward
   };
   const original=globalThis.fetch;globalThis.fetch=fetchMock;
   const builder={single:async()=>({data:{revision:1,formulas:{}}}),select(){return this},eq(){return this},maybeSingle:async()=>({data:{status:'ok',data:{_response_type:'json',payload:{symbol:'TEST',price:90,pe_forward:99,eps_forward:8}},logic_version:'test'},error:null})};
-  const context={Deno:{env:{get:()=>''},serve:h=>{handler=h}},createClient:()=>({from:()=>builder,rpc:async()=>({data:null})}),settings,calculateCompany,collectForward,fetch:fetchMock,Response,URL,URLSearchParams,Date,console,Set,Map};
+  const context={createCompanyFactsLoader,Deno:{env:{get:()=>''},serve:h=>{handler=h}},createClient:()=>({from:()=>builder,rpc:async()=>({data:null})}),settings,calculateCompany,collectForward,fetch:fetchMock,Response,URL,URLSearchParams,Date,console,Set,Map};
   const source=fs.readFileSync(new URL('../supabase/functions/wave-data/index.ts',import.meta.url),'utf8').replace(/^import.*\n/gm,'');
   vm.runInNewContext(stripTypeScriptTypes(source),context);
   try{

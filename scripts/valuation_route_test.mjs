@@ -5,6 +5,8 @@ import vm from 'node:vm';
 import {stripTypeScriptTypes} from 'node:module';
 import {buildValuationInputs} from '../supabase/functions/wave-data/valuation-inputs.ts';
 import {settings,calculateCompany,adminCalculations} from '../supabase/functions/wave-data/calculation-service.ts';
+import {withFundamentalReporting} from '../supabase/functions/wave-data/fundamental-reporting.ts';
+import {createCompanyFactsLoader} from '../supabase/functions/wave-data/company-facts.ts';
 
 const emptyFacts = {data:{document:{entityName:'Fixture',facts:{}}},error:null};
 const companyFacts = JSON.parse(fs.readFileSync(new URL('./fixtures/csco-fixture.json',import.meta.url)));
@@ -14,7 +16,7 @@ function handler({cached=emptyFacts,stock=null,quote=null,quoteFailure=false}={}
   const calls={rpc:[],fetch:[],tables:[],company:0,settings:0,admin:0,forward:0};
   const client={
     auth:{getUser:async()=>({data:{user:null},error:Error('invalid')})},
-    rpc:async(name,args)=>{calls.rpc.push({name,args});return cached;},
+    rpc:async(name,args)=>{calls.rpc.push({name,args});return typeof cached==='function'?cached(name,args):cached;},
     from(name){
       calls.tables.push(name);
       const query={
@@ -26,7 +28,7 @@ function handler({cached=emptyFacts,stock=null,quote=null,quoteFailure=false}={}
     }
   };
   const context={
-    Deno:{env:{get:()=>''},serve:h=>{route=h}},createClient:()=>client,buildValuationInputs,
+    Deno:{env:{get:()=>''},serve:h=>{route=h}},createClient:()=>client,buildValuationInputs,withFundamentalReporting,createCompanyFactsLoader,
     settings:async(...args)=>{calls.settings++;return settings(...args);},
     calculateCompany:async(...args)=>{calls.company++;return calculateCompany(...args);},
     adminCalculations:async(...args)=>{calls.admin++;return adminCalculations(...args);},
@@ -35,13 +37,77 @@ function handler({cached=emptyFacts,stock=null,quote=null,quoteFailure=false}={}
       calls.fetch.push(url);if(quoteFailure)throw Error('quote unavailable');
       return Response.json({chart:{result:quote?[{meta:quote}]:[]}});
     },
-    Response,URL,URLSearchParams,Date,console,Set,Map
+    Response,Headers,URL,URLSearchParams,Date,console,Set,Map
   };
   const source=fs.readFileSync(new URL('../supabase/functions/wave-data/index.ts',import.meta.url),'utf8').replace(/^import.*\n/gm,'');
   vm.runInNewContext(stripTypeScriptTypes(source),context);
   return {route,calls};
 }
 const request=(suffix,options)=>new Request('https://test/wave-data/api/'+suffix,options);
+
+test('facts loader deduplicates concurrent reads, expires locally and never extends provider freshness',async()=>{
+  let now=Date.parse('2026-10-13T10:00:00Z'),calls=0,resolve;
+  const result={data:{document:{facts:{}},fetched_at:new Date(now-86400000+20).toISOString()},error:null};
+  const load=createCompanyFactsLoader(async()=>{calls++;return new Promise(r=>{resolve=r;});},{now:()=>now});
+  const a=load(' msft '),b=load('MSFT');await Promise.resolve();assert.equal(calls,1);resolve(result);
+  assert.strictEqual(await a,await b);assert.strictEqual(await load('MSFT'),result);assert.equal(calls,1);
+  now+=21;const c=load('MSFT');await Promise.resolve();assert.equal(calls,2);resolve(result);await c;
+});
+test('facts loader evicts by entries and serialized bytes, and does not retain stale or failed results',async()=>{
+  let now=Date.parse('2026-10-13T10:00:00Z'),calls=0;
+  const result={data:{document:{text:'א'.repeat(64)},fetched_at:new Date(now).toISOString()},error:null};
+  const bytes=new TextEncoder().encode(JSON.stringify(result)).byteLength;
+  const load=createCompanyFactsLoader(async()=>{calls++;return result;},{now:()=>now,maxEntries:4,maxBytes:bytes+1});
+  await load('A');await load('A');assert.equal(calls,1);await load('B');await load('A');assert.equal(calls,3);
+  now+=30001;await load('A');assert.equal(calls,4);
+  for(const response of [{...result,error:{message:'failed'}},{data:{...result.data,stale_fallback:true},error:null},{data:{document:{}},error:null}]){
+    let n=0;const uncached=createCompanyFactsLoader(async()=>{n++;return response;});
+    await uncached('A');await uncached('A');assert.equal(n,2);
+  }
+  let n=0;const reject=createCompanyFactsLoader(async()=>{n++;throw Error('down');});
+  await assert.rejects(reject('A'));await assert.rejects(reject('A'));assert.equal(n,2);
+  n=0;const tiny=createCompanyFactsLoader(async()=>{n++;return result;},{now:()=>now-30001,maxBytes:bytes-1});
+  await tiny('A');await tiny('A');assert.equal(n,2);
+  n=0;const one=createCompanyFactsLoader(async()=>{n++;return result;},{now:()=>now-30001,maxEntries:1});
+  await one('A');await one('B');await one('A');assert.equal(n,3);
+});
+
+test('dynamic fundamentals reuse one SEC document for values and fiscal metadata',async()=>{
+  for(const period of ['annual','quarterly']){
+    const cached={data:{document:companyFacts,cached:true,fetched_at:'2026-10-13T10:00:00Z'},error:null};
+    const {route,calls}=handler({cached});
+    const response=await route(request('fundamentals?symbol=CSCO&metric=revenue&period='+period));
+    const body=await response.json();
+    assert.equal(response.status,200);assert.ok(body.data.length>=3);
+    assert.equal(calls.rpc.length,1);
+    assert.equal(calls.rpc[0].name,'wave_get_companyfacts');
+    assert.equal(body.meta.provider_fetched_at,cached.data.fetched_at);
+    assert.ok(body.reporting);assert.equal(response.headers.get('x-wave-reporting-version'),'fiscal-reporting-v1');
+    const withoutReporting={...body,data:body.data.map(({date,value})=>({date,value}))};
+    const expected=withFundamentalReporting(withoutReporting,cached.data,Date.parse(body.reporting.checked_at),null);
+    assert.deepEqual(body.data,expected.data);
+    assert.deepEqual(body.reporting,expected.reporting);
+  }
+});
+test('snapshot fundamentals still fetch fiscal metadata once and preserve stored values',async()=>{
+  const stock={symbol:'CSCO',metric:'revenue',period:'annual',data:[{date:'2025-07-31',value:123}]};
+  const {route,calls}=handler({stock,cached:{data:{document:companyFacts},error:null}});
+  const response=await route(request('fundamentals?symbol=CSCO&metric=revenue&period=annual'));
+  const body=await response.json();
+  assert.equal(response.status,200);assert.equal(calls.rpc.length,1);
+  assert.equal(body.data[0].value,123);assert.ok(body.reporting);
+});
+test('failed dynamic SEC reads are not retried as reporting metadata requests',async()=>{
+  const {route,calls}=handler({cached:{data:null,error:{message:'statement timeout'}}});
+  const response=await route(request('fundamentals?symbol=CSCO&metric=revenue&period=annual'));
+  assert.equal(response.status,502);assert.equal(calls.rpc.length,1);
+});
+test('request-local SEC reuse does not leak one ticker into another',async()=>{
+  const {route,calls}=handler({cached:(_name,args)=>({data:{document:{...companyFacts,entityName:args.p_ticker},cached:true},error:null})});
+  const responses=await Promise.all(['CSCO','OTHER'].map(symbol=>route(request('fundamentals?symbol='+symbol+'&metric=revenue&period=annual'))));
+  const bodies=await Promise.all(responses.map(r=>r.json()));
+  assert.deepEqual(bodies.map(x=>x.name),['CSCO','OTHER']);assert.equal(calls.rpc.length,2);
+});
 
 test('valuation route rejects invalid ticker before fetching either provider',async()=>{
   const {route,calls}=handler();

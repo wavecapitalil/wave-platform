@@ -282,3 +282,25 @@ test('invalid configurations fail clearly and overflowing calculations stay unav
   assert.equal(relativeGrowth(Number.MAX_VALUE, Number.MIN_VALUE, 'revenue').status, 'non-finite');
   near(relativeGrowth(Number.MAX_VALUE, Number.MAX_VALUE, 'revenue').value, 0);
 });
+
+function requestHarness(){
+ const source=fs.readFileSync(require.resolve('../apps/terminal/public/terminal-equities.js'),'utf8');
+ const elements=Object.fromEntries(['fcTicker1','fcTicker2','fcStatus','fcChartWrap','fcRangeWrap','fcDownloadPng'].map(id=>[id,{value:id==='fcTicker1'?'AAPL':id==='fcTicker2'?'MSFT':'',style:{}}]));
+ const pending=[];let active=0,peak=0;
+ const c={_fcRequestId:0,_fcAbort:null,_fcMetrics:['revenue','net_income','eps_diluted'],_fcPeriod:'annual',_fcValueMode:'absolute',_fcChart:null,FC_GROWTH_BASE:{},FC_LABELS:{},API:'https://test',AbortController,Promise,Array,Error,Set,WaveFundamentalChart:model,document:{getElementById:id=>elements[id]},window:{},fcInitRangeSlider:()=>{},fcDrawChart:()=>{c.drawn=c._fcFetched.map(x=>x.ticker+':'+x.metric);}};
+ c.fetch=(url,{signal})=>new Promise((resolve,reject)=>{active++;peak=Math.max(peak,active);let done=false;const finish=fn=>{if(done)return;done=true;active--;fn();};signal.addEventListener('abort',()=>finish(()=>reject(Error('aborted'))));pending.push({url,signal,resolve:()=>finish(()=>resolve({ok:true,json:async()=>({data:[{date:'2025-12-31',value:100}]})}))});});
+ vm.createContext(c);vm.runInContext(source.slice(source.indexOf('async function runFundChart(){'),source.indexOf('function fcPeriodKey')),c);
+ return {c,pending,elements,peak:()=>peak};
+}
+const flush=()=>new Promise(r=>setImmediate(r));
+test('chart bounds active metric requests to two while preserving series order',async()=>{
+ const h=requestHarness(),run=h.c.runFundChart();assert.equal(h.pending.length,2);
+ for(let i=0;i<6;i+=2){h.pending[i].resolve();h.pending[i+1].resolve();await flush();}
+ await run;assert.equal(h.peak(),2);assert.equal(h.c._fcLoading,false);
+ assert.deepEqual(Array.from(h.c.drawn),['AAPL:revenue','MSFT:revenue','AAPL:net_income','MSFT:net_income','AAPL:eps_diluted','MSFT:eps_diluted']);
+});
+test('new chart selection aborts previous requests and drops its queued metrics',async()=>{
+ const h=requestHarness(),old=h.c.runFundChart();h.c._fcMetrics=['revenue'];h.elements.fcTicker1.value='NVDA';h.elements.fcTicker2.value='';const current=h.c.runFundChart();
+ assert.equal(h.pending.length,3);assert.ok(h.pending[0].signal.aborted);assert.ok(h.pending[1].signal.aborted);
+ h.pending[2].resolve();await Promise.all([old,current]);assert.equal(h.pending.length,3);assert.deepEqual(Array.from(h.c.drawn),['NVDA:revenue']);assert.equal(h.elements.fcStatus.textContent,'');
+});

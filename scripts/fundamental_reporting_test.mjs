@@ -96,7 +96,7 @@ test('both production fundamental source paths pass through metadata enrichment'
   const code=fs.readFileSync(new URL('../supabase/functions/wave-data/index.ts',import.meta.url),'utf8');
   const route=code.slice(code.indexOf('if(p.endsWith("/api/fundamentals"))'),code.indexOf('if(p.endsWith("/api/stock-info"))'));
   assert.match(route,/cached\|\|await dynamicFundamentals/);
-  assert.match(route,/withFundamentalReporting\(body,companyFacts,Date.now\(\),filings\)/);
+  assert.match(route,/withFundamentalReporting\(body,reportingFacts,Date.now\(\),filings\)/);
 });
 test('partial enrichment preserves annual YoY and quarterly Q3/Q4 keys and values exactly', () => {
   const cases=[
