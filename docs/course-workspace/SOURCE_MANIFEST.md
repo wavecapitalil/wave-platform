@@ -1,16 +1,23 @@
 # Source manifest and migration notes
 
-Primary working source supplied in conversation: `Candlesticks_Course_Assembly_Working_v03.pdf` (2026-10-13; 163 pages).
+Primary source: `Candlesticks_Course_Assembly_Working_v03.pdf`, dated 2026-10-13, 163 pages.
 
-**PDF binary has not yet been uploaded to the repository.** This workspace initially contains an index and editorial instructions only. Do not suggest that the extracted Markdown lessons already exist until uploaded and verified.
+## Successfully imported
+- **56 lesson transcripts**: `lessons/01-01.md` through `lessons/10-05.md`, mapped to PDF pages 7–148.
+- **4 reference/appendix transcripts**: `appendices/`, covering PDF pages 149–163.
+- Lesson source page numbers and non-publication state are noted on each page.
 
-The PDF labels itself an assembled working draft, not an approved edition, and identifies unfinished source and migration work in its annex.
+## Still missing or unverified
+- Original PDF binary itself has **not** been committed to GitHub.
+- Extracted text preserves raw reading order from the PDF, which may have Hebrew RTL punctuation and math formatting issues.
+- PDF diagrams, candle charts, embedded pictures, page composition, bookmarks and visual annotations are **not included** in lesson Markdown.
+- Lesson structure, references and formula formatting need review against source before claiming faithful conversion.
+- Publishing permission has **not** been given for any lesson.
 
-When migrating a lesson:
-1. Preserve original text and sequence; identify changes, rather than silently rewriting.
-2. Preserve original charts/figures, captions and source attribution.
-3. Keep edit-ready Markdown separate from visual assets.
-4. Verify completeness page-by-page and update PROGRESS.md.
-5. Name lessons by stable IDs, e.g. `lessons/04-03-hammer-hanging-man.md`.
+## Editorial protocol
+1. Work from the relevant lesson Markdown, its appendix if necessary, and source PDF for visual checks.
+2. Track edits as Git commits and keep the original text until explicitly revised.
+3. Distinguish verified market data from synthetic education examples.
+4. Mark lesson as approved **only** after explicit owner sign-off.
 
-The source PDF is not intended to load through the production website.
+These files are documentation under `docs/course-workspace/`, not part of the frontend.
