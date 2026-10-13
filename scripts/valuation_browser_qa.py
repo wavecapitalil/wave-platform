@@ -61,13 +61,14 @@ async def check(browser, name, width, height, lang="he"):
         await page.locator("#navBackdrop").click(position={"x":5,"y":5})
         assert await panel.get_attribute("aria-hidden") == "true"
         await menu.click()
-    valuation_link = page.locator("#items-equities a[data-page=valuation]")
-    assert await valuation_link.get_attribute("href") == "#valuation"
+    research_link = page.locator("#items-equities [data-page=research]")
+    await research_link.click()
+    valuation_link = page.locator("#er-tab-valuation")
     await valuation_link.scroll_into_view_if_needed()
     await page.screenshot(path=str(OUT / f"{name}-menu.png"), full_page=True)
     await valuation_link.click()
     assert page.url.endswith("#valuation")
-    assert await valuation_link.get_attribute("aria-current") == "page"
+    assert await research_link.get_attribute("aria-current") == "page"
     assert await page.locator(".top-nav").is_visible()
     if width <= 800:
         assert await panel.get_attribute("aria-hidden") == "true"
@@ -79,7 +80,7 @@ async def check(browser, name, width, height, lang="he"):
     else:
         assert await panel.get_attribute("aria-hidden") == "false"
     await page.locator("#vw-summary-base").filter(has_text="$242.08").wait_for(timeout=30000)
-    assert await page.locator("#items-equities [data-page=valuation]").count() == 1
+    assert await page.locator("#items-equities [data-page=valuation]").count() == 0
     assert await page.locator(".vw-scenario").count() == 3
     assert await page.locator("#vw-advanced-toggle").get_attribute("aria-expanded") == "false"
     assert await page.locator("#vw-tbody tr:not([hidden])").count() == 7
@@ -135,14 +136,13 @@ async def check(browser, name, width, height, lang="he"):
     await page.locator('#items-equities [data-page="research"]').click()
     assert await page.locator("#page-research").is_visible()
     assert not page.url.endswith("#valuation")
-    if width <= 800: await menu.click()
     await valuation_link.click()
-    assert await page.locator("#page-valuation").is_visible()
+    assert await page.locator("#er-panel-valuation").is_visible()
     assert page.url.endswith("#valuation")
     # A reload and the legacy route must retain the full shell and selected item.
     await page.reload(wait_until="domcontentloaded")
     await page.locator("#vw-summary-base").filter(has_text="$242.08").wait_for(timeout=30000)
-    assert await page.locator('#items-equities [aria-current="page"]').get_attribute("data-page") == "valuation"
+    assert await page.locator('#items-equities [aria-current="page"]').get_attribute("data-page") == "research"
     await page.goto("http://127.0.0.1:8765/terminal.html#valuation", wait_until="domcontentloaded")
     await page.wait_for_url("**/terminal_app.html#valuation")
     await page.locator("#vw-summary-base").filter(has_text="$242.08").wait_for(timeout=30000)
@@ -153,7 +153,7 @@ async def check(browser, name, width, height, lang="he"):
     await page.locator("#vw-method").click()
     assert await page.locator("#page-sources").is_visible()
     await page.evaluate("navigate('valuation')")
-    assert await page.locator("#page-valuation").is_visible()
+    assert await page.locator("#er-panel-valuation").is_visible()
     assert await page.locator(".nav-panel a[href*='calculation']").count() == 0
     report={"viewport":name,"dimensions":[width,height],"passed":True,"layout":metrics,"other_page_errors":errors}
     await context.close()
@@ -164,7 +164,7 @@ async def main():
     threading.Thread(target=server.serve_forever,daemon=True).start()
     try:
         async with async_playwright() as p:
-            browser=await p.chromium.launch()
+            browser=await p.chromium.launch(**({"executable_path": __import__("os").environ["CHROME_BIN"]} if __import__("os").environ.get("CHROME_BIN") else {}))
             results=[]
             for args in [("desktop",1440,900),("desktop-compact",1100,800),("desktop-compact-en",1100,800,"en"),("tablet-boundary",800,800),("desktop-boundary",801,800),("narrow-embed",750,650),("ipad-landscape",1024,768),("ipad-portrait",768,1024),("phone",390,844)]:
                 print("Checking viewport: "+args[0],flush=True)

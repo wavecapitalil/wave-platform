@@ -1,4 +1,4 @@
-#page-valuation{background:radial-gradient(ellipse at 70% 0,rgba(40,108,155,.07),transparent 55%)}
+#page-valuation,#er-panel-valuation{background:radial-gradient(ellipse at 70% 0,rgba(40,108,155,.07),transparent 55%)}
 .val-wrap{max-width:1720px;margin:0 auto;padding:28px clamp(12px,2vw,30px) 45px;color:#edf6ff}
 .val-wrap *{box-sizing:border-box}.val-wrap button,.val-wrap input,.val-wrap select{font:inherit}.val-wrap button{cursor:pointer}.val-wrap [hidden]{display:none!important}
 .vw-hero{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:22px}.vw-eyebrow{font-size:9px;letter-spacing:2px;color:#79b8e4;direction:ltr;margin-bottom:12px}.vw-hero h1{font-size:clamp(22px,2.2vw,31px);font-weight:600;letter-spacing:-.4px;margin:0 0 9px}.vw-hero p{font-size:12px;color:#9bb2c6;line-height:1.7;margin:0;max-width:770px}
@@ -148,5 +148,7 @@
 /* In the full Terminal shell, the existing main pane owns vertical scrolling.
  * Keep the worksheet horizontal-only so nested scrollers cannot hide lower rows. */
 .main.valuation-active{min-width:0;min-height:0;overflow-y:auto;overflow-x:hidden;}
-.main.valuation-active #page-valuation{height:auto;max-height:none;min-width:0;overflow:visible;}
+.main.valuation-active #page-valuation,#er-panel-valuation{height:auto;max-height:none;min-width:0;overflow:visible;}
 .main.valuation-active .vw-sheet-scroll{height:auto;max-height:none;overflow-x:auto;overflow-y:hidden;overscroll-behavior:auto;touch-action:pan-x pan-y;}
+
+#er-panel-valuation .val-wrap{padding-inline:0;min-width:0}#er-panel-valuation{min-width:0}

@@ -109,7 +109,7 @@ function buildScenarios(){
 function round(v){return Math.round(v*100)/100;}
 function base(){var y=last();return {revenue:y?mil(y.revenue):null,shares:y?mil(y.shares_outstanding):null,price:referencePrice()};}
 function calculate(id){return WaveEquityWorkbook.calculate(base(),(scenarios[id]||[]).slice(0,horizon).map(function(a){var pieces=[a.termDebt,a.shortDebt,a.leases].map(n),ok=pieces.every(function(v){return v!==null&&v>=0&&v<=1e12;});return Object.assign({},a,{debt:ok?pieces.reduce(function(x,y){return x+y;},0):null});}));}
-function init(){
+function init(symbol){
  var host=document.getElementById('valuationRoot');if(!host)return;
  host.innerHTML='<div class="vw-hero"><div><div class="vw-eyebrow">EQUITIES / VALUATION WORKBOOK</div><h1>'+L('From financial history to your forecast','מהנתונים ההיסטוריים לתחזית שלכם')+'</h1></div><span class="vw-mode-badge" id="vw-mode-badge">'+L('Basic · all 3 scenarios','בסיסי · כל 3 התרחישים')+'</span><a class="vw-jump-table" data-jump="table" href="#vw-table-panel">'+L('Go to table ↓','מעבר לטבלה ↓')+'</a></div>'+
  '<div class="vw-toolbar"><form id="vw-company-form"><label for="vw-symbol">'+L('Company','חברה')+'</label><input id="vw-symbol" type="text" value="AAPL" placeholder="AAPL" dir="ltr" maxlength="15" autocomplete="off"><button class="vw-button" type="submit" id="vw-load">'+L('Load history','טעינת היסטוריה')+'</button></form><div class="vw-company-shortcuts"><button class="vw-quick" data-company="AAPL">Apple · AAPL</button><button class="vw-quick" data-company="MSFT">Microsoft · MSFT</button></div><label class="vw-horizon-label" for="vw-horizon">'+L('Forecast years','שנות תחזית')+' <select id="vw-horizon">'+[1,2,3,4,5,6,7,8,9,10].map(function(v){return '<option value="'+v+'"'+(v===5?' selected':'')+'>'+v+'</option>';}).join('')+'</select></label></div><div id="vw-data-status" class="vw-status" role="status"></div>'+
@@ -135,7 +135,7 @@ function init(){
  document.getElementById('vw-method').addEventListener('click',function(){navigate('sources');});
  document.getElementById('vw-view-forecast').addEventListener('click',function(){var el=document.querySelector('[data-column="forecast-0"]');if(el)el.scrollIntoView({behavior:'smooth',block:'nearest',inline:'end'});});
  document.getElementById('vw-view-history').addEventListener('click',function(){var el=document.querySelector('[data-column="history-0"]');if(el)el.scrollIntoView({behavior:'smooth',block:'nearest',inline:'end'});});
- registerMethod();loadCompany('AAPL');
+ registerMethod();loadCompany(symbol||'AAPL');
 }
 function renderSheet(){
  selectedCell=null;document.getElementById('vw-fill-selected').disabled=true;
@@ -199,7 +199,7 @@ async function loadCompany(symbol){
  if(latestHistory!==data.fiscal_year_end)throw new Error('History and model base fiscal years do not match');
  company=data;resetReference(data.fields&&data.fields.current_price);buildScenarios();renderSheet();document.getElementById('vw-symbol').value=symbol;
  status.textContent=window.WAVE_VALUATION_SNAPSHOTS?L('SEC actuals · snapshot ','נתוני עבר SEC · צילום ')+(window.WAVE_VALUATION_SNAPSHOTS.snapshot_date||data.as_of.slice(0,10))+L(' · not live market data',' · אינם נתוני שוק בזמן אמת'):L('SEC annual actuals · dates shown by year','נתוני עבר שנתיים SEC · תאריכים בכל עמודה');
- registerCompany();
+ registerCompany();if(window.WaveResearch&&WaveResearch.syncValuation)WaveResearch.syncValuation(symbol);
  }catch(e){if(id!==requestId)return;status.textContent=window.WAVE_VALUATION_SNAPSHOTS?L('This review demo contains sourced Apple and Microsoft history. Select AAPL or MSFT.','הדמו כולל היסטוריה מאומתת של Apple ו־Microsoft. בחרו AAPL או MSFT.'):L('Annual data could not be loaded. Try another supported company.','לא ניתן לטעון נתונים שנתיים. נסו חברה נתמכת אחרת.');if(company)status.textContent+=' '+L('Still showing ','עדיין מוצגים נתוני ')+company.symbol+'.';if(!company){document.getElementById('vw-loaded').hidden=true;document.getElementById('vw-empty').hidden=false;}}
  finally{clearTimeout(timeout);if(id===requestId)document.getElementById('vw-load').removeAttribute('aria-busy');}
 }
@@ -210,7 +210,7 @@ function registerMethod(){if(!window.WaveSources)return;WaveSources.record('guid
  L('Presets are illustrative: Base begins with last reported growth/margin/buyback, adjusted only for supported bounds; Bull/Bear change those assumptions. The initial EV/EBIT multiples 22/18/14 and dilution 0.5%/0.5%/1% are assumptions, never historical observations. Zero/negative EBIT has no EV/EBIT price. Negative equity is retained with a zero share-price floor. Future prices are not discounted to today and no probability or return is promised. Not suitable for banks/insurers.','ברירות המחדל להמחשה: הבסיס מתחיל בצמיחה, במרווח וברכישה העצמית המדווחים האחרונים, בהתאמה לטווחי המודל; התרחיש האופטימי והפסימי משנים אותם. מכפילי EV/EBIT הראשוניים 22/18/14 ודילול 0.5%/0.5%/1% הם הנחות ולא נתוני עבר. רווח תפעולי אפסי או שלילי אינו מקבל מחיר לפי המכפיל. שווי הון שלילי נשמר עם רצפת מחיר מניה אפס. מחירים עתידיים אינם מהוונים להיום ואינם הבטחה. אינו מתאים לבנקים ומבטחים.'),
  [{title:'SEC CompanyFacts',url:'https://www.sec.gov/search-filings/edgar-application-programming-interfaces'},{title:'Buybacks and cash — Damodaran',url:'https://pages.stern.nyu.edu/~adamodar/pdfiles/papers/beydiv.pdf'}]);}
 function registerCompany(){if(!window.WaveSources)return;var links=[],parts=['Data status: '+(company.status||'unknown'),'Retrieved: '+(company.as_of||'unknown'),'Cache fetched: '+(company.fetched_at||'unknown')];(company.warnings||[]).forEach(function(w){parts.push(typeof w==='string'?w:[w.field,w.status,w.reason].filter(Boolean).join(' · '));});history().forEach(function(y){parts.push('FY '+y.period_end);Object.entries(y).forEach(function(pair){var v=pair[1];if(!v||typeof v!=='object'||!('value'in v))return;parts.push(pair[0]+': '+(v.value===null?'missing':v.value)+' '+v.unit+' | '+v.status+' | '+(v.period_start||'')+' → '+(v.period_end||'')+' | '+(v.reason||'')+' | '+(v.concept||'')+' | '+(v.accession||''));var url=safeLink(v.url);if(url&&!links.some(function(l){return l.url===url;}))links.push({title:'SEC · '+y.period_end,url:url});});});WaveSources.record('valuation:'+company.symbol,company.symbol+' · '+L('Annual financial history','היסטוריה פיננסית שנתית'),parts.join('\n'),links);}
-window.WaveValuation={open:function(){if(!ready){ready=true;init();}},loadCompany:loadCompany};
+window.WaveValuation={open:function(symbol){if(!ready){ready=true;init(symbol);}else if(symbol&&(!company||company.symbol!==symbol))loadCompany(symbol);},loadCompany:loadCompany};
 function initial(){if(location.hash==='#valuation'){navigate('valuation');WaveValuation.open();}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initial,{once:true});else initial();
 })();
