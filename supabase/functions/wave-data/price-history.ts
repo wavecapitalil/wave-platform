@@ -1,11 +1,12 @@
 import { calculatePriceHistory } from './calculations.ts';
+import { materialCategory, eventSentiment } from './company-events.ts';
 import { REVIEWED_PRICE_EVENTS } from './reviewed-price-events.ts';
 
 export const PRICE_RANGES = ['1mo','3mo','6mo','1y','5y'] as const;
 export type PriceRange = typeof PRICE_RANGES[number];
 type Fetcher = typeof fetch;
-export type ReviewedEvent = {id:string;symbols:string[];published_at:string;timing:'exact'|'date_only';title:string;summary:string;url:string;source:string;relationship:'reported_driver'|'context';reviewed_at:string};
-type Article = {id:string;published_at:string;timing:'exact'|'date_only';title:string;summary:string;url:string;source:string;relationship:'reported_driver'|'context';reviewed:boolean};
+export type ReviewedEvent = {id:string;symbols:string[];published_at:string;timing:'exact'|'date_only';title:string;summary:string;url:string;source:string;relationship:'reported_driver'|'context';reviewed_at:string;category?:string;effective_date?:string};
+type Article = {category?:string;sentiment?:string;sentiment_basis?:string;event_date?:string;timestamp_kind?:string;effective_date?:string;id:string;published_at:string;timing:'exact'|'date_only';title:string;summary:string;url:string;source:string;relationship:'reported_driver'|'context';reviewed:boolean};
 export type PricePoint = {date:string;close:number;raw_close:number|null;open?:number|null;high?:number|null;low?:number|null;change_pct:number|null;benchmark_change_pct:number|null;excess_change_pp:number|null};
 type ParsedChart = {symbol:string;currency:string;timezone:string;basis:string;points:PricePoint[];sessionEnds:Map<string,number>;isUS:boolean;limitations:string[];dropped:number};
 export class PriceHistoryError extends Error {status:number;constructor(message:string,status=502){super(message);this.name='PriceHistoryError';this.status=status;}}
@@ -132,7 +133,7 @@ function reviewedArticles(input:unknown,symbol:string,now:number,isUS:boolean):A
   const review=exactTimestamp(e.reviewed_at)??(validDate(e.reviewed_at)?Date.parse(e.reviewed_at+'T00:00:00Z'):null);
   const url=safeArticleUrl(e.url),title=cleanText(e.title,240),source=cleanText(e.source,100);
   if(pub==null||pub>now||review==null||review>now||!url||!title||!source||!['context','reported_driver'].includes(e.relationship))return [];
-  return [{id:cleanText(e.id,100)||url,published_at:e.published_at,timing:e.timing,title,summary:cleanText(e.summary,700),url,source,relationship:e.relationship,reviewed:true}];
+  return [{id:cleanText(e.id,100)||url,published_at:e.published_at,timing:e.timing,title,summary:cleanText(e.summary,700),url,source,category:e.category||materialCategory(title)||undefined,effective_date:validDate(e.effective_date)?e.effective_date:undefined,relationship:e.relationship,reviewed:true}];
  });
 }
 export function alignArticleSession(article:{published_at:string;timing:string},chart:Pick<ParsedChart,'points'|'timezone'|'sessionEnds'|'isUS'>):{index:number;rule:string;shifted:boolean}|null{
@@ -157,34 +158,19 @@ export function alignBenchmark(stock:ParsedChart,benchmark:ParsedChart|null):{st
  return {status:matched?'available':'no_aligned_sessions',matched};
 }
 export function selectPriceEvents(chart:ParsedChart,articles:Article[],range:PriceRange,visibleStartIndex=0):any[]{
- const points=chart.points,n=points.length,window=range==='1mo'?2:range==='5y'?10:4;
- const candidates=new Map<number,{reason:string;score:number}>();
- for(let i=visibleStartIndex;i<n;i++){
-  const p=points[i],move=p.change_pct==null?0:Math.abs(p.change_pct);
-  if(move>=2.5)candidates.set(i,{reason:'large_move',score:move});
-  if(i<window||i>=n-window)continue;
-  const before=points.slice(i-window,i).map(x=>x.close),after=points.slice(i+1,i+window+1).map(x=>x.close);
-  const high=p.close>Math.max(...before,...after),low=p.close<Math.min(...before,...after);if(!high&&!low)continue;
-  const a=calculatePriceHistory('price_history_prominence_pct',{extreme:p.close,reference:high?Math.min(...before):Math.max(...before)}),b=calculatePriceHistory('price_history_prominence_pct',{extreme:p.close,reference:high?Math.min(...after):Math.max(...after)});
-  const prominence=a==null||b==null?0:Math.min(a,b);
-  if(prominence>=2&&prominence>(candidates.get(i)?.score||0))candidates.set(i,{reason:high?'local_high':'local_low',score:prominence});
- }
- const pool:any[]=[],seen=new Set<string>();
+ const points=chart.points,pool:any[]=[],seen=new Set<string>();
  for(const article of [...articles].sort((a,b)=>Number(b.reviewed)-Number(a.reviewed)||a.published_at.localeCompare(b.published_at))){
-  if(seen.has(article.url))continue;seen.add(article.url);
-  const aligned=alignArticleSession(article,chart);if(!aligned)continue;
-  // Only the first eligible session or the immediately following session can be
-  // linked. A move before publication is never selected as that article's event.
-  const choices=[aligned.index,aligned.index+1].filter(i=>i>=visibleStartIndex&&i<n&&candidates.has(i));
-  if(!choices.length)continue;
-  const index=choices.sort((a,b)=>(candidates.get(b)!.score-(b===aligned.index?0:1))-(candidates.get(a)!.score-(a===aligned.index?0:1)))[0],p=points[index],candidate=candidates.get(index)!;
-  const relationship=article.reviewed&&article.relationship==='reported_driver'&&!aligned.shifted&&article.timing==='exact'&&index===aligned.index?'reported_driver':'context';
-  pool.push({id:article.id,date:p.date,index,price:p.close,title:article.title,summary:article.summary,url:article.url,source:article.source,published_at:article.published_at,relationship,reason:candidate.reason,change_pct:p.change_pct,benchmark_change_pct:p.benchmark_change_pct,excess_change_pp:p.excess_change_pp,timing:article.timing,timing_label:article.timing==='date_only'?'Publication date only; next session or later':aligned.rule==='after_close_next_session'?'Published after close; next session or later':aligned.rule==='unknown_close_next_session'?'Close unverified; next session or later':aligned.rule==='nontrading_day_next_session'?'Published on a non-trading day; next session or later':index>aligned.index?'Session after first eligible session':'Published before session close; daily change may include moves before publication',alignment_rule:aligned.rule,reviewed:article.reviewed,_score:candidate.score+(article.reviewed?1:0)});
+  const category=article.category||materialCategory(article.title);if(!category)continue;const identity=article.url+'|'+category;if(seen.has(identity))continue;seen.add(identity);
+  const aligned=alignArticleSession(article,chart);if(!aligned||aligned.index<visibleStartIndex)continue;
+  const p=points[aligned.index];
+  // Material news is selected independently of returns and extrema. Never shift
+  // an event to a larger next-day move. The UI clusters without discarding data.
+  pool.push({...article,category,sentiment:article.sentiment||'neutral',sentiment_basis:article.sentiment_basis||eventSentiment(article.title,false).sentiment_basis,date:p.date,index:aligned.index,price:p.close,relationship:'context',reason:category,change_pct:p.change_pct,benchmark_change_pct:p.benchmark_change_pct,excess_change_pp:p.excess_change_pp,timing_label:article.timing==='date_only'?'Publication date only; conservatively aligned to next session':aligned.rule.replace(/_/g,' '),alignment_rule:aligned.rule});
  }
- const max=range==='1mo'?6:8,spacing=Math.max(2,Math.min(10,Math.floor((n-visibleStartIndex)/35))),selected:any[]=[];
- for(const event of pool.sort((a,b)=>b._score-a._score||a.index-b.index||a.url.localeCompare(b.url))){if(selected.length>=max)break;if(selected.some(s=>Math.abs(s.index-event.index)<spacing))continue;const {_score,...result}=event;selected.push(result);}
- return selected.sort((a,b)=>a.index-b.index);
+ const deduped=pool.filter(e=>{if(!e.id.startsWith('sec:'))return true;const match=pool.find(x=>!x.id.startsWith('sec:')&&x.index===e.index&&x.category===e.category&&(e.category==='earnings'||x.title.toLowerCase().split(/[^a-z]+/).filter((t:string)=>t.length>4&&e.summary.toLowerCase().includes(t)).length>=3));if(!match)return true;match.related_sources=(match.related_sources||[]).concat({title:e.source,url:e.url,published_at:e.published_at});return false;});
+ return deduped.sort((a,b)=>a.index-b.index||a.published_at.localeCompare(b.published_at));
 }
+
 async function fetchJson(url:string,fetcher:Fetcher):Promise<any>{
  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),7000);
  try{const response=await fetcher(url,{signal:controller.signal,headers:{'accept':'application/json','user-agent':'Wave-Research/1.0'}});if(!response.ok)throw new Error(`Provider HTTP ${response.status}`);const text=await response.text();if(text.length>4_000_000)throw new Error('Provider response exceeds size limit');return JSON.parse(text);}finally{clearTimeout(timer);}
@@ -195,7 +181,7 @@ function chartUrl(symbol:string,range:PriceRange,now:number):string{
  const params=new URLSearchParams({period1:String(Math.floor(start/1000)),period2:String(Math.floor(now/1000)),interval:'1d',includeAdjustedClose:'true',events:'div,splits',includePrePost:'false'});
  return `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?${params}`;
 }
-export async function collectPriceHistory(symbolInput:string,rangeInput:string,opts:{now?:number;fetcher?:Fetcher;reviewedEvents?:ReviewedEvent[];bypassCache?:boolean}={}):Promise<any>{
+export async function collectPriceHistory(symbolInput:string,rangeInput:string,opts:{now?:number;fetcher?:Fetcher;reviewedEvents?:ReviewedEvent[];bypassCache?:boolean;companyEvents?:{events:any[];coverage:any[];fetched_at?:string}|Promise<{events:any[];coverage:any[];fetched_at?:string}>}={}):Promise<any>{
  const {symbol,range}=validatePriceRequest(symbolInput,rangeInput),now=opts.now??Date.now();if(!Number.isFinite(now))throw new PriceHistoryError('Invalid request time',400);
  const useCache=!opts.fetcher&&!opts.reviewedEvents&&!opts.bypassCache&&opts.now===undefined,key=`${symbol}:${range}`;
  if(useCache){const hit=cache.get(key);if(hit&&now-hit.at<CACHE_TTL)return hit.value;const pending=inflight.get(key);if(pending)return await pending;}
@@ -209,7 +195,8 @@ export async function collectPriceHistory(symbolInput:string,rangeInput:string,o
   const benchmarkResult=alignBenchmark(chart,benchmark),news=await newsPromise;
   const start=rangeStartDate(now,range,chart.timezone),visibleStartIndex=chart.points.findIndex(p=>p.date>=start);
   if(visibleStartIndex<0||chart.points.length-visibleStartIndex<2)throw new PriceHistoryError('Not enough completed sessions in the requested range');
-  const reviewed=reviewedArticles(opts.reviewedEvents??REVIEWED_PRICE_EVENTS,symbol,now,chart.isUS),articles=[...reviewed,...news.articles];
+  const primary=await opts.companyEvents||{events:[],coverage:[{source:'Primary company events',status:'unavailable',gap:'Collector unavailable for this request.'}]};
+  const reviewed=reviewedArticles(opts.reviewedEvents??REVIEWED_PRICE_EVENTS,symbol,now,chart.isUS),articles=[...primary.events,...reviewed,...news.articles];
   // Resolve publication timing against the full fetched session buffer. Clipping
   // first could turn an earlier trading day into an apparent non-trading day and
   // incorrectly attach its article to the first visible session.
@@ -219,12 +206,13 @@ export async function collectPriceHistory(symbolInput:string,rangeInput:string,o
   benchmarkResult.matched=chart.points.filter(p=>p.benchmark_change_pct!=null).length;
   if(benchmarkResult.status==='available'&&!benchmarkResult.matched)benchmarkResult.status='no_aligned_sessions';
   const first=chart.points[0],last=chart.points.at(-1)!,high=chart.points.reduce((a,b)=>a.close>b.close?a:b),low=chart.points.reduce((a,b)=>a.close<b.close?a:b);
-  const limitations=[...chart.limitations,'Yahoo search supplies a rolling recent headline sample (eligible publications within 45 days), not a historical news archive. Reviewed historical events are a limited sample and do not cover every ticker or move.','Annotations are dated context near large moves or local extrema; temporal proximity does not establish causation. Date-only publications are conservatively placed on the next trading session or later.'];
+  const limitations=[...chart.limitations,'SEC filings provide material disclosures, not a complete news archive. Primary newsroom feeds and ticker-tagged news are rolling samples; historical product-launch and announcement coverage has gaps.','Material event selection is independent of price movements. Bubble sentiment comes only from explicit directional primary-source facts; other events remain neutral. This is not a claim of causation. Date-only publications align conservatively to the next session.'];
   if(benchmarkResult.status!=='available')limitations.push(`SPY comparison unavailable (${benchmarkResult.status}); no benchmark return or excess return is inferred.`);
   if(news.status!=='available')limitations.push(`Recent ticker-tagged news is ${news.status}; valid historical prices remain available.`);
   if(chart.basis==='dividend_and_split_adjusted_close')limitations.push('Adjusted close is the provider’s dividend-and-split-adjusted series, not the originally traded price. Raw close is provider split-adjusted close. Range high/low are closing-price extrema, not intraday highs/lows.');
   else limitations.push('Range high/low are closing-price extrema, not intraday highs/lows.');
-  return {symbol,range,currency:chart.currency,exchange_timezone:chart.timezone,price_basis:chart.basis,points:chart.points,weekly_candles:weeklyCandles(chart.points),events,summary:{start_date:first.date,end_date:last.date,change_pct:calculatePriceHistory('price_history_return_pct',{current:last.close,previous:first.close}),high:{date:high.date,close:high.close},low:{date:low.date,close:low.close}},meta:{fetched_at:new Date(now).toISOString(),price_source:'Yahoo Finance chart daily',price_url:`https://finance.yahoo.com/quote/${encodeURIComponent(symbol)}/history/`,news_source:'Yahoo Finance ticker-tagged recent search + reviewed primary-source sample',news_status:news.status,news_coverage:{type:'recent_sample_plus_reviewed_history',recent_max_age_days:45,recent_valid_articles:news.articles.length,recent_rejected_articles:news.rejected,historical_archive:false,range_coverage:'partial',reviewed_articles_in_range:coveredReviewed.length},reviewed_event_count:coveredReviewed.length,selected_event_count:events.length,benchmark:{symbol:chart.isUS?'SPY':null,...benchmarkResult,currency:chart.isUS?'USD':null,price_basis:benchmark?.basis??null},cache_ttl_seconds:CACHE_TTL/1000,limitations}};
+  const pending_events=articles.filter(e=>(e.category||materialCategory(e.title))&&!alignArticleSession(e,chart)&&e.published_at.slice(0,10)>=last.date&&Date.parse(e.published_at)<=now).map(e=>({...e,category:e.category||materialCategory(e.title),sentiment:e.sentiment||'neutral',sentiment_basis:e.sentiment_basis||eventSentiment(e.title,false).sentiment_basis,timing_label:'Awaiting a completed eligible market session',date:null,index:null,price:null}));
+  return {symbol,range,pending_events,currency:chart.currency,exchange_timezone:chart.timezone,price_basis:chart.basis,points:chart.points,weekly_candles:weeklyCandles(chart.points),events,summary:{start_date:first.date,end_date:last.date,change_pct:calculatePriceHistory('price_history_return_pct',{current:last.close,previous:first.close}),high:{date:high.date,close:high.close},low:{date:low.date,close:low.close}},meta:{fetched_at:new Date(now).toISOString(),price_source:'Yahoo Finance chart daily',price_url:`https://finance.yahoo.com/quote/${encodeURIComponent(symbol)}/history/`,news_source:'SEC submissions + primary company newsroom feeds + ticker-tagged material headlines + reviewed context',news_status:news.status,news_coverage:{type:'material_company_events',sources:primary.coverage,primary_events:primary.events.length,requested_from:start,requested_to:last.date,recent_max_age_days:45,recent_valid_articles:news.articles.length,recent_rejected_articles:news.rejected,historical_archive:false,range_coverage:'partial',reviewed_articles_in_range:coveredReviewed.length},reviewed_event_count:coveredReviewed.length,selected_event_count:events.length,benchmark:{symbol:chart.isUS?'SPY':null,...benchmarkResult,currency:chart.isUS?'USD':null,price_basis:benchmark?.basis??null},cache_ttl_seconds:CACHE_TTL/1000,limitations}};
  };
  const promise=run();if(useCache)inflight.set(key,promise);
  try{const value=await promise;if(useCache){if(cache.size>=MAX_CACHE)cache.delete(cache.keys().next().value!);cache.set(key,{at:now,value});}return value;}finally{if(useCache)inflight.delete(key);}

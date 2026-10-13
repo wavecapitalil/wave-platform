@@ -3,6 +3,7 @@ import { collectForward } from "./forward-consensus.ts";
 import {settings,calculateCompany,adminCalculations} from "./calculation-service.ts";
 import { buildValuationInputs } from "./valuation-inputs.ts";
 import { withFundamentalReporting } from "./fundamental-reporting.ts";
+import { collectCompanyEvents } from "./company-events.ts";
 import { collectPriceHistory } from "./price-history.ts";
 import {collectHistoricalPE} from './historical-pe.ts';
 import {insiderFilingLinks,statementSeries,collectResearchSeasonality,collectDailyTape} from './research-data.ts';
@@ -713,7 +714,9 @@ Deno.serve(async(req:Request)=>{
       const range=u.searchParams.get("range")||"1y";
       if(!/^[A-Z0-9^][A-Z0-9.^=-]{0,19}$/.test(symbol))return json({error:"valid symbol required"},400);
       if(!["1mo","3mo","6mo","1y","5y"].includes(range))return json({error:"unsupported range"},400);
-      return json(await collectPriceHistory(symbol,range),200,{"cache-control":"public, max-age=300","x-wave-source":"price-history"});
+      let issuer=null;try{issuer=await secTickerRecord(symbol);}catch{/* Price remains available with explicit event coverage gaps. */}
+      const companyEvents=collectCompanyEvents(symbol,issuer?.cik||null).catch(()=>({events:[],coverage:[{source:'Company event collector',status:'unavailable',gap:'Event sources unavailable; prices remain independently available.'}]}));
+      return json(await collectPriceHistory(symbol,range,{companyEvents}),200,{"cache-control":"public, max-age=300","x-wave-source":"price-history"});
     }
 
     // Isolated valuation data contract; does not change stock-info calculations.
