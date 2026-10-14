@@ -198,3 +198,17 @@ def yields():
         return jsonify({'error': str(e)}), 500
 
 
+
+
+@bp.get('/api/macro-series')
+def macro_series():
+    """Local parity with the shared public macro adapter; no ingestion schedule."""
+    series = request.args.get('series', '')
+    if series and not re.fullmatch(r'[a-z_]{1,32}', series):
+        return jsonify({'error': 'invalid indicator'}), 400
+    try:
+        r = requests.get('https://nqmtayofbhletydmiujz.supabase.co/functions/v1/wave-data/api/macro-series',
+                         params={'series': series} if series else {}, timeout=18)
+        return jsonify(r.json()), r.status_code
+    except (requests.RequestException, ValueError):
+        return jsonify({'error': 'Macro data unavailable'}), 502
