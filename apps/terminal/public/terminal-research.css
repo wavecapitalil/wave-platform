@@ -13,3 +13,15 @@
 .er-daily-tape .ticker-item{font-variant-numeric:tabular-nums;text-shadow:0 1px 2px #000}
 @keyframes erTapeScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media(prefers-reduced-motion:reduce){.er-tape-track{animation:none;transform:none;will-change:auto}.er-tape-group[aria-hidden]{display:none}}
+
+/* Stable chart frame with primary choices above it on every statement tab. */
+.er-chart-controls{display:flex;flex-wrap:wrap;align-items:end;gap:12px;margin-block:12px}
+.er-chart-controls label{display:grid;gap:6px;font-size:12px;color:var(--text2,#94a3b8);min-width:180px;max-width:100%}
+.er-chart-controls select{font:inherit;font-size:14px;color:#e2e8f0;background:#0f172a;border:1px solid var(--border2,#334155);border-radius:6px;padding:10px;min-height:44px;max-width:100%}
+.er-chart-controls>div{display:flex;flex-wrap:wrap;gap:4px}
+.er-chart-controls button,.er-chart-more summary{min-height:44px}
+.er-chart-more summary{cursor:pointer;display:flex;align-items:center;color:var(--text2,#94a3b8);font-size:12px}
+.er-chart-more .fc-display-controls,.er-chart-more #fcTypeBtns:empty{display:none}
+#erFinancialEngine #fcStatus{min-height:20px;margin-block:8px}
+#erFinancialEngine #fcChartWrap{min-height:360px}
+@media(max-width:600px){.er-chart-controls{gap:8px}.er-chart-controls label{width:100%}.er-chart-controls select{width:100%}.er-chart-controls>div{max-width:100%}}
