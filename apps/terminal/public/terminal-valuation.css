@@ -152,3 +152,20 @@
 .main.valuation-active .vw-sheet-scroll{height:auto;max-height:none;overflow-x:auto;overflow-y:hidden;overscroll-behavior:auto;touch-action:pan-x pan-y;}
 
 #er-panel-valuation .val-wrap{padding-inline:0;min-width:0}#er-panel-valuation{min-width:0}
+
+/* Two views of one scenario state; quick cards wrap without horizontal page scroll. */
+#valuationRoot [hidden]{display:none!important}
+.vw-starting{display:flex;flex-wrap:wrap;gap:12px;align-items:end;margin:12px 0;padding:14px;background:#0c2133;border:1px solid #28495f;border-radius:8px}
+.vw-starting label,.vw-quick-card label{display:flex;flex-direction:column;gap:6px;font-size:12px;line-height:1.6;color:#bcd0df}
+.vw-starting input,.vw-quick-card input{min-height:44px;max-width:100%;box-sizing:border-box;border:1px solid #52624c;border-radius:5px;background:#182a31;color:#f1d99b;padding:9px 12px;font:inherit;font-size:16px;width:100%}
+.vw-starting label{flex:1 1 190px}.vw-starting span{flex:1 1 230px;font-size:12px;line-height:1.7;color:#a9c2d5}
+.vw-quick-panel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:14px 0}
+.vw-quick-card{min-width:0;border:1px solid #2d4b60;border-radius:9px;background:#0c2133;padding:16px;display:flex;flex-direction:column;gap:13px}
+.vw-quick-card h3{font-size:17px;color:#e4cf9f;margin:0 0 3px}.vw-quick-result{border-top:1px solid #355266;padding-top:13px;font-size:14px;line-height:1.8;color:#d7ebf8}
+.vw-quick-card input[aria-invalid=true],.vw-starting input[aria-invalid=true]{border-color:#ef9879;outline:1px solid #ef9879}
+.vw-quick-card input:focus-visible,.vw-starting input:focus-visible{outline:2px solid #8cc9f2;outline-offset:2px}
+.vw-mode-control button,.vw-starting button{min-height:44px}
+@media(max-width:750px){.vw-quick-panel{grid-template-columns:1fr}.vw-quick-card{padding:14px}.vw-starting{padding:12px}.vw-mode-control{flex-wrap:wrap}.vw-mode-control>span{max-width:none}}
+@container valuation(max-width:750px){.vw-quick-panel{grid-template-columns:1fr}}
+.vw-capital-details summary{cursor:pointer;min-height:44px;font-size:12px;line-height:1.7;color:#bcd0df}
+.vw-capital-details label{margin-top:12px}.vw-history-context{font-size:12px;color:#bcd0df;line-height:1.8;margin:10px 0}

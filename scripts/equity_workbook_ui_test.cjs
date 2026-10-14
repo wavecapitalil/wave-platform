@@ -43,8 +43,8 @@ test('fill-forward copies chosen assumption only to later years in active scenar
 test('missing input blanks only dependent calculations, not unrelated operating rows',()=>{
  const a=app(),revenue=a.output('revenue',0);a.input('cash',0,'');assert.match(a.output('price',0),/—/);assert.equal(a.output('revenue',0),revenue);assert.doesNotMatch(a.output('price',1),/—/);
 });
-test('buyback and dilution edit forecast shares without acknowledgement blocks',()=>{
- const a=app(),old=a.output('shares',4);a.input('buyback',0,10);a.input('dilution',0,1);assert.notEqual(a.output('shares',4),old);assert.doesNotMatch(a.output('price',0),/—/);
+test('signed net share change edits forecast shares without acknowledgement blocks',()=>{
+ const a=app(),old=a.output('shares',4);a.input('shareGrowth',0,-9);assert.notEqual(a.output('shares',4),old);assert.doesNotMatch(a.output('price',0),/—/);
 });
 test('Microsoft actual CP missing stays blank, explicit forecast zero and lease debt populate',()=>{
  const a=app();a.click({'data-company':'MSFT'});assert.match(a.byId.get('vw-thead').html,/FY2022A/);assert.match(a.byId.get('vw-thead').html,/FY2026A/);assert.match(a.byId.get('vw-tbody').html,/331,839/);assert.equal(a.byId.get('vw-cell-shortDebt-0').value,'0');assert.equal(a.byId.get('vw-cell-leases-0').value,'66594');assert.match(a.byId.get('vw-summary-base').textContent,/\$/);assert.match(a.byId.get('vw-debt-note').textContent,/הנחת 0/);
@@ -68,7 +68,7 @@ test('Basic defaults to all three scenarios and the seven essential annual rows'
  const a=app(),html=a.byId.get('vw-tbody').html;assert.equal(a.byId.get('vw-advanced-toggle').attrs['aria-expanded'],'false');assert.equal(a.byId.get('vw-advanced-notes').hidden,true);
  for(const id of ['bull','base','bear'])assert.match(a.byId.get('vw-summary-'+id).textContent,/\$/);
  for(const key of ['revenue','growth','margin','ebit','shares','multiple','price'])assert.match(html,new RegExp('<tr data-row="'+key+'" data-detail="basic" class='));
- for(const key of ['buyback','dilution','cash','termDebt','claims','ev','equity'])assert.match(html,new RegExp('<tr data-row="'+key+'" data-detail="advanced" hidden'));
+ for(const key of ['cash','termDebt','claims','ev','equity'])assert.match(html,new RegExp('<tr data-row="'+key+'" data-detail="advanced" hidden'));
 });
 test('Advanced toggle reveals details without changing any scenario assumptions/results',()=>{
  const a=app(),prices=['bull','base','bear'].map(id=>a.byId.get('vw-summary-'+id).textContent);a.input('growth',0,9);const edited=a.byId.get('vw-summary-base').textContent;
@@ -83,7 +83,7 @@ test('earlier margin edit does not falsely attribute a changed terminal price',(
  const a=app(),before=a.byId.get('vw-summary-base').textContent,first=a.output('price',0);a.input('margin',0,60);assert.notEqual(a.output('price',0),first);assert.equal(a.byId.get('vw-summary-base').textContent,before);assert.match(a.byId.get('vw-change-sentence').textContent,/נשאר/);
 });
 test('multiple and share edits have accurate terminal explanations',()=>{
- const a=app();for(const[key,i,value] of [['multiple',4,25],['buyback',0,6]]){const before=a.byId.get('vw-summary-base').textContent;a.input(key,i,value);const after=a.byId.get('vw-summary-base').textContent;assert.notEqual(before,after);assert.ok(a.byId.get('vw-change-sentence').textContent.includes(before)&&a.byId.get('vw-change-sentence').textContent.includes(after));}
+ const a=app();for(const[key,i,value] of [['multiple',4,25],['shareGrowth',0,-6]]){const before=a.byId.get('vw-summary-base').textContent;a.input(key,i,value);const after=a.byId.get('vw-summary-base').textContent;assert.notEqual(before,after);assert.ok(a.byId.get('vw-change-sentence').textContent.includes(before)&&a.byId.get('vw-change-sentence').textContent.includes(after));}
 });
 test('unavailable then restored and sub-cent price changes are described honestly',()=>{
  const a=app();a.input('growth',0,'');assert.match(a.byId.get('vw-change-sentence').textContent,/אינו זמין/);a.input('growth',0,6.43);assert.match(a.byId.get('vw-change-sentence').textContent,/זמין כעת/);a.input('multiple',4,18.000000001);assert.match(a.byId.get('vw-change-sentence').textContent,/בפחות מ־\$0\.01/);
@@ -97,7 +97,7 @@ test('missing reference price/date never fabricates an upside',()=>{
 test('dated manual reference updates all comparisons, never modeled prices',()=>{
  const a=app(),before=['bull','base','bear'].map(id=>a.byId.get('vw-summary-'+id).textContent);a.reference(200,'2020-01-01');
  for(const [i,id] of ['bull','base','bear'].entries()){assert.equal(a.byId.get('vw-summary-'+id).textContent,before[i]);assert.match(a.byId.get('vw-upside-'+id).textContent,/%/);}
- assert.match(a.byId.get('vw-upside-base').textContent,/\+21%/);assert.match(a.byId.get('vw-reference-summary').textContent,/2020-01-01/);assert.match(a.byId.get('vw-reference-summary').textContent,/הזנה ידנית/);assert.match(a.byId.get('vw-change-sentence').textContent,/משנה רק את הפער/);
+ assert.match(a.byId.get('vw-upside-base').textContent,/\+8.5%/);assert.match(a.byId.get('vw-reference-summary').textContent,/2020-01-01/);assert.match(a.byId.get('vw-reference-summary').textContent,/הזנה ידנית/);assert.match(a.byId.get('vw-change-sentence').textContent,/משנה רק את הפער/);
 });
 test('invalid amounts, impossible dates and future dates suppress comparisons',()=>{
  for(const [amount,date] of [[0,'2020-01-01'],[-1,'2020-01-01'],['Infinity','2020-01-01'],[200,'2020-02-30'],[200,'2999-01-01']]){const a=app();a.reference(amount,date);assert.match(a.byId.get('vw-upside-base').textContent,/ללא מחיר/);}
@@ -144,4 +144,47 @@ test('late valuation response cannot switch Research back after a company change
  resolve({ok:true,json:async()=>snapshots.snapshots.MSFT});await pending;
  assert.deepEqual(synced,[]);assert.equal(a.byId.get('vw-company-symbol').textContent,'AAPL');assert.equal(a.byId.get('vw-loaded').hidden,true);
  a.c.WaveValuation.open('AAPL');assert.equal(a.byId.get('vw-loaded').hidden,false);assert.equal(a.byId.get('vw-cell-growth-0').value,'23');
+});
+
+function quick(a,id,key,value){const el=a.byId.get('vw-quick-'+id+'-'+key);el.value=String(value);a.byId.get('valuationRoot').handlers.input({target:el});}
+test('quick and advanced modes retain exact annual paths without flattening on switch',()=>{
+ const a=app();assert.equal(a.byId.get('vw-table-panel').hidden,true);assert.equal(a.byId.get('vw-quick-panel').hidden,false);
+ quick(a,'base','shareGrowth',-2);const before=a.byId.get('vw-summary-base').textContent;
+ a.byId.get('vw-advanced-toggle').handlers.click();assert.equal(a.byId.get('vw-table-panel').hidden,false);
+ assert.equal(a.byId.get('vw-summary-base').textContent,before);
+ for(let i=0;i<5;i++)assert.equal(a.byId.get('vw-cell-shareGrowth-'+i).value,'-2');
+ a.input('shareGrowth',2,3);const varied=a.byId.get('vw-summary-base').textContent;
+ a.byId.get('vw-advanced-toggle').handlers.click();assert.equal(a.byId.get('vw-quick-base-shareGrowth').value,'');assert.match(a.byId.get('vw-quick-base-shareGrowth').attrs.placeholder,/משתנה/);
+ assert.equal(a.byId.get('vw-summary-base').textContent,varied);quick(a,'base','margin',30);
+ a.byId.get('vw-advanced-toggle').handlers.click();assert.equal(a.byId.get('vw-cell-shareGrowth-2').value,'3');
+});
+test('quick edit only changes its scenario and chosen field within horizon',()=>{
+ const a=app();
+ a.byId.get('vw-horizon').handlers.change({target:{value:'2'}});const bull=a.byId.get('vw-summary-bull').textContent;quick(a,'base','growth',12);
+ assert.equal(a.byId.get('vw-summary-bull').textContent,bull);a.byId.get('vw-horizon').handlers.change({target:{value:'5'}});
+ assert.equal(a.byId.get('vw-cell-growth-0').value,'12');assert.equal(a.byId.get('vw-cell-growth-1').value,'12');assert.notEqual(a.byId.get('vw-cell-growth-2').value,'12');
+});
+test('invalid quick share change and negative operating earnings never produce a price',()=>{
+ for(const value of ['',-100,101]){const a=app();quick(a,'base','shareGrowth',value);assert.equal(a.byId.get('vw-summary-base').textContent,'—');assert.equal(a.byId.get('vw-quick-base-shareGrowth').attrs['aria-invalid'],'true');}
+ const a=app();quick(a,'base','margin',-10);assert.equal(a.byId.get('vw-summary-base').textContent,'—');assert.match(a.byId.get('vw-quick-result-base').textContent,/מהוון: —/);
+});
+test('latest shares are distinct from historical shares and weighted-average EPS shares',()=>{
+ const data=JSON.parse(JSON.stringify(snapshots));data.snapshots.AAPL.fields.latest_shares_outstanding={status:'ok',unit:'shares',value:14000e6,period_end:'2026-08-01',source:'SEC latest',url:'https://www.sec.gov/Archives/example'};
+ data.snapshots.AAPL.fields.diluted_eps_shares={status:'ok',unit:'shares',value:15500e6,period_start:'2024-09-29',period_end:'2025-09-27'};
+ const a=app({snapshots:data});assert.equal(a.byId.get('vw-start-shares').value,14000);assert.match(a.output('shares',0),/14,000/);assert.match(a.byId.get('vw-start-status').textContent,/2026-08-01/);
+ assert.match(a.sourceRecords.get('valuation-shares:AAPL')[2],/15,500/);
+ data.snapshots.AAPL.fields.latest_shares_outstanding.status='ambiguous';data.snapshots.AAPL.fields.latest_shares_outstanding.value=null;
+ const b=app({snapshots:data});assert.equal(b.byId.get('vw-start-shares').value,'');assert.equal(b.byId.get('vw-summary-base').textContent,'—');
+});
+test('manual share override requires positive count and nonfuture date and can restore sourced count',()=>{
+ const a=app(),before=a.byId.get('vw-summary-base').textContent;
+ function edit(count,date){a.byId.get('vw-start-shares').value=count;a.byId.get('vw-start-date').value=date;a.byId.get('vw-start-shares').handlers.input();}
+ for(const [count,date] of [[0,'2026-01-01'],[100,'2999-01-01'],[100,''],[100,'2026-02-30']]){edit(count,date);assert.equal(a.byId.get('vw-summary-base').textContent,'—');}
+ edit(10000,'2026-01-01');assert.notEqual(a.byId.get('vw-summary-base').textContent,before);assert.match(a.byId.get('vw-start-status').textContent,/הזנה ידנית/);
+ a.byId.get('vw-shares-reset').handlers.click();assert.equal(a.byId.get('vw-summary-base').textContent,before);
+});
+test('missing reported operating assumptions stay blank instead of fabricated defaults',()=>{
+ const data=JSON.parse(JSON.stringify(snapshots));const latest=data.snapshots.AAPL.history.reduce((a,b)=>a.period_end>b.period_end?a:b);
+ for(const key of ['revenue_growth_pct','operating_margin_pct'])latest[key]={value:null,status:'missing',unit:'%'};
+ const a=app({snapshots:data});assert.equal(a.byId.get('vw-quick-base-growth').value,'');assert.equal(a.byId.get('vw-quick-base-margin').value,'');assert.equal(a.byId.get('vw-summary-base').textContent,'—');
 });

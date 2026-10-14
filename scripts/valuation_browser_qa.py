@@ -80,13 +80,22 @@ async def check(browser, name, width, height, lang="he"):
         assert await menu.evaluate("el=>el===document.activeElement")
     else:
         assert await panel.get_attribute("aria-hidden") == "false"
-    await page.locator("#vw-summary-base").filter(has_text="$242.08").wait_for(timeout=30000)
+    await page.locator("#vw-summary-base").filter(has_text="$217.04").wait_for(timeout=30000)
     assert await page.locator("#items-equities [data-page=valuation]").count() == 0
     assert await page.locator(".vw-scenario").count() == 3
     assert await page.locator("#vw-advanced-toggle").get_attribute("aria-expanded") == "false"
-    assert await page.locator("#vw-tbody tr:not([hidden])").count() == 7
+    assert await page.locator("#vw-quick-panel").is_visible()
+    assert not await page.locator("#vw-table-panel").is_visible()
     assert not await page.locator("[data-row=cash]").is_visible()
     await page.screenshot(path=str(OUT / f"{name}-basic.png"), full_page=True)
+    for rate in ["-2", "0", "2"]:
+        await page.locator("#vw-quick-base-shareGrowth").fill(rate)
+        quick_price = await page.locator("#vw-summary-base").inner_text()
+        await page.locator("#vw-advanced-toggle").click()
+        assert await page.locator("#vw-cell-shareGrowth-4").input_value() == rate
+        assert await page.locator("#vw-summary-base").inner_text() == quick_price
+        await page.locator("#vw-advanced-toggle").click()
+    await page.locator("#vw-quick-base-shareGrowth").fill("0")
     # Direct jump must bring the actual worksheet into the scrollable main pane.
     await page.locator(".vw-jump-table").click()
     await page.locator("[data-row=revenue]").scroll_into_view_if_needed()
@@ -106,9 +115,9 @@ async def check(browser, name, width, height, lang="he"):
     assert page.url.endswith("#valuation"), page.url
     # Per-year edit propagates without a hidden acknowledgement step.
     await page.locator("#vw-cell-growth-0").fill("20")
-    assert "$242.08" != await page.locator("#vw-summary-base").inner_text()
+    assert "$217.04" != await page.locator("#vw-summary-base").inner_text()
     assert ("השתנה" if lang=="he" else "changed") in await page.locator("#vw-change-sentence").inner_text()
-    await page.locator("#vw-advanced-toggle").click()
+    assert await page.locator("#vw-advanced-toggle").get_attribute("aria-expanded") == "true"
     assert await page.locator("[data-row=cash]").is_visible()
     before = await page.locator("#vw-summary-base").inner_text()
     await page.locator("#vw-cell-claims-4").fill("10000")
@@ -131,7 +140,7 @@ async def check(browser, name, width, height, lang="he"):
     await page.locator("[data-company=MSFT]").click()
     await page.locator("#vw-company-symbol").filter(has_text="MSFT").wait_for(timeout=30000)
     assert await page.locator("#vw-reference-price").input_value() == ""
-    assert "331,839" in await page.locator("#vw-tbody").inner_text()
+    assert "331,839" in await page.locator("#vw-history-context").inner_text()
     # Return through another real menu item and reopen valuation in the same shell.
     if width <= 800: await menu.click()
     await page.locator('#items-equities [data-page="research"]').click()
@@ -142,11 +151,11 @@ async def check(browser, name, width, height, lang="he"):
     assert page.url.endswith("#valuation")
     # A reload and the legacy route must retain the full shell and selected item.
     await page.reload(wait_until="domcontentloaded")
-    await page.locator("#vw-summary-base").filter(has_text="$242.08").wait_for(timeout=30000)
+    await page.locator("#vw-summary-base").filter(has_text="$217.04").wait_for(timeout=30000)
     assert await page.locator('#items-equities [aria-current="page"]').get_attribute("data-page") == "research"
     await page.goto("http://127.0.0.1:8765/terminal.html#valuation", wait_until="domcontentloaded")
     await page.wait_for_url("**/terminal_app.html#valuation")
-    await page.locator("#vw-summary-base").filter(has_text="$242.08").wait_for(timeout=30000)
+    await page.locator("#vw-summary-base").filter(has_text="$217.04").wait_for(timeout=30000)
     assert await page.locator("#terminalMenuButton").is_visible()
     assert await page.locator(".top-nav").is_visible()
     # Source navigation and return do not expose private admin navigation.
