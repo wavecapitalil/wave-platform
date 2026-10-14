@@ -170,6 +170,8 @@ async def check(browser, name, width, height, lang="he"):
     await page.locator(".vw-report summary").click()
     await page.locator("#vw-report-title").fill("QA analyst report")
     await page.locator("#vw-report-thesis").fill("<script>not executable</script>\nQA only")
+    for field in ["opportunity","moat","notes","risks"]:
+        await page.locator("#vw-report-"+field).fill(field+" - "+("טקסט עברי ארוך לבדיקת חלוקת עמודים.\n"*80))
     await page.locator("#vw-report-save").click()
     saved_price=await page.locator("#vw-summary-base").inner_text()
     async with page.expect_popup() as popup:
@@ -177,10 +179,12 @@ async def check(browser, name, width, height, lang="he"):
     exported=await popup.value
     await exported.locator("h1").filter(has_text="QA analyst report").wait_for()
     assert saved_price[1:] in await exported.locator("main").inner_text()
-    assert "<script>not executable</script>" in await exported.locator(".commentary").inner_text()
+    assert "<script>not executable</script>" in await exported.locator(".commentary").first.inner_text()
     assert await exported.locator("script").count()==0
     assert "FY2035" in await exported.locator("main").inner_text()
-    assert "טבלת התחזית" in await exported.locator("main").inner_text()
+    assert "טבלת התחזית המלאה" in await exported.locator("main").inner_text()
+    assert "החפיר התחרותי" in await exported.locator("main").inner_text()
+    assert "חוב לזמן ארוך" in await exported.locator("main").inner_text()
     assert await exported.evaluate("document.documentElement.scrollWidth <= innerWidth + 1")
     await exported.screenshot(path=str(OUT/f"{name}-analyst-report.png"),full_page=True)
     await exported.emulate_media(media="print")

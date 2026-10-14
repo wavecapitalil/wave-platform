@@ -193,7 +193,7 @@ test('missing reported operating assumptions stay blank instead of fabricated de
 test('saved report preserves screen values, net share decline, annual paths and mode across reloads',()=>{
  const storage=new Map(),a=app({storage});a.reference(200,'2020-01-01');quick(a,'base','shareGrowth',-2);a.input('growth',2,12);a.byId.get('vw-advanced-toggle').handlers.click();a.byId.get('vw-report-title').value='בדיקת דוח';a.byId.get('vw-report-thesis').value='<script>alert(1)</script> & thesis';a.byId.get('vw-report-risks').value='Risk\nWatch';
  a.byId.get('vw-report-save').handlers.click();const s=a.c.WaveValuationReport.load(a.c.localStorage,'AAPL'),r=s.results.base.forecast.at(-1),html=a.c.WaveValuationReport.render(s);
- assert.equal('$'+r.price.toLocaleString('he-IL',{maximumFractionDigits:2}),a.byId.get('vw-summary-base').textContent);assert.equal(s.scenarios.base[0].shareGrowth,-2);assert.equal(s.scenarios.base[2].growth,12);assert.equal(s.advanced,true);assert.ok(Object.isFrozen(s.scenarios.base));assert.ok(html.includes('&lt;script&gt;alert(1)&lt;/script&gt; &amp; thesis'));assert.ok(!html.includes('<script>alert'));assert.match(html,/טבלת התחזית/);assert.match(html,/2020-01-01/);assert.match(html,/הזנה ידנית/);assert.match(html,/היסטוריית מחיר לא נטענה/);
+ assert.equal('$'+r.price.toLocaleString('he-IL',{maximumFractionDigits:2}),a.byId.get('vw-summary-base').textContent);assert.equal(s.scenarios.base[0].shareGrowth,-2);assert.equal(s.scenarios.base[2].growth,12);assert.equal(s.advanced,true);assert.ok(Object.isFrozen(s.scenarios.base));assert.ok(html.includes('&lt;script&gt;alert(1)&lt;/script&gt; &amp; thesis'));assert.ok(!html.includes('<script>alert'));assert.match(html,/טבלת התחזית המלאה/);assert.match(html,/2020-01-01/);assert.match(html,/הזנה ידנית/);assert.match(html,/היסטוריית מחיר לא נטענה/);
  quick(a,'base','shareGrowth',8);assert.equal(s.results.base.forecast.at(-1).price,r.price);assert.equal(a.c.WaveValuationReport.render(s),html);
  const b=app({storage});assert.equal(b.byId.get('vw-report-title').value,'בדיקת דוח');assert.equal(b.byId.get('vw-report-export').disabled,false);assert.equal(b.c.WaveValuationReport.render(b.c.WaveValuationReport.load(b.c.localStorage,'AAPL')),html);
  b.click({'data-company':'MSFT'});assert.equal(b.byId.get('vw-report-export').disabled,true);assert.equal(b.byId.get('vw-report-title').value,'');
@@ -210,3 +210,15 @@ test('storage quota failure keeps session report exportable and discloses persis
  const a=app();a.c.localStorage.setItem=()=>{throw Error('quota');};a.byId.get('vw-report-save').handlers.click();assert.equal(a.byId.get('vw-report-export').disabled,false);assert.match(a.byId.get('vw-report-status').textContent,/הנוכחית בלבד/);
 });
 test('malformed persisted report is safely ignored',()=>{const storage=new Map([['wave:analyst-report:v1:AAPL','{bad']]);const a=app({storage});assert.equal(a.byId.get('vw-report-export').disabled,true);});
+
+
+test('advanced report preserves full worksheet and every optional Hebrew narrative across modes and reload',()=>{
+ const storage=new Map(),a=app({storage});assert.equal(a.byId.get('vw-report-advanced-fields').hidden,true);a.byId.get('vw-advanced-toggle').handlers.click();assert.equal(a.byId.get('vw-report-advanced-fields').hidden,false);
+ const long='הזדמנות לבדיקה, חפיר וסיכון. <b>טקסט בלבד</b>\n'.repeat(150);
+ for(const k of ['opportunity','moat','notes','risks'])a.byId.get('vw-report-'+k).value=k+' '+long;
+ a.input('shareGrowth',2,-2.123456789);a.byId.get('vw-report-save').handlers.click();const s=a.c.WaveValuationReport.load(a.c.localStorage,'AAPL'),html=a.c.WaveValuationReport.render(s);
+ assert.match(html,/data-template="advanced"/);assert.equal(s.worksheet.length,18);assert.match(html,/חוב לזמן ארוך/);assert.match(html,/זכויות אחרות/);assert.match(html,/FY2021A/);assert.match(html,/FY2030E/);assert.match(html,/-2.123456789/);assert.match(html,/החפיר התחרותי/);assert.match(html,/הערות חופשיות/);
+ for(const k of ['opportunity','moat','notes','risks'])assert.equal(s[k],k+' '+long.trimEnd());
+ a.byId.get('vw-advanced-toggle').handlers.click();assert.equal(a.byId.get('vw-report-advanced-fields').hidden,true);a.byId.get('vw-report-save').handlers.click();const quick=a.c.WaveValuationReport.render(a.c.WaveValuationReport.load(a.c.localStorage,'AAPL'));assert.match(quick,/data-template="regular"/);assert.doesNotMatch(quick,/<h2>טבלת התחזית המלאה/);assert.match(quick,/החפיר התחרותי/);
+ const b=app({storage});assert.equal(b.byId.get('vw-report-notes').value,'notes '+long.trimEnd());
+});
