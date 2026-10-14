@@ -7,6 +7,8 @@ on:
       - 'apps/terminal/public/terminal-metals.js'
       - 'apps/terminal/public/terminal_app.html'
       - 'scripts/gold_expectations*'
+      - 'scripts/metals_ratio_browser_qa.py'
+      - 'apps/terminal/public/terminal.css'
       - '.github/workflows/gold-expectations-qa.yml'
   workflow_dispatch:
 permissions:
@@ -29,7 +31,9 @@ jobs:
           pip install playwright==1.58.0
           python -m playwright install --with-deps chromium
       - name: Test desktop, iPad and phone
-        run: python scripts/gold_expectations_browser_qa.py
+        run: |
+          python scripts/gold_expectations_browser_qa.py
+          python scripts/metals_ratio_browser_qa.py
       - name: Save browser evidence
         if: always()
         uses: actions/upload-artifact@v4

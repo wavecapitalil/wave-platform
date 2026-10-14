@@ -1172,3 +1172,21 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
 
 #fcTicker1,#fcTicker2,.fc-ticker-controls>div { min-width:0; }
 @media (max-width:1100px) { #page-fundchart .fc-ticker-controls { grid-template-columns:1fr!important; } }
+
+/* Gold/silver ratio: readable KPI tiles at phone widths, isolated from other dashboards. */
+#gsrMetrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:20px}
+#gsrMetrics .td-stat{min-width:0;padding:12px 10px}
+#gsrMetrics .td-stat-label{color:#b7c9dc;line-height:1.4;overflow-wrap:anywhere}
+#gsrMetrics .td-stat-sub{color:#a8bdd2;line-height:1.4;overflow-wrap:anywhere}
+#gsrMetrics .td-stat-val{font-variant-numeric:tabular-nums;line-height:1.25;overflow-wrap:anywhere}
+#gsrTimeTabs{flex-wrap:wrap}
+#gsrTimeTabs .cd-vbtn{min-height:44px;min-width:44px}
+@media(max-width:760px){
+ #gsrMetrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ #gsrMetrics .td-stat:first-child{grid-column:1/-1}
+ #gsrMetrics .td-stat{padding:12px}
+ #gsrMetrics .td-stat-val{font-size:22px!important}
+ #gsrMetrics .td-stat:first-child .td-stat-val{font-size:26px!important}
+ #gsrMetrics .td-stat-label,#gsrMetrics .td-stat-sub{font-size:11px}
+ #page-commodities .page-header-title{font-size:clamp(24px,6vw,32px);line-height:1.2}
+}
