@@ -169,3 +169,5 @@
 @container valuation(max-width:750px){.vw-quick-panel{grid-template-columns:1fr}}
 .vw-capital-details summary{cursor:pointer;min-height:44px;font-size:12px;line-height:1.7;color:#bcd0df}
 .vw-capital-details label{margin-top:12px}.vw-history-context{font-size:12px;color:#bcd0df;line-height:1.8;margin:10px 0}
+
+.vw-report{border:1px solid var(--border,#334155);border-radius:12px;margin:16px 0;padding:16px}.vw-report summary{cursor:pointer;min-height:44px;font-weight:700}.vw-report-fields{display:grid;gap:12px}.vw-report-fields label{display:grid;gap:6px}.vw-report-fields input,.vw-report-fields textarea{box-sizing:border-box;width:100%;min-height:44px;padding:10px;background:var(--bg,#101923);color:inherit;border:1px solid var(--border,#475569);border-radius:6px;font:inherit}.vw-report-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.vw-report button:disabled{opacity:.45;cursor:not-allowed}.vw-report p{font-size:12px;overflow-wrap:anywhere}

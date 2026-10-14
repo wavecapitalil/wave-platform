@@ -18,8 +18,9 @@ function app(options={}){
  function parse(html){for(const tag of html.matchAll(/<[A-Za-z][^>]*>/g)){const a={};for(const x of tag[0].matchAll(/([\w-]+)="([^"]*)"/g))a[x[1]]=x[2];const e=new Element(a);if(a.id)byId.set(a.id,e);for(const[k,v]of Object.entries(a))if(k.startsWith('data-'))byAttr.set(k+'='+v,e);}}
  byId.set('valuationRoot',new Element({id:'valuationRoot'}));
  const document={readyState:'complete',getElementById:id=>byId.get(id)||null,querySelector:s=>{const m=/^\[([^=]+)="([^"]*)"\]$/.exec(s);return m?byAttr.get(m[1]+'='+m[2])||null:null;}};
- const c={document,location:{hash:''},getLang:()=> 'he',console,URL,AbortController,Date,Number,Map,Set,JSON,Promise,setTimeout:()=>1,clearTimeout:()=>{},WaveSources:{record:(...args)=>sourceRecords.set(args[0],args)},navigate:()=>{},WAVE_VALUATION_SNAPSHOTS:options.snapshots||snapshots};c.window=c;
- vm.createContext(c);for(const f of ['equity-workbook-model.js','terminal-valuation.js'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),c,{filename:f});c.WaveValuation.open();
+ const storage=options.storage||new Map();const localStorage={getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)};
+ const c={localStorage,document,location:{hash:''},getLang:()=> 'he',console,URL,AbortController,Date,Number,Map,Set,JSON,Promise,setTimeout:()=>1,clearTimeout:()=>{},WaveSources:{record:(...args)=>sourceRecords.set(args[0],args)},navigate:()=>{},WAVE_VALUATION_SNAPSHOTS:options.snapshots||snapshots};c.window=c;
+ vm.createContext(c);for(const f of ['equity-workbook-model.js','terminal-valuation-report.js','terminal-valuation.js'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),c,{filename:f});c.WaveValuation.open();
  function input(key,year,value){const el=byId.get('vw-cell-'+key+'-'+year);el.value=String(value);byId.get('valuationRoot').handlers.input({target:el});}
  function click(attrs){byId.get('valuationRoot').handlers.click({target:new Element(attrs)});}
  function output(key,year){return byAttr.get('data-output='+key+'-'+year).html;}
@@ -188,3 +189,24 @@ test('missing reported operating assumptions stay blank instead of fabricated de
  for(const key of ['revenue_growth_pct','operating_margin_pct'])latest[key]={value:null,status:'missing',unit:'%'};
  const a=app({snapshots:data});assert.equal(a.byId.get('vw-quick-base-growth').value,'');assert.equal(a.byId.get('vw-quick-base-margin').value,'');assert.equal(a.byId.get('vw-summary-base').textContent,'—');
 });
+
+test('saved report preserves screen values, net share decline, annual paths and mode across reloads',()=>{
+ const storage=new Map(),a=app({storage});a.reference(200,'2020-01-01');quick(a,'base','shareGrowth',-2);a.input('growth',2,12);a.byId.get('vw-advanced-toggle').handlers.click();a.byId.get('vw-report-title').value='בדיקת דוח';a.byId.get('vw-report-thesis').value='<script>alert(1)</script> & thesis';a.byId.get('vw-report-risks').value='Risk\nWatch';
+ a.byId.get('vw-report-save').handlers.click();const s=a.c.WaveValuationReport.load(a.c.localStorage,'AAPL'),r=s.results.base.forecast.at(-1),html=a.c.WaveValuationReport.render(s);
+ assert.equal('$'+r.price.toLocaleString('he-IL',{maximumFractionDigits:2}),a.byId.get('vw-summary-base').textContent);assert.equal(s.scenarios.base[0].shareGrowth,-2);assert.equal(s.scenarios.base[2].growth,12);assert.equal(s.advanced,true);assert.ok(Object.isFrozen(s.scenarios.base));assert.ok(html.includes('&lt;script&gt;alert(1)&lt;/script&gt; &amp; thesis'));assert.ok(!html.includes('<script>alert'));assert.match(html,/טבלת התחזית/);assert.match(html,/2020-01-01/);assert.match(html,/הזנה ידנית/);assert.match(html,/היסטוריית מחיר לא נטענה/);
+ quick(a,'base','shareGrowth',8);assert.equal(s.results.base.forecast.at(-1).price,r.price);assert.equal(a.c.WaveValuationReport.render(s),html);
+ const b=app({storage});assert.equal(b.byId.get('vw-report-title').value,'בדיקת דוח');assert.equal(b.byId.get('vw-report-export').disabled,false);assert.equal(b.c.WaveValuationReport.render(b.c.WaveValuationReport.load(b.c.localStorage,'AAPL')),html);
+ b.click({'data-company':'MSFT'});assert.equal(b.byId.get('vw-report-export').disabled,true);assert.equal(b.byId.get('vw-report-title').value,'');
+});
+test('quick report includes exact ten-year assumptions, missing data and invalid results without invented thesis',()=>{
+ const a=app();a.byId.get('vw-horizon').handlers.change({target:{value:'10'}});quick(a,'bear','margin',-5);a.byId.get('vw-report-save').handlers.click();const s=a.c.WaveValuationReport.load(a.c.localStorage,'AAPL'),html=a.c.WaveValuationReport.render(s);
+ assert.equal(s.results.bear.forecast.at(-1).price,null);assert.match(html,/FY2035/);assert.doesNotMatch(html,/<h2>טבלת התחזית/);assert.doesNotMatch(html,/תזת ההשקעה שלי/);assert.match(html,/רווח תפעולי אינו חיובי/);assert.match(html,/מקור חסר/);assert.equal(s.reference.price,null);
+});
+test('report captures dated chart data once and never requests prices at export',()=>{
+ const a=app();let calls=0;a.c.WavePriceHistory={snapshot:symbol=>{calls++;return {symbol,currency:'USD',price_basis:'split_adjusted_close',points:[{date:'2026-01-01',close:100},{date:'2026-01-03',close:110}],summary:{change_pct:10},meta:{price_source:'Fixture only',fetched_at:'2026-01-04T00:00:00Z'}};}};
+ a.byId.get('vw-report-save').handlers.click();const s=a.c.WaveValuationReport.load(a.c.localStorage,'AAPL');a.c.WavePriceHistory.snapshot=()=>{throw Error('must not read live chart');};a.c.fetch=()=>{throw Error('must not fetch');};const html=a.c.WaveValuationReport.render(s);assert.equal(calls,1);assert.match(html,/<svg/);assert.match(html,/2026-01-03/);assert.match(html,/2026-01-04T00:00:00Z/);assert.match(html,/Fixture only/);assert.match(html,/split_adjusted_close/);
+});
+test('storage quota failure keeps session report exportable and discloses persistence failure',()=>{
+ const a=app();a.c.localStorage.setItem=()=>{throw Error('quota');};a.byId.get('vw-report-save').handlers.click();assert.equal(a.byId.get('vw-report-export').disabled,false);assert.match(a.byId.get('vw-report-status').textContent,/הנוכחית בלבד/);
+});
+test('malformed persisted report is safely ignored',()=>{const storage=new Map([['wave:analyst-report:v1:AAPL','{bad']]);const a=app({storage});assert.equal(a.byId.get('vw-report-export').disabled,true);});

@@ -3,6 +3,7 @@
 'use strict';
 var he=typeof getLang==='function'&&getLang()==='he', ready=false, company=null, active='base', scenarios={}, horizon=5, requestId=0, controller=null, selectedCell=null, advanced=false, reference={price:null,date:"",source:"missing",sourceLabel:"",timestamp:null,url:null};
 var requestedSymbol='', startingShares={value:null,date:'',manual:false};
+var savedReport=null;
 var ids=['bull','base','bear'];
 function L(en,il){return he?il:en;}
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -133,6 +134,28 @@ function buildScenarios(){
 function round(v){return Math.round(v*100)/100;}
 function base(){var y=last();return {revenue:y?mil(y.revenue):null,shares:validDate(startingShares.date)&&startingShares.date<=today()?n(startingShares.value):null,price:referencePrice()};}
 function calculate(id){return WaveEquityWorkbook.calculate(base(),(scenarios[id]||[]).slice(0,horizon).map(function(a){var pieces=[a.termDebt,a.shortDebt,a.leases].map(n),ok=pieces.every(function(v){return v!==null&&v>=0&&v<=1e12;});return Object.assign({},a,{debt:ok?pieces.reduce(function(x,y){return x+y;},0):null});}));}
+function reportStatus(message){document.getElementById('vw-report-status').textContent=message;document.getElementById('vw-report-export').disabled=!savedReport;}
+function restoreReport(){
+ try{savedReport=window.WaveValuationReport?WaveValuationReport.load(window.localStorage,company.symbol):null;}catch(e){savedReport=null;}
+ ['title','thesis','risks'].forEach(function(k){document.getElementById('vw-report-'+k).value=savedReport?savedReport[k]||'':'';});
+ reportStatus(savedReport?L('Export uses the saved snapshot: ','הייצוא משתמש בצילום השמור: ')+savedReport.savedAt:L('Save a snapshot before export. Saved locally in this browser only.','שמרו צילום לפני הייצוא. נשמר מקומית בדפדפן זה בלבד.'));
+}
+function saveReport(){
+ var results={};ids.forEach(function(id){results[id]=calculate(id);});
+ var data={company:Object.assign({},company,{history:history()}),startingShares:startingShares,shareSource:shareField(),reference:Object.assign({},reference,{price:referencePrice()}),scenarios:scenarios,results:results,horizon:horizon,advanced:advanced,savedAt:new Date().toISOString(),priceHistory:window.WavePriceHistory&&WavePriceHistory.snapshot?WavePriceHistory.snapshot(company.symbol):null};
+ ['title','thesis','risks'].forEach(function(k){data[k]=document.getElementById('vw-report-'+k).value.trim();});
+ savedReport=WaveValuationReport.capture(data);
+ try{WaveValuationReport.save(window.localStorage,savedReport);reportStatus(L('Saved locally: ','נשמר מקומית: ')+savedReport.savedAt+L('. Export uses this snapshot, including its mode.','. הייצוא משתמש בצילום זה, כולל מצב התצוגה שלו.'));}
+ catch(e){reportStatus(L('Browser storage unavailable. Snapshot is available for export during this session only.','אחסון הדפדפן אינו זמין. הצילום זמין לייצוא במהלך ההפעלה הנוכחית בלבד.'));}
+}
+function exportReport(){
+ if(!savedReport)return;
+ var snapshot=savedReport,tab=window.open('valuation-report.html','_blank');
+ if(!tab){reportStatus(L('Allow this report popup and try again.','אפשרו פתיחת חלון לדוח זה ונסו שוב.'));return;}
+ function deliver(event){if(event.origin!==location.origin||event.source!==tab||event.data!=='wave-report-ready')return;tab.postMessage({type:'wave-report-snapshot',snapshot:snapshot},location.origin);window.removeEventListener('message',deliver);}
+ window.addEventListener('message',deliver);
+ setTimeout(function(){window.removeEventListener('message',deliver);},30000);
+}
 function init(symbol){
  var host=document.getElementById('valuationRoot');if(!host)return;
  host.innerHTML='<div class="vw-hero"><div><div class="vw-eyebrow">EQUITIES / VALUATION WORKBOOK</div><h1>'+L('From financial history to your forecast','מהנתונים ההיסטוריים לתחזית שלכם')+'</h1></div><span class="vw-mode-badge" id="vw-mode-badge">'+L('Quick calculator · 3 scenarios','מחשבון מהיר · 3 תרחישים')+'</span><a class="vw-jump-table" data-jump="table" href="#vw-table-panel">'+L('Go to table ↓','מעבר לטבלה ↓')+'</a></div>'+
@@ -142,6 +165,7 @@ function init(symbol){
  '<details class="vw-reference" id="vw-reference"><summary id="vw-reference-summary">'+L('Market-price comparison · enter a dated price','השוואה למחיר שוק · הזינו מחיר ותאריך')+'</summary><div class="vw-reference-fields"><label for="vw-reference-price">'+L('Reference price · USD','מחיר להשוואה · דולר')+'<input id="vw-reference-price" type="number" min="0.000001" max="1000000000" step="any" inputmode="decimal" placeholder="—" dir="ltr"></label><label for="vw-reference-date">'+L('Price date','תאריך המחיר')+'<input id="vw-reference-date" type="date" max="'+today()+'"></label><span id="vw-reference-source" class="vw-reference-source"></span><button type="button" class="vw-text-button" id="vw-reference-clear">'+L('Clear','ניקוי')+'</button></div><div id="vw-reference-status" class="vw-reference-status" role="status"></div></details>'+
  '<div class="vw-starting"><label for="vw-start-shares">'+L('Starting outstanding shares · millions','מניות קיימות בתחילת התחזית · במיליונים')+'<input id="vw-start-shares" type="number" min="0.000001" max="1000000000000" step="any" inputmode="decimal" dir="ltr"></label><label for="vw-start-date">'+L('Share count date','תאריך מספר המניות')+'<input id="vw-start-date" type="date" max="'+today()+'"></label><span id="vw-start-status" role="status"></span><button type="button" class="vw-text-button" id="vw-shares-reset">'+L('Restore reported count','שחזור נתון מדווח')+'</button><button type="button" class="vw-text-button" data-sources="true">'+L('Sources & calculation','מקורות וחישוב')+'</button></div>'+
  '<div class="vw-mode-control"><span id="vw-basic-guide">'+L('Edit the gold cells, year by year.','ערכו את התאים המוזהבים בכל שנה.')+'</span><button type="button" class="vw-advanced-toggle" id="vw-advanced-toggle" aria-expanded="false" aria-controls="vw-table-panel vw-quick-panel vw-advanced-notes">'+L('Advanced · more assumptions','מתקדם · הנחות נוספות')+' ⌄</button></div>'+
+ '<details class="vw-report"><summary>'+L('My analyst report','דוח האנליסט שלי')+'</summary><div class="vw-report-fields"><label for="vw-report-title">'+L('Analysis title','כותרת הניתוח')+'<input id="vw-report-title" maxlength="180"></label><label for="vw-report-thesis">'+L('My thesis · optional','התזה שלי · רשות')+'<textarea id="vw-report-thesis" rows="3" maxlength="12000"></textarea></label><label for="vw-report-risks">'+L('Risks and watchpoints · optional','סיכונים ונקודות מעקב · רשות')+'<textarea id="vw-report-risks" rows="3" maxlength="12000"></textarea></label></div><div class="vw-report-actions"><button type="button" class="vw-button" id="vw-report-save">'+L('Save analysis snapshot','שמירת צילום הניתוח')+'</button><button type="button" class="vw-button" id="vw-report-export" disabled>'+L('Export analyst report','ייצוא דוח אנליסט')+'</button></div><p id="vw-report-status" role="status"></p></details>'+
  '<div id="vw-history-context" class="vw-history-context"></div>'+
  '<div id="vw-quick-panel" class="vw-quick-panel"></div>'+
  '<div class="vw-sheet-toolbar" id="vw-sheet-toolbar"><div class="vw-legend"><span><i class="vw-actual-dot"></i>'+L('Reported actuals','נתוני עבר מדווחים')+'</span><span><i class="vw-input-dot"></i>'+L('Editable assumptions','הנחות ניתנות לעריכה')+'</span><span><i class="vw-calc-dot"></i>'+L('Calculated results','תוצאות מחושבות')+'</span></div><div class="vw-sheet-actions"><button id="vw-view-history" class="vw-text-button">'+L('History','היסטוריה')+'</button><button id="vw-view-forecast" class="vw-text-button">'+L('Forecast →','לתחזית ←')+'</button><button id="vw-fill-selected" class="vw-text-button" disabled>'+L('Fill next years','מילוי לשנים הבאות')+'</button><button id="vw-reset" class="vw-text-button">'+L('Reset this scenario','איפוס התרחיש')+'</button></div></div>'+
@@ -164,6 +188,8 @@ function init(symbol){
  document.getElementById('vw-method').addEventListener('click',function(){navigate('sources');});
  document.getElementById('vw-view-forecast').addEventListener('click',function(){var el=document.querySelector('[data-column="forecast-0"]');if(el)el.scrollIntoView({behavior:'smooth',block:'nearest',inline:'end'});});
  document.getElementById('vw-view-history').addEventListener('click',function(){var el=document.querySelector('[data-column="history-0"]');if(el)el.scrollIntoView({behavior:'smooth',block:'nearest',inline:'end'});});
+ document.getElementById('vw-report-save').addEventListener('click',saveReport);
+ document.getElementById('vw-report-export').addEventListener('click',exportReport);
  registerMethod();loadCompany(symbol||'AAPL');
 }
 function renderSheet(){
@@ -235,7 +261,7 @@ async function loadCompany(symbol){
  if(!['ok','partial'].includes(data.status)||!validDate(data.fiscal_year_end))throw new Error('Unsupported valuation base');
  var latestHistory=data.history.map(function(y){return y.period_end;}).filter(validDate).sort().at(-1);
  if(latestHistory!==data.fiscal_year_end)throw new Error('History and model base fiscal years do not match');
- company=data;resetStartingShares();resetReference(data.fields&&data.fields.current_price);buildScenarios();renderSheet();document.getElementById('vw-symbol').value=symbol;
+ company=data;restoreReport();resetStartingShares();resetReference(data.fields&&data.fields.current_price);buildScenarios();renderSheet();document.getElementById('vw-symbol').value=symbol;
  status.textContent=window.WAVE_VALUATION_SNAPSHOTS?L('SEC actuals · snapshot ','נתוני עבר SEC · צילום ')+(window.WAVE_VALUATION_SNAPSHOTS.snapshot_date||data.as_of.slice(0,10))+L(' · not live market data',' · אינם נתוני שוק בזמן אמת'):L('SEC annual actuals · dates shown by year','נתוני עבר שנתיים SEC · תאריכים בכל עמודה');
  registerCompany();if(window.WaveResearch&&WaveResearch.syncValuation)WaveResearch.syncValuation(symbol);
  }catch(e){if(id!==requestId)return;status.textContent=window.WAVE_VALUATION_SNAPSHOTS?L('This review demo contains sourced Apple and Microsoft history. Select AAPL or MSFT.','הדמו כולל היסטוריה מאומתת של Apple ו־Microsoft. בחרו AAPL או MSFT.'):L('Annual data could not be loaded. Try another supported company.','לא ניתן לטעון נתונים שנתיים. נסו חברה נתמכת אחרת.');if(company&&!document.getElementById('vw-loaded').hidden)status.textContent+=' '+L('Still showing ','עדיין מוצגים נתוני ')+company.symbol+'.';if(!company){document.getElementById('vw-loaded').hidden=true;document.getElementById('vw-empty').hidden=false;}}

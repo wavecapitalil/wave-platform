@@ -165,6 +165,33 @@ async def check(browser, name, width, height, lang="he"):
     await page.evaluate("navigate('valuation')")
     assert await page.locator("#er-panel-valuation").is_visible()
     assert await page.locator(".nav-panel a[href*='calculation']").count() == 0
+    # Analyst export: exact saved snapshot, independent of subsequent calculator edits.
+    await page.locator("#vw-horizon").select_option("10")
+    await page.locator(".vw-report summary").click()
+    await page.locator("#vw-report-title").fill("QA analyst report")
+    await page.locator("#vw-report-thesis").fill("<script>not executable</script>\nQA only")
+    await page.locator("#vw-report-save").click()
+    saved_price=await page.locator("#vw-summary-base").inner_text()
+    async with page.expect_popup() as popup:
+        await page.locator("#vw-report-export").click()
+    exported=await popup.value
+    await exported.locator("h1").filter(has_text="QA analyst report").wait_for()
+    assert saved_price[1:] in await exported.locator("main").inner_text()
+    assert "<script>not executable</script>" in await exported.locator(".commentary").inner_text()
+    assert await exported.locator("script").count()==0
+    assert "FY2035" in await exported.locator("main").inner_text()
+    assert "טבלת התחזית" in await exported.locator("main").inner_text()
+    assert await exported.evaluate("document.documentElement.scrollWidth <= innerWidth + 1")
+    await exported.screenshot(path=str(OUT/f"{name}-analyst-report.png"),full_page=True)
+    await exported.emulate_media(media="print")
+    assert await exported.evaluate("Array.from(document.querySelectorAll('table')).every(t=>t.scrollWidth<=t.clientWidth+1)")
+    if name in ["desktop","phone"]:
+        await exported.pdf(path=str(OUT/f"{name}-analyst-report.pdf"),prefer_css_page_size=True)
+    await exported.close()
+    await page.reload(wait_until="domcontentloaded")
+    await page.locator(".vw-report summary").click()
+    assert await page.locator("#vw-report-title").input_value()=="QA analyst report"
+    assert await page.locator("#vw-report-export").is_enabled()
     report={"viewport":name,"dimensions":[width,height],"passed":True,"layout":metrics,"other_page_errors":errors}
     await context.close()
     return report
