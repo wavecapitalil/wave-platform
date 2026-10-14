@@ -184,7 +184,7 @@ async def check(browser, name, width, height, lang="he"):
     assert "FY2035" in await exported.locator("main").inner_text()
     assert "טבלת התחזית המלאה" in await exported.locator("main").inner_text()
     assert "החפיר התחרותי" in await exported.locator("main").inner_text()
-    assert "חוב לזמן ארוך" in await exported.locator("main").inner_text()
+    assert ("חוב לזמן ארוך" if lang=="he" else "Term debt") in await exported.locator("main").inner_text()
     assert await exported.evaluate("document.documentElement.scrollWidth <= innerWidth + 1")
     await exported.screenshot(path=str(OUT/f"{name}-analyst-report.png"),full_page=True)
     await exported.emulate_media(media="print")
