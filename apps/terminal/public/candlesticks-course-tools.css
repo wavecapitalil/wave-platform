@@ -1,0 +1,11 @@
+
+/* Shared course interaction toolkit. Existing prose is unaffected. */
+.course-tools{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 30px}
+.course-tools button,.course-widget button{font:inherit;background:#12334e;color:#d9ecff;border:1px solid #315b7c;border-radius:9px;padding:9px 13px;cursor:pointer}
+.course-tools button[aria-pressed=true]{background:#245474;border-color:#82d4f7}
+.course-tools button:focus-visible,.course-widget button:focus-visible,.course-dialog button:focus-visible{outline:3px solid #ffc857;outline-offset:3px}
+body.course-focus .layout{display:block;max-width:930px}body.course-focus .sidebar{display:none}body.course-focus .content{max-width:750px;margin:auto}body.course-focus .content .section>p{max-width:65ch}
+.course-dialog{background:#0b1d2d;color:#edf6ff;border:1px solid #427398;border-radius:15px;padding:0;width:min(90vw,850px);max-height:87vh;overflow:auto;box-shadow:0 24px 80px #000b;direction:rtl}
+.course-dialog::backdrop{background:#030914cc}.course-dialog__top{display:flex;justify-content:space-between;gap:15px;align-items:center;padding:14px 20px;border-bottom:1px solid #35546e;position:sticky;top:0;background:#0b1d2d}.course-dialog__top button{background:#173b59;color:white;border:1px solid #456986;border-radius:8px;padding:5px 11px;cursor:pointer}.course-dialog__body{padding:20px;line-height:1.8}.course-dialog__image{display:block;max-width:100%;max-height:70vh;object-fit:contain;margin:auto}.course-glossary{display:grid;grid-template-columns:max-content 1fr;gap:12px 20px}.course-glossary dt{font-weight:750;color:#a3dcff;direction:ltr;text-align:right}.course-glossary dd{margin:0}.content figure.visual img[role=button]{cursor:zoom-in}
+.course-widget{background:#0b2235;border:1px solid #31536d;border-radius:14px;padding:20px;margin:26px 0}.course-widget [hidden]{display:none!important}.course-widget .feedback{margin-top:12px}.course-widget .controls{display:flex;gap:9px;flex-wrap:wrap}
+@media(max-width:580px){.course-glossary{grid-template-columns:1fr;gap:4px}.course-glossary dd{margin-bottom:12px}.course-tools button{font-size:14px}}
