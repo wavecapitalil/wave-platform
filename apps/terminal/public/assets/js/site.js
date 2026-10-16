@@ -26,6 +26,9 @@
       var h = $('.hero'), y = Math.round(h.offsetTop + Math.max(0, h.offsetHeight - innerHeight) * 0.95);   // all words of the headline are in by 0.935
       scrollTo({ top: y, behavior: 'instant' }); if (lenis) lenis.scrollTo(y, { immediate: true, force: true });
     };
+    // until the film paints, show its last frame (under water), not the logo poster from the start of the film
+    var pst = $('.hero__poster'), src = pst && pst.parentNode.querySelector('source');
+    if (src) src.parentNode.removeChild(src); if (pst) pst.src = 'assets/film/wc-0918-last.jpg';
     history.scrollRestoration = 'manual'; land(); addEventListener('load', land, { once: true });
   })();
 

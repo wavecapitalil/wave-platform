@@ -6,20 +6,25 @@
 (function () {
   if (document.getElementById('wave-legal')) return;
   var he = true; try { he = (localStorage.getItem('wc_lang') || 'he') === 'he'; } catch (e) {}
-  var T = he
-    ? { note: 'המידע באתר ובמערכת הוא מידע כללי בלבד ואינו ייעוץ השקעות. מסחר והשקעה כרוכים בסיכון.',
-        links: [['privacy.html', 'מדיניות פרטיות'], ['terms.html', 'תקנון ותנאי שימוש'], ['terms.html#disclosure', 'גילוי נאות'], ['accessibility.html', 'הצהרת נגישות']],
-        label: 'מידע משפטי' }
-    : { note: 'Information on this site and platform is general information only and is not investment advice. Trading and investing involve risk.',
-        links: [['privacy.html', 'Privacy Policy'], ['terms.html', 'Terms of Use'], ['terms.html#disclosure', 'Disclosure'], ['accessibility.html', 'Accessibility Statement']],
-        label: 'Legal information' };
-
-  var box = document.createElement('aside');
-  box.id = 'wave-legal'; box.dir = he ? 'rtl' : 'ltr'; box.setAttribute('aria-label', T.label);
-  var p = document.createElement('p'); p.textContent = T.note; box.appendChild(p);
-  var nav = document.createElement('nav'); nav.setAttribute('aria-label', T.label);
-  T.links.forEach(function (l) { var a = document.createElement('a'); a.href = l[0]; a.textContent = l[1]; nav.appendChild(a); });
-  box.appendChild(nav);
+  var TXT = {
+    he: { note: 'המידע באתר ובמערכת הוא מידע כללי בלבד ואינו ייעוץ השקעות. מסחר והשקעה כרוכים בסיכון.',
+          links: [['privacy.html', 'מדיניות פרטיות'], ['terms.html', 'תקנון ותנאי שימוש'], ['terms.html#disclosure', 'גילוי נאות'], ['accessibility.html', 'הצהרת נגישות']],
+          label: 'מידע משפטי' },
+    en: { note: 'Information on this site and platform is general information only and is not investment advice. Trading and investing involve risk.',
+          links: [['privacy.html', 'Privacy Policy'], ['terms.html', 'Terms of Use'], ['terms.html#disclosure', 'Disclosure'], ['accessibility.html', 'Accessibility Statement']],
+          label: 'Legal information' } };
+  var box = document.createElement('aside'); box.id = 'wave-legal';
+  function render(isHe) {
+    var T = TXT[isHe ? 'he' : 'en'];
+    box.dir = isHe ? 'rtl' : 'ltr'; box.setAttribute('aria-label', T.label); box.textContent = '';
+    var p = document.createElement('p'); p.textContent = T.note; box.appendChild(p);
+    var nav = document.createElement('nav'); nav.setAttribute('aria-label', T.label);
+    T.links.forEach(function (l) { var a = document.createElement('a'); a.href = l[0]; a.textContent = l[1]; nav.appendChild(a); });
+    box.appendChild(nav);
+  }
+  render(he);
+  var prevLang = window.onLangChange;   // follow the platform's language button (i18n.js)
+  window.onLangChange = function (l) { if (typeof prevLang === 'function') prevLang(l); render(l === 'he'); };
 
   var s = document.createElement('style');
   s.textContent = '#wave-legal{box-sizing:border-box;width:100%;margin:48px 0 0;padding:22px 16px 26px;border-top:1px solid rgba(233,239,247,.08);' +

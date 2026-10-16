@@ -8,16 +8,20 @@
   var he = true; try { he = (localStorage.getItem('wc_lang') || 'he') === 'he'; } catch (e) {}
   var H = 44;
 
-  var bar = document.createElement('div');
-  bar.id = 'wave-back'; bar.dir = he ? 'rtl' : 'ltr';
-  var a = document.createElement('a');
-  a.href = 'index.html';
-  a.setAttribute('aria-label', he ? 'חזרה לדף הבית של Wave Capital' : 'Back to the Wave Capital home page');
-  var ar = document.createElement('span'); ar.className = 'wb-arr'; ar.setAttribute('aria-hidden', 'true'); ar.textContent = he ? '→' : '←';
-  var tx = document.createElement('span'); tx.textContent = he ? 'חזרה לדף הבית' : 'Back to home';
+  var bar = document.createElement('div'); bar.id = 'wave-back';
+  var a = document.createElement('a'); a.href = 'index.html';
+  var ar = document.createElement('span'); ar.className = 'wb-arr'; ar.setAttribute('aria-hidden', 'true');
+  var tx = document.createElement('span');
   var br = document.createElement('span'); br.className = 'wb-brand'; br.textContent = 'Wave Capital';
-  a.appendChild(ar); a.appendChild(tx); a.appendChild(br);
-  bar.appendChild(a);
+  a.appendChild(ar); a.appendChild(tx); a.appendChild(br); bar.appendChild(a);
+  function render(isHe) {
+    bar.dir = isHe ? 'rtl' : 'ltr'; ar.textContent = isHe ? '→' : '←'; tx.textContent = isHe ? 'חזרה לדף הבית' : 'Back to home';
+    a.setAttribute('aria-label', isHe ? 'חזרה לדף הבית של Wave Capital' : 'Back to the Wave Capital home page');
+  }
+  render(he);
+  // the platform's language button (i18n.js) calls window.onLangChange; chain onto it like the terminal's own modules do
+  var prevLang = window.onLangChange;
+  window.onLangChange = function (l) { if (typeof prevLang === 'function') prevLang(l); render(l === 'he'); };
 
   var s = document.createElement('style');
   s.textContent =
