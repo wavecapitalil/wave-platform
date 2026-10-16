@@ -22,3 +22,8 @@ body:has(.layout>.content) .course-widget .feedback{background:#e7f3ff;color:#16
 body.course-focus:has(.layout>.content){background:#fff}
 body.course-focus:has(.layout>.content) .layout{display:block;max-width:930px}
 body.course-focus:has(.layout>.content) .sidebar{display:none}
+
+.course-sidebar-progress{border-top:1px solid #245478;margin-top:25px;padding-top:20px;display:grid;gap:10px;color:#e5f5ff}
+.course-sidebar-progress small{font-size:12px;color:#b7d4f2}
+.course-progress-track{height:8px;background:#164267;border-radius:20px;overflow:hidden}
+.course-progress-track span{display:block;height:100%;background:#53bafa;border-radius:20px;transition:width .2s ease}
