@@ -17,3 +17,9 @@
 .content .sources{line-height:1.8;margin-top:28px}
 @media(max-width:900px){.content .section{margin-bottom:44px}.content .section>p{font-size:16.5px;line-height:1.98;max-width:100%;margin-bottom:23px}.content .visual{padding:19px;margin-block:27px 32px}}
 @media(max-width:480px){.content .section>h2{margin-bottom:21px}.content .section>p{font-size:16px;line-height:1.95;margin-bottom:22px}.content .hero{margin-bottom:42px}.content .visual{padding:15px}}
+
+/* Unit lesson opening summary: intentionally distinct from body text. */
+.lesson-preview{margin:26px 0 34px;padding:22px 25px;background:#0a1d30;border-inline-start:3px solid #77c8eb;border-radius:12px;max-width:68ch}
+.lesson-preview__label{font-size:13px;font-weight:750;color:#9bdcff;margin:0 0 9px;letter-spacing:.01em}
+.lesson-preview__copy{color:#b8e2f1;font-size:16px;line-height:1.95;margin:0;max-width:60ch}
+@media(max-width:600px){.lesson-preview{margin:22px 0 28px;padding:18px 19px}.lesson-preview__copy{font-size:15.5px;line-height:1.9}}
