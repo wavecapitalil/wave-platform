@@ -9,3 +9,16 @@ body.course-focus .layout{display:block;max-width:930px}body.course-focus .sideb
 .course-dialog::backdrop{background:#030914cc}.course-dialog__top{display:flex;justify-content:space-between;gap:15px;align-items:center;padding:14px 20px;border-bottom:1px solid #35546e;position:sticky;top:0;background:#0b1d2d}.course-dialog__top button{background:#173b59;color:white;border:1px solid #456986;border-radius:8px;padding:5px 11px;cursor:pointer}.course-dialog__body{padding:20px;line-height:1.8}.course-dialog__image{display:block;max-width:100%;max-height:70vh;object-fit:contain;margin:auto}.course-glossary{display:grid;grid-template-columns:max-content 1fr;gap:12px 20px}.course-glossary dt{font-weight:750;color:#a3dcff;direction:ltr;text-align:right}.course-glossary dd{margin:0}.content figure.visual img[role=button]{cursor:zoom-in}
 .course-widget{background:#0b2235;border:1px solid #31536d;border-radius:14px;padding:20px;margin:26px 0}.course-widget [hidden]{display:none!important}.course-widget .feedback{margin-top:12px}.course-widget .controls{display:flex;gap:9px;flex-wrap:wrap}
 @media(max-width:580px){.course-glossary{grid-template-columns:1fr;gap:4px}.course-glossary dd{margin-bottom:12px}.course-tools button{font-size:14px}}
+
+
+/* Light content toolbar, while glossary overlay remains navy for legibility. */
+body:has(.layout>.content) .course-tools{justify-content:flex-start;align-items:center;border-bottom:1px solid #e7edf5;padding-bottom:14px;margin-bottom:28px}
+body:has(.layout>.content) .course-tools button{background:#f7fbff;color:#174575;border-color:#c9dfef;font-weight:650}
+body:has(.layout>.content) .course-tools button:hover{background:#e9f5ff}
+body:has(.layout>.content) .course-tools button[aria-pressed=true]{background:#d9ecff;color:#0756a5}
+body:has(.layout>.content) .course-widget{background:#f1f8ff;border-color:#bcdcf6;color:#183452}
+body:has(.layout>.content) .course-widget button{background:#1466ca;border-color:#1466ca;color:#fff}
+body:has(.layout>.content) .course-widget .feedback{background:#e7f3ff;color:#16426b}
+body.course-focus:has(.layout>.content){background:#fff}
+body.course-focus:has(.layout>.content) .layout{display:block;max-width:930px}
+body.course-focus:has(.layout>.content) .sidebar{display:none}
