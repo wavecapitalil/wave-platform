@@ -493,3 +493,26 @@ test('all error locations identify the year and the model never emits NaN or inf
   }
   assert.doesNotThrow(() => JSON.stringify(result));
 });
+
+test('signed net share changes compound and ignore gross rates to avoid double counting', () => {
+  for (const rate of [-10, 0, 10]) {
+    const result = run(Array.from({length:3},()=>year({shareGrowth:rate,buyback:50,dilution:20,requiredReturn:10})));
+    assert.equal(result.valid,true);
+    result.forecast.forEach((row,i)=>{
+      near(row.shares,100*Math.pow(1+rate/100,i+1));
+      near(row.price,1900/row.shares);near(row.presentPrice,row.price/Math.pow(1.1,i+1));
+      assert.equal(row.buybackShares,null);assert.equal(row.dilutionShares,null);
+      assert.equal(row.equity,1900);assert.equal(row.shareChangePct,rate);
+    });
+  }
+});
+test('net share change and required return enforce finite ranges without fallback',()=>{
+ for(const bad of [null,'',false,NaN,Infinity,-100,101]){const row=first({shareGrowth:bad});assert.equal(row.shares,null);assert.equal(row.price,null);assert.ok(hasError(row,'shareGrowth'));}
+ for(const bad of [null,'',false,NaN,Infinity,-1,101]){const row=first({shareGrowth:0,requiredReturn:bad});assert.equal(row.price,19);assert.equal(row.presentPrice,null);assert.ok(hasError(row,'requiredReturn'));}
+ assert.equal(first({shareGrowth:0,requiredReturn:0}).presentPrice,19);
+});
+test('net shares preserve EV bridge, loss-year semantics, and legacy gross-rate compatibility',()=>{
+ const net=first({shareGrowth:-5}),gross=first({buyback:5});near(net.price,gross.price);near(net.equity,gross.equity);
+ for(const margin of [0,-10]){const row=first({shareGrowth:2,margin});assert.equal(row.price,null);assert.equal(row.presentPrice,null);assert.equal(row.valid,true);}
+ const row=first({shareGrowth:-10,cash:0,debt:0});assert.equal(row.equity,2000);near(row.price,2000/90);
+});

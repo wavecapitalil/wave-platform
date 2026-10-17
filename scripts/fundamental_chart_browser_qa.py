@@ -183,6 +183,8 @@ async def set_metrics(page, metrics):
 
 
 async def load(page, symbol="AAPL", metrics=("revenue",), period="annual", second="", mode="absolute"):
+    if not await page.locator(".er-chart-more").evaluate("el=>el.open"):
+        await page.locator(".er-chart-more summary").click()
     await page.locator("#fcTicker1").fill(symbol)
     await page.locator("#fcTicker2").fill(second)
     await set_metrics(page, metrics)
@@ -432,7 +434,9 @@ async def exhaustive(page, router):
     await page.locator('#erFinancialEngine button[onclick="runFundChart()"]').click()
     await page.wait_for_function("/error|fail/i.test(document.querySelector('#fcStatus').textContent)")
     assert await page.locator("#fcDownloadPng").is_disabled()
-    assert not await page.locator("#fcChartWrap").is_visible()
+    assert await page.locator("#fcChartWrap").is_visible()
+    assert await page.locator("#fcTable").inner_text() == ""
+    assert await page.evaluate("!_fcChart || _fcChart.data.datasets.length===0")
     await load(page)
     equal_values(await values(page), [100, 200, 300])
     result["error_recovery"] = "failed fetch disabled export; subsequent load recovered"
@@ -440,7 +444,9 @@ async def exhaustive(page, router):
     await page.locator('#erFinancialEngine button[onclick="runFundChart()"]').click()
     await page.wait_for_function("/no reported periods/i.test(document.querySelector('#fcStatus').textContent)")
     assert await page.locator("#fcDownloadPng").is_disabled()
-    assert not await page.locator("#fcChartWrap").is_visible()
+    assert await page.locator("#fcChartWrap").is_visible()
+    assert await page.locator("#fcTable").inner_text() == ""
+    assert await page.evaluate("!_fcChart || _fcChart.data.datasets.length===0")
     await load(page)
     count = len(router.requests)
     await page.locator('#fcMetricPills button[onclick*="\'revenue\'"]').click()

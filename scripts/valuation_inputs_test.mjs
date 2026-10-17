@@ -340,3 +340,21 @@ test('reviewed static demo has five sourced historical columns and no fabricated
     }
   }
 });
+
+test('latest point-in-time shares are independent from FY and diluted weighted-average shares',()=>{
+ const r=result();assert.equal(r.fields.latest_shares_outstanding.value,94);assert.equal(r.fields.latest_shares_outstanding.period_end,'2026-02-01');assert.equal(r.fields.shares_outstanding.value,95);assert.equal(r.fields.diluted_eps_shares.value,107);
+});
+test('latest interim filing shares win with their own provenance; future filings are ignored',()=>{
+ const f=fixture(),accn='0000123456-26-000020',q={form:'10-Q',fp:'Q2',filed:'2026-08-02',accn};
+ us(f).CommonStockSharesOutstanding.units.shares.push(instant(92,'2026-06-30',q));
+ f.document.facts.dei.EntityCommonStockSharesOutstanding.units.shares.push(instant(91,'2026-07-25',q),instant(80,'2026-09-30',{...q,filed:'2027-01-01'}));
+ const r=result(f);assert.equal(r.fields.latest_shares_outstanding.value,91);assert.equal(r.fields.latest_shares_outstanding.accession,accn);assert.equal(r.fields.latest_shares_outstanding.period_end,'2026-07-25');assert.equal(r.fields.revenue.value,1200);
+});
+test('missing and ambiguous latest counts never backfill from annual or EPS shares',()=>{
+ for(const value of [null,-1,0]){const f=fixture();f.document.facts.dei.EntityCommonStockSharesOutstanding.units.shares[0].val=value;assert.equal(result(f).fields.latest_shares_outstanding.value,null);}
+ const f=fixture();f.document.facts.dei.EntityCommonStockSharesOutstanding.units.shares.push(instant(90,'2026-02-01'));assert.equal(result(f).fields.latest_shares_outstanding.value,null);
+});
+test('latest shares retain split and multi-class safeguards',()=>{
+ const f=fixture();add(f,'CommonStockClassASharesOutstanding','shares',[instant(50)]);assert.equal(result(f).fields.latest_shares_outstanding.value,null);
+ const split=fixture();add(split,'StockholdersEquityNoteStockSplitConversionRatio1','pure',[{end:'2026-08-01',val:4,filed:'2026-09-01',form:'10-Q'}]);assert.equal(result(split).fields.latest_shares_outstanding.value,null);
+});

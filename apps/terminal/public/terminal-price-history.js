@@ -126,5 +126,5 @@
       if(window.WaveSources)WaveSources.record('price-history:'+selected,'Price history & events · '+selected,'Request failed: '+String(error.message||error)+'. No cached or synthetic prices were substituted.');
     }finally{clearTimeout(timer);if(id===state.request)state.controller=null;}
   }
-  window.WavePriceHistory={load:load,reset:reset,formatPrice:formatPrice};
+  window.WavePriceHistory={load:load,reset:reset,formatPrice:formatPrice,snapshot:function(symbol){return state.data&&state.symbol===symbol?JSON.parse(JSON.stringify(state.data)):null;}};
 })();

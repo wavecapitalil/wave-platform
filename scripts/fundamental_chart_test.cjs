@@ -304,3 +304,13 @@ test('new chart selection aborts previous requests and drops its queued metrics'
  assert.equal(h.pending.length,3);assert.ok(h.pending[0].signal.aborted);assert.ok(h.pending[1].signal.aborted);
  h.pending[2].resolve();await Promise.all([old,current]);assert.equal(h.pending.length,3);assert.deepEqual(Array.from(h.c.drawn),['NVDA:revenue']);assert.equal(h.elements.fcStatus.textContent,'');
 });
+
+test('metric refresh preserves chart instance and frame while identifying the previous selection',async()=>{
+ const h=requestHarness();let updates=0;const chart={data:{datasets:[{data:[100]}]},update:mode=>{assert.equal(mode,'none');updates++;},destroy:()=>assert.fail('refresh must retain chart')};h.c._fcChart=chart;
+ h.c._fcMetrics=['revenue'];h.elements.fcTicker2.value='';const run=h.c.runFundChart();
+ assert.equal(h.c._fcChart,chart);assert.equal(h.elements.fcChartWrap.style.display,'block');assert.equal(chart.data.datasets.length,1);assert.equal(h.elements.fcChartWrap.style.opacity,'0.45');assert.match(h.elements.fcStatus.textContent,/Previous selection/);assert.equal(h.elements.fcDownloadPng.disabled,true);
+ h.pending[0].resolve();await run;assert.equal(h.c._fcChart,chart);assert.equal(updates,0);
+});
+test('invalid chart selection keeps empty frame and cannot export stale data',async()=>{
+ const h=requestHarness();h.elements.fcTicker1.value='!';await h.c.runFundChart();assert.equal(h.elements.fcChartWrap.style.display,'block');assert.equal(h.elements.fcDownloadPng.disabled,true);assert.equal(h.pending.length,0);assert.match(h.elements.fcStatus.textContent,/valid ticker/);
+});
