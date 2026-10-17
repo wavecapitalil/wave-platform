@@ -48,7 +48,7 @@
     'sidebar.brief':      {en:'Morning Brief',   he:'תדריך בוקר'},
     'sidebar.macro':      {en:'Macro',           he:'מאקרו'},
     'sidebar.riskMeter':  {en:'Risk Meter',      he:'מד סיכון'},
-    'sidebar.macroScanner': {en:'Macro Scanner', he:'סורק מאקרו'},
+    'sidebar.macroScanner': {en:'Macro', he:'מקרו'},
     'sidebar.fx':         {en:'FX Monitor',      he:'מוניטור מט"ח'},
     'sidebar.rates':      {en:'Rates & Yields',  he:'ריביות ותשואות'},
     'sidebar.commodities':{en:'Commodities',     he:'סחורות'},

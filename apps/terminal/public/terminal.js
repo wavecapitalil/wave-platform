@@ -118,7 +118,7 @@ function navigate(page){
   if(page === 'commodities'){ loadCommodities(); }
   if(page === 'hormuz')     loadHormuz();
   if(page === 'rates') loadRatesPage();
-  if(page === 'macro') loadMacroScanner();
+  if(page === 'macro'){ loadMacroDashboard(); loadMacroScanner(); }
   if(page === 'confluence') loadConfluence();
   if(page === 'earnings'){ loadEarningsPage(); earnSetTab(_earnTab); }
   if(page === 'correlation' && !window._corrLoadedOnce){ window._corrLoadedOnce = true; runCorrelation(); }

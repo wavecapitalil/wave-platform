@@ -1,3 +1,4 @@
+import {catalogue as macroCatalogue, history as macroHistory} from './macro.ts';
 import { createClient } from "npm:@supabase/supabase-js@2.57.4";
 import { collectForward } from "./forward-consensus.ts";
 import {settings,calculateCompany,adminCalculations} from "./calculation-service.ts";
@@ -629,6 +630,11 @@ Deno.serve(async(req:Request)=>{
     }
     if(req.method!=="GET") return json({error:"method_not_allowed"},405);
 
+    if(p.endsWith("/api/macro-series")){
+      const id=u.searchParams.get("series");
+      if(id && !macroCatalogue().series.some(s=>s.id===id))return json({error:"unknown indicator"},400);
+      return json(id?await macroHistory(id):macroCatalogue(),200,{"cache-control":"no-store"});
+    }
     if(p.endsWith("/api/health")){
       return json({ok:true,service:"wave-data",snapshot_backend:"supabase"});
     }

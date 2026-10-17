@@ -1,0 +1,43 @@
+name: US Macro dashboard checks
+on:
+  pull_request:
+    paths:
+      - 'apps/terminal/public/**'
+      - 'supabase/functions/wave-data/**'
+      - 'services/api/modules/macro.py'
+      - 'services/api/modules/frontend.py'
+      - 'scripts/macro*'
+      - '.github/workflows/macro.yml'
+permissions:
+  contents: read
+jobs:
+  macro:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Release and contribution invariants
+        run: node --test scripts/macro_test.mjs
+      - name: Static and syntax checks
+        run: |
+          node --check apps/terminal/public/terminal-macro-dashboard.js
+          python -m py_compile services/api/modules/macro.py scripts/macro_browser_qa.py
+          python scripts/static_contract_check.py
+      - name: Browser dependencies
+        run: |
+          pip install playwright==1.58.0
+          python -m playwright install --with-deps chromium
+          curl -fL --retry 2 https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js -o /tmp/wave-chart-4.4.0.js
+          echo '0e2326c6868072bec1592760c6729043caeea2960a2b46cee6a2192aac6abff0  /tmp/wave-chart-4.4.0.js' | sha256sum -c
+      - name: Desktop, RTL and 320/375px mobile QA
+        run: python scripts/macro_browser_qa.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: macro-browser-qa
+          path: /tmp/wave-macro-qa

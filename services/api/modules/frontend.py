@@ -69,6 +69,8 @@ PUBLIC_FILES = {
     "terminal-rates.js",
     "terminal-industries.js",
     "terminal-macro.js",
+    "terminal-macro-dashboard.js",
+    "terminal-macro-dashboard.css",
     "terminal-earnings.js",
 
 }
