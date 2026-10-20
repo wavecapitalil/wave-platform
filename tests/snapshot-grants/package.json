@@ -1,0 +1,10 @@
+{
+  "name": "wave-snapshot-grants-test",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node test.mjs" },
+  "dependencies": {
+    "@electric-sql/pglite": "0.3.14",
+    "@supabase/supabase-js": "2.57.4"
+  }
+}
