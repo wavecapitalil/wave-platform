@@ -118,7 +118,7 @@ function navigate(page){
   if(page === 'commodities'){ loadCommodities(); }
   if(page === 'hormuz')     loadHormuz();
   if(page === 'rates') loadRatesPage();
-  if(page === 'macro') loadMacroScanner();
+  if(page === 'macro'){ loadMacroDashboard(); loadMacroScanner(); }
   if(page === 'confluence') loadConfluence();
   if(page === 'earnings'){ loadEarningsPage(); earnSetTab(_earnTab); }
   if(page === 'correlation' && !window._corrLoadedOnce){ window._corrLoadedOnce = true; runCorrelation(); }
@@ -292,10 +292,13 @@ function syncMobileDrawerTop(){
   document.documentElement.style.setProperty('--wave-mobile-drawer-top',bottom+'px');
 }
 
+var navMobileViewport=null;
 function syncNavForViewport(){
   var mobile=window.matchMedia&&window.matchMedia('(max-width:800px)').matches;
   if(mobile)syncMobileDrawerTop();
-  setNavVisible(!mobile);
+  // Header insertion and same-breakpoint resizes must not close an opened drawer.
+  if(navMobileViewport!==mobile)setNavVisible(!mobile);
+  navMobileViewport=mobile;
 }
 
 if(document.readyState==='loading'){

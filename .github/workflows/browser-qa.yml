@@ -24,6 +24,9 @@ jobs:
           pip install playwright
           python -m playwright install --with-deps chromium
 
+      - name: Homepage source-serving and navigation QA
+        run: WAVE_HOME_QA_OUT=browser_qa/homepage python scripts/homepage_browser_qa.py
+
       - name: Start WAVE API
         run: |
           mkdir -p services/api/data/briefs

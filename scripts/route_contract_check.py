@@ -33,6 +33,7 @@ REQUIRED = {
     "/api/daily-brief",
     "/api/daily-brief/refresh",
     "/api/macro-news",
+    "/api/macro-series",
     "/api/econ-calendar",
     "/api/fred",
     "/api/earnings",
