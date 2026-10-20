@@ -14,7 +14,40 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(MODULE_DIR, "..", "..", ".."))
 PUBLIC_DIR = os.path.join(PROJECT_ROOT, "apps", "terminal", "public")
 
-PUBLIC_FILES = {
+# Imported public homepage resources only; never allow a directory or suffix glob.
+HOME_PUBLIC_FILES = {
+    'wave-back.js',
+    'wave-legal.js',
+    'privacy.html',
+    'terms.html',
+    'accessibility.html',
+    'assets/css/legal.css',
+    'assets/film/wc-0918-d-fast.mp4',
+    'assets/film/wc-0918-d-hq.mp4',
+    'assets/film/wc-0918-last.jpg',
+    'assets/film/wc-0918-poster.jpg',
+    'assets/film/wc-0918-still-l.webp',
+    'assets/film/wc-1010b-poster-p.jpg',
+    'assets/film/wc-1010b-still-p.webp',
+    'assets/film/wc-1010c-m-fast.mp4',
+    'assets/film/wc-1010c-m-hq.mp4',
+    'assets/img/wc-logo-0918b.webp',
+    'assets/img/yogiweb-logo-dark.webp',
+    'assets/img/yogiweb-logo-light.webp',
+    'assets/js/a11y.js',
+    'assets/js/company.js',
+    'assets/js/film-engine.js',
+    'assets/js/film-tiers.js',
+    'assets/js/lang.js',
+    'assets/js/orbit.js',
+    'assets/js/site.js',
+    'assets/js/theme.js',
+    'vendor/ScrollTrigger.min.js',
+    'vendor/gsap.min.js',
+    'vendor/lenis.min.js',
+}
+
+PUBLIC_FILES = HOME_PUBLIC_FILES | {
     "terminal_app.html",
     "account.html",
     "account.js",
@@ -75,6 +108,15 @@ PUBLIC_FILES = {
 
 
 @bp.get("/")
+def serve_home():
+    return send_from_directory(PUBLIC_DIR, "index.html")
+
+
+@bp.get("/products")
+def serve_products():
+    return send_from_directory(PUBLIC_DIR, "products.html")
+
+
 @bp.get("/terminal")
 def serve_terminal():
     return send_from_directory(PUBLIC_DIR, "terminal_app.html")
