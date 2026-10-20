@@ -23,7 +23,7 @@ export type ValuationField = {
   components?: ValuationField[];
 };
 type Fact = {concept: string; namespace: string; unit: string; row: any};
-type Context = {doc: any; facts: any; today: string; cik: string; sourceUrl: string | null};
+type Context = {doc: any; facts: any; today: string; cik: string; sourceUrl: string | null; includeInterim?: boolean};
 const DAY = 86400000;
 const ANNUAL_FORMS = new Set(['10-K', '10-K/A']);
 const REVENUE = ['RevenueFromContractWithCustomerExcludingAssessedTax', 'RevenueFromContractWithCustomerIncludingAssessedTax', 'Revenues', 'SalesRevenueNet', 'RegulatedAndUnregulatedOperatingRevenue'];
@@ -49,7 +49,7 @@ function observations(ctx: Context, concepts: string[], unit: string, duration: 
     const rows = ctx.doc?.facts?.[namespace]?.[concept]?.units?.[unit];
     if (!Array.isArray(rows)) return [];
     return rows.filter((row: any) => {
-      if (!row || !ANNUAL_FORMS.has(row.form) || !plainContext(row)) return false;
+      if (!row || !(ANNUAL_FORMS.has(row.form) || (ctx.includeInterim && !duration && ['10-Q', '10-Q/A'].includes(row.form))) || !plainContext(row)) return false;
       const end = date(row.end), filed = date(row.filed);
       if (!end || !filed || end > ctx.today || filed > ctx.today || !/^\d{10}-\d{2}-\d{6}$/.test(String(row.accn || ''))) return false;
       if (duration) {
@@ -126,6 +126,19 @@ function splitInPeriod(ctx: Context, start: string, end: string): boolean {
     const reported = date(r.filed), periodEnd = date(r.end), v = number(r.val);
     return !!reported && reported <= ctx.today && !!periodEnd && periodEnd >= start && periodEnd <= end && v != null && v !== 1 && v > 0;
   })));
+}
+// Latest entity-wide outstanding count is independent of the annual income base.
+function latestOutstanding(ctx: Context): ValuationField {
+  const recent = {...ctx, includeInterim: true};
+  const all = [...observations(recent, ['CommonStockSharesOutstanding'], 'shares', false),
+    ...observations(recent, ['EntityCommonStockSharesOutstanding'], 'shares', false, 'dei')];
+  const end = all.map(x => x.row.end).sort().at(-1);
+  if (!end) return unavailable(ctx, 'shares', 'No dated entity-wide outstanding share count is available.');
+  const selected = nonnegative(ctx, select(ctx, all.filter(x => x.row.end === end), 'shares', '', null, end), true);
+  const issue = shareBasis(recent, selected, end, selected.accession);
+  if (issue || splitInPeriod(recent, priorDay(end), ctx.today)) return {...selected, value: null, status: 'ambiguous',
+    reason: issue || 'A subsequent stock split requires reconciliation of the latest share basis.'};
+  return {...selected, reason: 'Latest reported point-in-time common shares outstanding; not diluted weighted-average EPS shares.'};
 }
 function totalDebt(ctx: Context, end: string, accession?: string): ValuationField {
   const read = (concept: string) => nonnegative(ctx, atInstant(ctx, [concept], 'USD', end, accession));
@@ -294,6 +307,8 @@ export function buildValuationInputs(symbol: string, cachedFacts: any, chartMeta
   const fields: Record<string, ValuationField> = {
     revenue: current?.revenue || empty('USD'), revenue_growth_pct: current?.revenue_growth_pct || empty('%'),
     operating_income: current?.operating_income || empty('USD'), operating_margin_pct: current?.operating_margin_pct || empty('%'),
+    latest_shares_outstanding: supported ? latestOutstanding(ctx) : empty('shares'),
+    diluted_eps_shares: current ? nonnegative(ctx, atPeriod(ctx, ['WeightedAverageNumberOfDilutedSharesOutstanding'], 'shares', current.period_start, current.period_end), true) : empty('shares'),
     shares_outstanding: current?.shares_outstanding || empty('shares'), cash: current?.cash || empty('USD'), total_debt: current?.total_debt || empty('USD'),
     reported_long_term_debt: current?.reported_long_term_debt || empty('USD'), commercial_paper: current?.commercial_paper || empty('USD'),
     reported_borrowings: current?.reported_borrowings || empty('USD'), reported_term_debt_and_commercial_paper: current?.reported_term_debt_and_commercial_paper || empty('USD'),
@@ -315,12 +330,13 @@ export function buildValuationInputs(symbol: string, cachedFacts: any, chartMeta
     symbol: String(symbol).trim().toUpperCase(), name: doc.entityName || cachedFacts?.company_name || String(symbol).toUpperCase(),
     currency, fiscal_year_end: latest?.end || null, fiscal_year_start: latest?.start || null, as_of: asOf,
     fetched_at: cachedFacts?.fetched_at || null, status: !supported ? 'unsupported' : fields.revenue.value == null ? 'unavailable' : warnings.length ? 'partial' : 'ok',
-    fields, history, warnings, logic_version: 'valuation_inputs_v2',
+    fields, history, warnings, logic_version: 'valuation_inputs_v3',
     methodology: [
       'Full-year actuals use USD, entity-wide US-GAAP facts from 10-K/10-K/A, with 350–380 day duration and exact period alignment. Later restatements replace earlier reports; fiscal-year labels are not inferred from filing year.',
       'USD annual financial history is independent of quote availability. Quotes require their own verified USD currency and timestamp; no FX or ADR conversion is performed.',
       'Older balance-sheet, prior-growth and repurchase disclosures can come from an earlier annual filing only when omitted from a later comparative filing and both revenue and operating income reconcile exactly. Each field carries its own source filing. Ratio components remain within one filing.',
-      'Starting shares are the reported basic shares outstanding at the model base FY-end, corroborated by an entity-wide cover-page count. They are not current or weighted-average diluted shares. Forward share assumptions create an effective diluted-share proxy.',
+      'latest_shares_outstanding selects the latest validated annual or interim point-in-time count, separately from annual weighted-average diluted EPS shares. No older count replaces a missing or ambiguous latest count.',
+      'Historical shares are the reported basic shares outstanding at the model base FY-end, corroborated by an entity-wide cover-page count. They are not current or weighted-average diluted shares. Forward share assumptions create an effective diluted-share proxy.',
       'Repurchase reference is reported repurchased shares / opening FY-end shares from the same filing. Coverage can exclude withholding and other repurchases. Multiple classes, conflicting contexts or known splits require manual reconciliation. Net share changes are never used as gross issuance or buybacks.',
       'Cash means cash and equivalents. Debt is populated only from a reported total or complete non-overlapping debt-and-finance-lease aggregates in the same filing; absent components remain missing rather than zero.',
       'Reported long-term debt, commercial paper, their subtotal and finance-lease liabilities are separately labeled scopes. Their availability does not establish complete total debt; missing short-term debt is never assumed to be zero.',

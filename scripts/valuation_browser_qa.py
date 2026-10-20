@@ -80,13 +80,22 @@ async def check(browser, name, width, height, lang="he"):
         assert await menu.evaluate("el=>el===document.activeElement")
     else:
         assert await panel.get_attribute("aria-hidden") == "false"
-    await page.locator("#vw-summary-base").filter(has_text="$242.08").wait_for(timeout=30000)
+    await page.locator("#vw-summary-base").filter(has_text="$217.04").wait_for(timeout=30000)
     assert await page.locator("#items-equities [data-page=valuation]").count() == 0
     assert await page.locator(".vw-scenario").count() == 3
     assert await page.locator("#vw-advanced-toggle").get_attribute("aria-expanded") == "false"
-    assert await page.locator("#vw-tbody tr:not([hidden])").count() == 7
+    assert await page.locator("#vw-quick-panel").is_visible()
+    assert not await page.locator("#vw-table-panel").is_visible()
     assert not await page.locator("[data-row=cash]").is_visible()
     await page.screenshot(path=str(OUT / f"{name}-basic.png"), full_page=True)
+    for rate in ["-2", "0", "2"]:
+        await page.locator("#vw-quick-base-shareGrowth").fill(rate)
+        quick_price = await page.locator("#vw-summary-base").inner_text()
+        await page.locator("#vw-advanced-toggle").click()
+        assert await page.locator("#vw-cell-shareGrowth-4").input_value() == rate
+        assert await page.locator("#vw-summary-base").inner_text() == quick_price
+        await page.locator("#vw-advanced-toggle").click()
+    await page.locator("#vw-quick-base-shareGrowth").fill("0")
     # Direct jump must bring the actual worksheet into the scrollable main pane.
     await page.locator(".vw-jump-table").click()
     await page.locator("[data-row=revenue]").scroll_into_view_if_needed()
@@ -106,9 +115,9 @@ async def check(browser, name, width, height, lang="he"):
     assert page.url.endswith("#valuation"), page.url
     # Per-year edit propagates without a hidden acknowledgement step.
     await page.locator("#vw-cell-growth-0").fill("20")
-    assert "$242.08" != await page.locator("#vw-summary-base").inner_text()
+    assert "$217.04" != await page.locator("#vw-summary-base").inner_text()
     assert ("השתנה" if lang=="he" else "changed") in await page.locator("#vw-change-sentence").inner_text()
-    await page.locator("#vw-advanced-toggle").click()
+    assert await page.locator("#vw-advanced-toggle").get_attribute("aria-expanded") == "true"
     assert await page.locator("[data-row=cash]").is_visible()
     before = await page.locator("#vw-summary-base").inner_text()
     await page.locator("#vw-cell-claims-4").fill("10000")
@@ -131,7 +140,7 @@ async def check(browser, name, width, height, lang="he"):
     await page.locator("[data-company=MSFT]").click()
     await page.locator("#vw-company-symbol").filter(has_text="MSFT").wait_for(timeout=30000)
     assert await page.locator("#vw-reference-price").input_value() == ""
-    assert "331,839" in await page.locator("#vw-tbody").inner_text()
+    assert "331,839" in await page.locator("#vw-history-context").inner_text()
     # Return through another real menu item and reopen valuation in the same shell.
     if width <= 800: await menu.click()
     await page.locator('#items-equities [data-page="research"]').click()
@@ -142,11 +151,11 @@ async def check(browser, name, width, height, lang="he"):
     assert page.url.endswith("#valuation")
     # A reload and the legacy route must retain the full shell and selected item.
     await page.reload(wait_until="domcontentloaded")
-    await page.locator("#vw-summary-base").filter(has_text="$242.08").wait_for(timeout=30000)
+    await page.locator("#vw-summary-base").filter(has_text="$217.04").wait_for(timeout=30000)
     assert await page.locator('#items-equities [aria-current="page"]').get_attribute("data-page") == "research"
     await page.goto("http://127.0.0.1:8765/terminal.html#valuation", wait_until="domcontentloaded")
     await page.wait_for_url("**/terminal_app.html#valuation")
-    await page.locator("#vw-summary-base").filter(has_text="$242.08").wait_for(timeout=30000)
+    await page.locator("#vw-summary-base").filter(has_text="$217.04").wait_for(timeout=30000)
     assert await page.locator("#terminalMenuButton").is_visible()
     assert await page.locator(".top-nav").is_visible()
     # Source navigation and return do not expose private admin navigation.
@@ -156,6 +165,37 @@ async def check(browser, name, width, height, lang="he"):
     await page.evaluate("navigate('valuation')")
     assert await page.locator("#er-panel-valuation").is_visible()
     assert await page.locator(".nav-panel a[href*='calculation']").count() == 0
+    # Analyst export: exact saved snapshot, independent of subsequent calculator edits.
+    await page.locator("#vw-horizon").select_option("10")
+    await page.locator(".vw-report summary").click()
+    await page.locator("#vw-report-title").fill("QA analyst report")
+    await page.locator("#vw-report-thesis").fill("<script>not executable</script>\nQA only")
+    for field in ["opportunity","moat","notes","risks"]:
+        await page.locator("#vw-report-"+field).fill(field+" - "+("טקסט עברי ארוך לבדיקת חלוקת עמודים.\n"*80))
+    await page.locator("#vw-report-save").click()
+    saved_price=await page.locator("#vw-summary-base").inner_text()
+    async with page.expect_popup() as popup:
+        await page.locator("#vw-report-export").click()
+    exported=await popup.value
+    await exported.locator("h1").filter(has_text="QA analyst report").wait_for()
+    assert saved_price[1:] in await exported.locator("main").inner_text()
+    assert "<script>not executable</script>" in await exported.locator(".commentary").first.inner_text()
+    assert await exported.locator("script").count()==0
+    assert "FY2035" in await exported.locator("main").inner_text()
+    assert "טבלת התחזית המלאה" in await exported.locator("main").inner_text()
+    assert "החפיר התחרותי" in await exported.locator("main").inner_text()
+    assert ("חוב לזמן ארוך" if lang=="he" else "Term debt") in await exported.locator("main").inner_text()
+    assert await exported.evaluate("document.documentElement.scrollWidth <= innerWidth + 1")
+    await exported.screenshot(path=str(OUT/f"{name}-analyst-report.png"),full_page=True)
+    await exported.emulate_media(media="print")
+    assert await exported.evaluate("Array.from(document.querySelectorAll('table')).every(t=>t.scrollWidth<=t.clientWidth+1)")
+    if name in ["desktop","phone"]:
+        await exported.pdf(path=str(OUT/f"{name}-analyst-report.pdf"),prefer_css_page_size=True)
+    await exported.close()
+    await page.reload(wait_until="domcontentloaded")
+    await page.locator(".vw-report summary").click()
+    assert await page.locator("#vw-report-title").input_value()=="QA analyst report"
+    assert await page.locator("#vw-report-export").is_enabled()
     report={"viewport":name,"dimensions":[width,height],"passed":True,"layout":metrics,"other_page_errors":errors}
     await context.close()
     return report
