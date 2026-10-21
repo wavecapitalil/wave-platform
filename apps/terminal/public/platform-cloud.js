@@ -136,7 +136,9 @@
     if(!client)throw new Error('Cloud auth unavailable');
     email=String(email||'').trim();
     if(!email)throw new Error('Email is required');
-    var redirect=window.location.origin + '/account';
+    // Return to this site's Account page. On GitHub Pages the site lives under /wave-platform/ and pages end in .html,
+    // so origin + '/account' pointed to a page that does not exist.
+    var redirect=new URL('account.html', window.location.href).href;
     var res=await client.auth.signInWithOtp({email:email,options:{shouldCreateUser:true,emailRedirectTo:redirect}});
     if(res.error)throw res.error;
     return true;

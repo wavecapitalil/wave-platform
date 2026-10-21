@@ -13,17 +13,17 @@
     'Wave Capital, חזרה לעמוד הבית': 'Wave Capital, back to the home page',
     'ניווט ראשי': 'Main navigation', 'תפריט נייד': 'Mobile menu', 'תפריט': 'Menu',
     'ניווט תחתון': 'Footer navigation', 'מידע משפטי': 'Legal information',
-    'ייעוץ': 'Advisory', 'אודות': 'About', 'צור קשר': 'Contact', 'כניסה למערכת': 'Enter Terminal', '←': '→',
+    'אודות': 'About', 'צור קשר': 'Contact', 'כניסה למערכת': 'Enter Terminal', '←': '→',
     'הלוגו של Wave Capital': 'Wave Capital logo',
     'מחקר': 'Research', 'טכנולוגיה': 'Technology', 'הון': 'Capital',
-    'Wave Capital מחברת בין ניהול הון, פיתוח אסטרטגיות והשקעות ערך, כדי להפוך מידע לתהליך החלטה מדויק.':
-      'Wave Capital brings together capital management, strategy development and value investing to turn information into a precise decision process.',
-    'ניהול הון': 'Capital management', 'מחקר השקעות': 'Investment research', 'מערכות מסחר': 'Trading systems',
-    'פגישה ממוקדת עם הצוות של Wave Capital: בונים יחד תהליך עבודה, מחקר, ניהול סיכון או תשתית מסחר שמתאימים לכם.':
-      'A focused meeting with the Wave Capital team. Together we build the workflow, research, risk management or trading infrastructure that fits you.',
+    'Wave Capital מחברת בין מחקר השקעות, פיתוח אסטרטגיות והשקעות ערך, כדי להפוך מידע לתהליך החלטה מדויק.':
+      'Wave Capital brings together investment research, strategy development and value investing to turn information into a precise decision process.',
+    'השקעות ערך': 'Value investing', 'מחקר השקעות': 'Investment research', 'מערכות מסחר': 'Trading systems',
+    'פגישה עם הצוות של Wave Capital: נכיר לכם את המערכת, את שיטת המחקר ואת הכלים שבנינו.':
+      'A meeting with the Wave Capital team: we show you the platform, our research method and the tools we built.',
     'תהליך עבודה': 'Workflow', 'סדר קבוע להחלטות': 'A set order for every decision',
     'מהשאלה ועד התשובה': 'From the question to the answer',
-    'ניהול סיכון': 'Risk management', 'גודל פוזיציה וגבולות': 'Position sizing and limits',
+    'ניהול סיכון': 'Risk management', 'העקרונות שלנו לשמירה על ההון': 'Our principles for protecting capital',
     'תשתית מסחר': 'Trading infrastructure', 'כלים שעובדים בשבילכם': 'Tools that work for you',
     'לקביעת שיחה': 'Book a call', 'שיחת היכרות קצרה, ומשם מתאימים את הפגישה.': 'A short intro call first, then we tailor the meeting.',
     'הערכת שווי, מעקב וחקירת מניות, במערכת אחת.': 'Valuation, watchlists and stock research in one platform.',
@@ -34,7 +34,7 @@
     'איך זה עובד': 'How it works', 'בוחרים מניה': 'Pick a stock', 'חוקרים את החברה': 'Research the company',
     'מעריכים שווי': 'Estimate its value', 'עוקבים לאורך זמן': 'Track it over time',
     'כל הכלים מחכים בפנים.': 'All the tools are waiting inside.',
-    'חברה לניהול כספים, פיתוח אסטרטגיות והשקעות ערך.': 'Money management, strategy development and value investing.',
+    'חברת מחקר השקעות, פיתוח אסטרטגיות והשקעות ערך.': 'Investment research, strategy development and value investing.',
     'אנחנו חוקרים שווקים גלובליים ומפתחים תהליכים וכלים שמטרתם לשפר את איכות ההחלטות. הדגש שלנו הוא על ניהול סיכון, שקיפות ועקביות.':
       'We research global markets and build processes and tools designed to improve the quality of decisions. Our focus is on risk management, transparency and consistency.',
     'מחקר עצמאי': 'Independent research', 'שווקים גלובליים, בעיניים שלנו': 'Global markets, through our own eyes',
@@ -64,9 +64,9 @@
     '.h1': '<span class="hw">Research</span> <span class="hw">edge.</span><br><span class="hw"><em>Systematic</em></span> <span class="hw"><em>execution.</em></span>',
     '.lead__title': 'About <em>us</em>',
     '.mani': 'Wave Capital combines independent investment research, value investing and the development of systematic trading strategies. We turn complex information <em class="key">into clear decision processes,</em> with rigorous risk management.',
-    '#products .h2': 'A personal <em>advisory</em> call',
+    '#products .h2': 'A personal <em>intro</em> call',
     '#terminal .h2': 'The trader\'s <em>workspace</em>',
-    '#about .h2': 'Capital managed through <em>process</em>',
+    '#about .h2': 'Decisions through <em>process</em>',
     '.phil__q': 'We don\'t chase<br><em>forecasts.</em>',
     '#contact .h2': 'Want to work more <em>precisely</em>?'
   };

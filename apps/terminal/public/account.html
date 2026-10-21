@@ -70,6 +70,10 @@
         <input class="wp-input" id="authEmail" type="email" autocomplete="email" placeholder="Email address">
         <button class="wp-btn primary" id="authSubmit" type="submit">Email sign-in link</button>
       </form>
+      <p class="wp-row-meta" id="authNotice" style="margin-top:10px;line-height:1.6">
+        <span dir="rtl" lang="he" style="display:block">המייל משמש רק להתחברות ולסנכרון הנתונים שלך בין מכשירים. הוא נדרש רק אם רוצים חשבון, והמערכת עובדת גם בלעדיו. פרטים ב<a href="privacy.html" style="color:inherit;text-decoration:underline">מדיניות הפרטיות</a>.</span>
+        <span dir="ltr" lang="en" style="display:block">Your email is used only to sign you in and sync your data across devices. It is needed only for an account; the platform works without one. See the <a href="privacy.html" style="color:inherit;text-decoration:underline">Privacy Policy</a>.</span>
+      </p>
       <div id="authSignedIn" style="display:none">
         <div class="wp-row" style="margin-bottom:10px"><div><div class="wp-row-title" id="authEmailLabel">Signed in</div><div class="wp-row-meta">Watchlists, saved research and progress sync to Supabase.</div></div><span class="wp-pill live">SYNCED</span></div>
         <div class="wp-form"><button class="wp-btn" id="syncNow" type="button">Sync now</button><button class="wp-btn ghost" id="authSignOut" type="button">Sign out</button></div>
@@ -120,7 +124,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1"></script>
 <script src="supabase-config.js"></script>
 <script src="platform.js"></script>
-<script src="platform-cloud.js"></script>
+<script src="platform-cloud.js?v=20261021-redirect"></script>
 <script src="platform-search.js"></script>
 <script src="ai-tutor.js"></script>
 <script src="account.js"></script>
