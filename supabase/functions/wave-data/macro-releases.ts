@@ -1,0 +1,11 @@
+// Public official releases verified 2026-10-14. Append new vintages; never overwrite.
+// These are bounded editorial extracts, not an automated ingestion pipeline.
+const employment = 'https://www.bls.gov/news.release/archives/empsit_10022026.htm';
+const cpi = 'https://www.bls.gov/news.release/cpi.nr0.htm';
+export const MACRO_RELEASES = [
+  {id:'nfp:2026-09-04',series:'nfp',period:'2026-08-01',released_at:'2026-09-04T12:30:00Z',vintage:'2026-09-04',actual:162,prior:null,revised_prior:null,revisions:[],source:'https://www.bls.gov/news.release/archives/empsit_09042026.htm',table:'Employment Situation',components:[],verified_at:'2026-10-14T15:52:04Z'},
+  {id:'nfp:2026-10-02',series:'nfp',period:'2026-09-01',released_at:'2026-10-02T12:30:00Z',vintage:'2026-10-02',actual:29,prior:162,revised_prior:133,prior_period:'2026-08-01',revisions:[{period:'2026-07-01',before:21,after:-10},{period:'2026-08-01',before:162,after:133}],source:employment,table:'B-1, seasonally adjusted net monthly change',components:[['Mining and logging',-2],['Construction',11],['Manufacturing',9],['Trade, transportation and utilities',18],['Information',-10],['Financial activities',-7],['Professional and business services',-9],['Private education and health services',20],['Leisure and hospitality',10],['Other services',6],['Government',-17]],verified_at:'2026-10-14T15:52:04Z'},
+  {id:'cpi:2026-10-14',series:'cpi',period:'2026-09-01',released_at:'2026-10-14T12:30:00Z',vintage:'2026-10-14',actual:3.7,prior:null,revised_prior:null,revisions:[],source:cpi,table:'Table 7: 12-month unadjusted effects on All Items',component_source:'https://www.bls.gov/news.release/cpi.t07.htm',components:[['Food',0.338],['Energy',1.353],['All items less food and energy',2.046]],verified_at:'2026-10-14T15:52:04Z'},
+  {id:'core_cpi:2026-10-14',series:'core_cpi',period:'2026-09-01',released_at:'2026-10-14T12:30:00Z',vintage:'2026-10-14',actual:2.6,prior:null,revised_prior:null,revisions:[],source:cpi,table:'Table A: 12-month unadjusted change',components:[],verified_at:'2026-10-14T15:52:04Z'},
+  {id:'unemployment:2026-10-02',series:'unemployment',period:'2026-09-01',released_at:'2026-10-02T12:30:00Z',vintage:'2026-10-02',actual:4.2,prior:null,revised_prior:null,revisions:[],source:employment,table:'Household survey CPS',components:[],verified_at:'2026-10-14T15:52:04Z'}
+];

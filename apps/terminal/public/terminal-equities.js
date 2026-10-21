@@ -346,7 +346,7 @@ function fcSetPeriod(p, btn){
   _fcPeriod = p;
   document.querySelectorAll('#fcPeriodBtns .ratio-btn').forEach(function(b){ b.classList.remove('active'); });
   btn.classList.add('active');
-  if(_fcChart || _fcLoading) runFundChart();
+  if(document.getElementById('fcTicker1').value.trim()) runFundChart();
 }
 
 function fcSetChartType(t, btn){
@@ -366,7 +366,7 @@ function fcToggleMetric(m, btn){
     _fcMetrics.push(m);
     btn.classList.add('active');
   }
-  if(_fcChart || _fcLoading) runFundChart();
+  if(document.getElementById('fcTicker1').value.trim()) runFundChart();
 }
 
 function fcQuickPick(t1, t2){
@@ -520,19 +520,22 @@ async function runFundChart(){
   var metrics = _fcMetrics.slice(), period = _fcPeriod;
   if(_fcValueMode==='growth'&&metrics.some(function(m){return m==='shares_outstanding'||m==='repurchased_shares';}))fcSetValueMode('absolute',document.querySelector('#fcModeBtns button'));
   var status = document.getElementById('fcStatus');
-  if(_fcChart){ _fcChart.destroy(); _fcChart = null; }
+  function clearChart(){if(_fcChart){_fcChart.data.labels=[];_fcChart.data.datasets=[];_fcChart.update('none');}['fcLegend','fcChartTitle'].forEach(function(id){var n=document.getElementById(id);if(n)n.textContent='';});document.getElementById('fcChartWrap').style.opacity='1';}
   _fcFetched = [];
   _fcLoading = false;
   _fcRenderMeta = null;
-  document.getElementById('fcChartWrap').style.display = 'none';
-  document.getElementById('fcRangeWrap').style.display = 'none';
+  document.getElementById('fcChartWrap').style.display = 'block';
+  ['fcTable','fcDataStatus'].forEach(function(id){var node=document.getElementById(id);if(node)node.textContent='';});
+  if(window.WaveResearch&&WaveResearch.syncChartControls)WaveResearch.syncChartControls();
+  document.getElementById('fcRangeWrap').style.visibility = 'hidden';
   document.getElementById('fcDownloadPng').disabled = true;
-  if(!t1){ status.textContent = 'Enter at least one ticker.'; return; }
-  if(!/^[A-Z0-9.^-]{1,12}$/.test(t1) || (t2 && !/^[A-Z0-9.^-]{1,12}$/.test(t2))){ status.textContent = 'Enter a valid ticker.'; return; }
-  if(!metrics.length){ status.textContent = 'Select at least one metric.'; return; }
+  if(!t1){ clearChart();status.textContent = 'Enter at least one ticker.'; return; }
+  if(!/^[A-Z0-9.^-]{1,12}$/.test(t1) || (t2 && !/^[A-Z0-9.^-]{1,12}$/.test(t2))){ clearChart();status.textContent = 'Enter a valid ticker.'; return; }
+  if(!metrics.length){ clearChart();status.textContent = 'Select at least one metric.'; return; }
   var tickers = t2 && t2 !== t1 ? [t1,t2] : [t1];
   _fcLoading = true;
-  status.textContent = 'Loading ' + tickers.join(' & ') + '...';
+  document.getElementById('fcChartWrap').style.opacity=_fcChart?'0.45':'1';
+  status.textContent = 'Loading ' + tickers.join(' & ') + (_fcChart?'… Previous selection shown while updating.':'…');
   try{
     var requests = {};
     var series = metrics.flatMap(function(metric){return tickers.map(function(ticker){return {metric:metric,ticker:ticker};});});
@@ -571,6 +574,8 @@ async function runFundChart(){
     _fcAllDates = Array.from(dateSet).sort();
     if(!_fcAllDates.length) throw new Error('No reported periods are available.');
     document.getElementById('fcChartWrap').style.display = 'block';
+    document.getElementById('fcChartWrap').style.opacity='1';
+    document.getElementById('fcRangeWrap').style.visibility='visible';
     fcInitRangeSlider(_fcAllDates);
     fcDrawChart(_fcAllDates);
     status.textContent = '';
@@ -580,6 +585,7 @@ async function runFundChart(){
     _fcLoading = false;
     _fcFetched = [];
     _fcRenderMeta = null;
+    clearChart();
     status.textContent = 'Error: ' + e.message;
   }
 }
@@ -653,8 +659,7 @@ function fcDrawChart(dates){
       type:line?'line':'bar',borderWidth:line?2:0,borderRadius:line?0:3,tension:0.2,pointRadius:line?3:0,
       fill:false,spanGaps:false,yAxisID:'y'+(units.indexOf(s.unit)||''),stack:stacked?s.f.ticker:undefined};
   });
-  if(_fcChart)_fcChart.destroy();
-  _fcChart=new Chart(document.getElementById('fcCanvas').getContext('2d'),{
+  var configuration={
     type:line?'line':'bar',data:{labels:dates,datasets:datasets},
     options:{responsive:true,maintainAspectRatio:false,animation:false,devicePixelRatio:Math.max(2,window.devicePixelRatio||1),
       interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'#0f172a',titleColor:'#e2e8f0',bodyColor:'#e2e8f0',callbacks:{
@@ -666,7 +671,9 @@ function fcDrawChart(dates){
           });
         }
       }}},scales:scales}
-  });
+  };
+  if(_fcChart){_fcChart.config.type=configuration.type;_fcChart.data=configuration.data;_fcChart.options=configuration.options;_fcChart.update('none');}
+  else _fcChart=new Chart(document.getElementById('fcCanvas').getContext('2d'),configuration);
   var title=_fcTickers.join(' vs ')+' · '+(_fcPeriod==='annual'?'Annual · full years':'Quarterly')+' · '+(growth?'YoY change %':'Values');
   document.getElementById('fcChartTitle').textContent=title;
   document.getElementById('fcLegend').innerHTML=series.map(function(s){return '<div class="fc-legend-item"><i style="background:'+s.color.line+'"></i><span>'+fcEscape(s.label)+'</span></div>';}).join('');
