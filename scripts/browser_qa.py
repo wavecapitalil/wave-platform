@@ -309,17 +309,20 @@ async def run_viewport(browser, name, width, height):
     await page.locator("#fcTicker2").fill("HOOD")
     net_margin=page.locator("#fcMetricPills button", has_text="Net Margin")
     await net_margin.click()
-    await page.evaluate("runFundChart()")
+    # Selecting the metric already starts the chart request through the UI.
     await page.wait_for_function("""() => {
       const wrap=document.querySelector('#fcChartWrap');
       const legend=document.querySelector('#fcLegend');
       const table=document.querySelector('#fcTable');
       const status=document.querySelector('#fcStatus');
+      if (status && status.innerText.startsWith('Error')) return true;
       return wrap && wrap.style.display !== 'none' &&
              legend && legend.innerText.includes('MSFT') && legend.innerText.includes('HOOD') &&
              table && table.innerText.includes('MSFT') && table.innerText.includes('HOOD') &&
              (!status || !status.innerText.startsWith('Error'));
     }""", timeout=120000)
+    chart_status=await page.locator("#fcStatus").inner_text()
+    assert not chart_status.startswith("Error"), chart_status
     chart_state=await page.evaluate("""() => {
       const c=document.querySelector('#fcCanvas');
       const r=c?c.getBoundingClientRect():null;
