@@ -305,11 +305,18 @@ async def run_viewport(browser, name, width, height):
     await page.locator("#erFinancialEngine").wait_for(state="visible", timeout=15000)
     if not await page.locator(".er-chart-more").evaluate("el => el.open"):
         await page.locator(".er-chart-more summary").click()
-    await page.locator("#fcTicker1").fill("MSFT")
-    await page.locator("#fcTicker2").fill("HOOD")
+    # Configure metrics before tickers so selection cannot auto start a request.
+    await page.locator("#fcTicker1").fill("")
     net_margin=page.locator("#fcMetricPills button", has_text="Net Margin")
     await net_margin.click()
-    # Selecting the metric already starts the chart request through the UI.
+    await page.locator("#fcTicker1").fill("MSFT")
+    await page.locator("#fcTicker2").fill("HOOD")
+    await page.locator('#erFinancialEngine button[onclick="runFundChart()"]').click()
+    print(json.dumps(await page.evaluate("""() => ({
+      viewport:innerWidth,ticker1:document.querySelector('#fcTicker1').value,
+      ticker2:document.querySelector('#fcTicker2').value,metrics:_fcMetrics,
+      status:document.querySelector('#fcStatus').innerText
+    })""")), flush=True)
     await page.wait_for_function("""() => {
       const wrap=document.querySelector('#fcChartWrap');
       const legend=document.querySelector('#fcLegend');
