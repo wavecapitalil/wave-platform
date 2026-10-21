@@ -1,0 +1,387 @@
+{
+  "checked_at": "2026-10-14T20:23:55.308Z",
+  "scope": "Local adapter against public official-series FRED CSV; not deployed edge validation",
+  "headlines": [
+    {
+      "id": "cpi",
+      "agency": "BLS",
+      "fred": "CPIAUCNS",
+      "transform": "yoy",
+      "unit": "% YoY",
+      "sa": "NSA",
+      "frequency": "monthly",
+      "status": "current_vintage",
+      "latest": {
+        "period": "2026-09-01",
+        "value": 3.7377
+      }
+    },
+    {
+      "id": "pce",
+      "agency": "BEA",
+      "fred": "PCEPI",
+      "transform": "yoy",
+      "unit": "% YoY",
+      "sa": "SA",
+      "frequency": "monthly",
+      "status": "current_vintage",
+      "latest": {
+        "period": "2026-08-01",
+        "value": 3.419
+      }
+    },
+    {
+      "id": "core_cpi",
+      "agency": "BLS",
+      "fred": "CPILFENS",
+      "transform": "yoy",
+      "unit": "% YoY",
+      "sa": "NSA",
+      "frequency": "monthly",
+      "status": "current_vintage",
+      "latest": {
+        "period": "2026-09-01",
+        "value": 2.5644
+      }
+    },
+    {
+      "id": "industrial",
+      "agency": "Federal Reserve",
+      "fred": "INDPRO",
+      "transform": "mom",
+      "unit": "% MoM",
+      "sa": "SA",
+      "frequency": "monthly",
+      "status": "current_vintage",
+      "latest": {
+        "period": "2026-08-01",
+        "value": 0.0221
+      }
+    },
+    {
+      "id": "gdp",
+      "agency": "BEA",
+      "fred": "A191RL1Q225SBEA",
+      "transform": "level",
+      "unit": "% QoQ annualized",
+      "sa": "SA",
+      "frequency": "quarterly",
+      "status": "current_vintage",
+      "latest": {
+        "period": "2026-04-01",
+        "value": 2.2
+      }
+    },
+    {
+      "id": "retail",
+      "agency": "Census Bureau",
+      "fred": "RSAFS",
+      "transform": "mom",
+      "unit": "% MoM nominal",
+      "sa": "SA",
+      "frequency": "monthly",
+      "status": "current_vintage",
+      "latest": {
+        "period": "2026-08-01",
+        "value": 1.1274
+      }
+    },
+    {
+      "id": "ism_manufacturing",
+      "agency": "ISM",
+      "fred": null,
+      "transform": "level",
+      "unit": "index",
+      "sa": "SA",
+      "frequency": "monthly",
+      "status": "license_unverified",
+      "latest": null
+    },
+    {
+      "id": "ism_services",
+      "agency": "ISM",
+      "fred": null,
+      "transform": "level",
+      "unit": "index",
+      "sa": "SA",
+      "frequency": "monthly",
+      "status": "license_unverified",
+      "latest": null
+    },
+    {
+      "id": "nfp",
+      "agency": "BLS CES",
+      "fred": "PAYEMS",
+      "transform": "difference",
+      "unit": "thousand jobs MoM",
+      "sa": "SA",
+      "frequency": "monthly",
+      "status": "current_vintage",
+      "latest": {
+        "period": "2026-09-01",
+        "value": 29
+      }
+    },
+    {
+      "id": "unemployment",
+      "agency": "BLS CPS",
+      "fred": "UNRATE",
+      "transform": "level",
+      "unit": "%",
+      "sa": "SA",
+      "frequency": "monthly",
+      "status": "current_vintage",
+      "latest": {
+        "period": "2026-09-01",
+        "value": 4.2
+      }
+    },
+    {
+      "id": "claims",
+      "agency": "US Department of Labor",
+      "fred": "ICSA",
+      "transform": "level",
+      "unit": "claims",
+      "sa": "SA",
+      "frequency": "weekly",
+      "status": "current_vintage",
+      "latest": {
+        "period": "2026-10-03",
+        "value": 197000
+      }
+    },
+    {
+      "id": "jolts",
+      "agency": "BLS",
+      "fred": "JTSJOL",
+      "transform": "level",
+      "unit": "thousand openings",
+      "sa": "SA",
+      "frequency": "monthly",
+      "status": "current_vintage",
+      "latest": {
+        "period": "2026-08-01",
+        "value": 7079
+      }
+    },
+    {
+      "id": "wages",
+      "agency": "BLS CES",
+      "fred": "CES0500000003",
+      "transform": "yoy",
+      "unit": "% YoY",
+      "sa": "SA",
+      "frequency": "monthly",
+      "status": "current_vintage",
+      "latest": {
+        "period": "2026-09-01",
+        "value": 3.0245
+      }
+    }
+  ],
+  "components": [
+    {
+      "id": "gdp",
+      "status": "current_vintage",
+      "table": "BEA NIPA 1.1.2",
+      "history_basis": "latest_revised",
+      "periods": 60,
+      "latest": {
+        "period": "2026-04-01",
+        "headline": 2.2,
+        "components": [
+          {
+            "fred": "DPCERY2Q224SBEA",
+            "name": "Personal consumption",
+            "he": "צריכה פרטית",
+            "value": 2.51
+          },
+          {
+            "fred": "A006RY2Q224SBEA",
+            "name": "Gross private domestic investment",
+            "he": "השקעה פרטית מקומית",
+            "value": 0.82
+          },
+          {
+            "fred": "A020RY2Q224SBEA",
+            "name": "Exports",
+            "he": "יצוא",
+            "value": 0.56
+          },
+          {
+            "fred": "A021RY2Q224SBEA",
+            "name": "Imports · signed contribution",
+            "he": "יבוא · תרומה חתומה",
+            "value": -1.66
+          },
+          {
+            "fred": "A822RY2Q224SBEA",
+            "name": "Government consumption and investment",
+            "he": "צריכה והשקעה ממשלתית",
+            "value": -0.01
+          }
+        ],
+        "complete": true,
+        "sum": 2.22,
+        "residual": -0.02,
+        "reconciled": true
+      },
+      "incomplete_periods": 0,
+      "unreconciled_periods": 0
+    },
+    {
+      "id": "pce",
+      "status": "current_vintage",
+      "table": "BEA NIPA 2.8.4",
+      "history_basis": "latest_revised",
+      "periods": 48,
+      "latest": {
+        "period": "2026-08-01",
+        "headline": 131.579,
+        "components": [
+          {
+            "fred": "DDURRG3M086SBEA",
+            "name": "Durable goods",
+            "he": "מוצרים בני קיימא",
+            "value": 110.083,
+            "mom": 0.0727,
+            "yoy": 2.6147
+          },
+          {
+            "fred": "DNDGRG3M086SBEA",
+            "name": "Nondurable goods",
+            "he": "מוצרים שאינם בני קיימא",
+            "value": 125.212,
+            "mom": 0.4702,
+            "yoy": 4.0546
+          },
+          {
+            "fred": "DSERRG3M086SBEA",
+            "name": "Services",
+            "he": "שירותים",
+            "value": 137.415,
+            "mom": 0.3015,
+            "yoy": 3.3607
+          },
+          {
+            "fred": "DFXARG3M086SBEA",
+            "name": "Food · supplementary",
+            "he": "מזון · קטגוריה משלימה",
+            "value": 132.167,
+            "mom": 0.031,
+            "yoy": 1.9202
+          },
+          {
+            "fred": "DNRGRG3M086SBEA",
+            "name": "Energy · supplementary",
+            "he": "אנרגיה · קטגוריה משלימה",
+            "value": 156.634,
+            "mom": 2.3083,
+            "yoy": 16.8457
+          }
+        ],
+        "complete": true,
+        "sum": null,
+        "residual": null,
+        "reconciled": null,
+        "mom": 0.3103,
+        "yoy": 3.419
+      },
+      "incomplete_periods": 0,
+      "unreconciled_periods": 0
+    }
+  ],
+  "raw": [
+    {
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCEPI",
+      "status": 200,
+      "retrieved_at": "2026-10-14T20:23:56.635Z",
+      "sha256": "0f416a343a73a3b723af3315679596eecd7300abb433e8999c6a161d46c22e4f",
+      "file": "PCEPI.csv"
+    },
+    {
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPILFENS",
+      "status": 200,
+      "retrieved_at": "2026-10-14T20:23:56.882Z",
+      "sha256": "15fb27ab0a444bc2e68eb5301987bd57890254910b20a87d54dacac55486efa5",
+      "file": "CPILFENS.csv"
+    },
+    {
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=A191RL1Q225SBEA",
+      "status": 200,
+      "retrieved_at": "2026-10-14T20:23:57.001Z",
+      "sha256": "f261d663285038c66b4aa524a1d6f081327400c812d9cc5b48059e2048a0d977",
+      "file": "A191RL1Q225SBEA.csv"
+    },
+    {
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=INDPRO",
+      "status": 200,
+      "retrieved_at": "2026-10-14T20:23:57.099Z",
+      "sha256": "1a916926060d09b970880153da76d36040505666dbe686ae2abda1ff7eba6279",
+      "file": "INDPRO.csv"
+    },
+    {
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RSAFS",
+      "status": 200,
+      "retrieved_at": "2026-10-14T20:23:57.137Z",
+      "sha256": "dd14965e898a9337b3fc59424443549e1dd0f9ebf58b5c8e77049568d122c999",
+      "file": "RSAFS.csv"
+    },
+    {
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=UNRATE",
+      "status": 200,
+      "retrieved_at": "2026-10-14T20:23:57.339Z",
+      "sha256": "621ff6fadf50910cb7a21ee20ba610c247cb043b29b4e05c4c1a72fadca2a06c",
+      "file": "UNRATE.csv"
+    },
+    {
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PAYEMS",
+      "status": 200,
+      "retrieved_at": "2026-10-14T20:23:57.370Z",
+      "sha256": "c8c429818ed73de6db985f4ff565d64bd2a5ba66a6b651b39373a1532924fc0e",
+      "file": "PAYEMS.csv"
+    },
+    {
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPIAUCNS",
+      "status": 200,
+      "retrieved_at": "2026-10-14T20:23:57.378Z",
+      "sha256": "cfab9b9be4a5d4f06253c4dcc3f7e0b28b1d58837e710dd7cb1fd54a49e7ad7c",
+      "file": "CPIAUCNS.csv"
+    },
+    {
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=JTSJOL",
+      "status": 200,
+      "retrieved_at": "2026-10-14T20:23:57.520Z",
+      "sha256": "b2103436eb1f5cb9fe30ac9b65eb3d895f69758df1c52476778e50ac55027c53",
+      "file": "JTSJOL.csv"
+    },
+    {
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=CES0500000003",
+      "status": 200,
+      "retrieved_at": "2026-10-14T20:23:57.658Z",
+      "sha256": "15ac5d3097f5cb2e7e66b8dd8ef04b91316cd49213aaa3d407fec928857ea35d",
+      "file": "CES0500000003.csv"
+    },
+    {
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=ICSA",
+      "status": 200,
+      "retrieved_at": "2026-10-14T20:23:57.663Z",
+      "sha256": "9928caaf5d6b28264aca011658469cd8b36a2132ddc3bcb96dced706f1a2a54c",
+      "file": "ICSA.csv"
+    },
+    {
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=A191RL1Q225SBEA,DPCERY2Q224SBEA,A006RY2Q224SBEA,A020RY2Q224SBEA,A021RY2Q224SBEA,A822RY2Q224SBEA",
+      "status": 200,
+      "retrieved_at": "2026-10-14T20:23:57.879Z",
+      "sha256": "ef50f77e90d67229b9d51fd7dc8d08d9e39af7f7cdeb9359ce5153bf390ce307",
+      "file": "A191RL1Q225SBEA_DPCERY2Q224SBEA_A006RY2Q224SBEA_A020RY2Q224SBEA_A021RY2Q224SBEA_A822RY2Q224SBEA.csv"
+    },
+    {
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCEPI,DDURRG3M086SBEA,DNDGRG3M086SBEA,DSERRG3M086SBEA,DFXARG3M086SBEA,DNRGRG3M086SBEA",
+      "status": 200,
+      "retrieved_at": "2026-10-14T20:23:58.116Z",
+      "sha256": "58011e8007cbe1a29dac3fd9566a8311538a8444c4ab1f0e479df07e95937010",
+      "file": "PCEPI_DDURRG3M086SBEA_DNDGRG3M086SBEA_DSERRG3M086SBEA_DFXARG3M086SBEA_DNRGRG3M086SBEA.csv"
+    }
+  ]
+}

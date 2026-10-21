@@ -1,11 +1,15 @@
 /* Year-by-year equity workbook. All money and shares are in millions; prices are
  * currency/share. Rates are percentage points (5 means 5%), not fractions.
  * Each year's cash/debt/claims are YEAR-END balances after all funding flows.
- * Gross buyback and dilution rates both apply to that year's opening shares.
+ * shareGrowth is the signed annual net change (-100 < rate <= 100). When
+ * supplied it overrides legacy gross buyback/dilution rates, avoiding duplication.
+ * Legacy gross rates both apply to that year's opening shares.
  * The model never estimates repurchase spending or subtracts it a second time.
  *
  * calculate({revenue, shares, price?}, [{growth, margin, buyback, dilution,
- *   multiple, cash, debt, claims, capitalConfirmed?}, ...]) returns:
+ *   multiple, cash, debt, claims, capitalConfirmed?, shareGrowth?, requiredReturn?}, ...]) returns:
+ * presentPrice discounts that year's terminal price for year annual periods at
+ * its requiredReturn (0..100; legacy default 0). No distributions are added.
  * {valid, errors, warnings, base, years, forecast, rows}. rows aliases forecast.
  * A valid:false result still contains every independently calculable value.
  * Missing/invalid values are null, never zero; errors identify year and field.
@@ -93,8 +97,11 @@
 
       row.growth = read(assumption, 'growth', -100, 300, false, false, row.year, row.errors);
       row.margin = read(assumption, 'margin', -100, 100, false, false, row.year, row.errors);
-      row.buyback = read(assumption, 'buyback', 0, 100, false, true, row.year, row.errors);
-      row.dilution = read(assumption, 'dilution', 0, 100, false, false, row.year, row.errors);
+      var netMode = Object.prototype.hasOwnProperty.call(assumption, 'shareGrowth');
+      row.shareGrowth = netMode ? read(assumption, 'shareGrowth', -100, 100, true, false, row.year, row.errors) : null;
+      row.requiredReturn = Object.prototype.hasOwnProperty.call(assumption, 'requiredReturn') ? read(assumption, 'requiredReturn', 0, 100, false, false, row.year, row.errors) : 0;
+      row.buyback = netMode ? null : read(assumption, 'buyback', 0, 100, false, true, row.year, row.errors);
+      row.dilution = netMode ? null : read(assumption, 'dilution', 0, 100, false, false, row.year, row.errors);
       row.multiple = read(assumption, 'multiple', 0, 100, false, false, row.year, row.errors);
       row.cash = read(assumption, 'cash', 0, MAX_BALANCE, false, false, row.year, row.errors);
       row.debt = read(assumption, 'debt', 0, MAX_BALANCE, false, false, row.year, row.errors);
@@ -106,18 +113,26 @@
       row.ebit = derive(row, 'ebit', [row.revenue, row.margin], ['revenue', 'margin'], function () {
         return row.revenue * row.margin / 100;
       });
-      row.buybackShares = derive(row, 'buybackShares', [previousShares, row.buyback], ['startShares', 'buyback'], function () {
-        return previousShares * row.buyback / 100;
-      });
-      row.dilutionShares = derive(row, 'dilutionShares', [previousShares, row.dilution], ['startShares', 'dilution'], function () {
-        return previousShares * row.dilution / 100;
-      });
-      row.shareChangePct = derive(row, 'shareChangePct', [row.buyback, row.dilution], ['buyback', 'dilution'], function () {
-        return row.dilution - row.buyback;
-      });
-      row.shares = derive(row, 'shares', [previousShares, row.buyback, row.dilution], ['startShares', 'buyback', 'dilution'], function () {
-        return previousShares * (1 - row.buyback / 100 + row.dilution / 100);
-      });
+      if (netMode) {
+        // Net change already includes issuance, SBC and repurchases. Never add gross rates.
+        row.shareChangePct = row.shareGrowth;
+        row.shares = derive(row, 'shares', [previousShares, row.shareGrowth], ['startShares', 'shareGrowth'], function () {
+          return previousShares * (1 + row.shareGrowth / 100);
+        });
+      } else {
+        row.buybackShares = derive(row, 'buybackShares', [previousShares, row.buyback], ['startShares', 'buyback'], function () {
+          return previousShares * row.buyback / 100;
+        });
+        row.dilutionShares = derive(row, 'dilutionShares', [previousShares, row.dilution], ['startShares', 'dilution'], function () {
+          return previousShares * row.dilution / 100;
+        });
+        row.shareChangePct = derive(row, 'shareChangePct', [row.buyback, row.dilution], ['buyback', 'dilution'], function () {
+          return row.dilution - row.buyback;
+        });
+        row.shares = derive(row, 'shares', [previousShares, row.buyback, row.dilution], ['startShares', 'buyback', 'dilution'], function () {
+          return previousShares * (1 - row.buyback / 100 + row.dilution / 100);
+        });
+      }
       if (row.shares !== null && row.shares <= 0) {
         addError(row.errors, row.year, 'shares', 'underflow');
         row.shares = null;
@@ -126,10 +141,10 @@
         return row.shares - previousShares;
       });
 
-      if (Math.abs(row.growth) > 50 || row.buyback > 20 || row.dilution > 20 || row.multiple > 50) {
+      if (Math.abs(row.growth) > 50 || row.buyback > 20 || row.dilution > 20 || row.multiple > 50 || Math.abs(row.shareGrowth) > 20) {
         addWarning(row.warnings, 'extreme_assumptions');
       }
-      if ((row.buyback > 0 || row.dilution > 0) && !row.capitalConfirmed) {
+      if ((row.buyback > 0 || row.dilution > 0 || (netMode && row.shareGrowth !== 0)) && !row.capitalConfirmed) {
         addWarning(row.warnings, 'capital_balances_unconfirmed');
       }
 
@@ -155,6 +170,9 @@
           } else addWarning(row.warnings, 'missing_current_price');
         }
       }
+      row.presentPrice = row.price === null ? null : derive(row, 'presentPrice', [row.price, row.requiredReturn], ['price', 'requiredReturn'], function () {
+        return row.price / Math.pow(1 + row.requiredReturn / 100, row.year);
+      });
       row.valid = row.errors.length === 0;
       row.valuationValid = row.price !== null;
       forecast.push(row);

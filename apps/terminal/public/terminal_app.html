@@ -12,9 +12,9 @@
 <link rel="stylesheet" href="ai-tutor.css">
 <link rel="stylesheet" href="terminal-sources.css?v=20261008-1">
 <link rel="stylesheet" href="terminal-gold-expectations.css?v=20261009-2">
-<link rel="stylesheet" href="terminal-valuation.css?v=20261013-research-markers">
+<link rel="stylesheet" href="terminal-valuation.css?v=20261014-report">
 <link rel="stylesheet" href="terminal-price-history.css?v=20261013-material-events">
-<link rel="stylesheet" href="terminal-research.css?v=20261013-compact-heading">
+<link rel="stylesheet" href="terminal-research.css?v=20261014-persistent-statements">
 <link rel="stylesheet" href="terminal-brief.css?v=20261009-brighter-reader1">
 </head>
 <body>
@@ -406,10 +406,13 @@
       <div class="welcome-wrap" style="max-width:1140px">
         <div class="page-header" style="margin-bottom:20px">
           <div class="page-header-tag">Macro · Intelligence</div>
-          <div class="page-header-title">Macro Scanner</div>
-          <div class="page-header-sub">Real-time macro news filtered by topic — Fed, CPI, Jobs, GDP, Trade, FX, Energy, Housing</div>
+          <div class="page-header-title">Macro / מקרו · US</div>
+          <div class="page-header-sub">US economic indicators · מדדי כלכלת ארה״ב</div>
         </div>
 
+        <button class="macro-refresh" onclick="loadMacroDashboard()">↻ Refresh / רענון</button>
+        <div id="macroDashboard" aria-live="polite"></div>
+        <details class="macro-news-details"><summary>Macro news / חדשות מקרו</summary>
         <!-- Topic filter pills -->
         <div id="macroTopics" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px"></div>
 
@@ -427,6 +430,7 @@
 
         <!-- Stories grid -->
         <div id="macroGrid"><div style="color:#334155;font-size:13px;padding:40px 0;text-align:center">Loading macro news...</div></div>
+        </details>
       </div>
     </div>
     <div class="page" id="page-fx">
@@ -1515,7 +1519,7 @@
 
 <script src="terminal-sources.js?v=20261008-sources1"></script>
 <script src="terminal-brief.js?v=20261009-dark-reader1"></script>
-<script src="terminal.js?v=20261013-research-markers"></script>
+<script src="terminal.js?v=20261020-drawer-resize"></script>
 <script src="terminal-market.js?v=20261012-equity"></script>
 <script src="terminal-content.js?v=20261013-article-fallback"></script>
 <script src="terminal-flows.js?v=20261008-sources1"></script>
@@ -1538,17 +1542,21 @@ if (window.Chart) Chart.register({
   }
 });
 </script>
-<script src="terminal-price-history.js?v=20261013-material-events"></script>
-<script src="terminal-equities.js?v=20261012-research-followup"></script>
-<script src="terminal-research.js?v=20261013-research-markers"></script>
+<script src="terminal-price-history.js?v=20261014-report"></script>
+<script src="terminal-equities.js?v=20261014-persistent-statements"></script>
+<script src="terminal-research.js?v=20261014-persistent-statements"></script>
 <script src="terminal-research-markets.js?v=20261013-tape"></script>
-<script src="equity-workbook-model.js?v=20261008-live1"></script>
-<script src="terminal-valuation.js?v=20261013-research-markers"></script>
+<script src="equity-workbook-model.js?v=20261014-modes"></script>
+<script src="terminal-valuation-report.js?v=20261014-report"></script>
+<script src="terminal-valuation.js?v=20261014-report"></script>
 <script src="terminal-risk.js?v=20261008-sources1"></script>
 <script src="terminal-crypto.js?v=20261008-sources1"></script>
 <script src="terminal-rates.js?v=20261008-sources1"></script>
 <script src="terminal-industries.js?v=20261008-sources1"></script>
+<link rel="stylesheet" href="terminal-macro-dashboard.css?v=20261014-1">
+<dialog id="macroDialog" aria-labelledby="macroDialogTitle"><header><h2 id="macroDialogTitle"></h2><button id="macroDialogClose" type="button" aria-label="Close / סגירה">✕</button></header><div id="macroDetail"></div></dialog>
 <script src="terminal-macro.js?v=20261008-sources1"></script>
+<script src="terminal-macro-dashboard.js?v=20261014-1"></script>
 <script src="terminal-earnings.js?v=20261008-sources1"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1"></script>
 <script src="supabase-config.js"></script>

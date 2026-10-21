@@ -37,6 +37,9 @@ jobs:
       - name: Route contract check
         run: python scripts/route_contract_check.py
 
+      - name: Homepage routes and private-file boundary
+        run: python scripts/homepage_contract_test.py
+
       - name: Secret-file guard
         run: |
           test ! -e wave_secrets.env

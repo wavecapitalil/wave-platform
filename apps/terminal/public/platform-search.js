@@ -5,7 +5,7 @@
     ['mover',"What's Moving",'Catalyst deep-dive'],
     ['brief','Morning Brief','Daily briefing'],
     ['risk','Risk Meter','Cross-asset regime risk'],
-    ['macro','Macro Scanner','Macro dashboard'],
+    ['macro','Macro / מקרו','US economic indicators'],
     ['fx','FX Monitor','Currencies'],
     ['rates','Rates Monitor','Rates & yield curve'],
     ['commodities','Gold / Silver Ratio','Metals context'],
