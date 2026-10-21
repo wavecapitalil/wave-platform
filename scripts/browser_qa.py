@@ -213,7 +213,8 @@ async def run_viewport(browser, name, width, height):
                 await wait_not_loading(page,"#flowContent",90000)
             crypto_text=await page.locator("#flowContent").inner_text()
             if IS_PRODUCTION:
-                assert "Global Accounts" in crypto_text and "Top Trader Accounts" in crypto_text and "Top Trader Positions" in crypto_text
+                crypto_labels=crypto_text.casefold()
+                assert all(label in crypto_labels for label in ("global accounts", "top trader accounts", "top trader positions")), crypto_text
                 assert "L/S ratio: —" not in crypto_text, f"Crypto positioning missing values: {crypto_text}"
             await active.screenshot(path=str(OUT/f"{name}-flows.png"))
         elif slug=="confluence":
@@ -413,7 +414,7 @@ async def run_viewport(browser, name, width, height):
         await page.wait_for_function("() => document.querySelector('#statTotal') && document.querySelector('#statTotal').innerText === '3'", timeout=15000)
         assert "All production datasets healthy" in await page.locator("#bannerTitle").inner_text()
         assert await page.locator("#healthRows tr").count() == 3
-    await page.locator("#searchInput").fill("risk")
+    await page.locator("#searchInput").fill("risk:composite")
     await page.wait_for_timeout(100)
     assert await page.locator("#healthRows tr").count() == 1
     await page.locator("#healthRows tr").first.click()
