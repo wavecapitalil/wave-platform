@@ -12,7 +12,7 @@ from playwright.async_api import async_playwright
 ROOT = Path(__file__).resolve().parents[1]
 OUT = Path(os.environ.get('WAVE_MACRO_QA_OUT', '/tmp/wave-macro-qa'))
 REAL_DATA = json.loads(Path(os.environ['WAVE_MACRO_REAL_DATA']).read_text()) if os.environ.get('WAVE_MACRO_REAL_DATA') else None
-CATALOGUE = json.loads(subprocess.check_output(['node','--input-type=module','-e',"import {catalogue} from './supabase/functions/wave-data/macro.ts';console.log(JSON.stringify(catalogue(Date.parse('2026-10-14T20:00:00Z'))));"],cwd=ROOT))
+CATALOGUE = json.loads(subprocess.check_output(['node','--input-type=module','-e',"import {catalogue} from './supabase/functions/wave-data/macro.ts';console.log(JSON.stringify(catalogue(Date.parse('2026-10-21T14:00:00Z'))));"],cwd=ROOT))
 
 async def check(browser,width,lang):
     ctx = await browser.new_context(viewport={'width':width,'height':900},has_touch=width<600)
@@ -35,7 +35,7 @@ async def check(browser,width,lang):
             if sid:
                 if REAL_DATA:
                     await route.fulfill(json=REAL_DATA['histories'][sid]);return
-                await route.fulfill(json={'id':sid,'status':'current_vintage','history_basis':'latest_revised','fetched_at':'2026-10-14T20:00:00Z','points':[{'period':f'2026-{m:02}-01','value':3+m*.1} for m in range(1,10)]})
+                await route.fulfill(json={'id':sid,'status':'current_vintage','history_basis':'latest_revised','fetched_at':'2026-10-21T14:00:00Z','points':[{'period':f'2026-{m:02}-01','value':3+m*.1} for m in range(1,10)]})
             else:await route.fulfill(json=CATALOGUE)
         elif u.path.endswith('/api/macro-news'):await route.fulfill(json={'stories':[],'topics':{}})
         else:await route.fulfill(status=404,json={'error':'Outside isolated Macro test'})
@@ -52,6 +52,10 @@ async def check(browser,width,lang):
     assert all(c['width']>=44 and c['height']>=44 for c in cards),cards
     assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
     assert await page.locator('.macro-indicator .macro-contributions').count()==0
+    assert await page.locator('.macro-indicator polyline').count()==0
+    for sid in ['cpi','core_cpi']:
+        assert await page.locator('[data-macro-id='+sid+'] .macro-column').count() == (24 if REAL_DATA else 9)
+
     await page.locator('[data-macro-id=nfp]').focus()
     await page.keyboard.press('Enter')
     await page.locator('#macroDialog[open]').wait_for()
@@ -75,6 +79,12 @@ async def check(browser,width,lang):
     assert '-0.037' in await page.locator('#macroDetail').inner_text()
     await page.locator('#macroDialog').evaluate('(e)=>e.scrollTop=0')
     await page.screenshot(path=str(OUT/f'{width}-{lang}-cpi.png'),full_page=True)
+    assert await page.locator('#macroReleaseSelect option').count()==4
+    await page.locator('#macroReleaseSelect').select_option('cpi:2026-08-12')
+    assert '2026-07-01' in await page.locator('#macroDetail').inner_text()
+    assert await page.locator('.macro-contribution').count()==0
+    assert await page.locator('#macroDetail details[open] tbody tr').count()==(60 if REAL_DATA else 9)
+    assert await page.locator('#macroDetail polyline').count()==0
     await page.locator('#macroDialogClose').click()
     for sid in ['gdp','pce']:
         await page.locator('[data-macro-id='+sid+']').click()

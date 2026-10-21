@@ -9,12 +9,13 @@
   function status(s){return ({loading:t('Loading','טוען'),unavailable:t('Unavailable','לא זמין'),license_unverified:t('License unverified','רישיון לא אומת'),stale:t('Stale','לא מעודכן'),partial:t('Incomplete components','רכיבים חסרים'),unreconciled:t('Components do not reconcile','הרכיבים אינם מתיישבים'),current_vintage:t('Revised history','היסטוריה מעודכנת')})[s]||s;}
   function latest(s){return s.releases.length?s.releases[s.releases.length-1]:null;}
   function chart(points,expanded,unit){
-    if(points.length<2)return '<div class="macro-empty">'+(expanded?t('History unavailable','היסטוריה לא זמינה'):'')+'</div>';
+    if(!points.length)return '<div class="macro-empty">'+(expanded?t('History unavailable','היסטוריה לא זמינה'):'')+'</div>';
     var w=expanded?Math.max(280,Math.min(760,window.innerWidth<600?window.innerWidth-24:window.innerWidth*.94-48)):210,h=expanded?280:58,left=expanded?65:5,right=expanded?40:5,top=expanded?22:5,bottom=expanded?60:5;
     var min=Math.min.apply(null,points.map(function(p){return p.value;})),max=Math.max.apply(null,points.map(function(p){return p.value;}));
-    var pad=(max-min||1)*.12;min-=pad;max+=pad;
+    min=Math.min(0,min);max=Math.max(0,max);
+    var pad=(max-min||1)*.12;if(min<0)min-=pad;max+=pad;
     var start=Date.parse(points[0].period),end=Date.parse(points[points.length-1].period);
-    function x(p){return left+(Date.parse(p.period)-start)/(end-start||1)*(w-left-right);}
+    function x(p){return left+(points.indexOf(p)+.5)/points.length*(w-left-right);}
     function y(v){return top+(max-v)/(max-min)*(h-top-bottom);}
     var axes='';
     if(expanded){
@@ -22,7 +23,9 @@
       [0,Math.floor((points.length-1)/3),Math.floor((points.length-1)*2/3),points.length-1].filter(function(v,i,a){return a.indexOf(v)===i;}).forEach(function(i){axes+='<text x="'+x(points[i])+'" y="'+(h-36)+'" text-anchor="middle">'+points[i].period.slice(0,7)+'</text>';});
       axes+='<text x="'+left+'" y="14">'+esc(unit)+'</text><text x="'+(w/2)+'" y="'+(h-8)+'" text-anchor="middle">'+t('Reference period (YYYY-MM)','תקופת ייחוס (YYYY-MM)')+'</text>';
     }
-    return '<svg dir="ltr" viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+esc(unit+' '+points[0].period+' – '+points[points.length-1].period)+'">'+axes+'<polyline fill="none" stroke="#67e8f9" stroke-width="'+(expanded?2:3)+'" points="'+points.map(function(p){return x(p)+','+y(p.value);}).join(' ')+'"/></svg>';
+    var barWidth=Math.min(expanded?32:12,(w-left-right)/points.length*.72);
+    var bars=points.map(function(p){return '<rect class="macro-column" x="'+(x(p)-barWidth/2)+'" y="'+Math.min(y(0),y(p.value))+'" width="'+barWidth+'" height="'+Math.max(1,Math.abs(y(p.value)-y(0)))+'" fill="'+(p.value<0?'#fb7185':'#67e8f9')+'"><title>'+esc(p.period+' · '+num(p.value)+' '+unit)+'</title></rect>';}).join('');
+    return '<svg dir="ltr" viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+esc(unit+' '+points[0].period+' – '+points[points.length-1].period)+'">'+axes+'<line x1="'+left+'" x2="'+(w-right)+'" y1="'+y(0)+'" y2="'+y(0)+'" stroke="#64748b"/>'+bars+'</svg>';
   }
   function register(s,h){
     if(!window.WaveSources)return;
@@ -37,8 +40,9 @@
     var value=useHistory?p.value:r?r.actual:null,period=useHistory?p.period:r?r.period:null;
     var label=useHistory?status(h.status):r?t('Verified release','פרסום מאומת'):status(h.status);
     if(!useHistory&&r&&Date.now()-Date.parse(r.released_at)>45*86400000)label=t('Older release','פרסום ישן');
-    var points=!useHistory&&r?s.releases.map(function(x){return {period:x.period,value:x.actual};}):h.points;
-    return '<button type="button" class="macro-indicator" data-macro-id="'+s.id+'" aria-haspopup="dialog"><span class="macro-indicator-name">'+esc(he()?s.he:s.name)+'</span><strong dir="ltr">'+num(value)+'</strong><span class="macro-unit" dir="ltr">'+esc(s.unit)+'</span>'+chart(points,false,s.unit)+'<span class="macro-period" dir="ltr">'+esc(period?period.slice(0,s.frequency==='weekly'?10:7):'—')+'</span><span class="macro-state">'+esc(label)+'</span></button>';
+    var points=h.points.length?h.points:s.releases.map(function(x){return {period:x.period,value:x.actual};});
+    var chartLabel=h.points.length?t('Revised observations','תצפיות מעודכנות'):t('Recorded releases','פרסומים שנשמרו');
+    return '<button type="button" class="macro-indicator" data-macro-id="'+s.id+'" aria-haspopup="dialog"><span class="macro-indicator-name">'+esc(he()?s.he:s.name)+'</span><strong dir="ltr">'+num(value)+'</strong><span class="macro-unit" dir="ltr">'+esc(s.unit)+'</span>'+chart(points.slice(-24),false,s.unit)+'<span class="macro-state">'+chartLabel+'</span>'+'<span class="macro-period" dir="ltr">'+esc(period?period.slice(0,s.frequency==='weekly'?10:7):'—')+'</span><span class="macro-state">'+esc(label)+'</span></button>';
   }
   function render(){
     var host=document.getElementById('macroDashboard');if(!host)return;
@@ -55,6 +59,7 @@
     var releaseId=document.getElementById('macroReleaseSelect')&&document.getElementById('macroReleaseSelect').value;
     var r=s.releases.find(function(x){return x.id===releaseId;})||latest(s);
     var html='<p class="macro-measure" dir="ltr">'+esc(s.unit+' · '+s.sa+' · '+s.frequency)+'</p>';
+    html+='<p class="macro-coverage">'+s.releases.length+' '+t('recorded releases','פרסומים שנשמרו')+' · '+h.points.length+' '+t('revised observations','תצפיות מעודכנות')+'</p>';
     if(r){
       html+='<label for="macroReleaseSelect">'+t('Release / vintage','פרסום / גרסה')+'</label> <select id="macroReleaseSelect">'+s.releases.slice().reverse().map(function(x){return '<option value="'+x.id+'"'+(x.id===r.id?' selected':'')+'>'+x.vintage+' · '+x.period.slice(0,7)+'</option>';}).join('')+'</select>';
       html+='<div class="macro-release-metrics">'+[[t('Actual','בפועל'),r.actual],[t('Consensus','קונצנזוס'),r.consensus?r.consensus.value:null],[t('Prior reported','קודם שדווח'),r.prior],[t('Prior revised','קודם מתוקן'),r.revised_prior]].map(function(x){return '<div><span>'+x[0]+'</span><strong dir="ltr">'+num(x[1])+'</strong></div>';}).join('')+'</div>';
@@ -73,7 +78,7 @@
       }else html+='<p class="macro-state">'+t('Verified decomposition unavailable for this release.','פירוק מאומת אינו זמין לפרסום זה.')+'</p>';
     }else html+='<p class="macro-state">'+t('Release snapshots unavailable.','גרסאות פרסום אינן זמינות.')+'</p>';
     html+='<h3>'+t('Current revised history','היסטוריה לפי הנתונים המעודכנים')+'</h3><p class="macro-state">'+esc(status(h.status))+'</p>'+chart(h.points,true,s.unit);
-    if(h.points.length)html+='<details><summary>'+t('Observation values','ערכי התצפיות')+'</summary>'+table([t('Reference period','תקופת ייחוס'),s.unit],h.points.map(function(p){return [p.period,num(p.value)];}))+'</details>';
+    if(h.points.length)html+='<details open><summary>'+t('Observation values','ערכי התצפיות')+'</summary>'+table([t('Reference period','תקופת ייחוס'),s.unit],h.points.map(function(p){return [p.period,num(p.value)];}))+'</details>';
     if(h.fetched_at)html+='<p>'+t('Retrieved','נשלף')+': <bdi>'+esc(h.fetched_at)+'</bdi></p>';
     html+=componentDetails(s);
     // Methodology/source details stay in the central registry per AGENTS.md.

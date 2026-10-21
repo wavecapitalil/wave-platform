@@ -86,3 +86,13 @@ test('quarterly freshness uses period end, not the quarter-start timestamp',asyn
  assert.equal(observationStale('2026-09-01','monthly',now),false);
  assert.equal(observationStale('2026-08-01','weekly',now),true);
 });
+test('bounded CPI archive preserves separate annual headline/core vintages and excludes unverified past captures',()=>{
+ const c=catalogue(Date.parse('2026-10-21T14:00:00Z'));
+ for(const [id,expected] of [['cpi',[3.5,3.4,3.4,3.7]],['core_cpi',[2.6,2.5,2.4,2.6]]]){
+  const s=c.series.find(x=>x.id===id);assert.deepEqual(s.releases.map(r=>r.actual),expected);
+  assert.ok(s.releases.every(r=>r.unit==='% YoY'&&r.sa==='NSA'&&r.consensus===null));
+  assert.ok(s.releases.slice(0,3).every(r=>r.components.length===0&&r.source.includes('/archives/')));
+  assert.equal(s.releases[0].prior,null);assert.equal(s.releases[1].prior,s.releases[0].actual);
+ }
+ assert.equal(catalogue(Date.parse('2026-10-20')).series.find(s=>s.id==='cpi').releases.length,0);
+});
