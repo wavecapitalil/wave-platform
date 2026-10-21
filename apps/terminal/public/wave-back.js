@@ -41,6 +41,6 @@
   document.head.appendChild(s);
 
   document.body.insertBefore(bar, document.body.firstChild);
-  // the terminal's phone menu measures where its header ends; let it measure again now that the bar is in
-  try { dispatchEvent(new Event('resize')); } catch (e) {}
+  // No synthetic resize here: the terminal closes its phone menu on every resize, and it already measures its
+  // header on DOMContentLoaded, which runs after this deferred script has added the bar.
 })();
