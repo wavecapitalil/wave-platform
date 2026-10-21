@@ -302,6 +302,8 @@ async def run_viewport(browser, name, width, height):
     # Fundamental comparison: two companies, multiple KPIs, real chart + table.
     await page.evaluate("navigate('fundchart')")
     await page.locator("#erFinancialEngine").wait_for(state="visible", timeout=15000)
+    if not await page.locator(".er-chart-more").evaluate("el => el.open"):
+        await page.locator(".er-chart-more summary").click()
     await page.locator("#fcTicker1").fill("MSFT")
     await page.locator("#fcTicker2").fill("HOOD")
     net_margin=page.locator("#fcMetricPills button", has_text="Net Margin")
