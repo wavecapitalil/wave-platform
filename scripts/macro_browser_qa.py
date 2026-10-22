@@ -35,7 +35,7 @@ async def check(browser,width,lang):
             if sid:
                 if REAL_DATA:
                     await route.fulfill(json=REAL_DATA['histories'][sid]);return
-                await route.fulfill(json={'id':sid,'status':'current_vintage','history_basis':'latest_revised','fetched_at':'2026-10-14T20:00:00Z','points':[{'period':f'2026-{m:02}-01','value':3+m*.1} for m in range(1,10)]})
+                await route.fulfill(json={'id':sid,'status':'current_vintage','history_basis':'latest_revised','fetched_at':'2026-10-14T20:00:00Z','points':[{'period':f'2026-{m:02}-01','value':-2 if sid=='gdp' and m==1 else 3+m*.1} for m in range(1,10)]})
             else:await route.fulfill(json=CATALOGUE)
         elif u.path.endswith('/api/macro-news'):await route.fulfill(json={'stories':[],'topics':{}})
         else:await route.fulfill(status=404,json={'error':'Outside isolated Macro test'})
@@ -46,6 +46,11 @@ async def check(browser,width,lang):
     await page.evaluate("navigate('macro')")
     await page.wait_for_function("document.querySelectorAll('.macro-indicator').length===13")
     await page.wait_for_function("document.querySelector('[data-macro-id=pce] strong').textContent !== '—'")
+    await page.wait_for_function("document.querySelectorAll('.macro-indicator svg').length===11")
+    assert await page.locator('#macroDashboard polyline').count()==0
+    for sid in ['cpi','core_cpi','unemployment']:
+        assert await page.locator('[data-macro-id='+sid+'] .macro-column').count()>1
+    assert await page.locator('.macro-indicator .macro-column').evaluate_all("els=>els.every(e=>['x','y','width','height'].every(a=>Number.isFinite(Number(e.getAttribute(a)))))")
     await page.locator('.inflation .macro-indicator').first.wait_for(state='visible')
     cards=await page.locator('.inflation .macro-indicator').evaluate_all('(els)=>els.map(e=>{let r=e.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height}})')
     assert len({round(c['y']) for c in cards})==1,cards
@@ -55,6 +60,8 @@ async def check(browser,width,lang):
     await page.locator('[data-macro-id=nfp]').focus()
     await page.keyboard.press('Enter')
     await page.locator('#macroDialog[open]').wait_for()
+    assert await page.locator('#macroDialog polyline').count()==0
+    assert await page.locator('#macroDialog .macro-column').count()>0
     assert await page.locator('.macro-contribution').count()==11
     assert await page.locator('.macro-contribution .negative').count()==5
     assert await page.locator('#macroDialogClose').evaluate('(e)=>document.activeElement===e')
@@ -79,6 +86,8 @@ async def check(browser,width,lang):
     for sid in ['gdp','pce']:
         await page.locator('[data-macro-id='+sid+']').click()
         await page.locator('#macroComponentPeriod').wait_for()
+        if sid=='gdp':
+            assert await page.locator('#macroDialog .macro-column.negative').count()>0
         assert await page.locator('.macro-component-section table tbody tr').count()==(5 if sid=='gdp' else 6)
         content=await page.locator('.macro-component-section').inner_text()
         assert ('-0.02' in content) if sid=='gdp' else ('% MoM' in content and '% YoY' in content)
