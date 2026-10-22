@@ -82,3 +82,12 @@ intentionally empty; their missing chart states are not live provider failures.
 The valuation model still computes EV from EBIT times the scenario multiple,
 then adds cash and subtracts modeled debt and other claims before dividing by
 forecast shares. No merge or deployment is part of this repair.
+
+The approved publication clarification keeps percentage units unchanged. The
+normal scenario input is now explicitly labeled annual share count change,
+positive for dilution and negative for buybacks. The dated starting total is a
+read only summary; correcting that source balance is a separate collapsed advanced
+section. Chrome verified two annual steps from 2,530 million: zero gives 2,530,
+positive 10 percent gives 3,061.3 and negative 10 percent gives 2,049.3 million.
+These independent scenario changes survived reload. The updated suite has 188
+passing tests and one preexisting skip. Publication is separately authorized.

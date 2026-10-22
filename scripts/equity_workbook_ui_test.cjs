@@ -243,3 +243,14 @@ test('reviewed annual share basis is used with its actual date, never as latest'
  const a=app({snapshots:data});assert.equal(a.byId.get('vw-start-shares').value,2530);assert.equal(a.byId.get('vw-start-date').value,'2025-12-31');assert.match(a.byId.get('vw-start-status').textContent,/צילום שנתי/);
  fields.latest_shares_outstanding.status='ambiguous';const b=app({snapshots:data});assert.equal(b.byId.get('vw-start-shares').value,'');
 });
+
+test('normal share control is percentage change and source balance is advanced',()=>{
+ const storage=new Map(),a=app({storage});
+ assert.match(a.byId.get('valuationRoot').html,/<details id="vw-share-source-details"/);
+ assert.match(a.byId.get('vw-tbody').html,/שינוי שנתי במספר המניות/);
+ const start=Number(a.byId.get('vw-start-shares').value),bull=a.byId.get('vw-summary-bull').textContent;
+ a.input('shareGrowth',0,0);assert.match(a.output('shares',0),new RegExp(start.toLocaleString('he-IL',{maximumFractionDigits:1}).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')));
+ a.input('shareGrowth',0,10);a.input('shareGrowth',1,-10);assert.equal(a.byId.get('vw-summary-bull').textContent,bull);
+ const b=app({storage});assert.equal(b.byId.get('vw-cell-shareGrowth-0').value,'10');assert.equal(b.byId.get('vw-cell-shareGrowth-1').value,'-10');
+ b.byId.get('vw-reset').handlers.click();assert.equal(b.byId.get('vw-cell-shareGrowth-0').value,'0');assert.equal(b.byId.get('vw-start-shares').value,start);
+});
