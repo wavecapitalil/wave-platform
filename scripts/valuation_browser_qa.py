@@ -154,13 +154,13 @@ async def check(browser, name, width, height, lang="he"):
     await valuation_link.click()
     assert await page.locator("#er-panel-valuation").is_visible()
     assert page.url.endswith("#valuation")
-    # A reload and the legacy route must retain the full shell and selected item.
+    # A reload and the legacy route retain the full shell and the saved Apple draft.
     await page.reload(wait_until="domcontentloaded")
-    await page.locator("#vw-summary-base").filter(has_text="$217.04").wait_for(timeout=30000)
+    await page.locator("#vw-summary-base").filter(has_text=model_price).wait_for(timeout=30000)
     assert await page.locator('#items-equities [aria-current="page"]').get_attribute("data-page") == "research"
     await page.goto("http://127.0.0.1:8765/terminal.html#valuation", wait_until="domcontentloaded")
     await page.wait_for_url("**/terminal_app.html#valuation")
-    await page.locator("#vw-summary-base").filter(has_text="$217.04").wait_for(timeout=30000)
+    await page.locator("#vw-summary-base").filter(has_text=model_price).wait_for(timeout=30000)
     assert await page.locator("#terminalMenuButton").is_visible()
     assert await page.locator(".top-nav").is_visible()
     # Source navigation and return do not expose private admin navigation.
