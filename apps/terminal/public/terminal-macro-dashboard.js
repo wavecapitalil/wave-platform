@@ -24,7 +24,8 @@
     var axes='';
     if(expanded){
       [min,(min+max)/2,max].forEach(function(v){axes+='<line x1="'+left+'" x2="'+(w-right)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="#334155"/><text x="'+(left-8)+'" y="'+(y(v)+4)+'" text-anchor="end">'+esc(value(v))+'</text>';});
-      [0,Math.floor((points.length-1)/3),Math.floor((points.length-1)*2/3),points.length-1].filter(function(v,i,a){return a.indexOf(v)===i;}).forEach(function(i){axes+='<text x="'+x(points[i])+'" y="'+(h-36)+'" text-anchor="'+(i===0?'start':i===points.length-1?'end':'middle')+'">'+period(points[i].period.slice(0,7))+'</text>';});
+      var tickCount=Math.min(points.length,5,Math.max(2,Math.floor((w-left-right)/100)+1));
+      Array.from({length:tickCount},function(_,i){return tickCount===1?0:Math.round(i*(points.length-1)/(tickCount-1));}).forEach(function(i){axes+='<text class="macro-axis-period" x="'+x(points[i])+'" y="'+(h-36)+'" text-anchor="'+(i===0?'start':i===points.length-1?'end':'middle')+'">'+period(points[i].period.slice(0,7))+'</text>';});
       axes+='<text x="'+left+'" y="14" text-anchor="start">'+esc(unit)+'</text><text x="'+(w/2)+'" y="'+(h-8)+'" text-anchor="middle">'+t('Reference period (YYYY/MM)','תקופת ייחוס (YYYY/MM)')+'</text>';
     }
     var baseline='<line class="macro-zero" x1="'+left+'" x2="'+(w-right)+'" y1="'+y(0)+'" y2="'+y(0)+'" stroke="#64748b"/>';

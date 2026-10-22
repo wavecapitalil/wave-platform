@@ -88,6 +88,7 @@ async def check(browser,width,lang):
         await page.locator('#macroComponentPeriod').wait_for()
         if sid=='gdp':
             assert await page.locator('#macroDialog .macro-column.negative').count()>0
+        assert await page.locator('#macroDialog .macro-axis-period').evaluate_all("els=>{const boxes=els.map(e=>e.getBBox()).sort((a,b)=>a.x-b.x);return boxes.every((b,i)=>i===0||boxes[i-1].x+boxes[i-1].width+3<=b.x)}")
         assert await page.locator('.macro-component-section table tbody tr').count()==(5 if sid=='gdp' else 6)
         content=await page.locator('.macro-component-section').inner_text()
         assert ('-0.02' in content) if sid=='gdp' else ('% MoM' in content and '% YoY' in content)
