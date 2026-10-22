@@ -36,3 +36,49 @@ In the full Terminal shell, the existing main pane owns vertical scrolling; the 
 Run the node model/UI/adapter/route/private-access/Company Research tests listed in `.github/workflows/equity-valuation.yml`, syntax checks, static contracts and Flask route contracts. `scripts/valuation_browser_qa.py` exercises the full Terminal with fixture financial responses in real Chromium at desktop, 750px embed, iPad landscape/portrait and phone widths. Screenshots/report are retained as CI artifacts. This fixture browser test is separate from real deployed API smoke tests.
 
 Live release smoke checks should cover AAPL, MSFT, CSCO, malformed tickers, quote/fiscal dates, null fields, existing Cisco ratios and anonymous owner-admin denials. Regenerate the source catalog with `python scripts/build-calculation-catalog.py` whenever included code changes.
+
+## October 22 valuation repair
+
+The META live response was missing both annual and latest outstanding shares.
+Its 2,574 million diluted EPS shares were a period average and were not used.
+The linked result warning concealed that root cause behind dependent outputs.
+Independent scenario multiples already existed in the current interface.
+
+The adapter now includes a deliberately bounded reconciliation from META's
+[2025 annual filing](https://www.sec.gov/Archives/edgar/data/1326801/000162828026003942/meta-20251231.htm),
+balance sheet and Note 12. Class A and Class B have equivalent conversion rights.
+Reported annual shares in millions are 2,187 plus 343 for 2025 and 2,190 plus 344
+for 2024. Each component retains the filing and fiscal date. This reconciliation
+requires CIK 1326801, the exact reviewed accession and an eligible date; it cannot
+overwrite a conflicting or explicitly null observation, or survive a known
+subsequent split. A different filing requires a new review. Earlier years remain
+missing. No EPS average, share issuance total or market capitalization is used.
+
+The latest count remains missing in the API. Only when it is missing, rather than
+ambiguous, the UI can start from the reviewed annual count, prominently labeled
+with its actual date and annual basis. Manual entries remain unverified. This is
+an annual valuation starting basis, not a claim to know current shares.
+
+Scenario drafts now persist separately by ticker and fiscal base in local browser
+storage. Annual assumptions, horizon, selected scenario and manual starting
+shares/reference inputs survive reload. Existing report snapshots are untouched.
+Scenario reset changes only that scenario; restoring reported shares clears only
+the manual share override. Quick multiples remain independent and apply only to
+the selected horizon. Missing commercial paper retains the existing editable zero
+forecast assumption, now also labeled as an assumption beside the quick input.
+
+Validation on October 22: 187 passing Node model, UI, adapter, route, calculation,
+access and consensus checks, one preexisting skipped static demo test; static and
+Flask route contracts passed. Actual SEC CompanyFacts was run through the amended
+adapter and returned annual shares of 2,530 million while retaining a missing
+latest count. Chrome UI checks used that amended META response and existing AAPL
+and MSFT fixtures in an isolated local preview. Checked scenario independence,
+1 and 10 year controls, an independent second year multiple, 10 percent dilution,
+reload persistence, active scenario reset, missing shares, reported share reset,
+multiple tickers, Hebrew desktop and a 390 by 844 phone viewport. Phone document
+width equaled viewport width. The unrelated market APIs in the preview were
+intentionally empty; their missing chart states are not live provider failures.
+
+The valuation model still computes EV from EBIT times the scenario multiple,
+then adds cash and subtracts modeled debt and other claims before dividing by
+forecast shares. No merge or deployment is part of this repair.

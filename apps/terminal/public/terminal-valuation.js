@@ -99,7 +99,31 @@ function editSentence(key,index,previous,value,before,after,filled){
  document.getElementById('vw-change-sentence').textContent=prefix+message;
 }
 
-function shareField(){return company&&company.fields&&(company.fields.latest_shares_outstanding||company.fields.shares_outstanding);}
+function draftKey(){return 'wave-valuation-draft-v1:'+company.symbol+':'+company.fiscal_year_end;}
+function saveDraft(){
+ if(!company)return;
+ try{window.localStorage.setItem(draftKey(),JSON.stringify({version:1,scenarios:scenarios,horizon:horizon,active:active,startingShares:startingShares.manual?startingShares:null,reference:reference.source==='manual'?reference:null}));}catch(e){/* Storage can be unavailable; in-memory editing remains usable. */}
+}
+function restoreDraft(){
+ try{
+ var draft=JSON.parse(window.localStorage.getItem(draftKey())||'null');
+ if(!draft||draft.version!==1||!draft.scenarios)return;
+ ids.forEach(function(id){var saved=draft.scenarios[id];if(!Array.isArray(saved)||saved.length!==10)return;
+  saved.forEach(function(a,i){if(!a||typeof a!=='object')return;Object.keys(scenarios[id][i]).forEach(function(key){if(Object.prototype.hasOwnProperty.call(a,key))scenarios[id][i][key]=key==='capitalConfirmed'?a[key]===true:n(a[key]);});});
+ });
+ if(Number.isInteger(draft.horizon)&&draft.horizon>=1&&draft.horizon<=10)horizon=draft.horizon;
+ if(ids.includes(draft.active))active=draft.active;
+ document.getElementById('vw-horizon').value=String(horizon);
+ if(draft.startingShares&&draft.startingShares.manual===true){startingShares={value:n(draft.startingShares.value),date:typeof draft.startingShares.date==='string'?draft.startingShares.date:'',manual:true};document.getElementById('vw-start-shares').value=startingShares.value===null?'':startingShares.value;document.getElementById('vw-start-date').value=startingShares.date;renderStartingShares();}
+ if(draft.reference&&draft.reference.source==='manual'){reference=Object.assign({},reference,{price:n(draft.reference.price),date:typeof draft.reference.date==='string'?draft.reference.date:'',source:'manual'});document.getElementById('vw-reference-price').value=reference.price===null?'':reference.price;document.getElementById('vw-reference-date').value=reference.date;renderReference();}
+ }catch(e){/* Malformed or obsolete drafts do not replace the usable defaults. */}
+}
+function shareField(){
+ var fields=company&&company.fields||{},latest=fields.latest_shares_outstanding,annual=fields.shares_outstanding;
+ // An explicitly reviewed annual basis is dated and labeled, never called latest.
+ if(latest&&latest.status==='missing'&&annual&&annual.status==='ok'&&annual.source==='SEC 10-K, reviewed annual share classes')return annual;
+ return latest||annual;
+}
 function resetStartingShares(){
  var field=shareField();startingShares={value:mil(field),date:field&&field.period_end||'',manual:false};
  document.getElementById('vw-start-shares').value=startingShares.value===null?'':startingShares.value;
@@ -108,7 +132,7 @@ function resetStartingShares(){
 function renderStartingShares(){
  var field=shareField(),valid=n(startingShares.value)>0&&n(startingShares.value)<=1e12&&validDate(startingShares.date)&&startingShares.date<=today();
  var source=startingShares.manual?L('User-entered · unverified','הזנה ידנית · לא מאומת'):field&&field.source||L('Missing','חסר');
- var legacy=!startingShares.manual&&company&&!(company.fields||{}).latest_shares_outstanding;
+ var legacy=!startingShares.manual&&company&&field!==(company.fields||{}).latest_shares_outstanding;
  document.getElementById('vw-start-status').textContent=source+' · '+(startingShares.date||'—')+(legacy?L(' · annual snapshot only; latest count unavailable',' · צילום שנתי בלבד; מספר עדכני אינו זמין'):'')+(!valid?' · '+L('Enter positive shares and a valid date','הזינו מספר מניות חיובי ותאריך תקין'):'');
  document.getElementById('vw-start-shares').setAttribute('aria-invalid',String(!valid));
  document.getElementById('vw-start-date').setAttribute('aria-invalid',String(!valid));
@@ -117,7 +141,7 @@ function renderStartingShares(){
 }
 function quickRows(){return rows.filter(function(r){return r.input;});}
 function renderQuick(){
- function control(r,id){var values=scenarios[id].slice(0,horizon).map(function(a){return a[r.key];}),same=values.every(function(v){return v===values[0];});return '<label for="vw-quick-'+id+'-'+r.key+'">'+r.label+' · '+r.unit+'<input id="vw-quick-'+id+'-'+r.key+'" type="number" inputmode="decimal" dir="ltr" data-quick="'+r.key+'" data-case="'+id+'" min="'+r.min+'" max="'+r.max+'" step="'+r.step+'" value="'+(same&&values[0]!==null?esc(values[0]):'')+'" placeholder="'+(same?'—':L('Varies by year','משתנה לפי שנה'))+'"></label>';}
+ function control(r,id){var values=scenarios[id].slice(0,horizon).map(function(a){return a[r.key];}),same=values.every(function(v){return v===values[0];});return '<label for="vw-quick-'+id+'-'+r.key+'">'+r.label+' · '+r.unit+(r.key==='shortDebt'&&histValue(last(),'shortDebt',history().length-1)===null?L(' (assumption, reported value unavailable)',' (הנחה, נתון מדווח אינו זמין)'):'')+'<input id="vw-quick-'+id+'-'+r.key+'" type="number" inputmode="decimal" dir="ltr" data-quick="'+r.key+'" data-case="'+id+'" min="'+r.min+'" max="'+r.max+'" step="'+r.step+'" value="'+(same&&values[0]!==null?esc(values[0]):'')+'" placeholder="'+(same?'—':L('Varies by year','משתנה לפי שנה'))+'"></label>';}
  var core=['growth','margin','shareGrowth','multiple','requiredReturn'];
  document.getElementById('vw-quick-panel').innerHTML=ids.map(function(id){return '<section class="vw-quick-card"><h3>'+names[id]+'</h3>'+quickRows().filter(function(r){return core.includes(r.key);}).map(function(r){return control(r,id);}).join('')+'<div id="vw-quick-result-'+id+'" class="vw-quick-result" aria-live="polite"></div><details class="vw-capital-details"><summary>'+L('Year-end balance assumptions · included in result','הנחות יתרות סוף שנה · כלולות בתוצאה')+'</summary>'+quickRows().filter(function(r){return !core.includes(r.key);}).map(function(r){return control(r,id);}).join('')+'</details></section>';}).join('');
 }
@@ -202,7 +226,7 @@ function renderSheet(){
  document.getElementById('vw-sheet-toolbar').hidden=!advanced;
  document.getElementById('vw-quick-panel').hidden=advanced;
  document.getElementById('vw-report-advanced-fields').hidden=!advanced;
- document.getElementById('vw-basic-guide').textContent=advanced?L('Edit each forecast year independently.','ערכו כל שנת תחזית בנפרד.'):L('One input applies to every forecast year in that scenario.','כל עריכה חלה על כל שנות התחזית באותו תרחיש.');
+ document.getElementById('vw-basic-guide').textContent=advanced?L('Edit each forecast year independently.','ערכו כל שנת תחזית בנפרד.'):L('Each scenario has its own multiple. Quick edits apply to its selected forecast years. Edits are saved in this browser by company and fiscal base.','לכל תרחיש מכפיל עצמאי. עריכה מהירה חלה על שנות התחזית הנבחרות שלו. העריכות נשמרות בדפדפן לפי חברה ושנת בסיס.');
  renderQuick();
  document.getElementById('vw-history-context').textContent=L('Latest reported FY ','שנת כספים מדווחת אחרונה ')+company.fiscal_year_end+' · '+L('Revenue: ','הכנסות: ')+f(mil(last().revenue))+' USD M · '+L('Operating margin: ','שיעור רווח תפעולי: ')+f(val(last().operating_margin_pct))+'%';
  document.getElementById('vw-mode-badge').textContent=advanced?L('Advanced · all 3 scenarios','מתקדם · כל 3 התרחישים'):L('Quick calculator · 3 scenarios','מחשבון מהיר · 3 תרחישים');
@@ -235,13 +259,15 @@ function updateResults(){
  fs.forEach(function(y,i){rows.filter(function(r){return !r.section&&!r.input;}).forEach(function(r){var cell=document.querySelector('[data-output="'+r.key+'-'+i+'"]');if(cell)cell.innerHTML='<span dir="ltr">'+f(y[r.key],['price','presentPrice'].includes(r.key)?2:1)+'</span>';});rows.filter(function(r){return r.input;}).forEach(function(r){var inp=document.getElementById('vw-cell-'+r.key+'-'+i);if(inp)inp.setAttribute('aria-invalid',String(['termDebt','shortDebt','leases'].includes(r.key)?(n(scenarios[active][i][r.key])===null||n(scenarios[active][i][r.key])<0||n(scenarios[active][i][r.key])>1e12):y.errors.some(function(e){return e.field===r.key;})));});});
  ids.forEach(function(id){var out=calculate(id).forecast,terminal=out[out.length-1];document.getElementById('vw-summary-'+id).textContent=terminal?money(terminal.price):'—';document.getElementById('vw-summary-sub-'+id).textContent='FY'+(y0+horizon)+' · '+L('price per share','מחיר למניה');var up=document.getElementById('vw-upside-'+id),ref=referencePrice();up.textContent=terminal&&terminal.upside!==null&&ref!==null?(terminal.upside>0?'+':'')+f(terminal.upside,1)+'% '+L('vs reference','מול מחיר ההשוואה'):L('No price comparison','ללא מחיר להשוואה');});
  var messages=[];
- var errFields=[...new Set(fs.flatMap(function(y){return y.errors.map(function(e){return e.field;});}))];
- if(errFields.length)messages.push(L('Some linked results need valid inputs: ','להשלמת חלק מהתוצאות יש להזין נתונים תקינים: ')+errFields.map(function(key){return (rows.find(function(r){return r.key===key;})||{}).label||key;}).join(', '));
+ if(result.errors.some(function(e){return e.year===0&&e.field==='shares';}))messages.push(startingShares.manual?L('Starting shares or their date are invalid. Enter a positive count in millions and a valid date.','מספר המניות בתחילת התחזית או התאריך אינם תקינים. הזינו מספר חיובי במיליונים ותאריך תקין.'):L('Reported starting shares are unavailable. Enter a dated total outstanding count from the filing, including all equivalent common classes. EPS averages cannot substitute. See Sources & calculation.','מספר המניות המדווח בתחילת התחזית אינו זמין. הזינו מספר מניות קיים ותאריך מהדוח, כולל כל סוגי המניות הרגילות השקולים. ממוצע EPS אינו תחליף. ראו מקורות וחישוב.'));
+ var inputErrors=result.errors.filter(function(e){return e.code!=='dependency'&&!(e.year===0&&e.field==='shares');});
+ var errFields=[...new Set(inputErrors.map(function(e){return (e.year?'FY'+(y0+e.year)+': ':'')+((rows.find(function(r){return r.key===e.field;})||{}).label||L('Debt components','רכיבי החוב'));}))];
+ if(errFields.length)messages.push(L('Missing or invalid inputs: ','נתונים חסרים או לא תקינים: ')+errFields.join(', '));
  if(fs.some(function(y){return y.warnings.includes('nonpositive_ebit');}))messages.push(L('A year with nonpositive EBIT has no meaningful EV/EBIT price.','בשנה שבה הרווח התפעולי אינו חיובי לא מוצג מחיר לפי EV/EBIT.'));
  if(fs.some(function(y){return y.warnings.includes('equity_deficit');}))messages.push(L('Negative equity stays visible; implied common-share price is floored at zero.','שווי הון שלילי נשאר מוצג; מחיר המניה המשתמע מוגבל לרצפת אפס.'));
  if(fs.some(function(y){return y.warnings.includes('extreme_assumptions');}))messages.push(L('Some assumptions are unusually large.','חלק מההנחות חריגות בגודלן.'));
  document.getElementById('vw-errors').textContent=messages.join(' ');
- updateQuickResults();
+ updateQuickResults();saveDraft();
 }
 function showFormula(key,index){selectedCell={key:key,index:index};document.getElementById('vw-fill-selected').disabled=false;if(['termDebt','shortDebt','leases'].includes(key))key='debt';var y=calculate(active).forecast[index],prev=index?calculate(active).forecast[index-1]:base(),labels={shareGrowth:L('Shares = prior shares × (1 + net change / 100). Includes issuance, SBC and buybacks once.','מניות = מספר קודם × (1 + שינוי נטו / 100). כולל הנפקות, תגמול מנייתי ורכישות עצמיות פעם אחת.'),requiredReturn:L('Discounted terminal price = future price / (1 + required return / 100)^year. No interim dividends or distributions are included.','מחיר סיום מהוון = מחיר עתידי / (1 + תשואה נדרשת / 100) בחזקת השנה. דיבידנדים וחלוקות ביניים אינם כלולים.'),growth:L('Revenue = prior revenue × (1 + growth). This changes operating profit and value in every later year.','הכנסות = הכנסות השנה הקודמת × (1 + צמיחה). השינוי עובר לרווח התפעולי ולשווי בכל השנים הבאות.'),margin:L('Operating profit = this year’s revenue × operating margin.','רווח תפעולי = הכנסות השנה × שיעור הרווח התפעולי.'),cash:L('Equity value = EV + year-end cash − debt − other claims. Cash must already reflect funding of buybacks.','שווי הון = שווי פעילות + מזומנים בסוף השנה − חוב − זכויות אחרות. המזומנים חייבים לשקף כבר את מימון הרכישות העצמיות.'),debt:L('Debt reduces common equity value one for one. Use the year-end balance after financing and buybacks.','כל דולר חוב מפחית דולר משווי ההון. יש להשתמש ביתרה בסוף השנה לאחר מימון ורכישות עצמיות.'),claims:L('Deduct preferred equity, minority interests and any non-common claims not already included in debt.','מפחיתים הון בכורה, זכויות מיעוט וזכויות אחרות שטרם נכללו בחוב.'),multiple:L('Enterprise value = operating profit × EV/EBIT. Price = (EV + cash − debt − other claims) / shares.','שווי פעילות = רווח תפעולי × EV/EBIT. מחיר = (שווי פעילות + מזומנים − חוב − זכויות אחרות) / מניות.')};
  document.getElementById('vw-formula').innerHTML='<b>ƒx</b><span><strong dir="ltr">FY'+(endYear(company.fiscal_year_end)+index+1)+'</strong> · '+labels[key]+'</span><span class="vw-formula-value" dir="ltr">'+money(key==='requiredReturn'?y.presentPrice:y.price)+'</span>';
@@ -263,7 +289,7 @@ async function loadCompany(symbol){
  if(!['ok','partial'].includes(data.status)||!validDate(data.fiscal_year_end))throw new Error('Unsupported valuation base');
  var latestHistory=data.history.map(function(y){return y.period_end;}).filter(validDate).sort().at(-1);
  if(latestHistory!==data.fiscal_year_end)throw new Error('History and model base fiscal years do not match');
- company=data;restoreReport();resetStartingShares();resetReference(data.fields&&data.fields.current_price);buildScenarios();renderSheet();document.getElementById('vw-symbol').value=symbol;
+ company=data;restoreReport();resetStartingShares();resetReference(data.fields&&data.fields.current_price);buildScenarios();restoreDraft();renderSheet();document.getElementById('vw-symbol').value=symbol;
  status.textContent=window.WAVE_VALUATION_SNAPSHOTS?L('SEC actuals · snapshot ','נתוני עבר SEC · צילום ')+(window.WAVE_VALUATION_SNAPSHOTS.snapshot_date||data.as_of.slice(0,10))+L(' · not live market data',' · אינם נתוני שוק בזמן אמת'):L('SEC annual actuals · dates shown by year','נתוני עבר שנתיים SEC · תאריכים בכל עמודה');
  registerCompany();if(window.WaveResearch&&WaveResearch.syncValuation)WaveResearch.syncValuation(symbol);
  }catch(e){if(id!==requestId)return;status.textContent=window.WAVE_VALUATION_SNAPSHOTS?L('This review demo contains sourced Apple and Microsoft history. Select AAPL or MSFT.','הדמו כולל היסטוריה מאומתת של Apple ו־Microsoft. בחרו AAPL או MSFT.'):L('Annual data could not be loaded. Try another supported company.','לא ניתן לטעון נתונים שנתיים. נסו חברה נתמכת אחרת.');if(company&&!document.getElementById('vw-loaded').hidden)status.textContent+=' '+L('Still showing ','עדיין מוצגים נתוני ')+company.symbol+'.';if(!company){document.getElementById('vw-loaded').hidden=true;document.getElementById('vw-empty').hidden=false;}}
