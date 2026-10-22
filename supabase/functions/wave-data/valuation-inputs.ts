@@ -215,6 +215,21 @@ function annualGrowth(ctx: Context, start: string, end: string, revenue: Valuati
   }
   return unavailable(ctx, '%', 'A positive, contiguous prior-FY revenue fact with the same concept, currency and filing is required.', 'missing', start, end);
 }
+// Reviewed dimensional facts omitted by CompanyFacts. Deliberately bounded to
+// this issuer, filing, fiscal dates and economic share basis, never a live count.
+// META 2025 10-K, balance sheet and Note 12: A and B convert one for one.
+function reviewedAnnualShares(ctx: Context, end: string, accession?: string): ValuationField | null {
+  const counts: Record<string, number[]> = {'2025-12-31': [2187, 343], '2024-12-31': [2190, 344]};
+  if (Number(ctx.cik) !== 1326801 || accession !== '0001628280-26-003942' || ctx.today < '2026-01-29' || !counts[end]) return null;
+  if (splitInPeriod(ctx, end, ctx.today)) return null;
+  const url = 'https://www.sec.gov/Archives/edgar/data/1326801/000162828026003942/meta-20251231.htm';
+  const components: ValuationField[] = counts[end].map((v, i) => ({value: v * 1e6, unit: 'shares', period_start: null, period_end: end,
+    source: 'SEC 10-K, reviewed Class ' + (i ? 'B' : 'A') + ' outstanding shares', url, status: 'ok', reason: 'Reported in millions; balance sheet, not weighted-average EPS shares.',
+    accession, filed: '2026-01-29', form: '10-K'}));
+  return {...derived(ctx, components.reduce((sum, x) => sum + x.value!, 0), 'shares', null, end,
+    'Reviewed annual Class A plus Class B outstanding shares, with one-for-one conversion (Note 12). Dated annual basis only, not the latest share count. Rounded to reported millions.', components),
+    source: 'SEC 10-K, reviewed annual share classes', url};
+}
 function yearInputs(ctx: Context, start: string, end: string) {
   const revenue = nonnegative(ctx, atPeriod(ctx, REVENUE, 'USD', start, end));
   const accession = revenue.accession;
@@ -226,6 +241,8 @@ function yearInputs(ctx: Context, start: string, end: string) {
   let shares = nonnegative(ctx, historicalInstant(ctx, ['CommonStockSharesOutstanding'], 'shares', end, accessions), true);
   const basisIssue = shareBasis(ctx, shares, end, shares.accession) || (splitInPeriod(ctx, new Date(Date.parse(end) + DAY).toISOString().slice(0, 10), ctx.today) ? 'A subsequent stock split makes the historical share count incompatible with the current quote basis; manual reconciliation is required.' : null);
   if (basisIssue && shares.value != null) shares = {...shares, value: null, status: 'ambiguous', reason: basisIssue};
+  // Never override a conflicting observation. Use reviewed facts only for absent data.
+  if (shares.status === 'missing' && !observations(ctx, ['CommonStockSharesOutstanding'], 'shares', false).some(x => x.row.end === end && accessions.includes(x.row.accn))) shares = reviewedAnnualShares(ctx, end, accession) || shares;
   let repurchaseAccession = accession;
   let repurchased = unavailable(ctx, 'shares', 'No matching full-fiscal-year repurchase fact on a reconciled annual reporting basis.', 'missing', start, end);
   for (const accn of accessions) {
@@ -330,7 +347,7 @@ export function buildValuationInputs(symbol: string, cachedFacts: any, chartMeta
     symbol: String(symbol).trim().toUpperCase(), name: doc.entityName || cachedFacts?.company_name || String(symbol).toUpperCase(),
     currency, fiscal_year_end: latest?.end || null, fiscal_year_start: latest?.start || null, as_of: asOf,
     fetched_at: cachedFacts?.fetched_at || null, status: !supported ? 'unsupported' : fields.revenue.value == null ? 'unavailable' : warnings.length ? 'partial' : 'ok',
-    fields, history, warnings, logic_version: 'valuation_inputs_v3',
+    fields, history, warnings, logic_version: 'valuation_inputs_v4',
     methodology: [
       'Full-year actuals use USD, entity-wide US-GAAP facts from 10-K/10-K/A, with 350–380 day duration and exact period alignment. Later restatements replace earlier reports; fiscal-year labels are not inferred from filing year.',
       'USD annual financial history is independent of quote availability. Quotes require their own verified USD currency and timestamp; no FX or ADR conversion is performed.',
@@ -341,7 +358,7 @@ export function buildValuationInputs(symbol: string, cachedFacts: any, chartMeta
       'Cash means cash and equivalents. Debt is populated only from a reported total or complete non-overlapping debt-and-finance-lease aggregates in the same filing; absent components remain missing rather than zero.',
       'Reported long-term debt, commercial paper, their subtotal and finance-lease liabilities are separately labeled scopes. Their availability does not establish complete total debt; missing short-term debt is never assumed to be zero.',
       'Gross dilution and historical EV/EBIT remain unavailable. No current or historical multiple is fabricated from a current quote and old shares. No fair value or investment recommendation is supplied by this adapter.',
-      'SEC CompanyFacts omits custom taxonomy and dimensional disclosures. Missing data, unverified currency or class scope requires reviewed manual input.',
+      'SEC CompanyFacts omits custom taxonomy and dimensional disclosures. A bounded, reviewed annual class reconciliation may fill absent historical shares for the exact issuer, fiscal date and filing. Components and filing links are retained; it never populates latest_shares_outstanding or overrides conflicting observations. Other missing data requires reviewed manual input.',
     ],
     sources: [
       {title: 'SEC CompanyFacts API and scope', url: 'https://www.sec.gov/search-filings/edgar-application-programming-interfaces'},

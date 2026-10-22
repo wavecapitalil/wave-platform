@@ -358,3 +358,16 @@ test('latest shares retain split and multi-class safeguards',()=>{
  const f=fixture();add(f,'CommonStockClassASharesOutstanding','shares',[instant(50)]);assert.equal(result(f).fields.latest_shares_outstanding.value,null);
  const split=fixture();add(split,'StockholdersEquityNoteStockSplitConversionRatio1','pure',[{end:'2026-08-01',val:4,filed:'2026-09-01',form:'10-Q'}]);assert.equal(result(split).fields.latest_shares_outstanding.value,null);
 });
+
+test('reviewed META annual class totals fill only the exact missing filing basis', () => {
+  const f=fixture();f.document.cik=1326801;
+  for(const ns of Object.values(f.document.facts))for(const concept of Object.values(ns))for(const rows of Object.values(concept.units))for(const row of rows){row.accn='0001628280-26-003942';row.filed='2026-01-29';}
+  delete us(f).CommonStockSharesOutstanding;delete f.document.facts.dei.EntityCommonStockSharesOutstanding;
+  let r=result(f);assert.equal(r.fields.shares_outstanding.value,2530e6);assert.equal(r.fields.latest_shares_outstanding.value,null);
+  assert.equal(r.fields.shares_outstanding.components.length,2);assert.match(r.fields.shares_outstanding.url,/meta-20251231.htm$/);
+  assert.equal(r.history.find(y=>y.period_end==='2024-12-31').shares_outstanding.value,2534e6);
+  f.document.cik=123456;assert.equal(result(f).fields.shares_outstanding.value,null);f.document.cik=1326801;
+  add(f,'CommonStockSharesOutstanding','shares',[instant(null,'2025-12-31',{accn:'0001628280-26-003942',filed:'2026-01-29'})]);assert.equal(result(f).fields.shares_outstanding.value,null);
+  delete us(f).CommonStockSharesOutstanding;
+  add(f,'StockSplitConversionRatio','pure',[instant(2,'2026-06-01')]);assert.equal(result(f).fields.shares_outstanding.value,null);
+});

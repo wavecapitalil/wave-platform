@@ -222,3 +222,35 @@ test('advanced report preserves full worksheet and every optional Hebrew narrati
  a.byId.get('vw-advanced-toggle').handlers.click();assert.equal(a.byId.get('vw-report-advanced-fields').hidden,true);a.byId.get('vw-report-save').handlers.click();const quick=a.c.WaveValuationReport.render(a.c.WaveValuationReport.load(a.c.localStorage,'AAPL'));assert.match(quick,/data-template="regular"/);assert.doesNotMatch(quick,/<h2>טבלת התחזית המלאה/);assert.match(quick,/החפיר התחרותי/);
  const b=app({storage});assert.equal(b.byId.get('vw-report-notes').value,'notes '+long.trimEnd());
 });
+
+test('independent scenario multiples and horizon survive reload and scoped reset',()=>{
+ const storage=new Map();const a=app({storage});a.input('multiple',0,31);a.click({'data-scenario':'bull'});a.input('multiple',0,42);
+ a.byId.get('vw-horizon').handlers.change({target:{value:'3'}});
+ const b=app({storage});assert.equal(b.byId.get('vw-cell-multiple-0').value,'42');assert.match(b.byId.get('vw-thead').html,/FY2028E/);
+ b.click({'data-scenario':'base'});assert.equal(b.byId.get('vw-cell-multiple-0').value,'31');b.byId.get('vw-reset').handlers.click();
+ const c=app({storage});assert.equal(c.byId.get('vw-cell-multiple-0').value,'18');c.click({'data-scenario':'bull'});assert.equal(c.byId.get('vw-cell-multiple-0').value,'42');
+});
+test('root share errors are distinct from invalid scenario assumptions',()=>{
+ const data=JSON.parse(JSON.stringify(snapshots));const fields=data.snapshots.AAPL.fields;
+ fields.latest_shares_outstanding={value:null,status:'missing',unit:'shares',reason:'No dated count'};
+ const a=app({snapshots:data});assert.match(a.byId.get('vw-errors').textContent,/מספר המניות המדווח/);assert.doesNotMatch(a.byId.get('vw-errors').textContent,/shareChange/);
+ a.input('multiple',0,'');assert.match(a.byId.get('vw-errors').textContent,/FY2026/);assert.doesNotMatch(a.output('revenue',0),/—/);
+});
+test('reviewed annual share basis is used with its actual date, never as latest',()=>{
+ const data=JSON.parse(JSON.stringify(snapshots)),fields=data.snapshots.AAPL.fields;
+ fields.latest_shares_outstanding={value:null,status:'missing',unit:'shares'};
+ fields.shares_outstanding={...fields.shares_outstanding,value:2530e6,status:'ok',source:'SEC 10-K, reviewed annual share classes',period_end:'2025-12-31'};
+ const a=app({snapshots:data});assert.equal(a.byId.get('vw-start-shares').value,2530);assert.equal(a.byId.get('vw-start-date').value,'2025-12-31');assert.match(a.byId.get('vw-start-status').textContent,/צילום שנתי/);
+ fields.latest_shares_outstanding.status='ambiguous';const b=app({snapshots:data});assert.equal(b.byId.get('vw-start-shares').value,'');
+});
+
+test('normal share control is percentage change and source balance is advanced',()=>{
+ const storage=new Map(),a=app({storage});
+ assert.match(a.byId.get('valuationRoot').html,/<details id="vw-share-source-details"/);
+ assert.match(a.byId.get('vw-tbody').html,/שינוי שנתי במספר המניות/);
+ const start=Number(a.byId.get('vw-start-shares').value),bull=a.byId.get('vw-summary-bull').textContent;
+ a.input('shareGrowth',0,0);assert.match(a.output('shares',0),new RegExp(start.toLocaleString('he-IL',{maximumFractionDigits:1}).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')));
+ a.input('shareGrowth',0,10);a.input('shareGrowth',1,-10);assert.equal(a.byId.get('vw-summary-bull').textContent,bull);
+ const b=app({storage});assert.equal(b.byId.get('vw-cell-shareGrowth-0').value,'10');assert.equal(b.byId.get('vw-cell-shareGrowth-1').value,'-10');
+ b.byId.get('vw-reset').handlers.click();assert.equal(b.byId.get('vw-cell-shareGrowth-0').value,'0');assert.equal(b.byId.get('vw-start-shares').value,start);
+});
