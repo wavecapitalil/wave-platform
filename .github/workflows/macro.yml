@@ -22,7 +22,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Release and contribution invariants
-        run: node --test scripts/macro_test.mjs
+        run: node --test scripts/macro_test.mjs scripts/macro_chart_test.mjs
       - name: Static and syntax checks
         run: |
           node --check apps/terminal/public/terminal-macro-dashboard.js

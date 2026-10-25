@@ -1,3 +1,4 @@
+import {releaseCalendar,calendarFreshness} from './macro-calendar.ts';
 import {COMPONENTS} from './macro-components.ts';
 import {MACRO_RELEASES} from './macro-releases.ts';
 // Public series only. No provider credentials, consensus substitution or scheduled work.
@@ -35,7 +36,7 @@ export function validateRelease(r:any){
     if(Math.abs(residual)>(r.series==='nfp'?0.00001:0.055))throw Error('Contributions do not reconcile');
   }
   // A future consensus adapter must prove both access and a pre-release capture.
-  if(r.consensus!=null&&(!finite(r.consensus.value)||r.consensus.access_verified!==true||!r.consensus.source||!Number.isFinite(Date.parse(r.consensus.captured_at))||Date.parse(r.consensus.captured_at)>=Date.parse(r.released_at)))throw Error('Unverified consensus');
+  if(r.consensus!=null&&(r.consensus.unit!==s.unit||r.consensus.sa!==s.sa||r.consensus.period!==r.period||!/^https:\/\//.test(r.consensus.source)||!finite(r.consensus.value)||r.consensus.access_verified!==true||!r.consensus.source||!Number.isFinite(Date.parse(r.consensus.captured_at))||Date.parse(r.consensus.captured_at)>=Date.parse(r.released_at)))throw Error('Unverified consensus');
   return {...r,unit:s.unit,sa:s.sa,frequency:s.frequency,consensus:r.consensus||null,
     residual:r.components.length?Number((r.actual-r.components.reduce((a:number,x:any)=>a+x[1],0)).toFixed(6)):null};
 }
@@ -50,7 +51,7 @@ export function releaseSet(rows:any[]){
 }
 export function catalogue(now=Date.now()){
   const releases=releaseSet(MACRO_RELEASES).filter(r=>Date.parse(r.released_at)<=now&&Date.parse(r.verified_at)<=now);
-  return {country:'US',scope:'provisional',automation:'not_connected',generated_at:new Date(now).toISOString(),series:MACRO_SERIES.map(s=>({...s,releases:releases.filter(r=>r.series===s.id),status:s.fred?'available':'license_unverified',breakdown:Object.hasOwn(COMPONENTS,s.id)?s.id:null}))};
+  return {country:'US',scope:'provisional',automation:'not_connected',generated_at:new Date(now).toISOString(),series:MACRO_SERIES.map(s=>({...s,releases:releases.filter(r=>r.series===s.id),calendar:releaseCalendar(s.id,now),next_release:calendarFreshness(s.id,null,now).next_release,status:s.fred?'available':'license_unverified',breakdown:Object.hasOwn(COMPONENTS,s.id)?s.id:null}))};
 }
 export function parseHistory(csv:string,s:any,now=Date.now(),limit=60){
   const lines=csv.trim().split(/\r?\n/),header=lines.shift()?.replace(/^\uFEFF/,'').split(',');
@@ -71,27 +72,33 @@ export function parseHistory(csv:string,s:any,now=Date.now(),limit=60){
   }
   return points.slice(-limit);
 }
-export function observationStale(period:string,frequency:string,now:number){
-  const end=new Date(period+'T00:00:00Z');
-  if(frequency==='quarterly')end.setUTCMonth(end.getUTCMonth()+3,0);
-  else if(frequency==='monthly')end.setUTCMonth(end.getUTCMonth()+1,0);
-  return (now-end.getTime())/86400000>(frequency==='weekly'?21:frequency==='quarterly'?130:50);
+// Freshness is independent of transport success; no observation-age cutoff.
+function withFreshness(data:any,now:number,cached=false){
+  const period=(data.points||data.rows||[]).at(-1)?.period||null;
+  const f=calendarFreshness(data.id,period,now);
+  return {...data,...f,status:data.fetch_status==='failed'?'fetch_failed':f.freshness,cached,cache_age_seconds:data.fetched_at?Math.max(0,(now-Date.parse(data.fetched_at))/1000):null};
 }
+function failure(error:any){
+  if(error?.provider_status)return {code:'provider_http_error',message:'FRED returned HTTP '+error.provider_status,http_status:error.provider_status};
+  if(error?.name==='TimeoutError'||error?.name==='AbortError')return {code:'provider_timeout',message:'FRED request timed out'};
+  if(error instanceof TypeError)return {code:'provider_network_error',message:'FRED network request failed'};
+  return {code:'provider_data_error',message:error instanceof Error?error.message:'Invalid FRED response'};
+}
+function checkResponse(response:Response){if(!response.ok)throw Object.assign(new Error('Provider unavailable'),{provider_status:response.status});}
 const cache=new Map<string,any>();
 export async function history(id:string,fetcher=fetch,now=Date.now()){
   const s=MACRO_SERIES.find(s=>s.id===id);if(!s)throw Error('Unknown indicator');
   if(!s.fred)return {id,status:'license_unverified',points:[]};
   const prior=cache.get(id);
-  if(prior&&now-Date.parse(prior.fetched_at)>=0&&now-Date.parse(prior.fetched_at)<3600000)return {...prior,cached:true};
+  if(prior&&now-Date.parse(prior.fetched_at)>=0&&now-Date.parse(prior.fetched_at)<3600000)return withFreshness(prior,now,true);
   try{
     const response=await fetcher('https://fred.stlouisfed.org/graph/fredgraph.csv?id='+s.fred,{signal:AbortSignal.timeout(12000)});
-    if(!response.ok)throw Error('Provider unavailable');
+    checkResponse(response);
     const points=parseHistory(await response.text(),s,now);if(!points.length)throw Error('No observations');
-    const stale=observationStale(points.at(-1)!.period,s.frequency,now);
-    const data={id,points,status:stale?'stale':'current_vintage',fetched_at:new Date(now).toISOString(),source:'https://fred.stlouisfed.org/series/'+s.fred,release_dates_available:false,history_basis:'latest_revised',unit:s.unit,sa:s.sa,frequency:s.frequency};
-    cache.set(id,data);return data;
-  }catch{
-    return prior?{...prior,status:'stale',error:'Refresh failed; retained observation history'}:{id,status:'unavailable',points:[],error:'Official-series history unavailable through FRED'};
+    const data={id,points,fetch_status:'ok',fetched_at:new Date(now).toISOString(),source:'https://fred.stlouisfed.org/series/'+s.fred,release_dates_available:false,history_basis:'latest_revised',unit:s.unit,sa:s.sa,frequency:s.frequency};
+    cache.set(id,data);return withFreshness(data,now);
+  }catch(error){
+    return withFreshness({...prior,id,points:prior?.points||[],fetch_status:'failed',error:failure(error),attempted_at:new Date(now).toISOString()},now);
   }
 }
 
@@ -129,17 +136,17 @@ export function parseComponents(csv:string,id:string,now=Date.now()){
 export async function componentHistory(id:string,fetcher=fetch,now=Date.now()){
   if(!Object.hasOwn(COMPONENTS,id))throw Error('Unknown component dataset');
   const spec=COMPONENTS[id as keyof typeof COMPONENTS],prior=componentCache.get(id);
-  if(prior&&now-Date.parse(prior.fetched_at)>=0&&now-Date.parse(prior.fetched_at)<3600000)return {...prior,cached:true};
+  if(prior&&now-Date.parse(prior.fetched_at)>=0&&now-Date.parse(prior.fetched_at)<3600000)return withFreshness(prior,now,true);
   try{
     const ids=[spec.headline,...spec.series.map(x=>x[0])];
     const response=await fetcher('https://fred.stlouisfed.org/graph/fredgraph.csv?id='+ids.join(','),{signal:AbortSignal.timeout(12000)});
-    if(!response.ok)throw Error('Provider unavailable');
+    checkResponse(response);
     const rows=parseComponents(await response.text(),id,now);if(!rows.length)throw Error('No observations');
     const last=rows.at(-1)!;
-    const status=observationStale(last.period,spec.frequency,now)?'stale':!last.complete?'partial':last.reconciled===false?'unreconciled':'current_vintage';
-    const data={id,kind:spec.kind,table:spec.table,unit:spec.unit,sa:'SA',frequency:spec.frequency,detail:spec.detail,rows,status,history_basis:'latest_revised',release_dates_available:false,fetched_at:new Date(now).toISOString(),sources:ids.map(fred=>({title:fred,url:'https://fred.stlouisfed.org/series/'+fred}))};
-    componentCache.set(id,data);return data;
-  }catch{
-    return prior?{...prior,status:'stale',error:'Refresh failed; retained whole component batch'}:{id,kind:spec.kind,rows:[],status:'unavailable',error:'Official component history unavailable through FRED'};
+    const quality=!last.complete?'partial':last.reconciled===false?'unreconciled':'complete';
+    const data={id,kind:spec.kind,table:spec.table,unit:spec.unit,sa:'SA',frequency:spec.frequency,detail:spec.detail,rows,quality,fetch_status:'ok',history_basis:'latest_revised',release_dates_available:false,fetched_at:new Date(now).toISOString(),sources:ids.map(fred=>({title:fred,url:'https://fred.stlouisfed.org/series/'+fred}))};
+    componentCache.set(id,data);return withFreshness(data,now);
+  }catch(error){
+    return withFreshness({...prior,id,kind:spec.kind,rows:prior?.rows||[],fetch_status:'failed',error:failure(error),attempted_at:new Date(now).toISOString()},now);
   }
 }

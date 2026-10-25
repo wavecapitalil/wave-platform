@@ -12,7 +12,7 @@ from playwright.async_api import async_playwright
 ROOT = Path(__file__).resolve().parents[1]
 OUT = Path(os.environ.get('WAVE_MACRO_QA_OUT', '/tmp/wave-macro-qa'))
 REAL_DATA = json.loads(Path(os.environ['WAVE_MACRO_REAL_DATA']).read_text()) if os.environ.get('WAVE_MACRO_REAL_DATA') else None
-CATALOGUE = json.loads(subprocess.check_output(['node','--input-type=module','-e',"import {catalogue} from './supabase/functions/wave-data/macro.ts';console.log(JSON.stringify(catalogue(Date.parse('2026-10-14T20:00:00Z'))));"],cwd=ROOT))
+CATALOGUE = json.loads(subprocess.check_output(['node','--input-type=module','-e',"import {catalogue} from './supabase/functions/wave-data/macro.ts';console.log(JSON.stringify(catalogue(Date.parse('2026-10-25T10:20:00Z'))));"],cwd=ROOT))
 
 async def check(browser,width,lang):
     ctx = await browser.new_context(viewport={'width':width,'height':900},has_touch=width<600)
@@ -35,7 +35,7 @@ async def check(browser,width,lang):
             if sid:
                 if REAL_DATA:
                     await route.fulfill(json=REAL_DATA['histories'][sid]);return
-                await route.fulfill(json={'id':sid,'status':'current_vintage','history_basis':'latest_revised','fetched_at':'2026-10-14T20:00:00Z','points':[{'period':f'2026-{m:02}-01','value':-2 if sid=='gdp' and m==1 else 3+m*.1} for m in range(1,10)]})
+                await route.fulfill(json={'id':sid,'status':'current_vintage','history_basis':'latest_revised','fetched_at':'2026-10-25T10:20:00Z','points':[{'period':f'2026-{m:02}-01','value':-2 if sid=='gdp' and m==1 else 3+m*.1} for m in range(1,10)]})
             else:await route.fulfill(json=CATALOGUE)
         elif u.path.endswith('/api/macro-news'):await route.fulfill(json={'stories':[],'topics':{}})
         else:await route.fulfill(status=404,json={'error':'Outside isolated Macro test'})
@@ -46,7 +46,7 @@ async def check(browser,width,lang):
     await page.evaluate("navigate('macro')")
     await page.wait_for_function("document.querySelectorAll('.macro-indicator').length===13")
     await page.wait_for_function("document.querySelector('[data-macro-id=pce] strong').textContent !== '—'")
-    await page.wait_for_function("document.querySelectorAll('.macro-indicator svg').length===11")
+    await page.wait_for_function("document.querySelectorAll('.macro-indicator svg').length>=11")
     assert await page.locator('#macroDashboard polyline').count()==0
     for sid in ['cpi','core_cpi','unemployment']:
         assert await page.locator('[data-macro-id='+sid+'] .macro-column').count()>1
@@ -88,7 +88,7 @@ async def check(browser,width,lang):
         await page.locator('#macroComponentPeriod').wait_for()
         if sid=='gdp':
             assert await page.locator('#macroDialog .macro-column.negative').count()>0
-        assert await page.locator('#macroDialog .macro-axis-period').evaluate_all("els=>{const boxes=els.map(e=>e.getBBox()).sort((a,b)=>a.x-b.x);return boxes.every((b,i)=>i===0||boxes[i-1].x+boxes[i-1].width+3<=b.x)}")
+        assert await page.locator('#macroDialog .macro-axis-period').evaluate_all("els=>{const groups=[...new Set(els.map(e=>e.ownerSVGElement))];return groups.every(svg=>{const boxes=els.filter(e=>e.ownerSVGElement===svg).map(e=>e.getBBox()).sort((a,b)=>a.x-b.x);return boxes.every((b,i)=>i===0||boxes[i-1].x+boxes[i-1].width+3<=b.x)})}")
         assert await page.locator('.macro-component-section table tbody tr').count()==(5 if sid=='gdp' else 6)
         content=await page.locator('.macro-component-section').inner_text()
         assert ('-0.02' in content) if sid=='gdp' else ('% MoM' in content and '% YoY' in content)

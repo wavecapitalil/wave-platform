@@ -91,3 +91,11 @@ export function calculateStatement(key:string,inputs:Record<string,unknown>):num
  if(def.variables.some(k=>typeof inputs[k]!=='number'||!Number.isFinite(inputs[k])))return null;
  return evaluate(def.expression,inputs,def.variables);
 }
+
+// Read-only valuation primitive. Not included in owner-editable definitions:
+// equivalence/completeness is established by the filing adapter before evaluation.
+export const SHARE_CLASS_SUM = {key:'reviewed_common_share_classes',expression:'class_a + class_b',variables:['class_a','class_b'],basis:'Identical economic rights, one filing, one as-of date, complete distinct common classes; no EPS averages'};
+export function calculateReviewedShareTotal(a:number,b:number):number|null {
+ if(!Number.isSafeInteger(a)||!Number.isSafeInteger(b)||a<=0||b<=0)return null;
+ return runMetric(SHARE_CLASS_SUM,SHARE_CLASS_SUM.expression,{class_a:a,class_b:b});
+}
