@@ -1,1 +1,43 @@
-(()=>{'use strict';const $=id=>document.getElementById(id),params=new URLSearchParams(location.search),u=+params.get('u'),n=+params.get('n');if(!Number.isInteger(u)||u<3||u>10||!Number.isInteger(n)||n<1||n>10){$('title').textContent='שיעור לא נמצא';return}const id=u+'.'+n,pad=x=>String(x).padStart(2,'0'),base='https://raw.githubusercontent.com/wavecapitalil/wave-platform/main/docs/course-workspace/';function el(tag,text){const x=document.createElement(tag);if(text!==undefined)x.textContent=text;return x}function clean(t){return t.replace(/[\u200e\u200f\u202a-\u202e\u2066-\u2069\uFEFF]/g,'').trim()}function split(text){const rows=text.split(/\n/).slice(5).map(clean).filter(x=>x&&!/^# |^>|^---$/.test(x));let groups=[{title:'פתיחה ומטרות',rows:[]}];for(const row of rows){let m=row.match(/^\.(\d{1,2})(.{5,130})$/)||row.match(/^(.{5,120}?)\s+(\d{1,2})\.$/),index=m?Number(/^\d/.test(m[1])?m[1]:m[2]):0;if(m&&index>0&&index<20&&row.length<145){groups.push({title:/^\d/.test(m[1])?m[2]:m[1],rows:[]})}else groups.at(-1).rows.push(row)}return groups}function render(groups,figures){const host=$('lesson-content'),nav=$('lesson-nav');groups.forEach((g,i)=>{const section=el('section');section.className='section';section.id='part-'+i;section.appendChild(el('h2',g.title));let paragraph='';function flush(){if(paragraph){section.appendChild(el('p',paragraph));paragraph=''}}for(const row of g.rows){if(paragraph.length>=310)flush();paragraph+=(paragraph?' ':'')+row}flush();const img=figures[i-1];if(img){const f=el('figure');f.className='visual';f.appendChild(el('h3',img.title||'המחשה לימודית'));const picture=el('img');picture.src=base+(img.asset||'').replace(/^assets\//,'');picture.alt=img.alt_he||img.title||'איור נרות';picture.loading='lazy';picture.decoding='async';picture.style.cssText='width:100%;height:auto;display:block;border-radius:10px';f.appendChild(picture);f.appendChild(el('figcaption','איור מקור מתוך חבילת הקורס'));section.appendChild(f)}host.appendChild(section);const a=el('a',g.title);a.href='#part-'+i;nav.appendChild(a)})}async function init(){try{const [source,outline,manifest]=await Promise.all([fetch(base+'lessons/'+pad(u)+'-'+pad(n)+'.md').then(r=>{if(!r.ok)throw Error('source '+r.status);return r.text()}),fetch(base+'COURSE_OUTLINE.md').then(r=>r.text()),fetch(base+'manifest.json').then(r=>r.json())]);const line=outline.split('\n').find(s=>s.startsWith(id+' ')),title=line?line.slice(id.length+1):'שיעור '+id;document.title=id+' — '+title+' | WAVE';$('title').textContent=id+' — '+title;$('meta').textContent='יחידה '+u+' · שיעור '+id;$('intro').textContent='נלמד את הנושא '+title+', נבחן את ההסברים והדוגמאות המלאים מתוך חומר המקור ונתרגל את המושגים בהקשר של קריאת נרות יפניים.';render(split(source),(manifest.figures||[]).filter(f=>f.lesson_id===id));const toolScript=document.createElement('script');toolScript.src='candlesticks-course-tools.js?v=2';document.body.appendChild(toolScript);const key='wave.candles.v1.lesson.'+pad(u)+'-'+pad(n),button=$('complete');function paint(){const yes=localStorage.getItem(key)==='done';button.textContent=yes?'ביטול סימון השלמה':'סמן שיעור כהושלם';$('done-label').textContent=yes?' ✓ הושלם':''}button.addEventListener('click',()=>{localStorage.setItem(key,localStorage.getItem(key)==='done'?'':'done');paint()});paint()}catch(err){$('title').textContent='טעינת השיעור נכשלה';$('lesson-content').appendChild(el('p','לא ניתן לטעון כעת את חומר המקור מ־GitHub. נסו לרענן את העמוד.'));const link=el('a','פתיחת קובץ המקור ישירות ב־GitHub');link.href=base+'lessons/'+pad(u)+'-'+pad(n)+'.md';$('lesson-content').appendChild(link);console.error('Course load failed',err)}}init()})();
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const params=new URLSearchParams(location.search),u=Number(params.get('u')),n=Number(params.get('n'));
+const pad=n=>String(n).padStart(2,'0'),id=u+'.'+n;
+const root='https://raw.githubusercontent.com/wavecapitalil/wave-platform/main/';
+const registryUrl=root+'docs/course/registry.json';
+function add(tag,text,container){const el=document.createElement(tag);el.textContent=text;container.appendChild(el);return el;}
+function unavailable(message){
+  $('title').textContent='שיעור '+id+' — בתהליך עריכה';
+  $('intro').textContent='התוכן המקצועי לשיעור זה נמצא כעת בבקרת איכות וטרם אושר לפרסום.';
+  const host=$('lesson-content');host.replaceChildren();
+  const box=add('section','',host);box.className='section';box.setAttribute('aria-label','סטטוס השיעור');
+  add('h2','השיעור עדיין אינו זמין ללמידה',box);
+  add('p',message||'אנחנו מכינים גרסה ערוכה הכוללת הסברים, המחשות ותרגול. חומרי העבודה המקוריים נשמרים בנפרד ואינם מוצגים כאן.',box);
+  $('complete').hidden=true;
+}
+async function getJson(url){const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw Error('Fetch '+response.status);return response.json();}
+async function init(){
+  if(!Number.isInteger(u)||u<3||u>10||!Number.isInteger(n)||n<1||n>10){unavailable('קישור השיעור אינו תקין.');return;}
+  // Fail closed: missing/invalid registry never falls back to raw source Markdown.
+  let entry;
+  try{const registry=await getJson(registryUrl);if(registry.schema_version!==1||registry.policy!=='deny_by_default')throw Error('Invalid registry');
+    entry=registry.lessons?.[id];}catch(error){console.warn('Course approval manifest unavailable',error);unavailable('לא ניתן לאמת כרגע את אישור הפרסום של השיעור.');return;}
+  if(!entry||entry.status!=='approved'||typeof entry.path!=='string'||!/^docs\/course\/approved\/[a-zA-Z0-9_-]+\.json$/.test(entry.path)){unavailable();return;}
+  try{
+    const lesson=await getJson(root+entry.path);
+    if(lesson.lesson_id!==id||typeof lesson.title!=='string'||!Array.isArray(lesson.sections)||!lesson.sections.length)throw Error('Invalid approved lesson');
+    $('title').textContent=id+' — '+lesson.title;
+    $('intro').textContent=lesson.intro||'';
+    const host=$('lesson-content'),nav=$('lesson-nav');host.replaceChildren();nav.replaceChildren();
+    lesson.sections.forEach((part,index)=>{
+      const section=add('section','',host);section.className='section';section.id='part-'+index;
+      add('h2',part.heading||'חלק '+(index+1),section);
+      for(const paragraph of part.paragraphs||[])if(typeof paragraph==='string')add('p',paragraph,section);
+      const link=add('a',part.heading||'חלק '+(index+1),nav);link.href='#part-'+index;
+    });
+    const key='wave.candles.v1.lesson.'+pad(u)+'-'+pad(n),button=$('complete');
+    function paint(){const done=localStorage.getItem(key)==='done';button.textContent=done?'ביטול סימון השלמה':'סמן שיעור כהושלם';$('done-label').textContent=done?' ✓ הושלם':'';}
+    button.addEventListener('click',()=>{localStorage.setItem(key,localStorage.getItem(key)==='done'?'':'done');paint();});paint();
+    const tools=document.createElement('script');tools.src='candlesticks-course-tools.js?v=2';document.body.appendChild(tools);
+  }catch(error){console.error('Approved lesson failed to load',error);unavailable('אירעה בעיה בטעינת השיעור המאושר.');}
+}init();
+})();
