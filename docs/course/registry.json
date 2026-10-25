@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "policy": "deny_by_default",
+  "description": "Only lessons explicitly marked approved with a curated public content path may render to students. Raw source Markdown must never be published directly.",
+  "lessons": {},
+  "source_roots": [
+    "docs/course-workspace/lessons/",
+    "docs/course-workspace/manifest.json"
+  ],
+  "curated_root": "docs/course/approved/"
+}
