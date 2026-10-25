@@ -53,6 +53,27 @@ body.glossary-page .glossary-teaching-body{padding-top:13px;color:#d9e8f8;line-h
 body.glossary-page .glossary-teaching-body p{margin:6px 0 12px;color:#bfd7ed}
 body.glossary-page .glossary-teaching-chart svg{display:block;max-width:100%;height:auto;border:1px solid #315474;border-radius:12px}
 body.glossary-page .glossary-teaching-body small{display:block;color:#9fbad6;font-size:12px;margin-top:9px}
+
+/* Glossary layout QA 2026-10-25: consistent cards and fully visible diagrams */
+body.glossary-page .glossary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
+body.glossary-page .term-card{box-sizing:border-box;display:flex;flex-direction:column;min-width:0;width:100%;margin:0;min-height:255px;padding:24px;border:1px solid #315474;border-radius:16px;background:#102943;box-shadow:none}
+body.glossary-page .term-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;min-height:36px}
+body.glossary-page .term-name{min-width:0;overflow-wrap:anywhere;color:#f0f7ff;font-size:19px;line-height:1.45}
+body.glossary-page .term-desc{margin:16px 0;color:#c8d9ed;line-height:1.85}
+body.glossary-page .term-category{margin-top:auto;padding-top:14px;color:#93b9dc;font-size:13px}
+body.glossary-page .glossary-teaching{width:100%;min-width:0;margin-top:16px;padding-top:16px;border-top:1px solid #365371}
+body.glossary-page .glossary-teaching summary{display:flex;align-items:center;justify-content:space-between;min-height:52px;padding:12px 15px;border:1px solid #49749e;border-radius:10px;background:#14314e;color:#8ccfff;font-weight:750;cursor:pointer;list-style:none}
+body.glossary-page .glossary-teaching summary::-webkit-details-marker{display:none}
+body.glossary-page .glossary-teaching summary::before{content:"▾";margin-left:8px;transition:transform .2s ease}
+body.glossary-page .glossary-teaching[open] summary::before{transform:rotate(180deg)}
+body.glossary-page .glossary-teaching-body{min-width:0;padding-top:18px;line-height:1.85}
+body.glossary-page .glossary-teaching-body p{margin:9px 0 16px}
+body.glossary-page .glossary-teaching-chart{box-sizing:border-box;width:100%;min-width:0;padding:12px;background:#091a2e;border:1px solid #315474;border-radius:12px}
+body.glossary-page .glossary-teaching-chart svg{display:block;width:100%;max-width:100%;height:auto;overflow:visible}
+body.glossary-page .glossary-teaching-chart svg text{direction:ltr;unicode-bidi:isolate}
+@media(max-width:850px){body.glossary-page .glossary-grid{grid-template-columns:1fr;gap:18px}body.glossary-page .term-card{padding:20px;min-height:unset}body.glossary-page .glossary-teaching-chart{padding:8px}}
+@media(prefers-reduced-motion:reduce){body.glossary-page .glossary-teaching summary::before{transition:none}}
+
 </style></head><body class="glossary-page"><header><a href="products.html"><strong>WAVE CAPITAL</strong></a><a href="candlesticks-course.html">חזרה לקורס</a></header><div class="glossary-layout"><main class="glossary-main"><small style="color:#2870b8">WAVE UNIVERSITY · קריאת גרפים ופעולת מחיר</small><h1 class="glossary-title">מילון המושגים הכללי</h1><div class="glossary-intro"><strong>מושגים מקצועיים, בהסברים קצרים וברורים.</strong><p style="margin:5px 0 0">כאן ניתן למצוא את המונחים המרכזיים בקריאת גרפים, נרות יפניים, התנהגות מחיר וניהול סיכונים. השתמשו בחיפוש או בקטגוריות כדי להגיע למושג הרצוי.</p></div>
 <label for="glossary-search" style="display:block;font-weight:700;margin-bottom:8px">חיפוש במילון</label><input id="glossary-search" class="glossary-search" type="search" placeholder="לדוגמה: מגמה, נר, תמיכה, OHLC..." autocomplete="off">
-<div id="glossary-filters" class="glossary-filters" role="group" aria-label="סינון מושגים"></div><p id="glossary-count" style="font-size:13px;color:#617e9b" aria-live="polite"></p><div id="glossary-grid" class="glossary-grid"></div><p id="glossary-empty" class="empty" hidden>לא נמצאו מושגים התואמים לחיפוש. נסו מילה אחרת או קטגוריה נוספת.</p><p class="glossary-foot">המילון נועד לסייע בלמידה ואינו מחליף את ההסברים המלאים בתוך השיעורים.</p></main><aside class="glossary-side"><strong>קריאת גרפים ופעולת מחיר</strong><p style="color:#bad7f5;font-size:13px">מילון מושגים מקצועי</p><a href="candlesticks-course.html">כל יחידות הקורס</a><a href="candlesticks-lesson-04.html">שיעור 1.4 — שפת הקורס</a><a class="current" href="candlesticks-glossary.html" aria-current="page">מילון המושגים</a></aside></div><script src="candlesticks-glossary.js?v=2" defer></script></body></html>
+<div id="glossary-filters" class="glossary-filters" role="group" aria-label="סינון מושגים"></div><p id="glossary-count" style="font-size:13px;color:#617e9b" aria-live="polite"></p><div id="glossary-grid" class="glossary-grid"></div><p id="glossary-empty" class="empty" hidden>לא נמצאו מושגים התואמים לחיפוש. נסו מילה אחרת או קטגוריה נוספת.</p><p class="glossary-foot">המילון נועד לסייע בלמידה ואינו מחליף את ההסברים המלאים בתוך השיעורים.</p></main><aside class="glossary-side"><strong>קריאת גרפים ופעולת מחיר</strong><p style="color:#bad7f5;font-size:13px">מילון מושגים מקצועי</p><a href="candlesticks-course.html">כל יחידות הקורס</a><a href="candlesticks-lesson-04.html">שיעור 1.4 — שפת הקורס</a><a class="current" href="candlesticks-glossary.html" aria-current="page">מילון המושגים</a></aside></div><script src="candlesticks-glossary.js?v=3" defer></script></body></html>
