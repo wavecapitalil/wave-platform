@@ -1,0 +1,43 @@
+/* WAVE lesson 1.2 / Midnight Terminal — presentation only. No textual or SVG changes. */
+:root{color-scheme:dark}
+body:has(.layout>.content){background:radial-gradient(circle at 75% 2%,#102857 0,#050e20 44%,#030a16 100%);color:#eaf2ff}
+body:has(.layout>.content) header{background:#061126;border-bottom:1px solid #1c3b70;color:#eef5ff;box-shadow:0 4px 35px #0003}
+body:has(.layout>.content) header a{color:#d3e6ff}
+body:has(.layout>.content) .layout{max-width:1410px;grid-template-columns:270px minmax(0,950px);gap:28px;padding:34px 22px 75px}
+body:has(.layout>.content) .content{background:linear-gradient(165deg,#081932,#060e20 70%);color:#eaf2ff;border:1px solid #183862;box-shadow:0 22px 70px #0005;padding:32px 40px 54px;border-radius:20px;max-width:none;width:100%}
+body:has(.layout>.content) .content h1,body:has(.layout>.content) .content h2{color:#f3f7ff}
+body:has(.layout>.content) .content p,body:has(.layout>.content) .content .section>p{color:#c0d1ea}
+body:has(.layout>.content) .content .intro{color:#d6e3fb}
+body:has(.layout>.content) .content a{color:#80c5ff}
+body:has(.layout>.content) .tag{color:#60c5ff;font-size:13px}
+body:has(.layout>.content) .content h1{font-size:clamp(32px,4.1vw,56px);letter-spacing:-.025em;line-height:1.25;text-wrap:balance}
+body:has(.layout>.content) .hero{padding-bottom:8px;margin-bottom:44px}
+body:has(.layout>.content) .sidebar{background:linear-gradient(165deg,#091e3c,#050f25);border:1px solid #264a89;color:#eff7ff;box-shadow:0 14px 38px #0004;border-radius:17px;min-height:0;padding:23px 16px}
+body:has(.layout>.content) .sidebar strong{display:block;color:#f3f7ff;font-size:18px;line-height:1.6;margin-bottom:16px}
+body:has(.layout>.content) .sidebar a{color:#adc6e9;border-radius:10px;padding:10px 12px;line-height:1.65}
+body:has(.layout>.content) .sidebar a:hover{background:#182e59;color:#fff}
+body:has(.layout>.content) .sidebar a.active{background:linear-gradient(90deg,#172c7b,#41309b);border:1px solid #5468ee;color:#fff;box-shadow:0 0 18px #554bda45}
+body:has(.layout>.content) .sidebar .subtle{color:#80a4cf}
+body:has(.layout>.content) .separator{background:#234273}
+body:has(.layout>.content) .lesson-preview{background:linear-gradient(130deg,#102851,#111b42);border:1px solid #3562b0;border-right:4px solid #55bfff;border-left:1px solid #3562b0;box-shadow:inset 0 0 35px #3058a922;border-radius:16px;padding:24px 27px}
+body:has(.layout>.content) .lesson-preview__label{color:#80c9ff;font-size:18px}
+body:has(.layout>.content) .lesson-preview__label:before{color:#79c3ff}
+body:has(.layout>.content) .lesson-preview__copy{color:#d8e6fa;font-size:17px}
+body:has(.layout>.content) .objective{background:#0e2241;border-right:3px solid #9c65ff;border-color:#8660ef;color:#f2f4ff;border-radius:12px;padding:22px 26px}
+body:has(.layout>.content) .objective p{color:#c9d9f0}
+body:has(.layout>.content) .section{border-color:#1b3761}
+body:has(.layout>.content) .section>h2{color:#7bc6ff;border-bottom:1px solid #345080;font-size:clamp(22px,2.4vw,30px)}
+body:has(.layout>.content) .visual,body:has(.layout>.content) .course-widget{background:linear-gradient(150deg,#0b2544,#07152b);border:1px solid #2b5694;border-radius:18px;color:#e9f3ff;box-shadow:0 10px 25px #0003}
+body:has(.layout>.content) .visual h3{color:#80d2ff}
+body:has(.layout>.content) .visnote,body:has(.layout>.content) .subtle{color:#a6bddf}
+body:has(.layout>.content) .feedback{background:#142f53;color:#ecf6ff}
+body:has(.layout>.content) .progress{background:#0c2546;border-color:#285183;color:#e7f1ff}
+body:has(.layout>.content) .mark{background:linear-gradient(90deg,#145ec1,#6739d0);color:white;border-color:#547cdd}
+body:has(.layout>.content) .sources{color:#9eb5d7}
+body:has(.layout>.content) .bottom{border-color:#2b4873}
+body:has(.layout>.content) .cards>div{background:#0e2748;color:#f1f5ff;border-color:#315488}
+body:has(.layout>.content) .visual svg{max-height:none}
+@media(min-width:901px){body:has(.layout>.content) .layout{direction:ltr;grid-template-columns:270px minmax(0,950px)}body:has(.layout>.content) .sidebar{grid-column:1;grid-row:1;direction:rtl;width:270px}body:has(.layout>.content) .content{grid-column:2;grid-row:1;direction:rtl}}
+@media(max-width:900px){body:has(.layout>.content) .layout{display:flex;flex-direction:column;padding:20px 14px 55px;gap:15px}body:has(.layout>.content) .sidebar{position:static;order:-1;width:100%;max-height:260px;overflow-y:auto}body:has(.layout>.content) .content{padding:22px 18px 42px;width:100%}body:has(.layout>.content) .sidebar .unitlist{display:block}body:has(.layout>.content) .sidebar nav{display:flex;overflow-x:auto;gap:7px}body:has(.layout>.content) .sidebar nav a{white-space:nowrap}}
+@media(max-width:480px){body:has(.layout>.content) .content{padding:20px 13px 35px}body:has(.layout>.content) .content h1{font-size:32px}body:has(.layout>.content) .lesson-preview{padding:18px 15px}body:has(.layout>.content) .visual{padding:12px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important}}
