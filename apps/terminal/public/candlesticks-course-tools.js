@@ -10,7 +10,7 @@ modal.addEventListener('click',event=>{if(event.target===modal)modal.close()});
 function present(title,build){const titleEl=modal.querySelector('#course-dialog-title'),body=modal.querySelector('#course-dialog-body');titleEl.textContent=title;body.replaceChildren();build(body);if(typeof modal.showModal==='function')modal.showModal()}
 bar.addEventListener('click',e=>{const btn=e.target.closest('button');if(!btn)return;
 if(btn.dataset.courseAction==='focus'){const enabled=doc.body.classList.toggle('course-focus');btn.setAttribute('aria-pressed',String(enabled));btn.textContent=enabled?'סיום מצב קריאה':'☾ מצב קריאה ממוקד';if(aside)aside.setAttribute('aria-hidden',String(enabled));}
-if(btn.dataset.courseAction==='glossary'){present('מילון המושגים',body=>{const list=doc.createElement('dl');list.className='course-glossary';Object.entries(dictionary).forEach(([term,meaning])=>{const dt=doc.createElement('dt'),dd=doc.createElement('dd');dt.textContent=term;dd.textContent=meaning;list.append(dt,dd)});body.appendChild(list)})}
+if(btn.dataset.courseAction==='glossary'){window.location.href='candlesticks-glossary.html'}
 });
 
 // Course-local completion status; keeps the existing per-lesson storage convention.
