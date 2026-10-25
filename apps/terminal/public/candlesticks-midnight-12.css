@@ -41,3 +41,20 @@ body:has(.layout>.content) .visual svg{max-height:none}
 @media(max-width:900px){body:has(.layout>.content) .layout{display:flex;flex-direction:column;padding:20px 14px 55px;gap:15px}body:has(.layout>.content) .sidebar{position:static;order:-1;width:100%;max-height:260px;overflow-y:auto}body:has(.layout>.content) .content{padding:22px 18px 42px;width:100%}body:has(.layout>.content) .sidebar .unitlist{display:block}body:has(.layout>.content) .sidebar nav{display:flex;overflow-x:auto;gap:7px}body:has(.layout>.content) .sidebar nav a{white-space:nowrap}}
 @media(max-width:480px){body:has(.layout>.content) .content{padding:20px 13px 35px}body:has(.layout>.content) .content h1{font-size:32px}body:has(.layout>.content) .lesson-preview{padding:18px 15px}body:has(.layout>.content) .visual{padding:12px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important}}
+
+/* Deep Navy Panel approved refinement — scoped exclusively to lesson 1.2.
+   Keep the source lesson, its text nodes, figures, DOM order and JS unchanged. */
+body:has(.layout>.content){background:#061327;color:#e9f2ff}
+body:has(.layout>.content) .content{background:#0a1c35;border-color:#23446e;box-shadow:0 15px 46px rgba(0,5,16,.30)}
+body:has(.layout>.content) .sidebar{background:#07172d;border-color:#224267}
+body:has(.layout>.content) .sidebar a.active{background:#16458a;border-color:#3175cd;box-shadow:none}
+body:has(.layout>.content) .lesson-preview{background:#102845;border-color:#315784;border-right:4px solid #56aeef;box-shadow:none}
+body:has(.layout>.content) .objective{background:#10233e;border-right-color:#549cdd;border-color:#345781}
+body:has(.layout>.content) .visual,body:has(.layout>.content) .course-widget{background:#0c2542;border-color:#2b5681;box-shadow:none}
+body:has(.layout>.content) .feedback{background:#153554}
+body:has(.layout>.content) .progress{background:#102942;border-color:#315478}
+body:has(.layout>.content) .mark{background:#135fbc;border-color:#3c83d3}
+body:has(.layout>.content) .section>h2{color:#85caff}
+body:has(.layout>.content) .content .section>p{color:#d4e0f1}
+@media(max-width:900px){body:has(.layout>.content){background:#061327}body:has(.layout>.content) .content{background:#0a1c35;padding:22px 18px 42px;border:1px solid #23446e;border-radius:16px}}
+@media(max-width:480px){body:has(.layout>.content) .content{padding:20px 13px 35px}}
