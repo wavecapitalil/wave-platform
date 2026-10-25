@@ -339,6 +339,15 @@ dialog h3{font-size:30px}dialog p{color:var(--mute);font-weight:300;margin-top:8
 @media (max-width:980px){.hd__nav .nav-sep{flex-basis:100%;width:auto;height:0;background:none}}
 .ft__nav .nav-sep{display:none}
 @media (min-width:981px) and (max-width:1180px){.hd{padding-inline:32px}.hd__logo img{height:52px}.hd__nav{gap:15px;font-size:13.5px}.hd .btn{padding-inline:16px}}
+
+/* About Us redesign — scoped styles, isolated from learning experience */
+.wc-about{position:relative;overflow:hidden;padding:110px 0 100px;background:radial-gradient(ellipse at 75% 5%,rgba(45,80,206,.22),transparent 53%),#040c1b;color:#eaf2ff}
+.wc-about .wrap{position:relative}.wc-about__top{display:flex;justify-content:space-between;align-items:center;gap:18px}.wc-about__langs{display:flex;gap:4px;padding:4px;border:1px solid #385581;border-radius:50px}.wc-about__langs button{border:0;background:transparent;color:#9bb5d2;padding:8px 13px;border-radius:40px;cursor:pointer;font-size:12px}.wc-about__langs button.is-on{background:#2450ba;color:#fff}
+.wc-about__hero{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;min-height:470px}.wc-about__eyebrow,.wc-about__sectionhead span,.wc-about__vision>span{font-size:11px;letter-spacing:.2em;color:#5ebeff;font-weight:750}.wc-about__headline{font-size:clamp(42px,5vw,76px);line-height:1.1;letter-spacing:-.035em;margin:22px 0}.wc-about__headline em,.wc-about__vision em{font-style:normal;background:linear-gradient(120deg,#46baff,#bb52f1);background-clip:text;-webkit-text-fill-color:transparent}.wc-about__copy>p{font-size:17px;line-height:1.85;color:#afc1d9;max-width:650px;margin:0 0 18px}.wc-about__copy>p.wc-about__intro{font-size:20px;color:#e0e9fa}.wc-about__cta{display:inline-flex;margin-top:10px;padding:12px 24px;border-radius:40px;background:linear-gradient(100deg,#196cd8,#a139d4);color:#fff;text-decoration:none;font-weight:700}.wc-about__visual{min-height:345px;position:relative;display:grid;place-items:center;perspective:800px}.wc-about__chart{width:94%;padding:20px;background:linear-gradient(160deg,#102647,#081629);border:1px solid #34659e;border-radius:22px;box-shadow:0 30px 80px #0008,0 0 70px #1742bf35;transform:rotateY(-6deg)}.wc-about__charthead{display:flex;justify-content:space-between;gap:10px;color:#a8c6e5;font-size:10px;letter-spacing:.1em}.wc-about__chart svg{width:100%;height:auto;margin-top:12px}.wc-about__float{position:absolute;left:0;bottom:0;padding:15px;background:#151c49;border:1px solid #754df7;border-radius:15px;box-shadow:0 14px 30px #0007;color:#c4cfee;font-size:10px;letter-spacing:.1em}.wc-about__float b{display:block;color:#5acbff;font-size:17px;margin-top:5px}.wc-about__sectionhead{text-align:center;margin:65px 0 24px}.wc-about__sectionhead h3{font-size:clamp(25px,3vw,37px);margin:9px 0}.wc-about__cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.wc-about__cards article,.wc-about__audience>div{padding:22px;border:1px solid #2b4674;border-radius:19px;background:linear-gradient(155deg,#112852,#08182c);transition:transform .25s,border-color .25s}.wc-about__cards article:hover,.wc-about__audience>div:hover{transform:translateY(-5px);border-color:#5bbcfb}.wc-about__symbol{font-size:32px;color:#62bafa}.wc-about__cards h4{font-size:17px;margin:14px 0 8px}.wc-about__cards p,.wc-about__audience p{font-size:15px;line-height:1.65;color:#afc0d8}.wc-about__tags{display:flex;justify-content:center;flex-wrap:wrap;gap:11px;direction:ltr}.wc-about__tags span{font-size:12px;color:#c4d8f2;border:1px solid #345b8b;border-radius:28px;padding:11px 18px;background:#0b1b32}.wc-about__audience{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.wc-about__audience strong{font-size:20px;color:#76c5ff}.wc-about__vision{text-align:center;max-width:850px;margin:80px auto 0;border-top:1px solid #2d4c72;padding-top:70px}.wc-about__vision h3{font-size:clamp(30px,4vw,50px);margin:18px 0}.wc-about__vision p{color:#b8cbe2;font-size:18px;line-height:1.8}.wc-about__vision small{display:block;color:#7692b4;margin-top:20px}
+.wc-about[dir=ltr] .wc-about__copy{text-align:left}.wc-about[dir=ltr] .wc-about__cards,.wc-about[dir=ltr] .wc-about__audience{text-align:left}
+@media(max-width:900px){.wc-about__hero{grid-template-columns:1fr;gap:10px}.wc-about__visual{min-height:290px}.wc-about__cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.wc-about{padding:80px 0}.wc-about__cards,.wc-about__audience{grid-template-columns:1fr}.wc-about__headline{font-size:40px}.wc-about__copy>p{font-size:16px}.wc-about__visual{min-height:230px}.wc-about__float{left:4%}}
+
 </style>
 </head>
 <body>
@@ -347,13 +356,13 @@ dialog h3{font-size:30px}dialog p{color:var(--mute);font-weight:300;margin-top:8
 <header class="hd is-hidden" id="hd">
   <a class="hd__logo" href="#top" aria-label="Wave Capital, לראש העמוד"><img src="assets/img/wc-logo-0918b.webp" alt="Wave Capital" width="720" height="262"></a>
   <nav class="hd__nav" aria-label="ניווט ראשי">
-    <a href="#products">שיחת היכרות</a><a href="#about">אודות</a><a href="#contact">צור קשר</a><span class="nav-sep" aria-hidden="true"></span><a href="#terminal" data-sys="terminal_app.html">Terminal</a><a href="#contact" data-sys="university.html" hidden>University</a><a href="#contact" data-sys="account.html" hidden>Account</a><a href="#contact" data-sys="blog.html" hidden>Blog</a><a href="#contact" data-sys="products.html" hidden>Products</a>
+    <a href="#products">שיחת היכרות</a><a href="#about">About Us</a><a href="#contact">צור קשר</a><span class="nav-sep" aria-hidden="true"></span><a href="#terminal" data-sys="terminal_app.html">Terminal</a><a href="#contact" data-sys="university.html" hidden>University</a><a href="#contact" data-sys="account.html" hidden>Account</a><a href="#contact" data-sys="blog.html" hidden>Blog</a><a href="#contact" data-sys="products.html" hidden>Products</a>
   </nav>
   <a class="btn btn--line" href="#contact" data-app target="_blank" rel="noopener">כניסה למערכת <span class="arr">←</span></a>
   <button class="hd__menu" aria-label="תפריט" aria-expanded="false"><i></i></button>
 </header>
 <nav class="sheetnav" id="sheetnav" aria-label="תפריט נייד">
-  <a href="#products">שיחת היכרות</a><a href="#about">אודות</a><a href="#contact">צור קשר</a><span class="nav-sep" aria-hidden="true"></span><a href="#terminal" data-sys="terminal_app.html">Terminal</a><a href="#contact" data-sys="university.html" hidden>University</a><a href="#contact" data-sys="account.html" hidden>Account</a><a href="#contact" data-sys="blog.html" hidden>Blog</a><a href="#contact" data-sys="products.html" hidden>Products</a><a href="#contact" data-app target="_blank" rel="noopener">כניסה למערכת</a>
+  <a href="#products">שיחת היכרות</a><a href="#about">About Us</a><a href="#contact">צור קשר</a><span class="nav-sep" aria-hidden="true"></span><a href="#terminal" data-sys="terminal_app.html">Terminal</a><a href="#contact" data-sys="university.html" hidden>University</a><a href="#contact" data-sys="account.html" hidden>Account</a><a href="#contact" data-sys="blog.html" hidden>Blog</a><a href="#contact" data-sys="products.html" hidden>Products</a><a href="#contact" data-app target="_blank" rel="noopener">כניסה למערכת</a>
 </nav>
 
 <main id="top">
@@ -477,28 +486,35 @@ dialog h3{font-size:30px}dialog p{color:var(--mute);font-weight:300;margin-top:8
   </div>
 </section>
 
-<section class="about" id="about">
-  <div class="wrap">
-    <span class="lbl">ABOUT / 04</span>
-    <h2 class="h2 rise" style="margin-top:22px">החלטות מתוך <em>תהליך</em></h2>
-    <div class="about__grid">
-      <div class="about__text">
-        <p class="about__big">חברת מחקר השקעות, פיתוח אסטרטגיות והשקעות ערך.</p>
-        <p>אנחנו חוקרים שווקים גלובליים ומפתחים תהליכים וכלים שמטרתם לשפר את איכות ההחלטות. הדגש שלנו הוא על ניהול סיכון, שקיפות ועקביות.</p>
-      </div>
-      <div class="phil" id="phil">
-        <div class="phil__hd"><span>WAVE / PHILOSOPHY</span><span>PROCESS FIRST</span></div>
-        <blockquote class="phil__q">אנחנו לא רודפים<br>אחרי <em>תחזיות.</em></blockquote>
-        <svg class="phil__wave" viewBox="0 0 600 60" preserveAspectRatio="none" aria-hidden="true"><path class="pdraw" d="M0 40C60 40 80 12 140 12s90 36 150 36 90-30 150-30 100 22 160 22"/></svg>
-        <ul class="phil__vals">
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="pdraw" cx="10.5" cy="10.5" r="6.5"/><path class="pdraw" d="M15.5 15.5L21 21"/></svg><b>מחקר עצמאי</b><small>שווקים גלובליים, בעיניים שלנו</small></li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path class="pdraw" d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg><b>גישה שיטתית</b><small>כל החלטה עוברת את אותו תהליך</small></li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path class="pdraw" d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path class="pdraw" d="M9 12l2 2 4-4"/></svg><b>ניהול סיכון</b><small>שמירה על ההון לפני הכל</small></li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path class="pdraw" d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 4l-3 16"/></svg><b>פיתוח טכנולוגי</b><small>כלים שבנינו לעבודה היומיומית</small></li>
-        </ul>
-      </div>
+<section class="about wc-about" id="about">
+<div class="wrap">
+  <div class="wc-about__top"><span class="lbl">WAVE CAPITAL / ABOUT US</span><div class="wc-about__langs" aria-label="About Us language"><button type="button" class="is-on" data-about-lang="he" aria-pressed="true">עברית</button><button type="button" data-about-lang="en" aria-pressed="false">ENGLISH</button></div></div>
+  <div class="wc-about__hero">
+    <div class="wc-about__copy">
+      <div class="wc-about__eyebrow">RESEARCH · TECHNOLOGY · EDUCATION</div>
+      <h2 class="wc-about__headline" data-about-he="מעבר לגרפים. אל תוך הנתונים." data-about-en="Beyond the Charts. Into the Data.">מעבר לגרפים. <em>אל תוך הנתונים.</em></h2>
+      <p class="wc-about__intro" data-about-he="Wave Capital היא פלטפורמה פיננסית־טכנולוגית המתמקדת בלמידה מקצועית, מחקר שווקים, פיתוח כלים אנליטיים וטכנולוגיות מסחר." data-about-en="Wave Capital is a financial technology platform focused on professional education, market research, analytical tools and trading technology.">Wave Capital היא פלטפורמה פיננסית־טכנולוגית המתמקדת בלמידה מקצועית, מחקר שווקים, פיתוח כלים אנליטיים וטכנולוגיות מסחר.</p>
+      <p data-about-he="אנחנו מאמינים שהבנה עמוקה של השווקים מתחילה בשילוב נכון בין ידע, נתונים וטכנולוגיה. לכן אנחנו מפתחים סביבת למידה ועבודה שמסייעת לסוחרים, למשקיעים ולמתחילים לחקור נכסים, לנתח מידע ולפתח תהליכי קבלת החלטות שיטתיים יותר." data-about-en="We believe deeper market understanding begins with the right combination of knowledge, data and technology. We are developing a learning and research environment where beginners, traders and investors can explore assets, analyze information and build more structured decision-making processes.">אנחנו מאמינים שהבנה עמוקה של השווקים מתחילה בשילוב נכון בין ידע, נתונים וטכנולוגיה. לכן אנחנו מפתחים סביבת למידה ועבודה שמסייעת לסוחרים, למשקיעים ולמתחילים לחקור נכסים, לנתח מידע ולפתח תהליכי קבלת החלטות שיטתיים יותר.</p>
+      <a class="wc-about__cta" href="#products" data-about-he="גלו את הפלטפורמה ←" data-about-en="Explore the Platform →">גלו את הפלטפורמה ←</a>
+    </div>
+    <div class="wc-about__visual" aria-label="Illustrative market analytics interface">
+       <div class="wc-about__chart"><div class="wc-about__charthead"><strong>WAVE / MARKET INTELLIGENCE</strong><span>DEMO VIEW</span></div><svg viewBox="0 0 460 240" role="img" aria-label="Illustrative candlestick chart"><defs><linearGradient id="wca-gradient" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#5126ef"/><stop offset="1" stop-color="#45c8ff"/></linearGradient></defs><path d="M8 190L45 173 77 179 118 146 145 153 186 118 226 138 257 101 300 94 336 62 371 73 418 29" fill="none" stroke="url(#wca-gradient)" stroke-width="4"/><g stroke="#23466e" opacity=".7"><path d="M0 40H460M0 90H460M0 140H460M0 190H460M50 0V240M150 0V240M250 0V240M350 0V240"/></g><g stroke="#49b9ff" stroke-width="3"><path d="M65 105V188M117 89V168M169 86V165M225 53V142M284 34V115M349 13V90M415 7V68"/></g><g fill="#35baff"><rect x="55" y="120" width="20" height="42" rx="2"/><rect x="107" y="103" width="20" height="39" rx="2"/><rect x="215" y="71" width="20" height="50" rx="2"/><rect x="339" y="30" width="20" height="37" rx="2"/><rect x="405" y="14" width="20" height="42" rx="2"/></g><g fill="#b34ff0"><rect x="159" y="100" width="20" height="46" rx="2"/><rect x="274" y="51" width="20" height="42" rx="2"/></g></svg></div>
+       <div class="wc-about__float">MARKET RESEARCH <b>Data + Insight</b></div>
     </div>
   </div>
+  <div class="wc-about__sectionhead"><span>WHAT WE DO</span><h3 data-about-he="מה אנחנו עושים?" data-about-en="What We Do">מה אנחנו עושים?</h3></div>
+  <div class="wc-about__cards">
+    <article><span class="wc-about__symbol">✧</span><h4>Financial Education</h4><p data-about-he="מסלולי למידה מקצועיים, מהיסודות ועד לניתוח טכני, נרות יפניים, ניהול סיכונים ומחקר מתקדם." data-about-en="Structured education, from market fundamentals to technical analysis, candlesticks, risk management and advanced research.">מסלולי למידה מקצועיים, מהיסודות ועד לניתוח טכני, נרות יפניים, ניהול סיכונים ומחקר מתקדם.</p></article>
+    <article><span class="wc-about__symbol">⌁</span><h4>Market Research</h4><p data-about-he="מחקר שיטתי של שווקים ונכסים דיגיטליים, תוך שילוב נתונים כמותיים, מדדי פעילות ומגמות." data-about-en="Systematic research into financial markets and digital assets using quantitative data, activity metrics and trends.">מחקר שיטתי של שווקים ונכסים דיגיטליים, תוך שילוב נתונים כמותיים, מדדי פעילות ומגמות.</p></article>
+    <article><span class="wc-about__symbol">▥</span><h4>Trading & Analytics</h4><p data-about-he="פיתוח דשבורדים, ממשקי ניתוח ואינדיקטורים לארגון מידע פיננסי ולבחינת התנהגות שוק." data-about-en="Developing dashboards, analytical interfaces and indicators to organize market information and examine market behavior.">פיתוח דשבורדים, ממשקי ניתוח ואינדיקטורים לארגון מידע פיננסי ולבחינת התנהגות שוק.</p></article>
+    <article><span class="wc-about__symbol">◇</span><h4>Technology & Automation</h4><p data-about-he="מחקר ופיתוח כלים מבוססי נתונים, אוטומציה ובינה מלאכותית לייעול תהליכי ניתוח ומחקר." data-about-en="Research and development of data-driven, automated and AI-powered tools for more efficient research workflows.">מחקר ופיתוח כלים מבוססי נתונים, אוטומציה ובינה מלאכותית לייעול תהליכי ניתוח ומחקר.</p></article>
+  </div>
+  <div class="wc-about__sectionhead"><span>OUR EXPERTISE</span><h3 data-about-he="תחומי התמחות ופיתוח" data-about-en="Areas of Expertise">תחומי התמחות ופיתוח</h3></div>
+  <div class="wc-about__tags"><span>Technical Analysis</span><span>Candlestick Patterns</span><span>Risk Management</span><span>Market Research</span><span>Digital Assets</span><span>On-Chain Analytics</span><span>Trading Dashboards</span><span>Quantitative Research</span><span>Data Visualization</span><span>AI & Automation</span></div>
+  <div class="wc-about__sectionhead"><span>WHO IS IT FOR?</span><h3 data-about-he="למי מיועדת הפלטפורמה?" data-about-en="Who Is It For?">למי מיועדת הפלטפורמה?</h3></div>
+  <div class="wc-about__audience"><div><strong data-about-he="מתחילים" data-about-en="Beginners">מתחילים</strong><p data-about-he="סביבת למידה מובנית להיכרות עם שוק ההון והעולם הפיננסי מהיסודות." data-about-en="A structured environment to build financial knowledge from the ground up.">סביבת למידה מובנית להיכרות עם שוק ההון והעולם הפיננסי מהיסודות.</p></div><div><strong data-about-he="סוחרים ומשקיעים" data-about-en="Traders & Investors">סוחרים ומשקיעים</strong><p data-about-he="תכנים וכלים להעמקת המחקר והניתוח של השווקים." data-about-en="Educational content and analytical tools for deeper market understanding.">תכנים וכלים להעמקת המחקר והניתוח של השווקים.</p></div><div><strong data-about-he="משתמשים מתקדמים" data-about-en="Advanced Users">משתמשים מתקדמים</strong><p data-about-he="גישה למתודולוגיות מחקר, נתונים כמותיים וניתוח מעמיק." data-about-en="Research methodologies, quantitative data and advanced market analysis.">גישה למתודולוגיות מחקר, נתונים כמותיים וניתוח מעמיק.</p></div></div>
+  <div class="wc-about__vision"><span>OUR VISION</span><h3>Beyond the Charts. <em>Into the Data.</em></h3><p data-about-he="להפוך ידע פיננסי מקצועי, מחקר שווקים וטכנולוגיות ניתוח מתקדמות לנגישים, ברורים ושימושיים יותר. אנחנו שואפים לחבר בין למידה, מחקר וכלים טכנולוגיים — מהבנת היסודות ועד לניתוח עצמאי ומעמיק." data-about-en="To make professional financial knowledge, market research and advanced analytical tools more accessible, understandable and practical. Our goal is to connect learning, research and technology — from the fundamentals to independent, in-depth analysis.">להפוך ידע פיננסי מקצועי, מחקר שווקים וטכנולוגיות ניתוח מתקדמות לנגישים, ברורים ושימושיים יותר. אנחנו שואפים לחבר בין למידה, מחקר וכלים טכנולוגיים — מהבנת היסודות ועד לניתוח עצמאי ומעמיק.</p><small>WAVE CAPITAL LTD · Features shown may be in development</small></div>
+</div>
 </section>
 <section class="end" id="contact">
   <div class="chip" aria-hidden="true">RISK REGIME<b>NEUTRAL</b></div><div class="chip" aria-hidden="true">MOMENTUM<b>72.4</b></div><div class="chip" aria-hidden="true">LIQUIDITY<b>RISING</b></div><div class="chip" aria-hidden="true">BREADTH<b>EXPANDING</b></div>
@@ -522,7 +538,7 @@ dialog h3{font-size:30px}dialog p{color:var(--mute);font-weight:300;margin-top:8
 
 <footer class="ft">
   <div class="wrap">
-    <div class="ft__nav"><nav aria-label="ניווט תחתון"><a href="#products">שיחת היכרות</a><a href="#about">אודות</a><a href="#contact">צור קשר</a><span class="nav-sep" aria-hidden="true"></span><a href="#terminal" data-sys="terminal_app.html">Terminal</a><a href="#contact" data-sys="university.html" hidden>University</a><a href="#contact" data-sys="account.html" hidden>Account</a><a href="#contact" data-sys="blog.html" hidden>Blog</a><a href="#contact" data-sys="products.html" hidden>Products</a></nav>
+    <div class="ft__nav"><nav aria-label="ניווט תחתון"><a href="#products">שיחת היכרות</a><a href="#about">About Us</a><a href="#contact">צור קשר</a><span class="nav-sep" aria-hidden="true"></span><a href="#terminal" data-sys="terminal_app.html">Terminal</a><a href="#contact" data-sys="university.html" hidden>University</a><a href="#contact" data-sys="account.html" hidden>Account</a><a href="#contact" data-sys="blog.html" hidden>Blog</a><a href="#contact" data-sys="products.html" hidden>Products</a></nav>
       <nav aria-label="מידע משפטי" class="ft__legal"><a href="privacy.html">מדיניות פרטיות</a><a href="terms.html">תקנון ותנאי שימוש</a><a href="accessibility.html">הצהרת נגישות</a></nav></div>
     <p class="ft__disc">המידע באתר הוא מידע כללי בלבד. הוא אינו ייעוץ השקעות או שיווק השקעות ואינו תחליף לייעוץ שמתחשב בצרכים של כל אדם. מסחר והשקעה כרוכים בסיכון. <a href="terms.html#disclosure">לגילוי הנאות המלא</a></p>
     <div class="ft__co"><span data-co-row><span data-co="legal" data-soft></span></span><span data-co-row>ח.פ <span data-co="id" data-soft></span></span><span data-co-row><span data-co="address" data-soft></span></span><span data-co-row><a data-co="email" data-soft data-mail href="#contact"></a></span></div>
@@ -543,5 +559,20 @@ dialog h3{font-size:30px}dialog p{color:var(--mute);font-weight:300;margin-top:8
 <script src="assets/js/film-tiers.js"></script><script src="assets/js/film-engine.js"></script>
 <script src="assets/js/site.js?v=20261016-return"></script>
 <script src="assets/js/company.js"></script><script src="assets/js/a11y.js"></script><script src="assets/js/theme.js"></script><script src="assets/js/orbit.js"></script>
+<script>
+(function(){
+  const sec=document.getElementById('about');if(!sec)return;
+  const buttons=sec.querySelectorAll('[data-about-lang]');
+  buttons.forEach(button=>button.addEventListener('click',()=>{
+    const lang=button.getAttribute('data-about-lang');
+    sec.dir=lang==='he'?'rtl':'ltr';sec.lang=lang;
+    sec.querySelectorAll('[data-about-he]').forEach(node=>{
+      if(node.classList.contains('wc-about__headline')&&lang==='he'){node.innerHTML='מעבר לגרפים. <em>אל תוך הנתונים.</em>';return;}
+      node.textContent=node.getAttribute('data-about-'+lang);
+    });
+    buttons.forEach(b=>{const active=b===button;b.classList.toggle('is-on',active);b.setAttribute('aria-pressed',String(active));});
+  }));
+})();
+</script>
 </body>
 </html>
