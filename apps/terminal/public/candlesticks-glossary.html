@@ -74,6 +74,27 @@ body.glossary-page .glossary-teaching-chart svg text{direction:ltr;unicode-bidi:
 @media(max-width:850px){body.glossary-page .glossary-grid{grid-template-columns:1fr;gap:18px}body.glossary-page .term-card{padding:20px;min-height:unset}body.glossary-page .glossary-teaching-chart{padding:8px}}
 @media(prefers-reduced-motion:reduce){body.glossary-page .glossary-teaching summary::before{transition:none}}
 
+
+/* Glossary card polish — bright subtle outlines and restrained interaction */
+body.glossary-page .glossary-grid .term-card{
+  border:1px solid rgba(223,239,255,.73);
+  background:linear-gradient(155deg,#132f4c 0%,#10263f 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 6px 20px rgba(0,8,24,.18);
+  transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease,background .18s ease;
+}
+body.glossary-page .glossary-grid .term-card:hover,
+body.glossary-page .glossary-grid .term-card:focus-within{
+  border-color:#f1f8ff;
+  background:linear-gradient(155deg,#183957 0%,#132c48 100%);
+  box-shadow:0 10px 26px rgba(0,10,25,.30),0 0 0 1px rgba(148,207,255,.16);
+}
+@media(hover:hover) and (pointer:fine){
+  body.glossary-page .glossary-grid .term-card:hover{transform:translateY(-2px)}
+}
+@media(prefers-reduced-motion:reduce){
+  body.glossary-page .glossary-grid .term-card{transition:none}
+  body.glossary-page .glossary-grid .term-card:hover{transform:none}
+}
 </style></head><body class="glossary-page"><header><a href="products.html"><strong>WAVE CAPITAL</strong></a><a href="candlesticks-course.html">חזרה לקורס</a></header><div class="glossary-layout"><main class="glossary-main"><small style="color:#2870b8">WAVE UNIVERSITY · קריאת גרפים ופעולת מחיר</small><h1 class="glossary-title">מילון המושגים הכללי</h1><div class="glossary-intro"><strong>מושגים מקצועיים, בהסברים קצרים וברורים.</strong><p style="margin:5px 0 0">כאן ניתן למצוא את המונחים המרכזיים בקריאת גרפים, נרות יפניים, התנהגות מחיר וניהול סיכונים. השתמשו בחיפוש או בקטגוריות כדי להגיע למושג הרצוי.</p></div>
 <label for="glossary-search" style="display:block;font-weight:700;margin-bottom:8px">חיפוש במילון</label><input id="glossary-search" class="glossary-search" type="search" placeholder="לדוגמה: מגמה, נר, תמיכה, OHLC..." autocomplete="off">
 <div id="glossary-filters" class="glossary-filters" role="group" aria-label="סינון מושגים"></div><p id="glossary-count" style="font-size:13px;color:#617e9b" aria-live="polite"></p><div id="glossary-grid" class="glossary-grid"></div><p id="glossary-empty" class="empty" hidden>לא נמצאו מושגים התואמים לחיפוש. נסו מילה אחרת או קטגוריה נוספת.</p><p class="glossary-foot">המילון נועד לסייע בלמידה ואינו מחליף את ההסברים המלאים בתוך השיעורים.</p></main><aside class="glossary-side"><strong>קריאת גרפים ופעולת מחיר</strong><p style="color:#bad7f5;font-size:13px">מילון מושגים מקצועי</p><a href="candlesticks-course.html">כל יחידות הקורס</a><a href="candlesticks-lesson-04.html">שיעור 1.4 — שפת הקורס</a><a class="current" href="candlesticks-glossary.html" aria-current="page">מילון המושגים</a></aside></div><script src="candlesticks-glossary.js?v=4" defer></script></body></html>
