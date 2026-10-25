@@ -58,3 +58,29 @@ body:has(.layout>.content) .section>h2{color:#85caff}
 body:has(.layout>.content) .content .section>p{color:#d4e0f1}
 @media(max-width:900px){body:has(.layout>.content){background:#061327}body:has(.layout>.content) .content{background:#0a1c35;padding:22px 18px 42px;border:1px solid #23446e;border-radius:16px}}
 @media(max-width:480px){body:has(.layout>.content) .content{padding:20px 13px 35px}}
+
+/* QA fix: eliminate high-contrast white surfaces; preserve the existing SVG source. */
+body:has(.layout>.content) .content .lesson-preview,
+body:has(.layout>.content) .content .objective,
+body:has(.layout>.content) .content .visual,
+body:has(.layout>.content) .content .course-widget,
+body:has(.layout>.content) .content .progress{color:#e9f2ff!important}
+body:has(.layout>.content) .content .lesson-preview{background:#122a49!important;border-color:#315277!important;border-right-color:#55a9ec!important}
+body:has(.layout>.content) .content .lesson-preview__label{color:#85caff!important}
+body:has(.layout>.content) .content .lesson-preview__copy{color:#d4e1f3!important}
+body:has(.layout>.content) .content .objective{background:#10243e!important;border-color:#31547c!important}
+body:has(.layout>.content) .content .visual,
+body:has(.layout>.content) .content .course-widget{background:#0b2039!important;border-color:#28496d!important}
+body:has(.layout>.content) .content .visual>p,
+body:has(.layout>.content) .content .visual .visnote{color:#cfdef1!important}
+body:has(.layout>.content) .content .visual svg{background:#0a1c31!important;border:1px solid #243f5d;border-radius:12px;display:block;max-width:100%}
+body:has(.layout>.content) .content .visual svg text{paint-order:stroke;stroke:none}
+body:has(.layout>.content) .content .feedback{background:#15324e!important;color:#e1eeff!important}
+body:has(.layout>.content) .content .course-tools{border-bottom-color:#345473!important}
+body:has(.layout>.content) .content .course-tools button{background:#142e4e!important;border:1px solid #3b5d82!important;color:#e0edff!important}
+body:has(.layout>.content) .content .course-tools button:hover{background:#20456b!important}
+body:has(.layout>.content) .content .course-tools button[aria-pressed=true]{background:#20548c!important;color:white!important;border-color:#66a9ef!important}
+body:has(.layout>.content) .content .course-widget button{background:#185da4!important;border-color:#4b8cd0!important;color:#fff!important}
+body:has(.layout>.content) .content .course-widget .feedback{background:#173957!important;color:#eaf5ff!important}
+body:has(.layout>.content) .content .progress{background:#102a44!important}
+body.course-focus:has(.layout>.content){background:#061327!important}
