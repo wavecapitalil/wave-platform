@@ -1,3 +1,4 @@
+import {REVIEWED_SHARE_CLASSES,aggregateShareClasses} from './share-classes.ts';
 /**
  * Read-only, deterministic SEC CompanyFacts adapter. No fetch, cache write, or
  * forecast defaults live here. Amounts are unscaled USD; percentages are points.
@@ -23,7 +24,7 @@ export type ValuationField = {
   components?: ValuationField[];
 };
 type Fact = {concept: string; namespace: string; unit: string; row: any};
-type Context = {doc: any; facts: any; today: string; cik: string; sourceUrl: string | null; includeInterim?: boolean};
+type Context = {doc: any; facts: any; now: number; today: string; cik: string; sourceUrl: string | null; includeInterim?: boolean};
 const DAY = 86400000;
 const ANNUAL_FORMS = new Set(['10-K', '10-K/A']);
 const REVENUE = ['RevenueFromContractWithCustomerExcludingAssessedTax', 'RevenueFromContractWithCustomerIncludingAssessedTax', 'Revenues', 'SalesRevenueNet', 'RegulatedAndUnregulatedOperatingRevenue'];
@@ -127,8 +128,28 @@ function splitInPeriod(ctx: Context, start: string, end: string): boolean {
     return !!reported && reported <= ctx.today && !!periodEnd && periodEnd >= start && periodEnd <= end && v != null && v !== 1 && v > 0;
   })));
 }
+function reviewedLatestShares(ctx:Context):ValuationField|null {
+  const records=REVIEWED_SHARE_CLASSES.filter(r=>r.cik===Number(ctx.cik)&&r.filed<=ctx.today&&Date.parse(r.verified_at)<=ctx.now).sort((a,b)=>b.as_of.localeCompare(a.as_of));
+  const record=records[0];if(!record)return null;
+  // A bounded review cannot mask a newer annual/interim filing, even if that
+  // filing omits its share tags. Require evidence the reviewed filing is loaded.
+  const filings:any[]=Object.values(ctx.doc?.facts||{}).flatMap((ns:any)=>Object.values(ns).flatMap((c:any)=>Object.values(c.units||{}).flatMap((rows:any)=>Array.isArray(rows)?rows:[])))
+    .filter((r:any)=>['10-K','10-K/A','10-Q','10-Q/A'].includes(r.form)&&date(r.filed)&&r.filed<=ctx.today);
+  if(!filings.some(r=>r.accn===record.accession)||filings.some(r=>r.filed>record.filed))return null;
+  if(splitInPeriod(ctx,record.as_of,ctx.today))return null;
+  // Never replace a conflicting/null entity-wide fact or a newer dated count.
+  const recent={...ctx,includeInterim:true};
+  const reported=[...observations(recent,['CommonStockSharesOutstanding'],'shares',false),...observations(recent,['EntityCommonStockSharesOutstanding'],'shares',false,'dei')];
+  if(reported.some(x=>x.row.end>=record.as_of))return null;
+  try{
+    const {value}=aggregateShareClasses(record,ctx.now);
+    const components:ValuationField[]=record.classes.map(c=>({value:c.value,unit:'shares',period_start:null,period_end:record.as_of,source:'SEC filing cover · '+c.id,url:record.source,status:'ok',reason:'Dated outstanding common shares; not weighted-average EPS shares.',accession:record.accession,filed:record.filed,form:record.form}));
+    return {...derived(ctx,value,'shares',null,record.as_of,'Reviewed complete Class A + Class B cover-page count. Identical dividend/liquidation rights; no weighted-average EPS substitution. Bounded to this filing, not a live current count.',components),source:'SEC filing · reviewed common share classes',form:record.form,as_of:record.as_of};
+  }catch{return null;}
+}
 // Latest entity-wide outstanding count is independent of the annual income base.
 function latestOutstanding(ctx: Context): ValuationField {
+  const reviewed=reviewedLatestShares(ctx);if(reviewed)return reviewed;
   const recent = {...ctx, includeInterim: true};
   const all = [...observations(recent, ['CommonStockSharesOutstanding'], 'shares', false),
     ...observations(recent, ['EntityCommonStockSharesOutstanding'], 'shares', false, 'dei')];
@@ -296,7 +317,7 @@ export function buildValuationInputs(symbol: string, cachedFacts: any, chartMeta
   const doc = cachedFacts?.document || cachedFacts || {};
   const rawCik = String(doc.cik || cachedFacts?.cik || '');
   const cik = /^\d{1,10}$/.test(rawCik) ? rawCik.padStart(10, '0') : '';
-  const ctx: Context = {doc, facts: doc?.facts?.['us-gaap'] || {}, today, cik,
+  const ctx: Context = {doc, facts: doc?.facts?.['us-gaap'] || {}, now: safeNow, today, cik,
     sourceUrl: cik ? `https://data.sec.gov/api/xbrl/companyfacts/CIK${cik}.json` : null};
   const quoteCurrency = chartMeta?.currency === 'USD' ? 'USD' : null;
   const hasGAAP = Object.keys(ctx.facts).length > 0;
@@ -347,7 +368,7 @@ export function buildValuationInputs(symbol: string, cachedFacts: any, chartMeta
     symbol: String(symbol).trim().toUpperCase(), name: doc.entityName || cachedFacts?.company_name || String(symbol).toUpperCase(),
     currency, fiscal_year_end: latest?.end || null, fiscal_year_start: latest?.start || null, as_of: asOf,
     fetched_at: cachedFacts?.fetched_at || null, status: !supported ? 'unsupported' : fields.revenue.value == null ? 'unavailable' : warnings.length ? 'partial' : 'ok',
-    fields, history, warnings, logic_version: 'valuation_inputs_v4',
+    fields, history, warnings, logic_version: 'valuation_inputs_v5',
     methodology: [
       'Full-year actuals use USD, entity-wide US-GAAP facts from 10-K/10-K/A, with 350–380 day duration and exact period alignment. Later restatements replace earlier reports; fiscal-year labels are not inferred from filing year.',
       'USD annual financial history is independent of quote availability. Quotes require their own verified USD currency and timestamp; no FX or ADR conversion is performed.',
@@ -358,7 +379,7 @@ export function buildValuationInputs(symbol: string, cachedFacts: any, chartMeta
       'Cash means cash and equivalents. Debt is populated only from a reported total or complete non-overlapping debt-and-finance-lease aggregates in the same filing; absent components remain missing rather than zero.',
       'Reported long-term debt, commercial paper, their subtotal and finance-lease liabilities are separately labeled scopes. Their availability does not establish complete total debt; missing short-term debt is never assumed to be zero.',
       'Gross dilution and historical EV/EBIT remain unavailable. No current or historical multiple is fabricated from a current quote and old shares. No fair value or investment recommendation is supplied by this adapter.',
-      'SEC CompanyFacts omits custom taxonomy and dimensional disclosures. A bounded, reviewed annual class reconciliation may fill absent historical shares for the exact issuer, fiscal date and filing. Components and filing links are retained; it never populates latest_shares_outstanding or overrides conflicting observations. Other missing data requires reviewed manual input.',
+      'SEC CompanyFacts omits custom taxonomy and dimensional disclosures. A bounded, reviewed annual class reconciliation may fill absent historical shares for the exact issuer, fiscal date and filing. Components and filing links are retained; annual and latest counts remain separate. A complete reviewed common-equivalent cover-page class set may populate latest_shares_outstanding only for its exact loaded filing, with no newer filing, conflicting count or subsequent split. Unsupported class economics require manual reconciliation. No live class-ingestion coverage is implied.',
     ],
     sources: [
       {title: 'SEC CompanyFacts API and scope', url: 'https://www.sec.gov/search-filings/edgar-application-programming-interfaces'},

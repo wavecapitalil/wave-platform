@@ -238,9 +238,9 @@ test('stale cache and old annual data are surfaced independently', () => {
   const f = fixture(); f.stale_fallback = true;
   const r = result(f); assert.ok(r.warnings.some(x => x.field === 'cache')); assert.equal(r.fetched_at, f.fetched_at);
 });
-test('module has no fetch, database writes, runtime credentials or imports', () => {
+test('module has no fetch, database writes, runtime credentials or external imports', () => {
   const source = fs.readFileSync(new URL('../supabase/functions/wave-data/valuation-inputs.ts', import.meta.url), 'utf8');
-  assert.doesNotMatch(source, /\bfetch\s*\(|\bDeno\.env|\b(?:insert|update|upsert|rpc)\s*\(|^import\s/m);
+  assert.doesNotMatch(source, /\bfetch\s*\(|\bDeno\.env|\b(?:insert|update|upsert|rpc)\s*\(|from ['"](?:https:|npm:|jsr:)/m);
 });
 
 
@@ -370,4 +370,45 @@ test('reviewed META annual class totals fill only the exact missing filing basis
   add(f,'CommonStockSharesOutstanding','shares',[instant(null,'2025-12-31',{accn:'0001628280-26-003942',filed:'2026-01-29'})]);assert.equal(result(f).fields.shares_outstanding.value,null);
   delete us(f).CommonStockSharesOutstanding;
   add(f,'StockSplitConversionRatio','pure',[instant(2,'2026-06-01')]);assert.equal(result(f).fields.shares_outstanding.value,null);
+});
+
+test('reviewed latest META cover classes aggregate without changing annual input dates',()=>{
+ const f=fixture();f.document.cik=1326801;
+ for(const ns of Object.values(f.document.facts))for(const concept of Object.values(ns))for(const rows of Object.values(concept.units))for(const row of rows){row.accn='0001628280-26-003942';row.filed='2026-01-29';}
+ delete us(f).CommonStockSharesOutstanding;delete f.document.facts.dei.EntityCommonStockSharesOutstanding;
+ const q={end:'2026-06-30',val:100,accn:'0001628280-26-050705',filed:'2026-07-30',form:'10-Q',fp:'Q2'};
+ us(f).Assets={units:{USD:[q]}};
+ const late=Date.parse('2026-10-25T10:05:00Z');
+ const run=()=>buildValuationInputs('META',f,quote,late);
+ const r=run();assert.equal(r.fields.latest_shares_outstanding.value,2547506225);assert.equal(r.fields.latest_shares_outstanding.period_end,'2026-07-24');assert.equal(r.fields.latest_shares_outstanding.accession,q.accn);assert.equal(r.fields.latest_shares_outstanding.components.length,2);
+ assert.equal(r.fields.shares_outstanding.value,2530e6);assert.equal(r.fields.shares_outstanding.period_end,'2025-12-31');assert.equal(r.fields.diluted_eps_shares.value,107);
+ us(f).Assets.units.USD.push({...q,accn:'0001628280-26-060000',filed:'2026-10-23'});assert.equal(run().fields.latest_shares_outstanding.value,null);
+ us(f).Assets.units.USD.pop();
+ f.document.facts.dei.EntityCommonStockSharesOutstanding={units:{shares:[{...q,end:'2026-07-24',val:null}]}};assert.equal(run().fields.latest_shares_outstanding.value,null);
+ delete f.document.facts.dei.EntityCommonStockSharesOutstanding;
+ add(f,'StockSplitConversionRatio','pure',[{...q,end:'2026-08-01',val:2}]);assert.equal(run().fields.latest_shares_outstanding.value,null);
+});
+test('class aggregation rejects duplicate/missing/aggregate, unequal classes, units and issuer mismatch',async()=>{
+ const {aggregateShareClasses,REVIEWED_SHARE_CLASSES}=await import('../supabase/functions/wave-data/share-classes.ts');
+ const r=structuredClone(REVIEWED_SHARE_CLASSES[0]),at=Date.parse('2026-10-25T10:05:00Z');
+ assert.equal(aggregateShareClasses(r,at).value,2547506225);
+ for(const classes of [[r.classes[0],r.classes[0]],r.classes.slice(0,1),[...r.classes,{...r.classes[0],id:'Total'}],[r.classes[0],{...r.classes[1],common_equivalent_ratio:1500}],[r.classes[0],{...r.classes[1],unit:'USD'}]])assert.throws(()=>aggregateShareClasses({...r,classes},at));
+ // Berkshire's unequal A/B economics and Alphabet's three classes are never
+ // inferred from class labels. Apple/MSFT continue through existing single-class facts.
+ for(const cik of [1067983,1652044,320193,789019])assert.throws(()=>aggregateShareClasses({...r,cik},at));
+ assert.throws(()=>aggregateShareClasses({...r,as_of:'2026-07-31'},at));
+ assert.throws(()=>aggregateShareClasses({...r,verified_at:'2026-10-26T10:00:00Z'},at));
+ assert.throws(()=>aggregateShareClasses({...r,source:r.source.replace('050705','050706')},at));
+});
+
+test('October META filing replaces July only after verification and rejects newer unreviewed filing',()=>{
+ const f=fixture();f.document.cik=1326801;
+ delete us(f).CommonStockSharesOutstanding;delete f.document.facts.dei.EntityCommonStockSharesOutstanding;
+ const q={end:'2026-09-30',val:100,accn:'0001628280-26-066773',filed:'2026-10-22',form:'10-Q',fp:'Q3'};
+ us(f).Assets={units:{USD:[q]}};
+ const run=at=>buildValuationInputs('META',f,quote,Date.parse(at)).fields.latest_shares_outstanding;
+ assert.equal(run('2026-10-25T10:13:59Z').value,null);
+ const r=run('2026-10-25T10:14:00Z');assert.equal(r.value,2556241253);assert.equal(r.period_end,'2026-10-16');assert.equal(r.accession,q.accn);
+ us(f).Assets.units.USD.push({...q,filed:'2026-10-26',accn:'0001628280-26-066999'});
+ assert.equal(run('2026-10-27T00:00:00Z').value,null);
 });

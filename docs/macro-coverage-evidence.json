@@ -1,0 +1,187 @@
+{
+  "checked_at": "2026-10-21T13:23:41.759Z",
+  "scope": "Read-only official-series check; not a deployed candidate",
+  "live_cpi": {
+    "id": "cpi",
+    "status": "current_vintage",
+    "fetched_at": "2026-10-21T13:24:34.949Z",
+    "source": "https://fred.stlouisfed.org/series/CPIAUCNS",
+    "release_dates_available": false,
+    "history_basis": "latest_revised",
+    "unit": "% YoY",
+    "sa": "NSA",
+    "frequency": "monthly"
+  },
+  "indicators": [
+    {
+      "id": "cpi",
+      "source": "https://fred.stlouisfed.org/series/CPIAUCNS",
+      "history_status": "current_vintage",
+      "observation_count": 60,
+      "first": {
+        "period": "2021-09-01",
+        "value": 5.3903
+      },
+      "last": {
+        "period": "2026-09-01",
+        "value": 3.7377
+      }
+    },
+    {
+      "id": "pce",
+      "source": "https://fred.stlouisfed.org/series/PCEPI",
+      "history_status": "stale",
+      "observation_count": 60,
+      "first": {
+        "period": "2021-09-01",
+        "value": 4.6556
+      },
+      "last": {
+        "period": "2026-08-01",
+        "value": 3.419
+      }
+    },
+    {
+      "id": "core_cpi",
+      "source": "https://fred.stlouisfed.org/series/CPILFENS",
+      "history_status": "current_vintage",
+      "observation_count": 60,
+      "first": {
+        "period": "2021-09-01",
+        "value": 4.0252
+      },
+      "last": {
+        "period": "2026-09-01",
+        "value": 2.5644
+      }
+    },
+    {
+      "id": "industrial",
+      "source": "https://fred.stlouisfed.org/series/INDPRO",
+      "history_status": "current_vintage",
+      "observation_count": 60,
+      "first": {
+        "period": "2021-10-01",
+        "value": 1.3435
+      },
+      "last": {
+        "period": "2026-09-01",
+        "value": 0.6626
+      }
+    },
+    {
+      "id": "gdp",
+      "source": "https://fred.stlouisfed.org/series/A191RL1Q225SBEA",
+      "history_status": "current_vintage",
+      "observation_count": 60,
+      "first": {
+        "period": "2011-07-01",
+        "value": -0.1
+      },
+      "last": {
+        "period": "2026-04-01",
+        "value": 2.2
+      }
+    },
+    {
+      "id": "retail",
+      "source": "https://fred.stlouisfed.org/series/RSAFS",
+      "history_status": "current_vintage",
+      "observation_count": 60,
+      "first": {
+        "period": "2021-10-01",
+        "value": 1.4516
+      },
+      "last": {
+        "period": "2026-09-01",
+        "value": 0.7708
+      }
+    },
+    {
+      "id": "ism_manufacturing",
+      "source": null,
+      "history_status": "license_unverified",
+      "observation_count": 0,
+      "first": null,
+      "last": null
+    },
+    {
+      "id": "ism_services",
+      "source": null,
+      "history_status": "license_unverified",
+      "observation_count": 0,
+      "first": null,
+      "last": null
+    },
+    {
+      "id": "nfp",
+      "source": "https://fred.stlouisfed.org/series/PAYEMS",
+      "history_status": "current_vintage",
+      "observation_count": 60,
+      "first": {
+        "period": "2021-10-01",
+        "value": 801
+      },
+      "last": {
+        "period": "2026-09-01",
+        "value": 29
+      }
+    },
+    {
+      "id": "unemployment",
+      "source": "https://fred.stlouisfed.org/series/UNRATE",
+      "history_status": "current_vintage",
+      "observation_count": 60,
+      "first": {
+        "period": "2021-09-01",
+        "value": 4.7
+      },
+      "last": {
+        "period": "2026-09-01",
+        "value": 4.2
+      }
+    },
+    {
+      "id": "claims",
+      "source": "https://fred.stlouisfed.org/series/ICSA",
+      "history_status": "current_vintage",
+      "observation_count": 60,
+      "first": {
+        "period": "2025-08-23",
+        "value": 229000
+      },
+      "last": {
+        "period": "2026-10-10",
+        "value": 199000
+      }
+    },
+    {
+      "id": "jolts",
+      "source": "https://fred.stlouisfed.org/series/JTSJOL",
+      "history_status": "stale",
+      "observation_count": 60,
+      "first": {
+        "period": "2021-09-01",
+        "value": 10834
+      },
+      "last": {
+        "period": "2026-08-01",
+        "value": 7079
+      }
+    },
+    {
+      "id": "wages",
+      "source": "https://fred.stlouisfed.org/series/CES0500000003",
+      "history_status": "current_vintage",
+      "observation_count": 60,
+      "first": {
+        "period": "2021-10-01",
+        "value": 5.4164
+      },
+      "last": {
+        "period": "2026-09-01",
+        "value": 3.0245
+      }
+    }
+  ]
+}
