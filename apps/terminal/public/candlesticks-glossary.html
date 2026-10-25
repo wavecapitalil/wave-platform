@@ -13,6 +13,36 @@ body.glossary-page{background:#f7faff;color:#142745}body.glossary-page header{ba
 .empty{padding:25px;color:#4d6685;text-align:center}.glossary-foot{font-size:13px;color:#637e9c;margin-top:22px}
 @media(min-width:851px){.glossary-layout{direction:ltr;grid-template-columns:250px minmax(0,1fr)}.glossary-side{grid-column:1;grid-row:1;direction:rtl}.glossary-main{grid-column:2;grid-row:1;direction:rtl}}
 @media(max-width:850px){.glossary-layout{display:flex;flex-direction:column-reverse;padding:12px;gap:15px}.glossary-main,.glossary-side{width:100%}.glossary-main{padding:20px}.glossary-side{position:static}.glossary-grid{grid-template-columns:1fr}}
+
+/* Deep Navy glossary: presentation only; term definitions and data remain untouched. */
+body.glossary-page{background:#061327;color:#e5effe}
+body.glossary-page header{background:#07182c;border-bottom:1px solid #234269}
+body.glossary-page .glossary-main{background:#0b1d35;color:#e6f1ff;border:1px solid #24486e;box-shadow:0 20px 55px #0004}
+body.glossary-page .glossary-side{background:#081a31;border:1px solid #294c74;box-shadow:0 12px 36px #0003}
+body.glossary-page .glossary-title{color:#f3f8ff;letter-spacing:-.02em}
+body.glossary-page .glossary-intro{background:#112b47;border:1px solid #2b5579;color:#d5e7f8}
+body.glossary-page .glossary-intro p{color:#c2d8ed}
+body.glossary-page .glossary-search{background:#071a30;color:#eef6ff;border:1px solid #3a638a;min-height:56px}
+body.glossary-page .glossary-search::placeholder{color:#8ba9c7}
+body.glossary-page .glossary-search:focus{outline:2px solid #64b4f6;outline-offset:2px}
+body.glossary-page .glossary-filters{gap:9px;margin:18px 0 24px}
+body.glossary-page .glossary-filters button{background:#122b46;color:#d0e4f9;border:1px solid #355777;border-radius:10px;transition:background .15s,border-color .15s}
+body.glossary-page .glossary-filters button:hover{background:#1a3a5c;border-color:#5a90c4}
+body.glossary-page .glossary-filters button.active{background:#1e569b;border-color:#4b94e9;color:#fff}
+body.glossary-page .glossary-grid{gap:12px}
+body.glossary-page .term-card{background:#102943;border:1px solid #2b5173;border-radius:13px;padding:19px;box-shadow:none}
+body.glossary-page .term-card:hover{border-color:#5c95cf;background:#13304e}
+body.glossary-page .term-name{color:#f0f7ff;font-size:19px}
+body.glossary-page .term-icon{color:#6dbef6}
+body.glossary-page .term-desc{color:#c1d7eb;line-height:1.85}
+body.glossary-page .term-category{color:#8eb8dd}
+body.glossary-page .empty,body.glossary-page .glossary-foot{color:#9bb7d2}
+body.glossary-page #glossary-count{color:#a9cae7!important}
+body.glossary-page .glossary-main>small{color:#81bfff!important}
+body.glossary-page label[for="glossary-search"]{color:#dceeff}
+@media(max-width:850px){body.glossary-page .glossary-layout{flex-direction:column}body.glossary-page .glossary-side{order:2}body.glossary-page .glossary-main{order:1}}
+@media(max-width:580px){body.glossary-page .glossary-main{padding:23px 16px}body.glossary-page .term-card{padding:16px}body.glossary-page .glossary-filters button{font-size:13px;padding:8px 12px}}
+
 </style></head><body class="glossary-page"><header><a href="products.html"><strong>WAVE CAPITAL</strong></a><a href="candlesticks-course.html">חזרה לקורס</a></header><div class="glossary-layout"><main class="glossary-main"><small style="color:#2870b8">WAVE UNIVERSITY · קריאת גרפים ופעולת מחיר</small><h1 class="glossary-title">מילון המושגים הכללי</h1><div class="glossary-intro"><strong>מושגים מקצועיים, בהסברים קצרים וברורים.</strong><p style="margin:5px 0 0">כאן ניתן למצוא את המונחים המרכזיים בקריאת גרפים, נרות יפניים, התנהגות מחיר וניהול סיכונים. השתמשו בחיפוש או בקטגוריות כדי להגיע למושג הרצוי.</p></div>
 <label for="glossary-search" style="display:block;font-weight:700;margin-bottom:8px">חיפוש במילון</label><input id="glossary-search" class="glossary-search" type="search" placeholder="לדוגמה: מגמה, נר, תמיכה, OHLC..." autocomplete="off">
 <div id="glossary-filters" class="glossary-filters" role="group" aria-label="סינון מושגים"></div><p id="glossary-count" style="font-size:13px;color:#617e9b" aria-live="polite"></p><div id="glossary-grid" class="glossary-grid"></div><p id="glossary-empty" class="empty" hidden>לא נמצאו מושגים התואמים לחיפוש. נסו מילה אחרת או קטגוריה נוספת.</p><p class="glossary-foot">המילון נועד לסייע בלמידה ואינו מחליף את ההסברים המלאים בתוך השיעורים.</p></main><aside class="glossary-side"><strong>קריאת גרפים ופעולת מחיר</strong><p style="color:#bad7f5;font-size:13px">מילון מושגים מקצועי</p><a href="candlesticks-course.html">כל יחידות הקורס</a><a href="candlesticks-lesson-04.html">שיעור 1.4 — שפת הקורס</a><a class="current" href="candlesticks-glossary.html" aria-current="page">מילון המושגים</a></aside></div><script src="candlesticks-glossary.js?v=1" defer></script></body></html>
