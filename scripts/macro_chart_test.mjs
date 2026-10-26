@@ -4,10 +4,10 @@ import vm from 'node:vm';
 import fs from 'node:fs';
 const source=fs.readFileSync(new URL('../apps/terminal/public/terminal-macro-dashboard.js',import.meta.url),'utf8');
 function ui(lang='en',width=375){
- const noop=()=>{};const el={addEventListener:noop};
- const context={window:{innerWidth:width},document:{documentElement:{lang},getElementById:()=>el},localStorage:{getItem:()=>lang},Date,Intl,Number,Math,Array,String,Set};
- vm.runInNewContext(source.replace('  var previousLanguageChange=', '  window.testAPI={chart,chartScale,readable,comparisonPoints,comparison,nextRelease,verifiedConsensus}; var previousLanguageChange='),context);
- return context.window.testAPI;
+ const records=[];const noop=()=>{};const el={addEventListener:noop};
+ const context={window:{innerWidth:width,WaveSources:{record:(...args)=>records.push(args)}},WaveSources:{record:(...args)=>records.push(args)},document:{documentElement:{lang},getElementById:()=>el},localStorage:{getItem:()=>lang},Date,Intl,Number,Math,Array,String,Set};
+ vm.runInNewContext(source.replace('  var previousLanguageChange=', '  window.testAPI={chart,chartScale,readable,comparisonPoints,comparison,nextRelease,verifiedConsensus,registerNotes}; var previousLanguageChange='),context);
+ context.window.testAPI.records=records;return context.window.testAPI;
 }
 const now=Date.now(),past=new Date(now-86400000).toISOString(),future=new Date(now+86400000).toISOString();
 const period='2026-08-01',base={period,unit:'% YoY',sa:'SA',source:'https://www.bea.gov/test',verified_at:past};
@@ -16,14 +16,15 @@ test('past actual columns and distinct consensus dots; future consensus has no f
  const api=ui(),s={unit:'% YoY',sa:'SA',releases:[{...base,actual:3.4,released_at:past,consensus}],calendar:[{...base,id:'next',scheduled_at:future,consensus}]};
  const points=api.comparisonPoints(s);assert.equal(points[0].value,3.4);assert.equal(points[1].value,null);
  const html=api.comparison(s,true);assert.equal((html.match(/<rect /g)||[]).length,1);assert.equal((html.match(/<circle /g)||[]).length,2);
- assert.ok(html.includes('Difference: 0.2'));assert.ok(html.includes('2026-08-01'));assert.ok(html.includes('Verified source'));assert.ok(html.includes('Release date'));
+ assert.ok(html.includes('Difference: 0.2'));assert.ok(html.includes('2026-08-01'));assert.ok(!html.includes('Verified source'));assert.ok(html.includes('Release date'));
  for(const attr of html.matchAll(/\s(?:x|y|width|height|cx|cy)="([^"]+)"/g))assert.ok(Number.isFinite(Number(attr[1])),attr[0]);
 });
 test('missing consensus is never zero; revised history has no consensus dots',()=>{
  const api=ui(),s={unit:'% YoY',sa:'SA',releases:[{...base,actual:0,released_at:past}],calendar:[]};
- const html=api.comparison(s,true);assert.equal((html.match(/<circle /g)||[]).length,0);assert.equal((html.match(/<rect /g)||[]).length,1);assert.ok(html.includes('Missing verified consensus'));
+ const html=api.comparison(s,true);assert.equal((html.match(/<circle /g)||[]).length,0);assert.equal((html.match(/<rect /g)||[]).length,1);assert.ok(!html.includes('Missing verified consensus'));
+ const card=api.comparison(s,false);assert.ok(!card.includes('Missing verified consensus'));assert.ok(!card.includes('macro-consensus-key'));assert.equal((card.match(/<circle /g)||[]).length,0);
  assert.ok(!api.chart([{period,value:3.419}],true,'% YoY').includes('<circle'));
- assert.ok(api.nextRelease(s).includes('Schedule unavailable'));
+ assert.equal(api.nextRelease(s),'');
 });
 test('invalid or future-captured consensus fails closed in frontend; RTL and narrow chart remain finite',()=>{
  const api=ui('he',320),r={...base,released_at:past,consensus};
@@ -48,7 +49,7 @@ test('readouts preserve observation precision and missing values; empty consensu
  assert.ok(html.includes('−0.015 % MoM'));assert.ok(html.includes('2026/08/01 · — % MoM'));
  assert.ok(html.includes('tabindex="0"'));assert.ok(html.includes('aria-live="polite"'));
  const comparison=api.comparison({unit:'%',sa:'SA',releases:[{...base,actual:0,released_at:past}],calendar:[]},true);
- assert.ok(!comparison.includes('macro-consensus-key'));assert.ok(comparison.includes('צפי מאומת חסר'));
+ assert.ok(!comparison.includes('macro-consensus-key'));assert.ok(!comparison.includes('צפי מאומת חסר'));
 });
 
 test('zero and tiny signed bars share the exact baseline without minimum-height distortion',()=>{
@@ -68,4 +69,12 @@ test('visible values trim tails, preserve tiny signs and do not rescale units',(
  assert.equal(f(-.000000123456,'% MoM'),'−0.000000123');
  assert.equal(f(120000,'jobs'),'120,000');assert.equal(f(103.45678,'Index'),'103.457');
  assert.equal(f(12.3,'USD billions'),'12.3');assert.equal(f(-0,'%'),'0');assert.equal(f(null,'%'),'—');
+});
+
+test('chart explanations move to indicator-associated Sources without losing availability caveats',()=>{
+ const api=ui(),s={id:'core_cpi',name:'Core CPI',he:'ליבה',unit:'% YoY',sa:'SA',releases:[{...base,id:'release-test',actual:2.6,released_at:past,components:[]}],calendar:[]};
+ api.registerNotes(s,{status:'fetch_failed',points:[],error:'test retrieval error',fetched_at:past});
+ const [key,title,body]=api.records[0];assert.equal(key,'macro-notes:core_cpi');assert.ok(title.includes('Core CPI'));
+ for(const note of ['test retrieval error','no verified pre-release capture','decomposition unavailable','Schedule unavailable','0 revised observations','never zero',past])assert.ok(body.includes(note),note);
+ assert.equal(api.nextRelease(s),'');assert.ok(!api.comparison(s,true).includes('Missing verified consensus'));
 });
