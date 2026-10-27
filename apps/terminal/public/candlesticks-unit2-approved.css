@@ -1,0 +1,14 @@
+/* Unit 2 visual approval: reliable deep navy, including the legacy 2.1 master skin. */
+body.wave-unit2,body.course-master.wave-unit2{background:#06152b!important;color:#e8f2ff!important}
+body.wave-unit2 .content,body.course-master.wave-unit2 .content{background:linear-gradient(160deg,#0b2343,#071528)!important;color:#eaf3ff!important;border:1px solid #24486e!important;border-radius:18px!important;box-shadow:0 18px 60px #0005!important;padding:30px!important}
+body.wave-unit2 .content .section,body.wave-unit2 .content .visual,body.wave-unit2 .content .course-widget,body.wave-unit2 .content .cards>div{background:#0e2847!important;color:#eaf3ff!important;border-color:#31577b!important}
+body.wave-unit2 .content .section>p,body.wave-unit2 .content .section li,body.wave-unit2 .content .visual p,body.wave-unit2 .content figcaption{color:#d9e7fa!important}
+body.wave-unit2 .content h1,body.wave-unit2 .content h2,body.wave-unit2 .content h3{color:#f0f7ff!important}
+body.wave-unit2 .content .combined-intro{background:#122a49!important;border:1px solid #35577d!important;border-right:4px solid #74beff!important}
+body.wave-unit2 .content .combined-intro h2{color:#8bcbff!important}
+body.wave-unit2 .content .progress,body.wave-unit2 .content .feedback{background:#133250!important;color:#eaf3ff!important}
+body.wave-unit2 .master-links a{background:#153252!important;color:#daebff!important;border-color:#3a648b!important}
+body.wave-unit2 .content .visual img{background:#102b4c;border:1px solid #355676;padding:8px}
+body.wave-unit2 .content .visual svg{background:#0b203c!important;border:1px solid #335b85}
+@media(max-width:900px){body.wave-unit2 .content,body.course-master.wave-unit2 .content{padding:20px!important;background:#0b203b!important}body.course-master.wave-unit2{background:#06152b!important}}
+@media(max-width:600px){body.wave-unit2 .content,body.course-master.wave-unit2 .content{padding:15px!important}}
