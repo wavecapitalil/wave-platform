@@ -16,11 +16,11 @@
 | 1.2 | מהו גרף ולמה בכלל צריך אותו? | docs/course-workspace/lessons/01-02.md | HTML + MD | תמליל HTML לבדיקת עריכה; QA לא הושלם | לא נבדק | לא נבדק | ממתין |
 | 1.3 | מאורז ביפן לגרף המודרני | docs/course-workspace/lessons/01-03.md | HTML + MD | תמליל HTML לבדיקת עריכה; QA לא הושלם | לא נבדק | לא נבדק | ממתין |
 | 1.4 | שפת הקורס וכללי הלמידה | docs/course-workspace/lessons/01-04.md | HTML + MD | תמליל HTML לבדיקת עריכה; QA לא הושלם | לא נבדק | לא נבדק | ממתין |
-| 2.1 | ארבעה מחירים בנר אחד | docs/course-workspace/lessons/02-01.md | HTML + MD | תמליל HTML לבדיקת עריכה; QA לא הושלם | לא נבדק | לא נבדק | ממתין |
-| 2.2 | גוף, פתילים וטווח | docs/course-workspace/lessons/02-02.md | HTML + MD | תמליל HTML לבדיקת עריכה; QA לא הושלם | לא נבדק | לא נבדק | ממתין |
-| 2.3 | מהו טיים־פריים? | docs/course-workspace/lessons/02-03.md | HTML + MD | תמליל HTML לבדיקת עריכה; QA לא הושלם | לא נבדק | לא נבדק | ממתין |
-| 2.4 | איך נר נבנה בזמן אמת | docs/course-workspace/lessons/02-04.md | HTML + MD | תמליל HTML לבדיקת עריכה; QA לא הושלם | לא נבדק | לא נבדק | ממתין |
-| 2.5 | פערים, שעות מסחר וסוגי שווקים | docs/course-workspace/lessons/02-05.md | HTML + MD | תמליל HTML לבדיקת עריכה; QA לא הושלם | לא נבדק | לא נבדק | ממתין |
+| 2.1 | ארבעה מחירים בנר אחד | docs/course-workspace/lessons/02-01.md | HTML + MD | עריכת HTML ומבנה פתיחה בוצעו; נדרש QA לשוני סופי | עיצוב Deep Navy הוחל בענף; בדיקת דפדפן נדרשת | קוד SVG וסקריפטים נשמר; בדיקת תמונות ומספרים נדרשת | ממתין לאישור אחרי QA |
+| 2.2 | גוף, פתילים וטווח | docs/course-workspace/lessons/02-02.md | HTML + MD | עריכת HTML ומבנה פתיחה בוצעו; נדרש QA לשוני סופי | עיצוב Deep Navy הוחל בענף; בדיקת דפדפן נדרשת | קוד SVG וסקריפטים נשמר; בדיקת תמונות ומספרים נדרשת | ממתין לאישור אחרי QA |
+| 2.3 | מהו טיים־פריים? | docs/course-workspace/lessons/02-03.md | HTML + MD | עריכת HTML ומבנה פתיחה בוצעו; נדרש QA לשוני סופי | עיצוב Deep Navy הוחל בענף; בדיקת דפדפן נדרשת | קוד SVG וסקריפטים נשמר; בדיקת תמונות ומספרים נדרשת | ממתין לאישור אחרי QA |
+| 2.4 | איך נר נבנה בזמן אמת | docs/course-workspace/lessons/02-04.md | HTML + MD | עריכת HTML ומבנה פתיחה בוצעו; נדרש QA לשוני סופי | עיצוב Deep Navy הוחל בענף; בדיקת דפדפן נדרשת | קוד SVG וסקריפטים נשמר; בדיקת תמונות ומספרים נדרשת | ממתין לאישור אחרי QA |
+| 2.5 | פערים, שעות מסחר וסוגי שווקים | docs/course-workspace/lessons/02-05.md | HTML + MD | עריכת HTML ומבנה פתיחה בוצעו; נדרש QA לשוני סופי | עיצוב Deep Navy הוחל בענף; בדיקת דפדפן נדרשת | קוד SVG וסקריפטים נשמר; בדיקת תמונות ומספרים נדרשת | ממתין לאישור אחרי QA |
 | 3.1 | מיקום הסגירה ביחס לטווח | docs/course-workspace/lessons/03-01.md | MD | טיוטת ניקוי RTL ורווחים — טעונה הגהה ידנית | לא נבדק | לא נבדק | ממתין |
 | 3.2 | נר חזק, נר חלש ונר מאוזן | docs/course-workspace/lessons/03-02.md | MD | טיוטת ניקוי RTL ורווחים — טעונה הגהה ידנית | לא נבדק | לא נבדק | ממתין |
 | 3.3 | דחיית מחיר ובדיקת רמות | docs/course-workspace/lessons/03-03.md | MD | טיוטת ניקוי RTL ורווחים — טעונה הגהה ידנית | לא נבדק | לא נבדק | ממתין |
@@ -80,3 +80,9 @@
 - Manually validated completed language QA: **0/56**.
 - Completed cross-course UX/UI QA: **0/56**.
 - Ready for publication: **0/56**.
+
+## Unit 2 isolated branch review (2026-10-27)
+- All five dedicated HTML lessons 2.1–2.5 now have a unified introductory card and archived legacy opening/source notes.
+- Manual/contextual rewrite passes completed across damaged prose sections, including OHLC formula consistency, numerical worked examples, comparative candle data and exercises. Original paragraphs retained inside HTML templates when modified.
+- Browser/mobile visual QA of chart raster assets is **not completed**; no claim of full diagram legibility yet.
+- Public main branch untouched. The files in this branch are **review candidates, not approved publication**.
