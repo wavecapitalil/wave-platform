@@ -42,3 +42,10 @@ Numbers in the final column are broad heuristic regex matches and **must not** b
 
 ## Next gated action
 Create an edited copy of lessons 1.1–1.4 and pilot unit 2 lesson 2.1 with full text diffs, screenshot checks, and figure integrity checks. After that, process Markdown units 3–10 in unit batches, leaving approved source files unchanged.
+
+## Editing progress: lesson 2.1 pilot
+- Completed two contextual proofread passes over lesson 2.1: 17 verified passage replacements.
+- Fixed scrambled PDF-extraction tokens in learning objectives, price-example prose, bullish/bearish candle examples, OHLC definitions, body/range formulas, validity constraints, and exercise questions.
+- Source HTML, SVG elements, scripts, class names, illustrations and navigation were preserved. The editing remains **draft**, not reviewed in a browser, and other passages still need a full line-by-line pass.
+- Design audit: lesson 2.1 includes `candlesticks-21-master.css` (a pre-existing light master theme) and `candlesticks-course-deep-navy-stage.css` loaded later. Cascade needs a screenshot-based regression check before declaring visual parity with unit 1.
+- Next: complete lesson 2.1 copy-edit, verify graphical OHLC and numerical constraints, then use the approved treatment as the unit-2 style baseline before broader rollout.
