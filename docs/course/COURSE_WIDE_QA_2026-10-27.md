@@ -32,3 +32,31 @@
 - Figure QA: NOT DONE.
 - Browser QA: NOT DONE.
 - No change to main or public site from this workstream.
+
+## Inventory update — 2026-10-27
+- Verified **all 56 of 56** lesson draft Markdown files at `docs/course-workspace/lessons/UU-NN.md`. No missing lesson IDs.
+- Every inspected draft contains bidirectional PDF extraction control characters. Typical counts range from ~170 to 870 per lesson; preserving source and rebuilding clean editorial copies is necessary.
+- 37 asset entries in the existing manifest require illustration-level verification: source figure vs displayed labels, axes, data, and responsive readability.
+- Staged `candlesticks-course-deep-navy-stage.css` and linked it to the five dedicated unit-2 lesson HTML pages **only on this branch**. The sole HTML change is a stylesheet link. Unit-2 rendering has **not yet passed browser QA**.
+- Unit 1 on main is the approved UX baseline but its copy still requires a complete final manual proofread.
+
+## Risks to resolve before publish
+- Copying a 56-lesson PDF extraction into student-facing HTML would bypass the existing content approval gate. Forbidden.
+- Auto-deleting all RTL/bidi markers can silently re-order numbers, punctuation, formulas, ranges and bilingual expressions.
+- Dark chart containers do not fix SVG intrinsic text geometry; figure labels must be audited individually.
+- A green code-diff check is not equivalent to browser-verified functionality.
+
+## Working-state checklist
+| Deliverable | Status |
+|---|---|
+| 56/56 draft-file inventory | Verified |
+| Base Deep Navy CSS staged for unit 2 | Implemented on QA branch |
+| 2.1–2.5 linked to staged theme | Implemented on QA branch |
+| All 56 lessons professionally copyedited | Not complete |
+| 37 asset-manifest figures manually QA'd | Not complete |
+| Browser desktop and mobile screenshots | Not complete |
+| Content semantics / interactions regression tests | Not complete |
+| Main branch merge / public publish | Not performed |
+
+## Publishing gate
+Only merge after a reviewed editorial diff for every modified lesson, accurate captions and graphic labels, confirmed responsive/keyboard tests, and user approval. Original PDF extracts and original figures remain immutable references.
