@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wave Capital — Blog</title>
+  <title>מחקרים | Wave Capital Research</title>
+  <meta name="description" content="מחקרי Wave Capital: השוואות הקצאה, השקעות וניתוח סיכונים על בסיס נתונים ומתודולוגיה שקופה.">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
@@ -78,6 +79,7 @@
     }
   </style>
 <link rel="stylesheet" href="ai-tutor.css">
+<link rel="stylesheet" href="research-feature.css?v=20261028">
 </head>
 <body>
 <nav class="nav">
@@ -124,6 +126,7 @@
 <script src="ai-tutor.js"></script>
 <script>
 var API = (location.hostname==='localhost'||location.hostname==='127.0.0.1') ? 'http://localhost:5001' : 'https://nqmtayofbhletydmiujz.supabase.co/functions/v1/wave-data';
+var FEATURED_RESEARCH_CARD = "<a class=\"research-feature\" href=\"research/three-portfolios.html\" aria-label=\"למחקר: שלוש הקצאות, שלוש פשרות\"><div class=\"research-feature__image\"><img src=\"assets/research/three-portfolios-banner.webp\" alt=\"שלושה מסלולים בכחול וכסף — איור קונספטואלי של פשרות בהקצאת נכסים\" width=\"1672\" height=\"941\" fetchpriority=\"high\"><span class=\"research-feature__number\">RESEARCH 001</span></div><div class=\"research-feature__body\"><span class=\"research-feature__eyebrow\">הקצאת נכסים · מחקר אמפירי</span><h2>שלוש הקצאות,<br>שלוש פשרות</h2><p>איך שילוב Nasdaq-100 או זהב משנה את צמיחת ההון, הסיכון וההתאוששות של תיק S&amp;P 500?</p><div class=\"research-feature__allocations\"><span><b>A</b> · 100% S&amp;P 500</span><span><b>B</b> · 50% S&amp;P 500 + 50% Nasdaq-100</span><span><b>C</b> · 70% S&amp;P 500 + 30% זהב</span></div><div class=\"research-feature__meta\"><span>2004–2026</span><span>5,518 תשואות יומיות</span><span>Wave Capital Research</span></div><span class=\"research-feature__cta\">למחקר המלא <b aria-hidden=\"true\">←</b></span><div class=\"research-cover-caption\">הבאנר הוא איור קונספטואלי; הגרפים והנתונים מופיעים במחקר.</div></div></a>";
 var PAGE_SIZE = 12;
 var _offset = 0;
 var _total = 0;
@@ -171,7 +174,10 @@ async function loadList(reset){
       '<div class="page-tag" data-i18n="blog.tag">Research & Insights</div>'
       +'<h1 class="page-title" data-i18n="blog.title">Blog</h1>'
       +'<p class="page-sub" data-i18n="blog.sub">Market analysis, strategy breakdowns, and trade recaps.</p>'
-      +'<div id="curatedResearch" class="grid" style="margin-bottom:24px"></div><div id="blogGrid" class="grid"><div class="empty" data-i18n="blog.loading">Loading articles…</div></div>'
+      +FEATURED_RESEARCH_CARD
+      +'<div id="curatedResearch" class="grid" style="margin-bottom:24px"></div>'
+      +'<h2 class="research-archive-title" data-i18n="blog.archive">מאמרים וניתוחי שוק</h2>'
+      +'<div id="blogGrid" class="grid"><div class="empty" data-i18n="blog.loading">Loading articles…</div></div>'
       +'<div class="loadmore-wrap" id="loadmoreWrap" style="display:none"><button class="loadmore" id="loadmoreBtn" data-i18n="blog.readMore">Load more</button></div>';
     document.getElementById('curatedResearch').innerHTML = (window.WaveResearchArticles||[]).map(function(a){return '<a class="card" href="blog.html?id='+encodeURIComponent(a.id)+'"><div class="card-body"><span class="card-cat">'+a.category+'</span><h2 class="card-title">'+a.title+'</h2><p class="card-lead">'+a.lead+'</p><div class="card-meta">'+a.source+' · '+timeAgo(a.created_at)+'</div></div></a>';}).join('');
     document.getElementById('loadmoreBtn').onclick = function(){ loadList(false); };
@@ -192,7 +198,7 @@ async function loadList(reset){
     wrap.style.display = (_offset < _total) ? 'block' : 'none';
     applyLang();
   }catch(e){
-    document.getElementById('blogGrid').innerHTML = '<div class="empty">Failed to load: '+e.message+'</div>';
+    document.getElementById('blogGrid').innerHTML = '<div class="empty">'+(getLang()==='he'?'מאמרי השוק אינם זמינים כרגע. המחקר המלא למעלה זמין לקריאה.':'Market articles are unavailable. The full research above remains available.')+'</div>';
   }
 }
 
