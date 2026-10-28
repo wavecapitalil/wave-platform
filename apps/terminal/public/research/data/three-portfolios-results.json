@@ -1,0 +1,957 @@
+{
+  "spec": {
+    "mode": "PORTFOLIO / COMBINED ANALYSIS",
+    "version": "ABC_v1",
+    "initial_usd": 100000,
+    "assets": [
+      "SPY",
+      "QQQ",
+      "GLD"
+    ],
+    "targets": {
+      "A": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "B": [
+        0.5,
+        0.5,
+        0.0
+      ],
+      "C": [
+        0.7,
+        0.0,
+        0.3
+      ]
+    },
+    "rebalance": [
+      "annual",
+      "quarterly",
+      "hold"
+    ],
+    "cost_bps": [
+      0,
+      5,
+      10,
+      25,
+      50
+    ],
+    "end_cap": "2026-10-27",
+    "annualization": 252,
+    "cagr_year_days": 365.25,
+    "seed": 42,
+    "rolling_years": [
+      1,
+      3,
+      5,
+      10
+    ],
+    "crisis_rule": "Every SPY total-return peak-to-recovery episode reaching -10%; same full episode for all portfolios; unfinished episodes end at sample end",
+    "bootstrap": "Paired circular block bootstrap of observed portfolio daily returns; 10000 draws; block 20; sensitivity blocks 5,60 with 2000 draws",
+    "cost_rule": "Cost = rate times SUM absolute dollars bought and sold; solve post-cost target NAV by bisection; entry/liquidation costs excluded",
+    "execution": "Idealized post-close rebalance at that close valuation; target active next return. No claim of executable same-close fills. One-session delay sensitivity."
+  },
+  "period": {
+    "status": "PASS",
+    "common_start": "2004-11-18",
+    "common_end": "2026-10-27",
+    "price_rows": 5519,
+    "daily_returns": 5518,
+    "missing_common": {
+      "SPY": 0,
+      "QQQ": 0,
+      "GLD": 0
+    },
+    "OHLC_violations": {
+      "SPY": 0,
+      "QQQ": 0,
+      "GLD": 0
+    },
+    "duplicates": 0,
+    "zero_fill": false,
+    "outlier_rule": "All abs daily returns >8% exported; >30% is a blocking gate",
+    "splits": {
+      "SPY": {},
+      "QQQ": {
+        "953562600": {
+          "date": 953562600,
+          "numerator": 2.0,
+          "denominator": 1.0,
+          "splitRatio": "2:1"
+        }
+      },
+      "GLD": {}
+    },
+    "note": "External independent exact-price validation remains WARNING, not part of internal arithmetic PASS.",
+    "portfolio_ledger_reconciliation": "PASS"
+  },
+  "metrics": {
+    "A": {
+      "start": "2004-11-18",
+      "end": "2026-10-27",
+      "n_returns": 5518,
+      "cumulative_return": 8.675448665321376,
+      "CAGR": 0.10899359291764954,
+      "final_usd": 967544.8665321376,
+      "volatility": 0.18816413876271773,
+      "Sharpe": 0.5436166431894258,
+      "Sharpe_rf_zero": 0.6450964564146742,
+      "Sortino_target_zero": 0.9115088948380016,
+      "Calmar": 0.197489903417647,
+      "max_drawdown": -0.5518945071695764,
+      "peak": "2007-10-09",
+      "trough": "2009-03-09",
+      "recovery": "2012-08-16",
+      "peak_to_trough_days": 517,
+      "trough_to_recovery_days": 1256,
+      "total_underwater_days": 1773,
+      "worst_day": -0.10942388274422288,
+      "worst_day_date": "2020-03-16",
+      "worst_month": -0.16518673527992744,
+      "worst_month_date": "2008-10-31",
+      "worst_year": -0.3679497645894467,
+      "worst_year_date": "2008-12-31",
+      "positive_month_fraction": 0.6628787878787878,
+      "mean_daily": 0.00048168261563550887,
+      "daily_win_fraction": 0.5503805726712577,
+      "daily_profit_factor": 1.1351820129754295,
+      "VaR_95": 0.017368884169341618,
+      "ES_95": 0.028807357559083528,
+      "VaR_99": 0.03437410345638304,
+      "ES_99": 0.050511274478200884
+    },
+    "B": {
+      "start": "2004-11-18",
+      "end": "2026-10-27",
+      "n_returns": 5518,
+      "cumulative_return": 13.945131096541015,
+      "CAGR": 0.13119182231125803,
+      "final_usd": 1494513.1096541015,
+      "volatility": 0.19784250670573564,
+      "Sharpe": 0.6268692561639481,
+      "Sharpe_rf_zero": 0.7233827651167002,
+      "Sortino_target_zero": 1.0280225885780931,
+      "Calmar": 0.24419025705180403,
+      "max_drawdown": -0.5372524845797848,
+      "peak": "2007-10-31",
+      "trough": "2009-03-09",
+      "recovery": "2011-02-08",
+      "peak_to_trough_days": 495,
+      "trough_to_recovery_days": 701,
+      "total_underwater_days": 1196,
+      "worst_day": -0.11480805328618338,
+      "worst_day_date": "2020-03-16",
+      "worst_month": -0.16010048067223215,
+      "worst_month_date": "2008-10-31",
+      "worst_year": -0.3926107380433811,
+      "worst_year_date": "2008-12-31",
+      "positive_month_fraction": 0.625,
+      "mean_daily": 0.0005679200776127553,
+      "daily_win_fraction": 0.5587169264226169,
+      "daily_profit_factor": 1.1466825547994328,
+      "VaR_95": 0.018745023723612773,
+      "ES_95": 0.029913982645002578,
+      "VaR_99": 0.03700621069246792,
+      "ES_99": 0.04946788048331857
+    },
+    "C": {
+      "start": "2004-11-18",
+      "end": "2026-10-27",
+      "n_returns": 5518,
+      "cumulative_return": 9.350254741111133,
+      "CAGR": 0.11240691500496669,
+      "final_usd": 1035025.4741111132,
+      "volatility": 0.14205200624618552,
+      "Sharpe": 0.6881794876662702,
+      "Sharpe_rf_zero": 0.8225712640699928,
+      "Sortino_target_zero": 1.1664217699088988,
+      "Calmar": 0.2980033735215262,
+      "max_drawdown": -0.3772001426582743,
+      "peak": "2007-11-06",
+      "trough": "2008-11-20",
+      "recovery": "2010-04-09",
+      "peak_to_trough_days": 380,
+      "trough_to_recovery_days": 505,
+      "total_underwater_days": 885,
+      "worst_day": -0.07635471050878617,
+      "worst_day_date": "2008-12-01",
+      "worst_month": -0.16384395876986513,
+      "worst_month_date": "2008-10-31",
+      "worst_year": -0.24279404596811616,
+      "worst_year_date": "2008-12-31",
+      "positive_month_fraction": 0.6477272727272727,
+      "mean_daily": 0.00046368213627620374,
+      "daily_win_fraction": 0.5527364987314244,
+      "daily_profit_factor": 1.1660005043157178,
+      "VaR_95": 0.013647038253060429,
+      "ES_95": 0.021490716487300467,
+      "VaR_99": 0.02571441704354882,
+      "ES_99": 0.036095701727313446
+    }
+  },
+  "real_metrics": {
+    "A": {
+      "start": "2004-11-18",
+      "end": "2026-09-30",
+      "real_final_usd": 543459.1380484678,
+      "real_CAGR": 0.08049759669674184,
+      "real_total_return": 4.434591380484678,
+      "nominal_same_end_final": 958707.444890318,
+      "nominal_same_end_CAGR": 0.10891607391381686
+    },
+    "B": {
+      "start": "2004-11-18",
+      "end": "2026-09-30",
+      "real_final_usd": 854455.8306240602,
+      "real_CAGR": 0.10309273710305211,
+      "real_total_return": 7.544558306240603,
+      "nominal_same_end_final": 1507331.6626726224,
+      "nominal_same_end_CAGR": 0.1321054955890688
+    },
+    "C": {
+      "start": "2004-11-18",
+      "end": "2026-09-30",
+      "real_final_usd": 586289.7152879045,
+      "real_CAGR": 0.08425293056540073,
+      "real_total_return": 4.862897152879045,
+      "nominal_same_end_final": 1034264.1710424427,
+      "nominal_same_end_CAGR": 0.11277017789572286
+    }
+  },
+  "overlap": {
+    "asof_SPY": "2026-10-26",
+    "asof_QQQ": "2026-10-26",
+    "common_tickers": 86,
+    "SPY_names": 504,
+    "QQQ_names": 101,
+    "weight_overlap_sum_min": 0.540405,
+    "QQQ_weight_in_SPY_names": 0.930306,
+    "SPY_weight_in_QQQ_names": 0.540405,
+    "source": "TickerInside issuer-file mirror; snapshot, not historical point-in-time holdings; official SPY file separately archived"
+  },
+  "rolling_summary": [
+    {
+      "years": 1,
+      "portfolio": "A",
+      "windows": 5266,
+      "p05": -0.17210164900951597,
+      "p25": 0.05428553747675169,
+      "median": 0.14636392695123013,
+      "p75": 0.2090742880989631,
+      "p95": 0.3385390031393584,
+      "min": -0.47377205361433794,
+      "max": 0.7757427603134737,
+      "positive_share": 0.8395366502088872,
+      "beat_A_share": 0.0,
+      "lead_share": 0.08735282947208507
+    },
+    {
+      "years": 1,
+      "portfolio": "B",
+      "windows": 5266,
+      "p05": -0.1970578215968943,
+      "p25": 0.06568269094155488,
+      "median": 0.17076067693609864,
+      "p75": 0.25197046074329194,
+      "p95": 0.38544231217090946,
+      "min": -0.47578914189361454,
+      "max": 0.8299126317524719,
+      "positive_share": 0.8480820357007216,
+      "beat_A_share": 0.7533232054690467,
+      "lead_share": 0.5170907709836688
+    },
+    {
+      "years": 1,
+      "portfolio": "C",
+      "windows": 5266,
+      "p05": -0.10460781852001655,
+      "p25": 0.070659670592366,
+      "median": 0.12911859877877685,
+      "p75": 0.19695683500909006,
+      "p95": 0.319262009913548,
+      "min": -0.35212487693160766,
+      "max": 0.5304612064570595,
+      "positive_share": 0.8691606532472465,
+      "beat_A_share": 0.5408279529054311,
+      "lead_share": 0.3955563995442461
+    },
+    {
+      "years": 3,
+      "portfolio": "A",
+      "windows": 4764,
+      "p05": -0.07302177774459673,
+      "p25": 0.09046432598370752,
+      "median": 0.12001348581417182,
+      "p75": 0.16197081818077302,
+      "p95": 0.2169386022595946,
+      "min": -0.17180729405791273,
+      "max": 0.29085899392965997,
+      "positive_share": 0.8727959697732998,
+      "beat_A_share": 0.0,
+      "lead_share": 0.004827875734676742
+    },
+    {
+      "years": 3,
+      "portfolio": "B",
+      "windows": 4764,
+      "p05": -0.041164004820767194,
+      "p25": 0.10193909558072911,
+      "median": 0.1458017077464946,
+      "p75": 0.18951870889761524,
+      "p95": 0.2523079314017867,
+      "min": -0.15321327270044827,
+      "max": 0.336911789733497,
+      "positive_share": 0.8847607052896725,
+      "beat_A_share": 0.9714525608732157,
+      "lead_share": 0.7220822837951302
+    },
+    {
+      "years": 3,
+      "portfolio": "C",
+      "windows": 4764,
+      "p05": 0.00871437385247651,
+      "p25": 0.07491269068083223,
+      "median": 0.10215861402544535,
+      "p75": 0.13354305822750956,
+      "p95": 0.2397999825297665,
+      "min": -0.0653877881962529,
+      "max": 0.2910106828893335,
+      "positive_share": 0.9643157010915198,
+      "beat_A_share": 0.4475230898404702,
+      "lead_share": 0.27308984047019313
+    },
+    {
+      "years": 5,
+      "portfolio": "A",
+      "windows": 4260,
+      "p05": 0.0018021134023177628,
+      "p25": 0.0918274083833504,
+      "median": 0.1302992774715983,
+      "p75": 0.1523817302608384,
+      "p95": 0.17903230597521208,
+      "min": -0.017608608043349405,
+      "max": 0.24847602647920874,
+      "positive_share": 0.956338028169014,
+      "beat_A_share": 0.0,
+      "lead_share": 0.0
+    },
+    {
+      "years": 5,
+      "portfolio": "B",
+      "windows": 4260,
+      "p05": 0.02949474709137113,
+      "p25": 0.11550850255963746,
+      "median": 0.15201537563277046,
+      "p75": 0.17868088711276897,
+      "p95": 0.2209152718213253,
+      "min": 0.009867534456495797,
+      "max": 0.27238534973819406,
+      "positive_share": 1.0,
+      "beat_A_share": 1.0,
+      "lead_share": 0.7490610328638497
+    },
+    {
+      "years": 5,
+      "portfolio": "C",
+      "windows": 4260,
+      "p05": 0.06530677670298375,
+      "p25": 0.07933635777836878,
+      "median": 0.0958620057752354,
+      "p75": 0.1383933538915661,
+      "p95": 0.1613120555503381,
+      "min": 0.04199537003836218,
+      "max": 0.1990072892071728,
+      "positive_share": 1.0,
+      "beat_A_share": 0.30422535211267604,
+      "lead_share": 0.2509389671361502
+    },
+    {
+      "years": 10,
+      "portfolio": "A",
+      "windows": 3002,
+      "p05": 0.06890864896233242,
+      "p25": 0.08241201539380677,
+      "median": 0.1273556738752013,
+      "p75": 0.14052441913747143,
+      "p95": 0.15723546864721258,
+      "min": 0.05891821349691351,
+      "max": 0.1740282426911648,
+      "positive_share": 1.0,
+      "beat_A_share": 0.0,
+      "lead_share": 0.0
+    },
+    {
+      "years": 10,
+      "portfolio": "B",
+      "windows": 3002,
+      "p05": 0.09240897683137199,
+      "p25": 0.1061317102063088,
+      "median": 0.15480129115444474,
+      "p75": 0.16968379244891107,
+      "p95": 0.18802202564458922,
+      "min": 0.07969315252201836,
+      "max": 0.20419206149534275,
+      "positive_share": 1.0,
+      "beat_A_share": 1.0,
+      "lead_share": 0.9980013324450366
+    },
+    {
+      "years": 10,
+      "portfolio": "C",
+      "windows": 3002,
+      "p05": 0.07531619775219234,
+      "p25": 0.08828860161269042,
+      "median": 0.1031896723874578,
+      "p75": 0.11507931309651898,
+      "p95": 0.14696605226141568,
+      "min": 0.06979646477973733,
+      "max": 0.16400837086375697,
+      "positive_share": 1.0,
+      "beat_A_share": 0.28281145902731514,
+      "lead_share": 0.001998667554963358
+    }
+  ],
+  "crisis_episodes": [
+    {
+      "peak": "2007-10-09",
+      "end": "2012-08-16",
+      "recovered": true,
+      "benchmark_dd": -0.5518945071695764,
+      "A_return": 0.004546659918916562,
+      "A_DD": -0.5518945071695764,
+      "B_return": 0.15861173044267995,
+      "B_DD": -0.5372524845797848,
+      "C_return": 0.307826418031649,
+      "C_DD": -0.3772001426582743
+    },
+    {
+      "peak": "2015-07-20",
+      "end": "2016-04-18",
+      "recovered": true,
+      "benchmark_dd": -0.13022880737110465,
+      "A_return": 0.0003802510088171118,
+      "A_DD": -0.13022880737110465,
+      "B_return": -0.007328487591026445,
+      "B_DD": -0.1429856574155779,
+      "C_return": 0.034951633710849084,
+      "C_DD": -0.08652043378145302
+    },
+    {
+      "peak": "2018-01-26",
+      "end": "2018-08-06",
+      "recovered": true,
+      "benchmark_dd": -0.10101902756718162,
+      "A_return": 0.0016863509963034318,
+      "A_DD": -0.10101902756718162,
+      "B_return": 0.03304052799037005,
+      "B_DD": -0.10164834172204007,
+      "C_return": -0.030183376226088687,
+      "C_DD": -0.07853136752327095
+    },
+    {
+      "peak": "2018-09-20",
+      "end": "2019-04-12",
+      "recovered": true,
+      "benchmark_dd": -0.19348883150156715,
+      "A_return": 0.0030215637157184894,
+      "A_DD": -0.19348883150156715,
+      "B_return": 0.007556054504656684,
+      "B_DD": -0.21022763705745084,
+      "C_return": 0.020475837017049248,
+      "C_DD": -0.12935108960555808
+    },
+    {
+      "peak": "2020-02-19",
+      "end": "2020-08-10",
+      "recovered": true,
+      "benchmark_dd": -0.3371726217076916,
+      "A_return": 0.0020354674675875373,
+      "A_DD": -0.3371726217076916,
+      "B_return": 0.07564339613782467,
+      "B_DD": -0.30732009400526916,
+      "C_return": 0.07778969568555061,
+      "C_DD": -0.2463985340579472
+    },
+    {
+      "peak": "2022-01-03",
+      "end": "2023-12-13",
+      "recovered": true,
+      "benchmark_dd": -0.2449637010221758,
+      "A_return": 0.01199479699790773,
+      "A_DD": -0.2449637010221758,
+      "B_return": 0.024449372646388357,
+      "B_DD": -0.295276125552975,
+      "C_return": 0.04737890316999893,
+      "C_DD": -0.19947374362973325
+    },
+    {
+      "peak": "2025-02-19",
+      "end": "2025-06-26",
+      "recovered": true,
+      "benchmark_dd": -0.18755242410695105,
+      "A_return": 0.0042335274457365735,
+      "A_DD": -0.18755242410695105,
+      "B_return": 0.009674767564870068,
+      "B_DD": -0.2077087342625057,
+      "C_return": 0.04459934611882921,
+      "C_DD": -0.1235528909366187
+    }
+  ],
+  "bootstrap_intervals": [
+    {
+      "block": 20,
+      "simulations": 10000,
+      "metric": "A_CAGR",
+      "p025": 0.03573174593451129,
+      "p50": 0.11001906151903294,
+      "p975": 0.18389216655399065
+    },
+    {
+      "block": 20,
+      "simulations": 10000,
+      "metric": "B_CAGR",
+      "p025": 0.051002163197930474,
+      "p50": 0.13184117345998406,
+      "p975": 0.2150773164561437
+    },
+    {
+      "block": 20,
+      "simulations": 10000,
+      "metric": "C_CAGR",
+      "p025": 0.05531935304466248,
+      "p50": 0.11291987956586133,
+      "p975": 0.1714136818217551
+    },
+    {
+      "block": 20,
+      "simulations": 10000,
+      "metric": "A_Sharpe",
+      "p025": 0.1797356280943016,
+      "p50": 0.5505909221880158,
+      "p975": 0.9453718360058668
+    },
+    {
+      "block": 20,
+      "simulations": 10000,
+      "metric": "B_Sharpe",
+      "p025": 0.250459954370021,
+      "p50": 0.6317127292359925,
+      "p975": 1.031652449288058
+    },
+    {
+      "block": 20,
+      "simulations": 10000,
+      "metric": "C_Sharpe",
+      "p025": 0.31144144583437217,
+      "p50": 0.6954842387272892,
+      "p975": 1.0948567299802958
+    },
+    {
+      "block": 20,
+      "simulations": 10000,
+      "metric": "A_DD",
+      "p025": -0.6126737201534317,
+      "p50": -0.3851219635333153,
+      "p975": -0.24858139180620786
+    },
+    {
+      "block": 20,
+      "simulations": 10000,
+      "metric": "B_DD",
+      "p025": -0.6079323683121953,
+      "p50": -0.38385811466313485,
+      "p975": -0.2518655911284266
+    },
+    {
+      "block": 20,
+      "simulations": 10000,
+      "metric": "C_DD",
+      "p025": -0.4659413819053704,
+      "p50": -0.28197257003987475,
+      "p975": -0.1772334963181852
+    },
+    {
+      "block": 20,
+      "simulations": 10000,
+      "metric": "B_minus_A_CAGR",
+      "p025": 0.0034980673048767177,
+      "p50": 0.022172468023122144,
+      "p975": 0.041632141501429305
+    },
+    {
+      "block": 20,
+      "simulations": 10000,
+      "metric": "C_minus_A_CAGR",
+      "p025": -0.030562549748656596,
+      "p50": 0.0033358512444658303,
+      "p975": 0.03640249097161744
+    },
+    {
+      "block": 20,
+      "simulations": 10000,
+      "metric": "B_minus_A_Sharpe",
+      "p025": -0.0027856031709812424,
+      "p50": 0.08167331721448418,
+      "p975": 0.1650308647387236
+    },
+    {
+      "block": 20,
+      "simulations": 10000,
+      "metric": "C_minus_A_Sharpe",
+      "p025": -0.02047563028011793,
+      "p50": 0.14373260421610567,
+      "p975": 0.30494089103824995
+    },
+    {
+      "block": 5,
+      "simulations": 2000,
+      "metric": "A_CAGR",
+      "p025": 0.030275936020806526,
+      "p50": 0.11113861511063516,
+      "p975": 0.18660946040148085
+    },
+    {
+      "block": 5,
+      "simulations": 2000,
+      "metric": "B_CAGR",
+      "p025": 0.047519482144685765,
+      "p50": 0.13298438853002248,
+      "p975": 0.2174604234583189
+    },
+    {
+      "block": 5,
+      "simulations": 2000,
+      "metric": "C_CAGR",
+      "p025": 0.05344154403660473,
+      "p50": 0.11280054442971141,
+      "p975": 0.17571562882946448
+    },
+    {
+      "block": 5,
+      "simulations": 2000,
+      "metric": "A_Sharpe",
+      "p025": 0.15823482580654882,
+      "p50": 0.5539401672891782,
+      "p975": 0.910240591511755
+    },
+    {
+      "block": 5,
+      "simulations": 2000,
+      "metric": "B_Sharpe",
+      "p025": 0.23777647227388035,
+      "p50": 0.6399024362744041,
+      "p975": 1.0081797933912693
+    },
+    {
+      "block": 5,
+      "simulations": 2000,
+      "metric": "C_Sharpe",
+      "p025": 0.3015345866576963,
+      "p50": 0.6908326177515016,
+      "p975": 1.0940307309717763
+    },
+    {
+      "block": 5,
+      "simulations": 2000,
+      "metric": "A_DD",
+      "p025": -0.6047393882237235,
+      "p50": -0.37554052065405025,
+      "p975": -0.2494368356230946
+    },
+    {
+      "block": 5,
+      "simulations": 2000,
+      "metric": "B_DD",
+      "p025": -0.5953403881950512,
+      "p50": -0.3756818483970445,
+      "p975": -0.2560629503095007
+    },
+    {
+      "block": 5,
+      "simulations": 2000,
+      "metric": "C_DD",
+      "p025": -0.44822647602158366,
+      "p50": -0.2757936936244679,
+      "p975": -0.18311820758353972
+    },
+    {
+      "block": 5,
+      "simulations": 2000,
+      "metric": "B_minus_A_CAGR",
+      "p025": 0.0028600990233088115,
+      "p50": 0.022830043126628983,
+      "p975": 0.04312862178413643
+    },
+    {
+      "block": 5,
+      "simulations": 2000,
+      "metric": "C_minus_A_CAGR",
+      "p025": -0.031519962886989376,
+      "p50": 0.0034596923321865564,
+      "p975": 0.03896167849425012
+    },
+    {
+      "block": 5,
+      "simulations": 2000,
+      "metric": "B_minus_A_Sharpe",
+      "p025": -0.004523575398788112,
+      "p50": 0.08511756327354103,
+      "p975": 0.17358852112269585
+    },
+    {
+      "block": 5,
+      "simulations": 2000,
+      "metric": "C_minus_A_Sharpe",
+      "p025": -0.019156377076587995,
+      "p50": 0.1418217477343081,
+      "p975": 0.32219028191441773
+    },
+    {
+      "block": 60,
+      "simulations": 2000,
+      "metric": "A_CAGR",
+      "p025": 0.03042011064680216,
+      "p50": 0.1086997947710713,
+      "p975": 0.18036359567169696
+    },
+    {
+      "block": 60,
+      "simulations": 2000,
+      "metric": "B_CAGR",
+      "p025": 0.047100323842274305,
+      "p50": 0.1303585106161515,
+      "p975": 0.21144171803848116
+    },
+    {
+      "block": 60,
+      "simulations": 2000,
+      "metric": "C_CAGR",
+      "p025": 0.05583534602436481,
+      "p50": 0.11161744576410645,
+      "p975": 0.16581330394184066
+    },
+    {
+      "block": 60,
+      "simulations": 2000,
+      "metric": "A_Sharpe",
+      "p025": 0.1560292603737957,
+      "p50": 0.5443556308937705,
+      "p975": 0.9607008201141836
+    },
+    {
+      "block": 60,
+      "simulations": 2000,
+      "metric": "B_Sharpe",
+      "p025": 0.2342245538597629,
+      "p50": 0.6282872343588661,
+      "p975": 1.051505179953401
+    },
+    {
+      "block": 60,
+      "simulations": 2000,
+      "metric": "C_Sharpe",
+      "p025": 0.3085974314175015,
+      "p50": 0.6873491518562811,
+      "p975": 1.0951051969086592
+    },
+    {
+      "block": 60,
+      "simulations": 2000,
+      "metric": "A_DD",
+      "p025": -0.639331847436729,
+      "p50": -0.40848621369754795,
+      "p975": -0.24904978520836846
+    },
+    {
+      "block": 60,
+      "simulations": 2000,
+      "metric": "B_DD",
+      "p025": -0.6438895019704818,
+      "p50": -0.4144245541615377,
+      "p975": -0.25497135734580934
+    },
+    {
+      "block": 60,
+      "simulations": 2000,
+      "metric": "C_DD",
+      "p025": -0.4799486841230605,
+      "p50": -0.3080222862709254,
+      "p975": -0.17388765647905358
+    },
+    {
+      "block": 60,
+      "simulations": 2000,
+      "metric": "B_minus_A_CAGR",
+      "p025": 0.0023909599161755827,
+      "p50": 0.02183447861465064,
+      "p975": 0.041748545392064684
+    },
+    {
+      "block": 60,
+      "simulations": 2000,
+      "metric": "C_minus_A_CAGR",
+      "p025": -0.02903410398656352,
+      "p50": 0.0029552144256711557,
+      "p975": 0.03472281293722849
+    },
+    {
+      "block": 60,
+      "simulations": 2000,
+      "metric": "B_minus_A_Sharpe",
+      "p025": -0.010170033614704477,
+      "p50": 0.07892252626621082,
+      "p975": 0.1653217972745654
+    },
+    {
+      "block": 60,
+      "simulations": 2000,
+      "metric": "C_minus_A_Sharpe",
+      "p025": -0.012611433549413197,
+      "p50": 0.13681807955448252,
+      "p975": 0.2858716447940787
+    }
+  ],
+  "source_manifest": [
+    {
+      "series": "SPY",
+      "source": "Yahoo Finance chart API",
+      "symbol": "SPY",
+      "price_type": "Adjusted close; splits and cash-distribution adjustment (Yahoo convention)",
+      "currency": "USD",
+      "start": "1993-01-29",
+      "end": "2026-10-27",
+      "n": 8494,
+      "download_utc": "2026-10-28T11:47:26.498211+00:00",
+      "url": "https://query1.finance.yahoo.com/v8/finance/chart/SPY",
+      "raw_file": "SPY.txt"
+    },
+    {
+      "series": "QQQ",
+      "source": "Yahoo Finance chart API",
+      "symbol": "QQQ",
+      "price_type": "Adjusted close; splits and cash-distribution adjustment (Yahoo convention)",
+      "currency": "USD",
+      "start": "1999-03-10",
+      "end": "2026-10-27",
+      "n": 6952,
+      "download_utc": "2026-10-28T11:47:26.473825+00:00",
+      "url": "https://query1.finance.yahoo.com/v8/finance/chart/QQQ",
+      "raw_file": "QQQ.txt"
+    },
+    {
+      "series": "GLD",
+      "source": "Yahoo Finance chart API",
+      "symbol": "GLD",
+      "price_type": "Adjusted close; splits and cash-distribution adjustment (Yahoo convention)",
+      "currency": "USD",
+      "start": "2004-11-18",
+      "end": "2026-10-27",
+      "n": 5519,
+      "download_utc": "2026-10-28T11:47:26.151182+00:00",
+      "url": "https://query1.finance.yahoo.com/v8/finance/chart/GLD",
+      "raw_file": "GLD.txt"
+    },
+    {
+      "series": "CPIAUCNS",
+      "source": "BLS via FRED",
+      "symbol": "CPIAUCNS",
+      "price_type": "Monthly CPI NSA",
+      "currency": "USD basis",
+      "start": "1913-01-01",
+      "end": "2026-09-01",
+      "n": 1365,
+      "download_utc": "2026-10-28T11:47:34.905048+00:00",
+      "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPIAUCNS",
+      "raw_file": "CPIAUCNS.csv"
+    },
+    {
+      "series": "DFF",
+      "source": "Federal Reserve via FRED",
+      "symbol": "DFF",
+      "price_type": "Annualized percent rate",
+      "currency": "USD basis",
+      "start": "1954-07-01",
+      "end": "2026-10-26",
+      "n": 26416,
+      "download_utc": "2026-10-28T11:47:35.183295+00:00",
+      "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFF",
+      "raw_file": "DFF.csv"
+    },
+    {
+      "series": "DTB3",
+      "source": "Federal Reserve via FRED",
+      "symbol": "DTB3",
+      "price_type": "Annualized percent rate",
+      "currency": "USD basis",
+      "start": "1954-01-04",
+      "end": "2026-10-26",
+      "n": 18996,
+      "download_utc": "2026-10-28T11:47:35.134632+00:00",
+      "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTB3",
+      "raw_file": "DTB3.csv"
+    },
+    {
+      "series": "NASDAQXNDX",
+      "source": "Nasdaq via FRED",
+      "symbol": "NASDAQXNDX",
+      "price_type": "Total Return index",
+      "currency": "USD basis",
+      "start": "1999-03-04",
+      "end": "2026-10-27",
+      "n": 7214,
+      "download_utc": "2026-10-28T11:47:59.682865+00:00",
+      "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQXNDX",
+      "raw_file": "NASDAQXNDX.csv"
+    },
+    {
+      "series": "SP500TR",
+      "source": "Yahoo Finance chart API",
+      "symbol": "^SP500TR",
+      "price_type": "S&P500 Total Return index level",
+      "currency": "USD",
+      "start": "1988-01-04",
+      "end": "2026-10-27",
+      "n": 9778,
+      "download_utc": "2026-10-28T11:47:26.478813+00:00",
+      "url": "https://query1.finance.yahoo.com/v8/finance/chart/%5ESP500TR",
+      "raw_file": "SP500TR.txt"
+    }
+  ],
+  "evidence": {
+    "E0": "PASS (internal); WARNING external exact-price validation",
+    "E1": "WARNING - descriptive historical evidence; conditional bootstrap",
+    "E2": "UNVERIFIABLE - selection history unknown",
+    "E3": "WARNING - assumed costs, idealized fills",
+    "E4": "NOT CHECKABLE - no untouched forward sample"
+  },
+  "verdict": "UNVERIFIABLE",
+  "research_action": "MORE RESEARCH",
+  "next_test": "Obtain licensed synchronized daily SP500TR, Nasdaq-100 TR and London gold data spanning the dot-com period; rerun frozen ABC weights without splicing.",
+  "limitations": [
+    "No complete long ABC layer: gold daily history inaccessible (FRED 404; Nasdaq Data Link 403; DBnomics 404).",
+    "Overlapping rolling windows are dependent. Historical quantiles are not predictive probabilities.",
+    "No taxes, spreads, actual fills or personal tax assumptions; no guarantee of same-close execution.",
+    "CPI monthly ex-post; real results end September 2026. No daily inflation series invented.",
+    "Exact independently sourced adjusted ETF prices not available; index and third-party calculations are partial checks.",
+    "Holdings snapshot is current, not historical; cannot infer historical overlap from it.",
+    "Common ETF sample excludes dot-com bubble and is not independent OOS.",
+    "Yahoo adjusted-close convention is not identical to ex-date cash reinvestment; discrepancy exported.",
+    "Quarter-end QQQ close references differ across SEC filings and Yahoo; all comparisons retained; no assertion of independent exact-price validation."
+  ],
+  "falsification": [
+    "Long-sample dot-com inclusion reverses growth rankings or risk rankings.",
+    "Different end dates reverse Sharpe comparisons.",
+    "An independently licensed data reconstruction materially changes drawdowns.",
+    "Actual taxes and implementation costs eliminate any relative benefit."
+  ],
+  "external_validation": {
+    "status": "WARNING",
+    "method": "Preselected eight quarter-end dates 2008-2009; all three retrieved filings retained",
+    "matches_within_1cent": 17,
+    "comparisons": 24,
+    "finding": "Some Bloomberg-sourced filing closes disagree with Yahoo and with each other. Reference definitions/timestamps are not reconciled; do not silently replace raw prices or declare independent validation PASS. Arithmetic results remain conditional on downloaded vendor prices.",
+    "source_access": "Web retrieval text; SEC direct downloads unavailable. Explicit reference values saved in CSV.",
+    "SPY_note": "ETF market-price vs NAV discrepancies independently documented in SEC comment ise201222-13.pdf; reported SPY price itself cites Yahoo and is not an independent price check."
+  }
+}
