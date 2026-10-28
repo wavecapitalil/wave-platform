@@ -50,6 +50,8 @@
     .article-save:hover { background: rgba(85,170,255,.13); border-color: #55aaff; }
     .article-lead { font-size: 19px; color: #ccc; line-height: 1.6; margin-bottom: 28px; max-width: 720px; font-weight: 500; }
     .article-body { font-size: 16px; line-height: 1.85; color: #ddd; max-width: 720px; }
+    .article-body { white-space: pre-line; }
+    .sources-card {margin:24px 0;padding:24px;border:1px solid #263448;border-radius:12px;} .sources-body{white-space:pre-wrap;line-height:1.8;color:#bbb;} .sources-links{display:flex;flex-wrap:wrap;gap:16px;margin-top:16px;} .sources-links a{color:#4a9eff;}
     .article-body h3 { font-size: 20px; margin: 28px 0 12px; color: #fff; }
     .article-body p { margin-bottom: 18px; }
     .article-source { margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 13px; color: #666; max-width: 720px; }
@@ -92,6 +94,7 @@
     <li><a href="blog.html" class="active" data-i18n="nav.blog">Research</a></li>
     <li><a href="products.html" data-i18n="nav.products">Products</a></li>
     <li><a href="account.html" class="nav-cta">Account</a></li>
+    <li><a href="blog.html?view=sources">מקורות ומתודולוגיה</a></li>
   </ul>
   <div class="nav-lang" onclick="cycleLang()" role="button" tabindex="0" onkeydown="if(event.key==='Enter')cycleLang()">🌐 EN</div>
 </nav>
@@ -111,6 +114,8 @@
   </ul>
 </footer>
 
+<script src="terminal-sources.js"></script>
+<script src="research-hood.js?v=20261028-2"></script>
 <script src="i18n.js?v=20261013-he-default"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1"></script>
 <script src="supabase-config.js"></script>
@@ -170,9 +175,11 @@ async function loadList(reset){
       +'<h1 class="page-title" data-i18n="blog.title">Blog</h1>'
       +'<p class="page-sub" data-i18n="blog.sub">Market analysis, strategy breakdowns, and trade recaps.</p>'
       +FEATURED_RESEARCH_CARD
+      +'<div id="curatedResearch" class="grid" style="margin-bottom:24px"></div>'
       +'<h2 class="research-archive-title" data-i18n="blog.archive">מאמרים וניתוחי שוק</h2>'
       +'<div id="blogGrid" class="grid"><div class="empty" data-i18n="blog.loading">Loading articles…</div></div>'
       +'<div class="loadmore-wrap" id="loadmoreWrap" style="display:none"><button class="loadmore" id="loadmoreBtn" data-i18n="blog.readMore">Load more</button></div>';
+    document.getElementById('curatedResearch').innerHTML = (window.WaveResearchArticles||[]).map(function(a){return '<a class="card" href="blog.html?id='+encodeURIComponent(a.id)+'"><div class="card-body"><span class="card-cat">'+a.category+'</span><h2 class="card-title">'+a.title+'</h2><p class="card-lead">'+a.lead+'</p><div class="card-meta">'+a.source+' · '+timeAgo(a.created_at)+'</div></div></a>';}).join('');
     document.getElementById('loadmoreBtn').onclick = function(){ loadList(false); };
   }
   try{
@@ -201,8 +208,9 @@ async function openArticle(id){
   page.innerHTML = '<div class="empty" data-i18n="blog.loading">Loading articles…</div>';
   applyLang();
   try{
-    var r = await fetch(API+'/api/blog/article/'+id);
-    var a = await r.json();
+    var a = (window.WaveResearchArticles||[]).find(function(item){return item.id===String(id);});
+    var curatedArticle=!!a;
+    if(!a){var r = await fetch(API+'/api/blog/article/'+encodeURIComponent(id)); a = await r.json();}
     if(a.error){ page.innerHTML = '<div class="empty">'+a.error+'</div>'; return; }
     var heroHtml = a.image_url
       ? '<img class="article-hero" src="'+a.image_url+'" alt="" onerror="this.style.display=\'none\'">'
@@ -215,8 +223,9 @@ async function openArticle(id){
       +'<div class="article-meta"><span>'+(a.source||'')+'</span><span>·</span><span>'+timeAgo(a.created_at)+'</span></div>'
       +'<button class="article-save" id="articleSaveBtn" type="button">☆ Save to Account</button>'
       +(a.lead?'<div class="article-lead">'+a.lead+'</div>':'')
-      +'<div class="article-body"><p>'+renderMarkdownLite(a.body)+'</p></div>'
+      +(curatedArticle && window.WaveHoodResearch ? window.WaveHoodResearch.html() : '<div class="article-body"><p>'+renderMarkdownLite(a.body)+'</p></div>')
       +(a.link?'<div class="article-source"><span data-i18n="blog.source">Source</span>: <a href="'+a.link+'" target="_blank" rel="noopener">'+(a.source||a.link)+'</a></div>':'');
+    if(curatedArticle && window.WaveHoodResearch) window.WaveHoodResearch.mount();
     if(window.wireArticleSave) wireArticleSave(a);
     if(window.WaveSearch) WaveSearch.rebuild();
     applyLang();
@@ -226,6 +235,10 @@ async function openArticle(id){
   }
 }
 
+function openResearchSources(){
+  document.getElementById('page').innerHTML='<section id="page-sources"><a class="back-link" href="blog.html">חזרה למחקרים</a><h1 class="page-title">מקורות ומתודולוגיה</h1><div id="sourcesContent"></div></section>';
+  if(window.WaveSources) WaveSources.render();
+}
 function backToList(){
   history.pushState({}, '', 'blog.html');
   loadList(true);
@@ -233,7 +246,7 @@ function backToList(){
 
 window.addEventListener('popstate', function(){
   var id = new URLSearchParams(location.search).get('id');
-  if(id) openArticle(id); else loadList(true);
+  if(new URLSearchParams(location.search).get('view')==='sources') openResearchSources(); else if(id) openArticle(id); else loadList(true);
 });
 
 (function(){
