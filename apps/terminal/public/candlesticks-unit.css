@@ -74,3 +74,32 @@ body:has(.layout>.content) .content .lesson-preview{margin:22px 0;background:#e9
 body:has(.layout>.content) .content .lesson-preview__copy{color:#274361}
 body:has(.layout>.content) .content .section>p{color:#172d49}
 body:has(.layout>.content) .content .visual,body:has(.layout>.content) .course-widget{background:#f7fbff}
+
+/* WAVE Academy: exercise, knowledge checks and answer keys.
+   White outlined on the approved navy background; shared across units. */
+body .layout .content .section.practice-panel{
+  background:#0b2039!important;
+  color:#edf5ff!important;
+  border:1.5px solid #f2f6ff!important;
+  border-radius:15px!important;
+  padding:25px 28px!important;
+  margin:34px 0 40px!important;
+  box-shadow:0 0 0 1px #ffffff14,0 8px 28px #0002!important;
+}
+body .layout .content .section.practice-panel>h2{
+  color:#f8fbff!important;
+  border-bottom:1px solid #ffffff65!important;
+  padding-bottom:12px!important;
+  margin:0 0 18px!important;
+}
+body .layout .content .section.practice-panel p,
+body .layout .content .section.practice-panel li{
+  color:#e3eefc!important;
+  line-height:1.95!important;
+}
+@media(max-width:600px){
+  body .layout .content .section.practice-panel{
+    padding:18px 17px!important;
+    margin:26px 0 30px!important;
+  }
+}
