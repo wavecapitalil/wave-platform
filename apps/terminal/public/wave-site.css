@@ -1,0 +1,42 @@
+/* WAVE shared visual system. Homepage and Terminal are the visual authorities. */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+:root{--wp-bg:#070c13;--wp-panel:#111a2b;--wp-panel2:#0e1622;--wp-line:rgba(233,239,247,.14);--wp-line2:rgba(111,178,255,.32);--wp-text:#e9eff7;--wp-muted:#9baabd;--wp-blue:#4a9eff;--wp-blue2:#9bcaff;--wp-radius:12px;--wp-shadow:none;--wave-font:"IBM Plex Sans Hebrew",Inter,system-ui,sans-serif}
+body.wp-body,body.wave-site{background:radial-gradient(ellipse at 80% 0,rgba(47,128,255,.055),transparent 50%),#070c13;color:var(--wp-text);font-family:var(--wave-font)}
+.wp-topbar,body.wave-site>.nav{position:sticky;top:10px;inset-inline:12px;display:flex;align-items:center;gap:22px;min-height:54px;height:auto;margin:10px 12px 0;padding:10px 18px;border:1px solid var(--wp-line);border-radius:16px;background:rgba(11,18,28,.95);backdrop-filter:blur(18px);z-index:100;direction:ltr;box-shadow:none}
+.wp-brand,.nav-logo{flex-shrink:0;display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--wp-text);font:700 13px var(--wave-font);letter-spacing:2px;text-transform:uppercase}
+.wp-brand svg,.nav-logo svg{width:25px;height:18px}
+.nav-logo-text{font:700 13px var(--wave-font);letter-spacing:2px;color:var(--wp-text)}
+.wp-nav,.nav-links{display:flex;align-items:center;gap:4px;list-style:none;padding:0!important;margin:0;flex:1}
+.wp-nav a,.nav-links a{display:block;padding:8px 11px;border:1px solid transparent;border-radius:7px;color:var(--wp-muted);font:700 12px var(--wave-font);text-decoration:none;letter-spacing:.65px;text-transform:uppercase;white-space:nowrap}
+.wp-nav a:hover,.nav-links a:hover{color:var(--wp-text);background:rgba(111,178,255,.06)}
+.wp-nav a.active,.nav-links a.active{color:var(--wp-text);border-color:rgba(111,178,255,.36);background:rgba(74,158,255,.16)}
+.nav-links a.nav-cta{border:1px solid transparent;padding:8px 11px;color:var(--wp-muted)}
+.wp-shell,body.wave-site>.page{max-width:1400px;margin:auto;padding:0 clamp(20px,4vw,64px) 64px}
+.wp-hero{padding:48px 0 28px}.wp-title,.page-title{font-size:clamp(32px,4vw,50px);line-height:1.15;letter-spacing:-1.2px;font-weight:700}
+.wp-sub,.page-sub{font-size:15px;line-height:1.8;color:var(--wp-muted)}
+.wp-kicker,.page-tag{font:500 11px "IBM Plex Mono",var(--wave-font);color:var(--wp-blue2);letter-spacing:2px}
+.wp-card,.wp-course,.wp-stat,body.wave-site .card{background:var(--wp-panel);border:1px solid var(--wp-line);border-radius:12px;box-shadow:none}
+.wp-row{background:rgba(7,12,19,.5);border-color:var(--wp-line);border-radius:8px}
+.wp-card-title{font-size:15px}.wp-card-sub,.wp-row-meta,.wp-stat-label,.wp-stat-note,.wp-course p{font-size:12px;line-height:1.6}
+.wp-stat-value{font-family:"IBM Plex Mono",var(--wave-font);font-size:28px}
+.wp-btn,.wp-input,.wp-select{font-family:var(--wave-font);font-size:13px;border-radius:8px}
+.wp-btn.primary{background:#2f80ff;color:#fff}.wp-input,.wp-select{background:#0b1320}
+.wp-course h3{font-size:20px}.wp-course{padding:22px}.wp-course-tag{font-size:11px}
+body.wave-site>.page{padding-top:48px}
+body.wave-site .page-sub{margin-bottom:30px}
+body.wave-site .card-lead{color:var(--wp-muted);line-height:1.75}
+body.wave-site .card-meta,body.wave-site .article-meta,body.wave-site .back-link{color:var(--wp-muted)}
+body.wave-site .card-title{font-size:22px;line-height:1.45}
+body.wave-site .card-body{padding:24px}
+body.wave-site .article-title{font-size:clamp(30px,4vw,46px);line-height:1.3;max-width:1000px}
+body.wave-site .article-lead{color:#c1ccda;line-height:1.8}
+body.wave-site .article-body{color:#d2dbe8}
+body.wave-site .sources-card{background:var(--wp-panel);border-color:var(--wp-line)}
+body.wave-site footer{border-color:var(--wp-line)}
+body.wave-site .footer-copy,body.wave-site .footer-links a{color:var(--wp-muted)}
+body.wave-site .hood-research{font-family:var(--wave-font)}
+body.wave-site .hood-research :is(.hood-kpi,.hood-figure){background:var(--wp-panel);border-color:var(--wp-line);border-radius:12px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #6fb2ff;outline-offset:4px}
+@media(max-width:1100px){.wp-topbar,body.wave-site>.nav{flex-wrap:wrap;gap:10px}.wp-nav,.nav-links{order:3;flex-basis:100%;overflow-x:auto;justify-content:flex-start;padding-bottom:2px!important}.wp-nav a:nth-child(4){display:block}.wp-account-chip{margin-inline-start:auto}.nav-lang{margin-inline-start:auto!important;margin-inline-end:0!important}}
+@media(max-width:720px){.wp-topbar,body.wave-site>.nav{top:6px;margin:6px 8px 0;padding:10px 12px;border-radius:12px}.wp-nav,.nav-links{display:flex;flex-wrap:nowrap;width:100%;border:0;gap:2px}.wp-nav a,.nav-links a{font-size:11px;padding:8px}.wp-hero,body.wave-site>.page{padding-top:32px}.wp-title{letter-spacing:-.7px}.wp-shell,body.wave-site>.page{padding-inline:16px}.nav-logo-text{font-size:12px}.wp-account-chip{font-size:10px}.grid{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
