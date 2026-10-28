@@ -113,7 +113,7 @@
 </footer>
 
 <script src="terminal-sources.js"></script>
-<script src="research-hood.js?v=20261028-1"></script>
+<script src="research-hood.js?v=20261028-2"></script>
 <script src="i18n.js?v=20261013-he-default"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1"></script>
 <script src="supabase-config.js"></script>
@@ -203,6 +203,7 @@ async function openArticle(id){
   applyLang();
   try{
     var a = (window.WaveResearchArticles||[]).find(function(item){return item.id===String(id);});
+    var curatedArticle=!!a;
     if(!a){var r = await fetch(API+'/api/blog/article/'+encodeURIComponent(id)); a = await r.json();}
     if(a.error){ page.innerHTML = '<div class="empty">'+a.error+'</div>'; return; }
     var heroHtml = a.image_url
@@ -216,8 +217,9 @@ async function openArticle(id){
       +'<div class="article-meta"><span>'+(a.source||'')+'</span><span>·</span><span>'+timeAgo(a.created_at)+'</span></div>'
       +'<button class="article-save" id="articleSaveBtn" type="button">☆ Save to Account</button>'
       +(a.lead?'<div class="article-lead">'+a.lead+'</div>':'')
-      +'<div class="article-body"><p>'+renderMarkdownLite(a.body)+'</p></div>'
+      +(curatedArticle && window.WaveHoodResearch ? window.WaveHoodResearch.html() : '<div class="article-body"><p>'+renderMarkdownLite(a.body)+'</p></div>')
       +(a.link?'<div class="article-source"><span data-i18n="blog.source">Source</span>: <a href="'+a.link+'" target="_blank" rel="noopener">'+(a.source||a.link)+'</a></div>':'');
+    if(curatedArticle && window.WaveHoodResearch) window.WaveHoodResearch.mount();
     if(window.wireArticleSave) wireArticleSave(a);
     if(window.WaveSearch) WaveSearch.rebuild();
     applyLang();
