@@ -57,6 +57,21 @@ class HomepageContract(unittest.TestCase):
             self.assertTrue(links)
             for a in links:
                 self.assertEqual(a['href'],target); self.assertNotIn('hidden',a)
+    def test_shared_navigation_is_identical_before_javascript(self):
+        import re
+        headers=[]
+        for page in ['index.html','terminal_app.html']:
+            source=(Path(frontend.PUBLIC_DIR)/page).read_text()
+            header=re.search(r'<header id="hd" class="wave-global-header">.*?</header>',source,re.S).group()
+            headers.append(header.replace(' aria-current="page"',''))
+            self.assertIn('wave-header.css?v=',source)
+            self.assertIn('wave-header.js?v=',source)
+        self.assertEqual(headers[0],headers[1])
+        terminal=(Path(frontend.PUBLIC_DIR)/'terminal_app.html').read_text()
+        self.assertNotIn('<script src="wave-back.js',terminal)
+        self.assertIn('id="terminalMenuButton"',terminal)
+        self.assertIn('class="top-nav-right"',terminal)
+
     def test_private_and_unlisted_existing_files_stay_unreachable(self):
         with tempfile.TemporaryDirectory() as tmp:
             for name in ['private.json','assets/js/private.js','vendor/private.js','.env','calculation-admin.html']:

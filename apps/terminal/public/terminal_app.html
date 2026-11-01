@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wave Capital — Terminal</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <link rel="stylesheet" href="terminal.css?v=20261013-article-fallback2">
 
 <script src="i18n.js?v=20261013-he-default"></script>
@@ -16,36 +15,18 @@
 <link rel="stylesheet" href="terminal-price-history.css?v=20261013-material-events">
 <link rel="stylesheet" href="terminal-research.css?v=20261014-persistent-statements">
 <link rel="stylesheet" href="terminal-brief.css?v=20261009-brighter-reader1">
-</head>
-<body>
+<link rel="stylesheet" href="wave-header.css?v=20261101-1"><script src="wave-header.js?v=20261101-1"></script></head>
+<body class="wave-terminal-shell">
 
 <!-- ══════════════════════════════════════
      TICKER BAR
 ══════════════════════════════════════ -->
 <!-- TOP NAV BAR -->
-<div class="top-nav">
-  <button type="button" id="terminalMenuButton" class="terminal-menu-button" data-nav-toggle aria-controls="navPanel" aria-expanded="true" onclick="toggleNav()"><span aria-hidden="true">☰</span><span data-i18n="nav.menu">Terminal menu</span></button>
-  <a href="index.html" class="top-nav-logo">
-    <svg viewBox="0 0 80 30" fill="none" width="22" height="14">
-      <path d="M0 20 C10 10,20 10,30 20 C40 30,50 30,60 20 C70 10,80 10,90 20" stroke="#4a9eff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-    </svg>
-    <span>Wave Capital</span>
-  </a>
-  <nav class="top-nav-links">
-    <a href="index.html" class="top-nav-link" data-i18n="nav.home">Home</a>
-    <a href="terminal_app.html" class="top-nav-link active" data-i18n="nav.terminal">Terminal</a>
-    <a href="university.html" class="top-nav-link">University</a>
-    <a href="blog.html" class="top-nav-link" data-i18n="nav.blog">Research</a>
-    <a href="products.html" class="top-nav-link" data-i18n="nav.products">Products</a>
-    <a href="account.html" class="top-nav-link">Account</a>
-  </nav>
-  <div class="top-nav-right">
+<header id="hd" class="wave-global-header"><a class="wave-global-brand" href="index.html">WAVE CAPITAL</a><nav id="wave-global-menu" class="wave-global-menu" aria-label="Main navigation"><a href="index.html"><span class="wave-label-he">בית</span><span class="wave-label-en">Home</span></a><a data-app href="terminal_app.html" aria-current="page"><span class="wave-label-he">טרמינל</span><span class="wave-label-en">Terminal</span></a><a href="university.html"><span class="wave-label-he">University</span><span class="wave-label-en">University</span></a><a href="blog.html"><span class="wave-label-he">מחקרים</span><span class="wave-label-en">Research</span></a><a href="products.html"><span class="wave-label-he">מוצרים</span><span class="wave-label-en">Products</span></a><a href="account.html"><span class="wave-label-he">Account</span><span class="wave-label-en">Account</span></a><a href="index.html#about"><span class="wave-label-he">אודות</span><span class="wave-label-en">About</span></a><a href="index.html#products"><span class="wave-label-he">שיחת היכרות</span><span class="wave-label-en">Intro call</span></a><a href="index.html#contact"><span class="wave-label-he">צור קשר</span><span class="wave-label-en">Contact</span></a></nav><button class="wave-global-language" type="button" aria-label="Change language"><span class="wave-label-he">EN</span><span class="wave-label-en">עב</span></button><button class="wave-global-toggle" type="button" aria-controls="wave-global-menu" aria-expanded="false" aria-label="Site menu / תפריט האתר">☰</button></header><script>WaveHeader.init();</script><div class="wave-terminal-tools"><button type="button" id="terminalMenuButton" class="terminal-menu-button" data-nav-toggle aria-controls="navPanel" aria-expanded="true" onclick="toggleNav()"><span aria-hidden="true">☰</span><span data-i18n="nav.menu">Terminal menu</span></button><div class="top-nav-right">
     <span class="ticker-time" id="tickerTime"></span>
     <span class="ticker-refresh" onclick="loadTickerData()" title="Refresh">⟳</span>
-    <span class="nav-lang" onclick="setLang(getLang()==='he'?'en':'he');location.reload()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){setLang(getLang()==='he'?'en':'he');location.reload();}" style="font-size:12px;color:#64748b;cursor:pointer;margin-left:12px;padding:4px 8px;border-radius:4px">🌐 EN</span>
-  </div>
-</div>
 
+  </div></div>
 <!-- TICKER BAR -->
 <div class="ticker-bar">
   <div class="ticker-items" id="tickerItems">
@@ -1517,6 +1498,7 @@
   </div><!-- end main -->
 </div><!-- end app-body -->
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="terminal-sources.js?v=20261008-sources1"></script>
 <script src="terminal-brief.js?v=20261009-dark-reader1"></script>
 <script src="terminal.js?v=20261020-drawer-resize"></script>
@@ -1581,7 +1563,7 @@ if (window.Chart) Chart.register({
     <div class="td-body" id="tdBody"><div style="text-align:center;padding:60px;color:#334155">Loading…</div></div>
   </div>
 </div>
-<script src="wave-back.js?v=20261021-noresize" defer></script>
+
 <script src="wave-legal.js?v=20261016-lang" defer></script>
 </body>
 </html>

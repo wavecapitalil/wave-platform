@@ -16,6 +16,8 @@ PUBLIC_DIR = os.path.join(PROJECT_ROOT, "apps", "terminal", "public")
 
 # Imported public homepage resources only; never allow a directory or suffix glob.
 HOME_PUBLIC_FILES = {
+    'wave-header.css',
+    'wave-header.js',
     'wave-back.js',
     'wave-legal.js',
     'privacy.html',

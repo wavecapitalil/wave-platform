@@ -82,7 +82,7 @@
   function swapText(scope) {
     var w = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, null), n, list = [];
     while ((n = w.nextNode())) list.push(n);
-    list.forEach(function (node) { var v = node.nodeValue, k = v.trim(); if (k && T[k]) node.nodeValue = v.replace(k, T[k]); });
+    list.forEach(function (node) { if(node.parentElement.closest('.wave-global-header'))return; var v = node.nodeValue, k = v.trim(); if (k && T[k]) node.nodeValue = v.replace(k, T[k]); });
     [].forEach.call(scope.querySelectorAll('[aria-label],[alt],[title]'), function (el) {
       ['aria-label', 'alt', 'title'].forEach(function (a) { var v = el.getAttribute(a); if (v && T[v]) el.setAttribute(a, T[v]); });
     });

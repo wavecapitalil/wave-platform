@@ -34,8 +34,8 @@
 
   /* ---------- dialog + nav ---------- */
   var dlg = $('#talk'), sheet = $('#sheetnav'), menuBtn = $('.hd__menu');
-  function closeSheet() { sheet.classList.remove('is-open'); menuBtn.setAttribute('aria-expanded', 'false'); }
-  menuBtn.addEventListener('click', function () { var o = sheet.classList.toggle('is-open'); menuBtn.setAttribute('aria-expanded', o); });
+  function closeSheet() { if(sheet)sheet.classList.remove('is-open'); if(menuBtn)menuBtn.setAttribute('aria-expanded', 'false'); }
+  if(menuBtn)menuBtn.addEventListener('click', function () { var o = sheet.classList.toggle('is-open'); menuBtn.setAttribute('aria-expanded', o); });
   $$('[data-talk]').forEach(function (el) { el.addEventListener('click', function (e) { e.preventDefault(); closeSheet(); if (dlg.showModal) dlg.showModal(); if (lenis) lenis.stop(); }); });
   dlg.addEventListener('close', function () { if (lenis) lenis.start(); });
   $('[data-close]').addEventListener('click', function () { dlg.close(); });

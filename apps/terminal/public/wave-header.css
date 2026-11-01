@@ -1,0 +1,28 @@
+/* One static global menu for the homepage and terminal. Fixed slots prevent font/route shifts. */
+.wave-global-header,.wave-global-header *{box-sizing:border-box}
+.wave-global-header{position:fixed!important;inset:10px 12px auto!important;height:64px!important;min-height:64px!important;margin:0!important;padding:0 18px!important;display:flex!important;align-items:center!important;gap:16px!important;direction:ltr!important;background:rgba(11,18,28,.97)!important;color:#e9eff7!important;border:1px solid #2a3543!important;border-radius:16px!important;z-index:110!important;opacity:1!important;transform:none!important;pointer-events:auto!important;box-shadow:none!important;font:700 12px/1 Arial,sans-serif!important;letter-spacing:0!important}
+.wave-global-header a,.wave-global-header button{font:700 12px/1 Arial,sans-serif!important;letter-spacing:0!important;text-decoration:none!important;color:#aab9cc!important;border:1px solid transparent;border-radius:7px;background:transparent;padding:0;margin:0;cursor:pointer;text-transform:none!important}
+.wave-global-header .wave-global-brand{width:150px;flex:0 0 150px;color:#e9eff7!important;letter-spacing:2px!important;white-space:nowrap}
+.wave-global-menu{display:flex;align-items:center;gap:3px;flex:1;min-width:0;direction:ltr}
+.wave-global-menu a{display:flex;align-items:center;justify-content:center;flex:0 0 80px;width:80px;height:36px;white-space:nowrap}
+.wave-global-menu a:hover,.wave-global-menu a[aria-current=page]{background:#19304a;border-color:#395573;color:#e9eff7!important}
+.wave-global-header .wave-global-language,.wave-global-header .wave-global-toggle{flex:0 0 40px;width:40px;height:36px;border-color:#395573;color:#e9eff7!important}
+.wave-global-header .wave-global-toggle{display:none;font-size:18px!important}
+.wave-global-header :focus-visible{outline:2px solid #9bcaff;outline-offset:3px}
+.wave-global-header .wave-label-en{display:none}
+html[data-wave-language=en] .wave-global-header .wave-label-en{display:inline}
+html[data-wave-language=en] .wave-global-header .wave-label-he{display:none}
+.wave-terminal-shell{padding-top:84px!important}
+.wave-terminal-tools{display:flex;flex:0 0 42px;align-items:center;gap:12px;margin:0 12px;direction:ltr}
+.wave-terminal-tools .top-nav-right{margin-left:auto;display:flex;align-items:center;gap:10px;border:0;padding:0}
+@media(max-width:1200px){
+ .wave-global-header{inset:6px 8px auto!important;height:54px!important;min-height:54px!important;padding:0 12px!important;gap:12px!important;border-radius:12px!important}
+ .wave-global-header .wave-global-brand{margin-right:auto!important}
+ .wave-global-header .wave-global-toggle{display:block}
+ .wave-global-menu{display:none;position:absolute;top:calc(100% + 8px);left:0;right:0;padding:12px;background:#0b121c;border:1px solid #2a3543;border-radius:12px;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;max-height:calc(100dvh - 84px);overflow:auto}
+ .wave-global-header[data-open=true] .wave-global-menu{display:grid}
+ .wave-global-menu a{width:100%;min-width:0;height:40px}
+ .wave-terminal-shell{padding-top:70px!important}
+ .wave-terminal-tools{margin:0 8px;gap:6px}.wave-terminal-tools .top-nav-right{gap:6px}
+}
+@media(max-width:380px){.wave-global-header{gap:8px!important}.wave-global-header .wave-global-brand{width:140px;flex-basis:140px;font-size:11px!important}.wave-terminal-tools .ticker-time{display:none}}

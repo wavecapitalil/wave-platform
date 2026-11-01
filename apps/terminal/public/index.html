@@ -382,21 +382,11 @@ main>section:not(.hero)>.wrap,.ft>.wrap{position:relative;z-index:2}
 
 @media(max-height:500px) and (max-width:1000px){.beat--hero{display:grid;grid-template-columns:1fr 1fr;align-content:center;gap:16px;padding-top:calc(var(--home-header-bottom,120px) + 12px);padding-bottom:24px}.beat--hero .h1{grid-column:1;grid-row:1 / 3;font-size:34px;margin:0;align-self:center}.beat--hero .sub{grid-column:2;grid-row:1;font-size:13px;margin:0}.beat--hero .cta{grid-column:2;grid-row:2;margin:0;gap:8px}.beat--hero .btn{height:auto;min-height:34px;padding:7px 10px;font-size:11px}}
 </style>
-</head>
+<link rel="stylesheet" href="wave-header.css?v=20261101-1"><script src="wave-header.js?v=20261101-1"></script></head>
 <body>
 <a class="skip" href="#lead">דילוג לתוכן המרכזי</a>
 
-<header class="hd is-hidden" id="hd">
-  <a class="hd__logo" href="#top" aria-label="Wave Capital, לראש העמוד"><span>WAVE CAPITAL</span></a>
-  <nav class="hd__nav" aria-label="ניווט ראשי">
-    <a href="#products">שיחת היכרות</a><a href="#about">About Us</a><a href="#contact">צור קשר</a><span class="nav-sep" aria-hidden="true"></span><a href="terminal_app.html" data-sys="terminal_app.html">Terminal</a><a href="university.html" data-sys="university.html">University</a><a href="account.html" data-sys="account.html">Account</a><a href="blog.html" data-sys="blog.html">מחקרים</a><a href="products.html" data-sys="products.html">Products</a>
-  </nav>
-  <a class="btn btn--line" href="terminal_app.html" data-app>כניסה למערכת <span class="arr">←</span></a>
-  <button class="hd__menu" aria-label="תפריט" aria-expanded="false"><i></i></button>
-</header>
-<nav class="sheetnav" id="sheetnav" aria-label="תפריט נייד">
-  <a href="#products">שיחת היכרות</a><a href="#about">About Us</a><a href="#contact">צור קשר</a><span class="nav-sep" aria-hidden="true"></span><a href="terminal_app.html" data-sys="terminal_app.html">Terminal</a><a href="university.html" data-sys="university.html">University</a><a href="account.html" data-sys="account.html">Account</a><a href="blog.html" data-sys="blog.html">מחקרים</a><a href="products.html" data-sys="products.html">Products</a><a href="terminal_app.html" data-app>כניסה למערכת</a>
-</nav>
+<header id="hd" class="wave-global-header"><a class="wave-global-brand" href="index.html">WAVE CAPITAL</a><nav id="wave-global-menu" class="wave-global-menu" aria-label="Main navigation"><a href="index.html" aria-current="page"><span class="wave-label-he">בית</span><span class="wave-label-en">Home</span></a><a data-app href="terminal_app.html"><span class="wave-label-he">טרמינל</span><span class="wave-label-en">Terminal</span></a><a href="university.html"><span class="wave-label-he">University</span><span class="wave-label-en">University</span></a><a href="blog.html"><span class="wave-label-he">מחקרים</span><span class="wave-label-en">Research</span></a><a href="products.html"><span class="wave-label-he">מוצרים</span><span class="wave-label-en">Products</span></a><a href="account.html"><span class="wave-label-he">Account</span><span class="wave-label-en">Account</span></a><a href="index.html#about"><span class="wave-label-he">אודות</span><span class="wave-label-en">About</span></a><a href="index.html#products"><span class="wave-label-he">שיחת היכרות</span><span class="wave-label-en">Intro call</span></a><a href="index.html#contact"><span class="wave-label-he">צור קשר</span><span class="wave-label-en">Contact</span></a></nav><button class="wave-global-language" type="button" aria-label="Change language"><span class="wave-label-he">EN</span><span class="wave-label-en">עב</span></button><button class="wave-global-toggle" type="button" aria-controls="wave-global-menu" aria-expanded="false" aria-label="Site menu / תפריט האתר">☰</button></header><script>WaveHeader.init();</script>
 
 <main id="top">
 <section class="hero" id="hero" aria-label="Wave Capital">
@@ -588,9 +578,9 @@ main>section:not(.hero)>.wrap,.ft>.wrap{position:relative;z-index:2}
       </div></div>
 </dialog>
 
-<script src="assets/js/lang.js?v=20261021-wording"></script><script src="vendor/gsap.min.js"></script><script src="vendor/ScrollTrigger.min.js"></script><script src="vendor/lenis.min.js"></script>
+<script src="assets/js/lang.js?v=20261101-header"></script><script src="vendor/gsap.min.js"></script><script src="vendor/ScrollTrigger.min.js"></script><script src="vendor/lenis.min.js"></script>
 <script src="assets/js/film-tiers.js"></script><script src="assets/js/film-engine.js?v=20261101-mobile"></script>
-<script src="assets/js/site.js?v=20261101-mobile"></script>
+<script src="assets/js/site.js?v=20261101-header"></script>
 <script src="assets/js/company.js"></script><script src="assets/js/a11y.js"></script><script src="assets/js/theme.js"></script><script src="assets/js/orbit.js"></script>
 <script>
 (function(){

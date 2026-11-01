@@ -42,11 +42,17 @@ async def main():
                 assert not errors,errors
                 assert not bad,bad
                 home_errors=list(errors);home_bad=list(bad)
+                header_box=await page.locator('.wave-global-header').bounding_box()
                 for target in ['terminal','university','products']:
                     await page.goto(base+'/'+target,wait_until='domcontentloaded')
-                    await page.locator('#wave-back a').wait_for()
-                    assert await page.locator('#wave-back a').get_attribute('href')=='index.html'
-                    await page.locator('#wave-back a').click()
+                    if target=='terminal':
+                        terminal_box=await page.locator('.wave-global-header').bounding_box()
+                        assert terminal_box==header_box,(header_box,terminal_box)
+                        assert await page.locator('#wave-back').count()==0
+                    home_link=page.locator('.wave-global-brand' if target=='terminal' else '#wave-back a')
+                    await home_link.wait_for()
+                    assert await home_link.get_attribute('href')=='index.html'
+                    await home_link.click()
                     await page.wait_for_url('**/index.html')
                     assert await page.locator('#hero video').count()==1
                 results.append({'width':width,'passed':True,'film_loaded_and_scrubbed':True,'homepage_errors':home_errors,'homepage_asset_failures':home_bad})
