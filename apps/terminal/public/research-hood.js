@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 var data={"2025Q3":{"label":"Q3 2025","total":1274,"transaction":730,"interest":456,"other":88,"options":304,"events":27,"crypto":268,"equities":86,"transactionOther":45},"2026Q2":{"label":"Q2 2026","total":1308,"transaction":776,"interest":389,"other":143,"options":342,"events":156,"crypto":100,"equities":129,"transactionOther":49},"2026Q3":{"label":"Q3 2026","total":1424,"transaction":867,"interest":415,"other":142,"options":399,"events":173,"crypto":120,"equities":121,"transactionOther":54}};
-var article={id:'hood-2026-10-28',title:'האם רובינהוד מתחילה להאט? תוצאות הרבעון השלישי 2026',category:'EQUITY RESEARCH',source:'WAVE · מחקר משותף בתהליך',created_at:'2026-10-28T12:00:00+02:00',lead:'',body:'הקדמה למחקר המשותף על Robinhood. נתוני Q3 2026 ותמהיל הכנסות; מסקנות המחקר טרם גובשו.',link:null};
+var article={id:'hood-2026-10-28',title:'האם רובינהוד מתחילה להאט? תוצאות הרבעון השלישי 2026',category:'EQUITY RESEARCH',source:'Wave Capital',image_url:'assets/research/robinhood-cover.svg',image_alt:'Robinhood — מסחר במובייל',created_at:'2026-10-28T12:00:00+02:00',lead:'',body:'תוצאות הרבעון השלישי של 2026: הכנסות, רווח למניה ותמהיל הפעילות של Robinhood.',link:null};
 window.WaveResearchArticles=[article];
 function fmt(n){return new Intl.NumberFormat('en-US').format(n);}
 function pie(rows,total,title){
