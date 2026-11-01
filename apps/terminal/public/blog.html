@@ -77,7 +77,8 @@
       .grid { grid-template-columns: 1fr; }
       .article-title { font-size: 28px; }
     }
-  </style>
+  .research-index-card{max-width:280px;width:100%;direction:rtl}.research-index-card .card-img{width:100%;height:auto;aspect-ratio:1;object-fit:cover}.research-card-cta{display:inline-block;font-size:12px;padding:6px 12px;border:1px solid #38577d;border-radius:7px;color:#9bcaff;margin-top:12px}.research-filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px;direction:rtl}.research-filters button{padding:8px 16px;border:1px solid #283a50;border-radius:8px;background:#111a2b;color:#e9eff7;cursor:pointer}.research-filters button[aria-pressed=true]{background:#21416b;border-color:#4a9eff}[hidden]{display:none!important}.research-index-grid{margin-bottom:24px}#curatedResearch{grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),280px));gap:24px;align-items:start}
+</style>
 <link rel="stylesheet" href="ai-tutor.css">
 <link rel="stylesheet" href="research-feature.css?v=20261028">
 <link rel="stylesheet" href="wave-site.css?v=20261028">
@@ -116,7 +117,7 @@
 </footer>
 
 <script src="terminal-sources.js"></script>
-<script src="research-hood.js?v=20261028-2"></script>
+<script src="research-hood.js?v=20261028-3"></script>
 <script src="i18n.js?v=20261013-he-default"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1"></script>
 <script src="supabase-config.js"></script>
@@ -127,7 +128,17 @@
 <script src="ai-tutor.js"></script>
 <script>
 var API = (location.hostname==='localhost'||location.hostname==='127.0.0.1') ? 'http://localhost:5001' : 'https://nqmtayofbhletydmiujz.supabase.co/functions/v1/wave-data';
-var FEATURED_RESEARCH_CARD = "<a class=\"research-feature\" href=\"research/three-portfolios.html\" aria-label=\"למחקר: שלושה תיקים, שלוש דרכים להשקיע\"><div class=\"research-feature__image\"><img src=\"assets/research/three-portfolios-vs-banner.jpg\" alt=\"S&P 500 מול Nasdaq-100 ומטילי זהב\" width=\"1984\" height=\"793\" fetchpriority=\"high\"><span class=\"research-feature__number\">RESEARCH 001</span></div><div class=\"research-feature__body\"><span class=\"research-feature__eyebrow\">הקצאת נכסים · מחקר אמפירי</span><h2>שלושה תיקים,<br>שלוש דרכים להשקיע</h2><p>איך שילוב Nasdaq-100 או זהב משנה את צמיחת ההון, הסיכון וההתאוששות של תיק S&amp;P 500?</p><div class=\"research-feature__allocations\"><span><b>A</b> · 100% S&amp;P 500</span><span><b>B</b> · 50% S&amp;P 500 + 50% Nasdaq-100</span><span><b>C</b> · 70% S&amp;P 500 + 30% זהב</span></div><div class=\"research-feature__meta\"><span>2004–2026</span><span>5,518 תשואות יומיות</span><span>Wave Capital Research</span></div><span class=\"research-feature__cta\">למחקר המלא <b aria-hidden=\"true\">←</b></span><div class=\"research-cover-caption\">הבאנר הוא איור קונספטואלי; הגרפים והנתונים מופיעים במחקר.</div></div></a>";
+var FEATURED_RESEARCH_CARD = '<a class="card research-index-card" data-tags="stocks commodities" href="research/three-portfolios.html"><img class="card-img" src="assets/research/three-portfolios-vs-banner.jpg" alt="S&amp;P 500, Nasdaq-100 וזהב"><div class="card-body"><h2 class="card-title">שלושה תיקים, שלוש דרכים להשקיע</h2><span class="research-card-cta">למאמר המלא</span></div></a>';
+var researchFilter = new URLSearchParams(location.search).get('category') || 'all';
+var articleTags = {'hood-2026-10-28':['stocks']};
+function tagsFor(a){return articleTags[String(a.id)] || (Array.isArray(a.tags)?a.tags:({MACRO:['macro'],CRYPTO:['crypto'],EQUITY:['stocks'],'EQUITY RESEARCH':['stocks'],EARNINGS:['stocks'],ENERGY:['commodities'],COMMODITIES:['commodities']}[String(a.category||'').toUpperCase()]||[]));}
+function filterArticles(category){
+ researchFilter=category;
+ var url=new URL(location.href); if(category==='all')url.searchParams.delete('category');else url.searchParams.set('category',category);history.replaceState({},'',url);
+ var count=0;document.querySelectorAll('[data-tags]').forEach(function(card){var show=category==='all'||card.dataset.tags.split(' ').indexOf(category)!==-1;card.hidden=!show;if(show)count++;});
+ document.querySelectorAll('[data-filter]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.filter===category));});
+ var empty=document.getElementById('filterEmpty');if(empty){empty.hidden=count>0||category==='all';empty.textContent='אין כרגע מאמרים בקטגוריה שנבחרה.';}
+}
 var PAGE_SIZE = 12;
 var _offset = 0;
 var _total = 0;
@@ -149,13 +160,13 @@ function cardHtml(a){
   var imgHtml = a.image_url
     ? '<img class="card-img" src="'+a.image_url+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">'
     : '';
-  return '<a class="card" href="blog.html?id='+a.id+'" onclick="event.preventDefault();openArticle('+a.id+')">'
+  return '<a class="card research-index-card" data-tags="'+tagsFor(a).join(' ')+'" href="blog.html?id='+a.id+'">'
     +imgHtml
     +'<div class="card-body">'
     +'<span class="card-cat" style="color:'+catColor(a.category)+'">'+(a.category||'MARKETS')+'</span>'
     +'<div class="card-title">'+a.title+'</div>'
     +(a.lead?'<div class="card-lead">'+a.lead+'</div>':'')
-    +'<div class="card-meta">'+(a.source||'')+' · '+timeAgo(a.created_at)+'</div>'
+    +'<div class="card-meta">'+(a.source||'')+' · '+timeAgo(a.created_at)+'</div><span class="research-card-cta">למאמר המלא</span>'
     +'</div></a>';
 }
 
@@ -175,36 +186,40 @@ async function loadList(reset){
       '<div class="page-tag" data-i18n="blog.tag">Research & Insights</div>'
       +'<h1 class="page-title" data-i18n="blog.title">Blog</h1>'
       +'<p class="page-sub" data-i18n="blog.sub">Market analysis, strategy breakdowns, and trade recaps.</p>'
-      +FEATURED_RESEARCH_CARD
+      +'<div class="research-filters" aria-label="סינון מאמרים">'+[['all','הכול'],['macro','מאקרו'],['crypto','קריפטו'],['stocks','מניות'],['commodities','סחורות']].map(function(f){return '<button type="button" data-filter="'+f[0]+'" aria-pressed="false">'+f[1]+'</button>';}).join('')+'</div>'
       +'<div id="curatedResearch" class="grid" style="margin-bottom:24px"></div>'
-      +'<h2 class="research-archive-title" data-i18n="blog.archive">מאמרים וניתוחי שוק</h2>'
+      +'<p id="filterEmpty" role="status" hidden></p>'
       +'<div id="blogGrid" class="grid"><div class="empty" data-i18n="blog.loading">Loading articles…</div></div>'
       +'<div class="loadmore-wrap" id="loadmoreWrap" style="display:none"><button class="loadmore" id="loadmoreBtn" data-i18n="blog.readMore">Load more</button></div>';
-    document.getElementById('curatedResearch').innerHTML = (window.WaveResearchArticles||[]).map(function(a){return '<a class="card" href="blog.html?id='+encodeURIComponent(a.id)+'"><div class="card-body"><span class="card-cat">'+a.category+'</span><h2 class="card-title">'+a.title+'</h2><p class="card-lead">'+a.lead+'</p><div class="card-meta">'+a.source+' · '+timeAgo(a.created_at)+'</div></div></a>';}).join('');
+    document.getElementById('curatedResearch').innerHTML = FEATURED_RESEARCH_CARD + (window.WaveResearchArticles||[]).map(function(a){return '<a class="card research-index-card" data-tags="'+tagsFor(a).join(' ')+'" href="blog.html?id='+encodeURIComponent(a.id)+'"><div class="card-body"><span class="card-cat">'+a.category+'</span><h2 class="card-title">'+a.title+'</h2><p class="card-lead">'+a.lead+'</p><div class="card-meta">'+a.source+' · '+timeAgo(a.created_at)+'</div><span class="research-card-cta">למאמר המלא</span></div></a>';}).join('');
+    document.querySelectorAll('[data-filter]').forEach(function(b){b.onclick=function(){filterArticles(b.dataset.filter);};});filterArticles(researchFilter);
     document.getElementById('loadmoreBtn').onclick = function(){ loadList(false); };
   }
   try{
     var r = await fetch(API+'/api/blog/articles?limit='+PAGE_SIZE+'&offset='+_offset);
     var d = await r.json();
+    if(reset){while((d.articles||[]).length < (d.total||0)){var next=await fetch(API+'/api/blog/articles?limit='+PAGE_SIZE+'&offset='+d.articles.length);var more=await next.json();if(!more.articles||!more.articles.length)break;d.articles=d.articles.concat(more.articles);}}
+    if(!document.getElementById('blogGrid'))return;
     _total = d.total||0;
     _offset += (d.articles||[]).length;
     var grid = document.getElementById('blogGrid');
     if(reset) grid.innerHTML = '';
     if(!d.articles || !d.articles.length){
-      if(reset) grid.innerHTML = '<div class="empty" data-i18n="blog.empty">No articles yet — check back soon.</div>';
+      if(reset) grid.innerHTML = '';
     } else {
       grid.innerHTML += d.articles.map(cardHtml).join('');
     }
     var wrap = document.getElementById('loadmoreWrap');
     wrap.style.display = (_offset < _total) ? 'block' : 'none';
+    filterArticles(researchFilter);
     applyLang();
   }catch(e){
     document.getElementById('blogGrid').innerHTML = '<div class="empty">'+(getLang()==='he'?'מאמרי השוק אינם זמינים כרגע. המחקר המלא למעלה זמין לקריאה.':'Market articles are unavailable. The full research above remains available.')+'</div>';
   }
 }
 
-async function openArticle(id){
-  history.pushState({id:id}, '', 'blog.html?id='+id);
+async function openArticle(id, fromHistory){
+  if(!fromHistory) history.pushState({id:id}, '', 'blog.html?id='+id);
   var page = document.getElementById('page');
   page.innerHTML = '<div class="empty" data-i18n="blog.loading">Loading articles…</div>';
   applyLang();
@@ -247,12 +262,12 @@ function backToList(){
 
 window.addEventListener('popstate', function(){
   var id = new URLSearchParams(location.search).get('id');
-  if(new URLSearchParams(location.search).get('view')==='sources') openResearchSources(); else if(id) openArticle(id); else loadList(true);
+  if(new URLSearchParams(location.search).get('view')==='sources') openResearchSources(); else if(id) openArticle(id,true); else loadList(true);
 });
 
 (function(){
   var id = new URLSearchParams(location.search).get('id');
-  if(id) openArticle(id); else loadList(true);
+  if(id) openArticle(id,true); else loadList(true);
 })();
 </script>
 <script src="wave-back.js?v=20261021-noresize" defer></script>
