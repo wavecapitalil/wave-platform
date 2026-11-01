@@ -75,7 +75,7 @@ async def check(browser, name, width, height, lang="he"):
     await valuation_link.click()
     assert page.url.endswith("#valuation")
     assert await research_link.get_attribute("aria-current") == "page"
-    assert await page.locator(".top-nav").is_visible()
+    assert await page.locator("#hd.wave-global-header").is_visible()
     if width <= 800:
         assert await panel.get_attribute("aria-hidden") == "true"
         await menu.click()
@@ -162,7 +162,7 @@ async def check(browser, name, width, height, lang="he"):
     await page.wait_for_url("**/terminal_app.html#valuation")
     await page.locator("#vw-summary-base").filter(has_text=model_price).wait_for(timeout=30000)
     assert await page.locator("#terminalMenuButton").is_visible()
-    assert await page.locator(".top-nav").is_visible()
+    assert await page.locator("#hd.wave-global-header").is_visible()
     # Source navigation and return do not expose private admin navigation.
     await page.locator("#vw-advanced-toggle").click()
     await page.locator("#vw-method").click()
