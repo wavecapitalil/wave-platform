@@ -141,6 +141,7 @@ function filterArticles(category){
  document.querySelectorAll('[data-filter]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.filter===category));});
  var empty=document.getElementById('filterEmpty');if(empty){empty.hidden=count>0||category==='all';empty.textContent='אין כרגע מאמרים בקטגוריה שנבחרה.';}
 }
+var META_RESEARCH_CARD = '<a class="card research-index-card" data-tags="stocks" href="research/meta.html"><img class="card-img" src="assets/research/meta-cover.svg" alt="Meta — מחקר הרבעון השלישי של 2026" loading="lazy"><div class="card-body"><span class="card-cat">מניות · 22.10.2026</span><h2 class="card-title">אנליזה מטא — רבעון 3 FY2026</h2><span class="research-card-cta">למאמר המלא</span></div></a>';
 var UBER_RESEARCH_CARD = '<a class="card research-index-card" data-tags="stocks" href="research/uber.html"><img class="card-img" src="assets/research/uber-cover.svg" alt="Uber — תחבורה ומשלוחים" loading="lazy"><div class="card-body"><span class="card-cat">מניות · 14.10.2026</span><h2 class="card-title">אנליזה אובר</h2><span class="research-card-cta">למאמר המלא</span></div></a>';
 var PAGE_SIZE = 12;
 var _offset = 0;
@@ -194,7 +195,7 @@ async function loadList(reset){
       +'<p id="filterEmpty" role="status" hidden></p>'
       +'<div id="blogGrid" class="grid"><div class="empty" data-i18n="blog.loading">Loading articles…</div></div>'
       +'<div class="loadmore-wrap" id="loadmoreWrap" style="display:none"><button class="loadmore" id="loadmoreBtn" data-i18n="blog.readMore">Load more</button></div>';
-    document.getElementById('curatedResearch').innerHTML = FEATURED_RESEARCH_CARD + UBER_RESEARCH_CARD + (window.WaveResearchArticles||[]).map(function(a){return '<a class="card research-index-card" data-tags="'+tagsFor(a).join(' ')+'" href="blog.html?id='+encodeURIComponent(a.id)+'"><img class="card-img" src="'+a.image_url+'" alt="'+(a.image_alt||'')+'" loading="lazy"><div class="card-body"><span class="card-cat">'+a.category+'</span><h2 class="card-title">'+a.title+'</h2><p class="card-lead">'+a.lead+'</p><div class="card-meta">'+a.source+' · '+timeAgo(a.created_at)+'</div><span class="research-card-cta">למאמר המלא</span></div></a>';}).join('');
+    document.getElementById('curatedResearch').innerHTML = FEATURED_RESEARCH_CARD + UBER_RESEARCH_CARD + META_RESEARCH_CARD + (window.WaveResearchArticles||[]).map(function(a){return '<a class="card research-index-card" data-tags="'+tagsFor(a).join(' ')+'" href="blog.html?id='+encodeURIComponent(a.id)+'"><img class="card-img" src="'+a.image_url+'" alt="'+(a.image_alt||'')+'" loading="lazy"><div class="card-body"><span class="card-cat">'+a.category+'</span><h2 class="card-title">'+a.title+'</h2><p class="card-lead">'+a.lead+'</p><div class="card-meta">'+a.source+' · '+timeAgo(a.created_at)+'</div><span class="research-card-cta">למאמר המלא</span></div></a>';}).join('');
     document.querySelectorAll('[data-filter]').forEach(function(b){b.onclick=function(){filterArticles(b.dataset.filter);};});filterArticles(researchFilter);
     document.getElementById('loadmoreBtn').onclick = function(){ loadList(false); };
   }
