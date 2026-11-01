@@ -11,7 +11,7 @@
   var lenis = null;
   // iOS: the toolbar collapsing mid-scroll fires resize; don't re-lay-out every scroll animation for it
   ScrollTrigger.config({ ignoreMobileResize: true });
-  if (!reduced) { lenis = new Lenis({ lerp: 0.09, smoothWheel: true }); lenis.on('scroll', ScrollTrigger.update); gsap.ticker.add(function (t) { lenis.raf(t * 1000); }); gsap.ticker.lagSmoothing(0); }
+  if (!reduced && !narrow && !matchMedia('(pointer: coarse)').matches) { lenis = new Lenis({ lerp: 0.09, smoothWheel: true }); lenis.on('scroll', ScrollTrigger.update); gsap.ticker.add(function (t) { lenis.raf(t * 1000); }); gsap.ticker.lagSmoothing(0); }
 
   /* ---------- back from the platform (13/10, Yogi): land on "יתרון מחקרי. ביצוע שיטתי." instead of the start of the film.
      A referrer from another page of this site = a return trip. Instant, and only before the visitor touches anything. ---------- */
@@ -48,6 +48,10 @@
   /* ---------- hero film ---------- */
   var hero = $('.hero'), video = $('.hero__film'), poster = $('.hero__poster'), fade = $('.hero__fade'), cue = $('.cue'), load = $('.hero__load'), loadBar = $('.hero__load i');
   var hd = $('#hd'), depth = $('#depth'), hws = $$('.h1 .hw');
+  function sizeHeader(){ document.documentElement.style.setProperty('--home-header-bottom', Math.ceil(hd.getBoundingClientRect().bottom) + 'px'); }
+  sizeHeader();
+  if (window.ResizeObserver) new ResizeObserver(sizeHeader).observe(hd);
+  addEventListener('resize', sizeHeader);
   var beats = $$('.beat').map(function (el) { return { el: el, a: +el.dataset.in, p: +el.dataset.peak, o: +el.dataset.out }; });
   function beatAlpha(b, p) { if (p < b.a || p > b.o) return 0; if (p < b.p) return (p - b.a) / Math.max(1e-4, b.p - b.a); if (b.o > 1.5) return 1; return 1 - (p - b.p) / Math.max(1e-4, b.o - b.p); }
   function paint(p) {

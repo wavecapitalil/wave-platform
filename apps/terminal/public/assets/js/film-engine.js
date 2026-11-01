@@ -31,7 +31,7 @@
     var dur = 0, target = 0, shown = -1, seeking = false, pending = null, ready = false, userTouched = false;
     var H = 1, lastP = -1, rafOn = false, ease = 0.32;
 
-    function measure() { H = Math.max(1, hero.offsetHeight - innerHeight); }
+    function measure() { H = Math.max(1, hero.offsetHeight - ((hero.querySelector('.hero__stage') || {}).clientHeight || innerHeight)); }
     function progress() {
       var r = hero.getBoundingClientRect();
       return Math.max(0, Math.min(1, -r.top / H));
