@@ -41,7 +41,9 @@ window.WAVE_CO = {
   var app = new URL(co.app, location.href), same = app.origin === location.origin, done = {}, warmed = false;
   // a different site (the Vercel preview) has its own browser cache, so only open the connection early there
   if (!same) { var l = document.createElement('link'); l.rel = 'preconnect'; l.href = app.origin; document.head.appendChild(l); return; }
-  function get(u) { if (done[u]) return; done[u] = 1; try { fetch(u, { credentials: 'same-origin', priority: 'low' }).catch(function () {}); } catch (e) {} }
+  // 02/11: files this page already loaded (the shared header) are in the cache; fetching them again was a double download
+  function had(u) { try { return performance.getEntriesByType('resource').some(function (e) { return e.name === u; }); } catch (e) { return false; } }
+  function get(u) { if (done[u] || had(u)) return; done[u] = 1; try { fetch(u, { credentials: 'same-origin', priority: 'low' }).catch(function () {}); } catch (e) {} }
   function warm() {
     if (warmed) return; warmed = true;
     fetch(app.href, { credentials: 'same-origin', priority: 'low' }).then(function (r) { return r.text(); }).then(function (html) {
