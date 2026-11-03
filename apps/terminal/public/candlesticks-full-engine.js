@@ -2,11 +2,13 @@
 const $=id=>document.getElementById(id);
 const params=new URLSearchParams(location.search),u=Number(params.get('u')),n=Number(params.get('n'));
 const pad=n=>String(n).padStart(2,'0'),id=u+'.'+n;
+// Display-only numbering; original URL and localStorage IDs remain stable.
+const displayId=u===5?'4.'+(n+5):u>=6?(u-1)+'.'+n:id;
 const root='https://raw.githubusercontent.com/wavecapitalil/wave-platform/main/';
 const registryUrl=root+'docs/course/registry.json';
 function add(tag,text,container){const el=document.createElement(tag);el.textContent=text;container.appendChild(el);return el;}
 function unavailable(message){
-  $('title').textContent='שיעור '+id+' — בתהליך עריכה';
+  $('title').textContent='שיעור '+displayId+' — בתהליך עריכה';
   $('intro').textContent='התוכן המקצועי לשיעור זה נמצא כעת בבקרת איכות וטרם אושר לפרסום.';
   const host=$('lesson-content');host.replaceChildren();
   const box=add('section','',host);box.className='section';box.setAttribute('aria-label','סטטוס השיעור');
@@ -25,7 +27,7 @@ async function init(){
   try{
     const lesson=await getJson(root+entry.path);
     if(lesson.lesson_id!==id||typeof lesson.title!=='string'||!Array.isArray(lesson.sections)||!lesson.sections.length)throw Error('Invalid approved lesson');
-    $('title').textContent=id+' — '+lesson.title;
+    $('title').textContent=displayId+' — '+lesson.title;
     $('intro').textContent=lesson.intro||'';
     const host=$('lesson-content'),nav=$('lesson-nav');host.replaceChildren();nav.replaceChildren();
     lesson.sections.forEach((part,index)=>{
