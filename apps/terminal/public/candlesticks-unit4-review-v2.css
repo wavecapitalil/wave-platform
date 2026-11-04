@@ -7,3 +7,15 @@ a{color:#addbff}.top{padding:25px clamp(18px,4vw,58px);border-bottom:1px solid #
 .fig-placeholder{padding:18px 20px;margin:18px 0;border:1px dashed #69849e;border-radius:14px;background:#0c243c;color:#c4d8e8;font-size:13px}.fig-placeholder strong{display:block;color:#8ccbf7;font-size:15px;margin-bottom:4px}.fig-placeholder small{display:block;margin-top:7px;color:#9bb6ce}
 .actions{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:24px 0}.actions button{border:1px solid #5890b5;border-radius:10px;background:#184870;color:#fff;padding:11px 19px;cursor:pointer;font:inherit}.actions button:disabled{opacity:.4;cursor:default}.source-preview{border:1px solid #355976;border-radius:13px;padding:12px 17px;background:#0b243c;margin:24px 0}.source-preview summary{cursor:pointer;font-weight:700;color:#aecde6}.source-preview pre{white-space:pre-wrap;overflow-wrap:break-word;font-size:13px;color:#aebfd3}.status{padding:28px;border:1px solid #345774;border-radius:15px;color:#c4d6e9}.section ol{padding-right:25px}.section li{margin-bottom:11px}
 @media(max-width:850px){.shell{display:flex;flex-direction:column;padding:14px}.side{position:static;max-height:none}.side nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.hero-text,.section{padding:19px}.section p{font-size:15.5px;line-height:2}.hero img{max-height:240px}}
+/* Readability pass across all 12 source-backed lessons — intentional Hebrew/English separation */
+.section{direction:rtl;text-align:right;padding:30px 34px;margin:25px 0}
+.section h3{font-size:clamp(20px,2.15vw,24px);font-weight:750;line-height:1.65;letter-spacing:0;margin-bottom:23px}
+.section p.readable-paragraph{direction:rtl;text-align:right;font-size:17px;line-height:2.15;font-weight:430;letter-spacing:.005em;max-width:78ch;margin:0 0 24px;word-break:normal;overflow-wrap:normal;hyphens:none}
+.section p.readable-paragraph:last-child{margin-bottom:0}
+.section bdi.term-ltr,.section h3 bdi.term-ltr{direction:ltr;unicode-bidi:isolate;display:inline;font-family:Arial,system-ui,sans-serif;white-space:normal;font-weight:inherit}
+.section.intro{margin-top:23px}
+.section.exercise{margin-top:36px;padding:30px 34px}
+.section.solution{margin-top:26px}
+.fig-placeholder{line-height:1.9;margin:26px 0;padding:20px 24px}
+.hero-text{padding:28px 34px}
+@media(max-width:850px){.section,.section.exercise{padding:20px 21px}.section p.readable-paragraph{font-size:16px;line-height:2.05;margin-bottom:20px}.hero-text{padding:20px}}
