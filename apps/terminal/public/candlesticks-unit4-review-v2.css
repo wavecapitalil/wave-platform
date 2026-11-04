@@ -19,3 +19,11 @@ a{color:#addbff}.top{padding:25px clamp(18px,4vw,58px);border-bottom:1px solid #
 .fig-placeholder{line-height:1.9;margin:26px 0;padding:20px 24px}
 .hero-text{padding:28px 34px}
 @media(max-width:850px){.section,.section.exercise{padding:20px 21px}.section p.readable-paragraph{font-size:16px;line-height:2.05;margin-bottom:20px}.hero-text{padding:20px}}
+
+/* Numbering and LTR token isolation verified against PDF-exported headings */
+.section h3.numbered-heading{display:flex;align-items:baseline;gap:12px;direction:rtl}
+.section h3 .heading-number{display:inline-block;direction:ltr;unicode-bidi:isolate;flex:none;color:#a8d9ff;font-variant-numeric:tabular-nums}
+.section .term-ltr{display:inline-block;direction:ltr;unicode-bidi:isolate;vertical-align:baseline;white-space:normal;max-width:100%;font-family:Arial,system-ui,sans-serif}
+.section p.readable-paragraph{unicode-bidi:plaintext;text-align:start;word-spacing:normal}
+.section h3{unicode-bidi:isolate}
+@media(max-width:850px){.section h3.numbered-heading{gap:9px}}
