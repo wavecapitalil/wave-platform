@@ -14,7 +14,7 @@ return t.replace(/[\u200e\u200f\u202a-\u202e\u2066-\u2069\ufeff]/g,'').replace(/
 .replace(/ {2,}/g,' ').trim()
 }
 function suppressed(t){return /^# שיעור 0[45]\./.test(t)||/^> טיוטה;/.test(t)||/^תורת הנרות היפניים\s*\|/.test(t)||/^יחידה\s*\|/.test(t)||/^שיעור\s*[—-]\s*[45]\./.test(t)||/^טיוטת תוכן והמחשה/.test(t)||/^ח ו מ ר ל י מ ו ד י/.test(t)||/^\d{2,3}$/.test(t)||/^מקורות(?:\s|:| לקריאה)/.test(t)||/^נקודות למוצר האתר ולבקרת איכות/.test(t)}
-function extract(raw){let blocks=raw.replace(/\r/g,'')
+function extract(raw){let blocks=raw.replace(/[\u200e\u200f\u202a-\u202e\u2066-\u2069\ufeff]/g,'').replace(/\r/g,'')
 .split(/\n\s*\n+/).flatMap(b=>b.split(/\n(?=\s*(?:דוג׳י רגיל|דוג׳י ארוך־רגליים|דוג׳י שפירית|דוג׳י אבן קבורה)\s*\()/))
 .map(b=>clean(b.replace(/\s*\n\s*/g,' '))).filter(Boolean);let result=[];let afterProduction=false;for(let b of blocks){if(/^נקודות למוצר האתר ולבקרת איכות/.test(b))afterProduction=true;if(afterProduction||suppressed(b)||b.includes('גרסת עבודה לביקורת |'))continue;if(/^איור\s*[—\d]|^כרטיסים\s*\d|המחשה לימודית סינתטית/.test(b)){result.push({kind:'figure',text:b});continue;}let isHead=b.length<=105&&!/[.!?][\u0590-\u05ff]/.test(b)&&!/(?:\d{3,}|O=|H=|L=|C=|https?:\/\/)/.test(b)&&(!b.includes(' — ')||b.length<66)&&b.split(' ').length<=15;
 if(/^מטרת השיעור$|^מטרה\s*:|^תרגול|^פתרון|^מפתח|^הערכה עצמית|^שאלות המשך|^בדיקת יחידה|^כללי התרגול/.test(b))isHead=true;
