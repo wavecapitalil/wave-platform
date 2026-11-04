@@ -41,3 +41,10 @@ for select to anon, authenticated using (true);
 revoke all on public.data_snapshots from anon, authenticated;
 grant select on public.data_snapshots to anon, authenticated;
 revoke all on public.data_snapshot_history from anon, authenticated;
+
+-- Explicit privileges for fresh provisioning without Supabase default grants.
+-- Ingest upserts snapshots on dataset_key, then inserts history without returning rows.
+grant select, insert, update on public.data_snapshots to service_role;
+grant insert on public.data_snapshot_history to service_role;
+-- The history id is GENERATED ALWAYS AS IDENTITY: inserting with id omitted
+-- generates it internally and does not require a sequence grant.
