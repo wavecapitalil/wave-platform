@@ -56,7 +56,21 @@ function addContent(section,paragraph){
   const chunks=[];for(let i=0;i<split.length;i+=2)chunks.push(split.slice(i,i+2).join(' '));
   for(const segment of chunks){const p=node('p','readable-paragraph');p.dir='rtl';addBilingualText(p,segment);section.append(p)}
 }
-function addFigure(section,label,idx){const x=node('div','fig-placeholder');x.append(node('strong','','איור לימודי מתוך חומר המקור — '+idx));x.append(node('div','',label));x.append(node('small','','קובץ האיור עצמו עדיין חסר בריפו. לא נוסף תרשים משוער.'));section.append(x)}
+function addFigure(section,label,idx){
+  if(selected===0&&idx===1){
+    const figure=node('figure','source-illustration');
+    const image=node('img','');image.src='assets/candlesticks-unit4/fig-4-1-01.svg';
+    image.alt='שלושה נרות בעלי אותו High 110 ו-Low 90, עם גופים שונים: דוג׳י, שורי ודובי';
+    image.width=1200;image.height=520;image.loading='lazy';image.decoding='async';
+    figure.append(image,node('figcaption','','אותו High ואותו Low — גודל הגוף תלוי בהפרש בין Open ל־Close. מחירים סינתטיים להמחשה בלבד.'));
+    section.append(figure);return;
+  }
+  const x=node('div','fig-placeholder');
+  x.append(node('strong','','איור לימודי מתוך חומר המקור — '+idx));
+  x.append(node('div','',label));
+  x.append(node('small','','קובץ האיור עצמו עדיין חסר בריפו. לא נוסף תרשים משוער.'));
+  section.append(x);
+}
 function compose(parts){const frag=document.createDocumentFragment();let current=null,sectionNumber=0,figureNumber=0;for(let part of parts){if(part.kind==='heading'){sectionNumber++;let section=node('section','section '+labelClass(part.text));let h=node('h3','');h.dir='rtl';const num=headingNumber(part.text);if(num){h.classList.add('numbered-heading');h.append(node('span','heading-number',num.number+'.'));addBilingualText(h,num.label)}else addBilingualText(h,part.text);section.append(h);frag.append(section);current=section;continue;}if(!current){sectionNumber++;current=node('section','section intro');current.append(node('h3','','מה נלמד בשיעור הזה?'));frag.append(current)}
 if(part.kind==='figure')addFigure(current,part.text,++figureNumber);else addContent(current,part.text)}return {fragment:frag,figureNumber,sectionNumber}}
 async function openLesson(index){if(index<0||index>=12)return;selected=index;let buttons=nav.querySelectorAll('button');buttons.forEach((button,i)=>button.classList.toggle('selected',i===index));host.replaceChildren(node('p','status','טוען את שיעור 4.'+(index+1)+'...'));let source=sources[index],raw;
