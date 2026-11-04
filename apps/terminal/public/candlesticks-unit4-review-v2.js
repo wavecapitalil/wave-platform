@@ -9,6 +9,8 @@ return t.replace(/[\u200e\u200f\u202a-\u202e\u2066-\u2069\ufeff]/g,'').replace(/
 .replace(/\(\s*:\s*\)\s*([A-Za-z][A-Za-z -]+)/g,(_,en)=>'('+en.trim()+'): ')
 .replace(/([A-Za-z])(?=[\u0590-\u05ff])/g,'$1 ')
 .replace(/([\u0590-\u05ff])(?=[A-Za-z])/g,'$1 ')
+.replace(/\s+\.([\u0590-\u05ffA-Za-z])/g, '. $1')
+.replace(/^\.(\d+)\s*/,'$1. ')
 .replace(/([,;:!?])(?=[\u0590-\u05ffA-Za-z])/g,'$1 ')
 .replace(/\s+([,;:!?])/g,'$1')
 .replace(/ {2,}/g,' ').trim()
