@@ -1,0 +1,1501 @@
+{
+  "schema": "wave.uber-tracker.bundle.v1",
+  "generated_at": "2026-11-05T18:58:23+02:00",
+  "timezone": "Asia/Jerusalem",
+  "utc_offset_standard": "+02:00",
+  "baseline_pull": {
+    "collected_on": "2026-11-05",
+    "timezone": "Asia/Jerusalem",
+    "utc_offset": "+02:00",
+    "clock_time_logged": false,
+    "note_he": "משיכת הבסיס מתוארכת ל-5 בנובמבר 2026, Asia/Jerusalem (UTC+2). בלוג האיסוף אין שעת שעון.",
+    "note_en": "Baseline pull is dated 5 November 2026, Asia/Jerusalem (UTC+2). The collection log has no clock time."
+  },
+  "last_attempt": {
+    "at": "2026-11-05T18:58:23+02:00",
+    "timezone": "Asia/Jerusalem",
+    "utc_offset": "+02:00",
+    "clock_time_logged": true,
+    "action": "public_source_check",
+    "eats_basket_window": false,
+    "quotes_collected": 0,
+    "new_observations": 0,
+    "reachable": 15,
+    "checked": 16,
+    "skip_reason": "In-app Uber, Lyft, and Eats quotes need an authenticated session. This job does not log in and does not parse new trip or order figures from HTML or PDF.",
+    "checks": [
+      {
+        "id": "tlc-trip-records",
+        "url": "https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page",
+        "expects": "page",
+        "status": 200,
+        "content_type": "text/html;charset=UTF-8",
+        "sample_bytes": 64,
+        "error": null
+      },
+      {
+        "id": "tlc-help-aggregation",
+        "url": "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc",
+        "expects": "page",
+        "status": 200,
+        "content_type": "text/html; charset=utf-8",
+        "sample_bytes": 64,
+        "error": null
+      },
+      {
+        "id": "sec-exhibit-99-1",
+        "url": "https://www.sec.gov/Archives/edgar/data/1543151/000154315126000039/uberq326earningspressrelea.htm",
+        "expects": "page",
+        "status": 403,
+        "content_type": "",
+        "sample_bytes": 0,
+        "error": "HTTP Error 403: Forbidden"
+      },
+      {
+        "id": "lawa-2025-06",
+        "url": "https://www.lawa.org/sites/lawa/files/2025-07/Ground%20Transportation%20Stats%2006%20Jun%202025.pdf",
+        "expects": "pdf",
+        "status": 200,
+        "content_type": "application/pdf",
+        "sample_bytes": 64,
+        "error": null
+      },
+      {
+        "id": "lawa-2026-06",
+        "url": "https://www.lawa.org/sites/lawa/files/2026-07/06%20Jun%202026.pdf",
+        "expects": "pdf",
+        "status": 200,
+        "content_type": "application/pdf",
+        "sample_bytes": 64,
+        "error": null
+      },
+      {
+        "id": "lawa-2026-09",
+        "url": "https://www.lawa.org/sites/lawa/files/2026-10/09%20Sep%202026.pdf",
+        "expects": "pdf",
+        "status": 200,
+        "content_type": "application/pdf",
+        "sample_bytes": 64,
+        "error": null
+      },
+      {
+        "id": "driver-ad-New York City",
+        "url": "https://uberreferralcode.com/uber-driver-referral/new-york",
+        "expects": "page",
+        "status": 200,
+        "content_type": "text/html; charset=utf-8",
+        "sample_bytes": 64,
+        "error": null
+      },
+      {
+        "id": "driver-ad-San Francisco",
+        "url": "https://uberreferralcode.com/uber-driver-referral/san-francisco",
+        "expects": "page",
+        "status": 200,
+        "content_type": "text/html; charset=utf-8",
+        "sample_bytes": 64,
+        "error": null
+      },
+      {
+        "id": "driver-ad-Los Angeles",
+        "url": "https://uberreferralcode.com/uber-driver-referral/los-angeles",
+        "expects": "page",
+        "status": 200,
+        "content_type": "text/html; charset=utf-8",
+        "sample_bytes": 64,
+        "error": null
+      },
+      {
+        "id": "driver-ad-Chicago",
+        "url": "https://uberreferralcode.com/uber-driver-referral/chicago",
+        "expects": "page",
+        "status": 200,
+        "content_type": "text/html; charset=utf-8",
+        "sample_bytes": 64,
+        "error": null
+      },
+      {
+        "id": "driver-ad-Miami",
+        "url": "https://uberreferralcode.com/uber-driver-referral/miami",
+        "expects": "page",
+        "status": 200,
+        "content_type": "text/html; charset=utf-8",
+        "sample_bytes": 64,
+        "error": null
+      },
+      {
+        "id": "driver-ad-Austin",
+        "url": "https://uberreferralcode.com/uber-driver-referral/austin",
+        "expects": "page",
+        "status": 200,
+        "content_type": "text/html; charset=utf-8",
+        "sample_bytes": 64,
+        "error": null
+      },
+      {
+        "id": "driver-ad-Boston",
+        "url": "https://uberreferralcode.com/uber-driver-referral/boston",
+        "expects": "page",
+        "status": 200,
+        "content_type": "text/html; charset=utf-8",
+        "sample_bytes": 64,
+        "error": null
+      },
+      {
+        "id": "driver-ad-Seattle",
+        "url": "https://uberreferralcode.com/uber-driver-referral/seattle",
+        "expects": "page",
+        "status": 200,
+        "content_type": "text/html; charset=utf-8",
+        "sample_bytes": 64,
+        "error": null
+      },
+      {
+        "id": "driver-ad-Washington DC",
+        "url": "https://uberreferralcode.com/uber-driver-referral/washington-dc",
+        "expects": "page",
+        "status": 200,
+        "content_type": "text/html; charset=utf-8",
+        "sample_bytes": 64,
+        "error": null
+      },
+      {
+        "id": "driver-ad-Atlanta",
+        "url": "https://uberreferralcode.com/uber-driver-referral/atlanta",
+        "expects": "page",
+        "status": 200,
+        "content_type": "text/html; charset=utf-8",
+        "sample_bytes": 64,
+        "error": null
+      }
+    ]
+  },
+  "cadence": {
+    "timezone": "Asia/Jerusalem",
+    "standard_offset": "+02:00",
+    "public_checks_local": [
+      "08:00",
+      "12:00",
+      "17:30",
+      "23:00"
+    ],
+    "eats_basket_local": "Monday 09:00",
+    "dst_note": "GitHub cron is pinned to UTC+2. During Israel summer time (UTC+3) the same jobs run one hour earlier on the Jerusalem clock. This is a poll, not a tick.",
+    "quote_collection": "In-app Uber, Lyft, and Eats quotes are not collected without an authenticated session. The job records the skip. It does not scrape behind login."
+  },
+  "inference": {
+    "label": "stable",
+    "label_he": "יציב",
+    "label_en": "stable",
+    "kind": "inference",
+    "flat_band_pct": 3.0,
+    "line_he": "יציב — נפח יומי של Uber בניו יורק +2.0% מ-2025-09 ל-2026-08 (מ-2026-05 עד 2026-08 -3.6%, בלי התאמה עונתית), נתח Uber מול Lyft 72.2% אחרי 72.3%. ב-LAX נפח TNC מתחילת השנה -5.7% והחודש האחרון +2.5%. סל המחירים, ההמתנה והסא'רג' לא נצפו.",
+    "line_en": "Stable — NYC Uber daily volume +2.0% from 2025-09 to 2026-08 (May to August 2026 -3.6%, not seasonally adjusted), Uber share versus Lyft 72.2% after 72.3%. LAX TNC year-to-date -5.7% and the latest month +2.5%. The fare, wait, and surge basket is unobserved.",
+    "components": [
+      {
+        "id": "nyc_uber_daily_full_window",
+        "change_pct": 1.96,
+        "read": "stable",
+        "detail": "2025-09 to 2026-08"
+      },
+      {
+        "id": "nyc_uber_daily_may_to_aug",
+        "change_pct": -3.61,
+        "read": "deteriorating",
+        "detail": "2026-05 to 2026-08, not seasonally adjusted"
+      },
+      {
+        "id": "lax_tnc_latest_month_yoy",
+        "change_pct": 2.5,
+        "read": "stable",
+        "detail": "2026-09"
+      },
+      {
+        "id": "lax_tnc_ytd_yoy",
+        "change_pct": -5.7,
+        "read": "deteriorating",
+        "detail": "year to 2026-09"
+      },
+      {
+        "id": "lax_tnc_june_yoy",
+        "change_pct": -4.9,
+        "read": "deteriorating",
+        "detail": "2026-06"
+      }
+    ],
+    "excluded": [
+      "SEC growth rates are facts about the company print, not inputs to this proxy read.",
+      "Driver-guarantee ads are a single date, so they have no direction.",
+      "Empty fare, ETA, surge, Eats, and consensus series are unobserved, not zero."
+    ],
+    "not_a_recommendation": true
+  },
+  "sec_print": [
+    {
+      "metric": "Trips_millions",
+      "label_he": "נסיעות",
+      "label_en": "Trips",
+      "unit": "million trips",
+      "headline_note_he": "הכותרת בדוח מעגלת 4,061 מיליון ל-4.1 מיליארד.",
+      "headline_note_en": "The exhibit headline rounds 4,061 million to 4.1 billion.",
+      "q3_2025": 3512,
+      "q3_2026": 4061,
+      "yoy_pct": 16,
+      "cc_yoy_pct": null,
+      "kind": "fact",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1543151/000154315126000039/uberq326earningspressrelea.htm",
+      "source_title": "SEC Exhibit 99.1 2026-11-04",
+      "printed_at": "2026-11-04",
+      "period": "2026-Q3"
+    },
+    {
+      "metric": "Gross_Bookings_USD_m",
+      "label_he": "הזמנות ברוטו",
+      "label_en": "Gross Bookings",
+      "unit": "USD million",
+      "headline_note_he": "הכותרת בדוח מעגלת 59,819 מיליון דולר ל-59.8 מיליארד.",
+      "headline_note_en": "The exhibit headline rounds $59,819 million to $59.8 billion.",
+      "q3_2025": 49740,
+      "q3_2026": 59819,
+      "yoy_pct": 20,
+      "cc_yoy_pct": 20,
+      "kind": "fact",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1543151/000154315126000039/uberq326earningspressrelea.htm",
+      "source_title": "SEC Exhibit 99.1",
+      "printed_at": "2026-11-04",
+      "period": "2026-Q3"
+    },
+    {
+      "metric": "Mobility_GB_USD_m",
+      "label_he": "הזמנות ברוטו Mobility",
+      "label_en": "Mobility Gross Bookings",
+      "unit": "USD million",
+      "headline_note_he": "",
+      "headline_note_en": "",
+      "q3_2025": 25111,
+      "q3_2026": 29512,
+      "yoy_pct": 18,
+      "cc_yoy_pct": 17,
+      "kind": "fact",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1543151/000154315126000039/uberq326earningspressrelea.htm",
+      "source_title": "SEC Exhibit 99.1",
+      "printed_at": "2026-11-04",
+      "period": "2026-Q3"
+    },
+    {
+      "metric": "Delivery_GB_USD_m",
+      "label_he": "הזמנות ברוטו Delivery",
+      "label_en": "Delivery Gross Bookings",
+      "unit": "USD million",
+      "headline_note_he": "",
+      "headline_note_en": "",
+      "q3_2025": 23322,
+      "q3_2026": 28539,
+      "yoy_pct": 22,
+      "cc_yoy_pct": 23,
+      "kind": "fact",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1543151/000154315126000039/uberq326earningspressrelea.htm",
+      "source_title": "SEC Exhibit 99.1",
+      "printed_at": "2026-11-04",
+      "period": "2026-Q3"
+    },
+    {
+      "metric": "Revenue_USD_m",
+      "label_he": "הכנסות",
+      "label_en": "Revenue",
+      "unit": "USD million",
+      "headline_note_he": "",
+      "headline_note_en": "",
+      "q3_2025": 13467,
+      "q3_2026": 14766,
+      "yoy_pct": 10,
+      "cc_yoy_pct": 10,
+      "kind": "fact",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1543151/000154315126000039/uberq326earningspressrelea.htm",
+      "source_title": "SEC Exhibit 99.1",
+      "printed_at": "2026-11-04",
+      "period": "2026-Q3"
+    },
+    {
+      "metric": "MAPCs_m",
+      "label_he": "צרכנים פעילים חודשית",
+      "label_en": "MAPCs",
+      "unit": "million consumers",
+      "headline_note_he": "",
+      "headline_note_en": "",
+      "q3_2025": 189,
+      "q3_2026": 215,
+      "yoy_pct": 14,
+      "cc_yoy_pct": null,
+      "kind": "fact",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1543151/000154315126000039/uberq326earningspressrelea.htm",
+      "source_title": "SEC Exhibit 99.1",
+      "printed_at": "2026-11-04",
+      "period": "2026-Q3"
+    },
+    {
+      "metric": "NonGAAP_EPS",
+      "label_he": "רווח למניה Non-GAAP",
+      "label_en": "Non-GAAP EPS",
+      "unit": "USD",
+      "headline_note_he": "",
+      "headline_note_en": "",
+      "q3_2025": 0.65,
+      "q3_2026": 0.88,
+      "yoy_pct": 35,
+      "cc_yoy_pct": null,
+      "kind": "fact",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1543151/000154315126000039/uberq326earningspressrelea.htm",
+      "source_title": "SEC Exhibit 99.1",
+      "printed_at": "2026-11-04",
+      "period": "2026-Q3"
+    }
+  ],
+  "q4_guide": {
+    "metric": "Q4_2026_Gross_Bookings_guide",
+    "period": "2026-Q4",
+    "low_usd_b": 63.25,
+    "high_usd_b": 65.25,
+    "cc_yoy_low_pct": 18,
+    "cc_yoy_high_pct": 22,
+    "currency_headwind_reported_yoy_pp": 1,
+    "kind": "fact",
+    "printed_at": "2026-11-04",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/1543151/000154315126000039/uberq326earningspressrelea.htm",
+    "source_title": "Uber Technologies Exhibit 99.1, results for the quarter ended 30 September 2026, filed 4 November 2026",
+    "note": "Company outlook for the following quarter, not a reported result and not a sell-side consensus. Constant-currency year-over-year range, with the exhibit's stated assumption of about a 1 percentage-point currency headwind to reported year-over-year growth. Confirmed against the same Exhibit 99.1 that the Q3 metrics CSV cites. The range is not a column in sec_q3_2026.csv."
+  },
+  "consensus": {
+    "mobility": null,
+    "delivery": null,
+    "band_pp": 2.0,
+    "mobility_score": "unscored",
+    "delivery_score": "unscored",
+    "note_he": "אין קונצנזוס מכירות שנצפה, ואין מדד פאנל. לא ניתן ציון hot / in-line / cold. הדפסת ה-SEC אינה מחליפה אף אחד מהם.",
+    "note_en": "No observed sell-side consensus and no panel index. hot / in-line / cold is not scored. The SEC print stands in for neither."
+  },
+  "route_basket": [
+    {
+      "city": "NYC",
+      "route_id": "NYC-1",
+      "type": "everyday",
+      "origin": "Penn Station (33rd St & 7th Ave)",
+      "destination": "Grand Central Terminal",
+      "why": "Core Midtown short-hop density"
+    },
+    {
+      "city": "NYC",
+      "route_id": "NYC-2",
+      "type": "airport",
+      "origin": "JFK Terminal 4 Arrivals",
+      "destination": "Times Square (42nd & Broadway)",
+      "why": "Primary airport long-haul GB proxy"
+    },
+    {
+      "city": "NYC",
+      "route_id": "NYC-3",
+      "type": "nightlife",
+      "origin": "East Village (1st Ave & E 1st St)",
+      "destination": "Williamsburg (Bedford Ave L)",
+      "why": "Weekend nightlife cross-borough"
+    },
+    {
+      "city": "NYC",
+      "route_id": "NYC-4",
+      "type": "airport",
+      "origin": "LGA Terminal B",
+      "destination": "Midtown East (Lexington & 51st)",
+      "why": "Secondary airport / corporate"
+    },
+    {
+      "city": "SF",
+      "route_id": "SF-1",
+      "type": "everyday",
+      "origin": "Financial District (Market & Montgomery)",
+      "destination": "Mission Dolores Park",
+      "why": "Commute + neighborhood mix"
+    },
+    {
+      "city": "SF",
+      "route_id": "SF-2",
+      "type": "airport",
+      "origin": "SFO Domestic Terminal 2 Arrivals",
+      "destination": "Union Square (Powell & Geary)",
+      "why": "Airport GB / tourism"
+    },
+    {
+      "city": "SF",
+      "route_id": "SF-3",
+      "type": "nightlife",
+      "origin": "Mission (16th & Valencia)",
+      "destination": "Marina (Chestnut & Fillmore)",
+      "why": "Weekend nightlife"
+    },
+    {
+      "city": "LA",
+      "route_id": "LA-1",
+      "type": "everyday",
+      "origin": "DTLA (7th & Figueroa)",
+      "destination": "Santa Monica Pier",
+      "why": "Cross-basin everyday long"
+    },
+    {
+      "city": "LA",
+      "route_id": "LA-2",
+      "type": "airport",
+      "origin": "LAX-it Rideshare Lot",
+      "destination": "Hollywood & Highland",
+      "why": "Airport + tourism"
+    },
+    {
+      "city": "LA",
+      "route_id": "LA-3",
+      "type": "nightlife",
+      "origin": "West Hollywood (Sunset & San Vicente)",
+      "destination": "DTLA Arts District",
+      "why": "Nightlife corridor"
+    },
+    {
+      "city": "Chicago",
+      "route_id": "CHI-1",
+      "type": "everyday",
+      "origin": "Loop (State & Madison)",
+      "destination": "Wicker Park (North & Damen)",
+      "why": "Core city everyday"
+    },
+    {
+      "city": "Chicago",
+      "route_id": "CHI-2",
+      "type": "airport",
+      "origin": "ORD Terminal 5 Arrivals",
+      "destination": "Magnificent Mile (Michigan & Chicago)",
+      "why": "ORD long-haul"
+    },
+    {
+      "city": "Chicago",
+      "route_id": "CHI-3",
+      "type": "nightlife",
+      "origin": "River North (State & Illinois)",
+      "destination": "Wrigleyville (Clark & Addison)",
+      "why": "Nightlife / events"
+    },
+    {
+      "city": "Miami",
+      "route_id": "MIA-1",
+      "type": "everyday",
+      "origin": "Brickell City Centre",
+      "destination": "Wynwood Walls",
+      "why": "Core triangle everyday"
+    },
+    {
+      "city": "Miami",
+      "route_id": "MIA-2",
+      "type": "airport",
+      "origin": "MIA Terminal Arrivals",
+      "destination": "South Beach (Ocean Dr & 10th)",
+      "why": "Airport + tourism"
+    },
+    {
+      "city": "Miami",
+      "route_id": "MIA-3",
+      "type": "nightlife",
+      "origin": "South Beach (Collins & 15th)",
+      "destination": "Brickell (Brickell Ave & 8th)",
+      "why": "Late-night bar corridor"
+    },
+    {
+      "city": "Austin",
+      "route_id": "AUS-1",
+      "type": "everyday",
+      "origin": "UT Tower / Guadalupe",
+      "destination": "South Congress (SoCo)",
+      "why": "Campus + retail everyday"
+    },
+    {
+      "city": "Austin",
+      "route_id": "AUS-2",
+      "type": "airport",
+      "origin": "AUS Arrivals",
+      "destination": "Downtown 6th Street (Trinity pickup zone)",
+      "why": "Airport short frequent"
+    },
+    {
+      "city": "Austin",
+      "route_id": "AUS-3",
+      "type": "nightlife",
+      "origin": "6th Street entertainment district",
+      "destination": "The Domain",
+      "why": "Nightlife + north growth"
+    },
+    {
+      "city": "DC",
+      "route_id": "DC-1",
+      "type": "everyday",
+      "origin": "Capitol Hill (Independence & 1st SE)",
+      "destination": "Dupont Circle",
+      "why": "Government everyday"
+    },
+    {
+      "city": "DC",
+      "route_id": "DC-2",
+      "type": "airport",
+      "origin": "DCA Arrivals",
+      "destination": "Georgetown (M St & Wisconsin)",
+      "why": "Close-in airport"
+    },
+    {
+      "city": "DC",
+      "route_id": "DC-3",
+      "type": "nightlife",
+      "origin": "U Street Corridor",
+      "destination": "Adams Morgan (18th & Columbia)",
+      "why": "Weekend nightlife"
+    },
+    {
+      "city": "Boston",
+      "route_id": "BOS-1",
+      "type": "everyday",
+      "origin": "Back Bay Station",
+      "destination": "Harvard Square",
+      "why": "City-Cambridge everyday"
+    },
+    {
+      "city": "Boston",
+      "route_id": "BOS-2",
+      "type": "airport",
+      "origin": "BOS Terminal B Arrivals",
+      "destination": "Seaport District",
+      "why": "Airport + growth district"
+    },
+    {
+      "city": "Boston",
+      "route_id": "BOS-3",
+      "type": "nightlife",
+      "origin": "Fenway (Lansdowne St)",
+      "destination": "Seaport",
+      "why": "Events + nightlife"
+    },
+    {
+      "city": "Seattle",
+      "route_id": "SEA-1",
+      "type": "everyday",
+      "origin": "South Lake Union (Amazon spheres)",
+      "destination": "Capitol Hill (Broadway & Pike)",
+      "why": "Tech commute + nightlife"
+    },
+    {
+      "city": "Seattle",
+      "route_id": "SEA-2",
+      "type": "airport",
+      "origin": "SEA-TAC Arrivals",
+      "destination": "Pike Place Market",
+      "why": "Airport tourism"
+    },
+    {
+      "city": "Seattle",
+      "route_id": "SEA-3",
+      "type": "nightlife",
+      "origin": "Capitol Hill",
+      "destination": "Ballard Avenue",
+      "why": "Weekend nightlife"
+    },
+    {
+      "city": "Atlanta",
+      "route_id": "ATL-1",
+      "type": "everyday",
+      "origin": "Midtown (Peachtree & 10th)",
+      "destination": "Buckhead (Lenox Square)",
+      "why": "Core corridor"
+    },
+    {
+      "city": "Atlanta",
+      "route_id": "ATL-2",
+      "type": "airport",
+      "origin": "ATL Domestic Arrivals",
+      "destination": "Downtown (Mercedes-Benz Stadium)",
+      "why": "World busiest airport proxy"
+    },
+    {
+      "city": "Atlanta",
+      "route_id": "ATL-3",
+      "type": "nightlife",
+      "origin": "Buckhead (Peachtree Rd bar strip)",
+      "destination": "Ponce City Market",
+      "why": "Nightlife + Beltline"
+    },
+    {
+      "city": "London",
+      "route_id": "LON-1",
+      "type": "everyday",
+      "origin": "King's Cross St Pancras",
+      "destination": "Canary Wharf",
+      "why": "Commute / finance"
+    },
+    {
+      "city": "London",
+      "route_id": "LON-2",
+      "type": "airport",
+      "origin": "Heathrow T5 Arrivals",
+      "destination": "Covent Garden",
+      "why": "Primary airport"
+    },
+    {
+      "city": "London",
+      "route_id": "LON-3",
+      "type": "nightlife",
+      "origin": "Soho (Old Compton St)",
+      "destination": "Shoreditch (Boxpark)",
+      "why": "Nightlife"
+    },
+    {
+      "city": "Paris",
+      "route_id": "PAR-1",
+      "type": "everyday",
+      "origin": "Gare du Nord",
+      "destination": "La Défense",
+      "why": "Commute"
+    },
+    {
+      "city": "Paris",
+      "route_id": "PAR-2",
+      "type": "airport",
+      "origin": "CDG Terminal 2E Arrivals",
+      "destination": "Châtelet–Les Halles",
+      "why": "Airport"
+    },
+    {
+      "city": "Paris",
+      "route_id": "PAR-3",
+      "type": "nightlife",
+      "origin": "Le Marais",
+      "destination": "Pigalle",
+      "why": "Nightlife"
+    },
+    {
+      "city": "Mexico City",
+      "route_id": "MEX-1",
+      "type": "everyday",
+      "origin": "Reforma / Ángel de la Independencia",
+      "destination": "Polanco (Masaryk)",
+      "why": "Core everyday"
+    },
+    {
+      "city": "Mexico City",
+      "route_id": "MEX-2",
+      "type": "airport",
+      "origin": "MEX Terminal 1 Arrivals",
+      "destination": "Roma Norte (Álvaro Obregón)",
+      "why": "Airport + growth neighborhood"
+    },
+    {
+      "city": "Mexico City",
+      "route_id": "MEX-3",
+      "type": "nightlife",
+      "origin": "Condesa",
+      "destination": "Roma Norte",
+      "why": "Nightlife density"
+    },
+    {
+      "city": "Sao Paulo",
+      "route_id": "SAO-1",
+      "type": "everyday",
+      "origin": "Av. Paulista (Consolação)",
+      "destination": "Faria Lima",
+      "why": "Finance commute"
+    },
+    {
+      "city": "Sao Paulo",
+      "route_id": "SAO-2",
+      "type": "airport",
+      "origin": "GRU Terminal 3 Arrivals",
+      "destination": "Pinheiros",
+      "why": "Primary airport"
+    },
+    {
+      "city": "Sao Paulo",
+      "route_id": "SAO-3",
+      "type": "nightlife",
+      "origin": "Vila Madalena",
+      "destination": "Jardins",
+      "why": "Nightlife"
+    },
+    {
+      "city": "Sydney",
+      "route_id": "SYD-1",
+      "type": "everyday",
+      "origin": "Circular Quay",
+      "destination": "Surry Hills",
+      "why": "Core everyday"
+    },
+    {
+      "city": "Sydney",
+      "route_id": "SYD-2",
+      "type": "airport",
+      "origin": "SYD Domestic Arrivals",
+      "destination": "CBD (Town Hall)",
+      "why": "Airport"
+    },
+    {
+      "city": "Sydney",
+      "route_id": "SYD-3",
+      "type": "nightlife",
+      "origin": "Darlinghurst",
+      "destination": "Newtown",
+      "why": "Nightlife"
+    }
+  ],
+  "cities": [
+    "NYC",
+    "SF",
+    "LA",
+    "Chicago",
+    "Miami",
+    "Austin",
+    "DC",
+    "Boston",
+    "Seattle",
+    "Atlanta",
+    "London",
+    "Paris",
+    "Mexico City",
+    "Sao Paulo",
+    "Sydney"
+  ],
+  "address_plan": [
+    {
+      "city": "NYC",
+      "address_id": "NYC-home",
+      "role": "home",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "NYC",
+      "address_id": "NYC-office",
+      "role": "office",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "SF",
+      "address_id": "SF-home",
+      "role": "home",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "SF",
+      "address_id": "SF-office",
+      "role": "office",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "LA",
+      "address_id": "LA-home",
+      "role": "home",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "LA",
+      "address_id": "LA-office",
+      "role": "office",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Chicago",
+      "address_id": "Chicago-home",
+      "role": "home",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Chicago",
+      "address_id": "Chicago-office",
+      "role": "office",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Miami",
+      "address_id": "Miami-home",
+      "role": "home",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Miami",
+      "address_id": "Miami-office",
+      "role": "office",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Austin",
+      "address_id": "Austin-home",
+      "role": "home",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Austin",
+      "address_id": "Austin-office",
+      "role": "office",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "DC",
+      "address_id": "DC-home",
+      "role": "home",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "DC",
+      "address_id": "DC-office",
+      "role": "office",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Boston",
+      "address_id": "Boston-home",
+      "role": "home",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Boston",
+      "address_id": "Boston-office",
+      "role": "office",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Seattle",
+      "address_id": "Seattle-home",
+      "role": "home",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Seattle",
+      "address_id": "Seattle-office",
+      "role": "office",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Atlanta",
+      "address_id": "Atlanta-home",
+      "role": "home",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Atlanta",
+      "address_id": "Atlanta-office",
+      "role": "office",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "London",
+      "address_id": "London-home",
+      "role": "home",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "London",
+      "address_id": "London-office",
+      "role": "office",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Paris",
+      "address_id": "Paris-home",
+      "role": "home",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Paris",
+      "address_id": "Paris-office",
+      "role": "office",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Mexico City",
+      "address_id": "Mexico City-home",
+      "role": "home",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Mexico City",
+      "address_id": "Mexico City-office",
+      "role": "office",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Sao Paulo",
+      "address_id": "Sao Paulo-home",
+      "role": "home",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Sao Paulo",
+      "address_id": "Sao Paulo-office",
+      "role": "office",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Sydney",
+      "address_id": "Sydney-home",
+      "role": "home",
+      "address_label": null,
+      "status": "unobserved"
+    },
+    {
+      "city": "Sydney",
+      "address_id": "Sydney-office",
+      "role": "office",
+      "address_label": null,
+      "status": "unobserved"
+    }
+  ],
+  "dish_basket": {
+    "target_per_city": "15-20",
+    "dishes_named": 0,
+    "points": [],
+    "note_he": "סל המנות לא ננעל בשמות ובמחירים. אין מדד עלות, והוא אינו AOV.",
+    "note_en": "The dish list is not locked to names or prices. There is no cost index, and it is not AOV."
+  },
+  "series": {
+    "nyc_hvfhv": {
+      "kind": "fact",
+      "observations": [
+        {
+          "month": "2025-09",
+          "uber_trips_per_day": 468235,
+          "lyft_trips_per_day": 179587,
+          "uber_share_pct": 72.3,
+          "uber_month_est": 14047050,
+          "lyft_month_est": 5387610,
+          "hv_total_per_day": 647822,
+          "kind": "fact",
+          "proxy_for": null,
+          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-10-12",
+          "source_urls": [
+            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+          ],
+          "timezone": "America/New_York"
+        },
+        {
+          "month": "2025-10",
+          "uber_trips_per_day": 499038,
+          "lyft_trips_per_day": 188340,
+          "uber_share_pct": 72.6,
+          "uber_month_est": 15470178,
+          "lyft_month_est": 5838540,
+          "hv_total_per_day": 687378,
+          "kind": "fact",
+          "proxy_for": null,
+          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-10-12",
+          "source_urls": [
+            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+          ],
+          "timezone": "America/New_York"
+        },
+        {
+          "month": "2025-11",
+          "uber_trips_per_day": 496949,
+          "lyft_trips_per_day": 196993,
+          "uber_share_pct": 71.6,
+          "uber_month_est": 14908470,
+          "lyft_month_est": 5909790,
+          "hv_total_per_day": 693942,
+          "kind": "fact",
+          "proxy_for": null,
+          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-10-12",
+          "source_urls": [
+            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+          ],
+          "timezone": "America/New_York"
+        },
+        {
+          "month": "2025-12",
+          "uber_trips_per_day": 515282,
+          "lyft_trips_per_day": 197894,
+          "uber_share_pct": 72.3,
+          "uber_month_est": 15973742,
+          "lyft_month_est": 6134714,
+          "hv_total_per_day": 713176,
+          "kind": "fact",
+          "proxy_for": null,
+          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-10-12",
+          "source_urls": [
+            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+          ],
+          "timezone": "America/New_York"
+        },
+        {
+          "month": "2026-01",
+          "uber_trips_per_day": 491795,
+          "lyft_trips_per_day": 183701,
+          "uber_share_pct": 72.8,
+          "uber_month_est": 15245645,
+          "lyft_month_est": 5694731,
+          "hv_total_per_day": 675496,
+          "kind": "fact",
+          "proxy_for": null,
+          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-10-12",
+          "source_urls": [
+            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+          ],
+          "timezone": "America/New_York"
+        },
+        {
+          "month": "2026-02",
+          "uber_trips_per_day": 505963,
+          "lyft_trips_per_day": 203883,
+          "uber_share_pct": 71.3,
+          "uber_month_est": 14166964,
+          "lyft_month_est": 5708724,
+          "hv_total_per_day": 709846,
+          "kind": "fact",
+          "proxy_for": null,
+          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-10-12",
+          "source_urls": [
+            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+          ],
+          "timezone": "America/New_York"
+        },
+        {
+          "month": "2026-03",
+          "uber_trips_per_day": 514715,
+          "lyft_trips_per_day": 196845,
+          "uber_share_pct": 72.3,
+          "uber_month_est": 15956165,
+          "lyft_month_est": 6102195,
+          "hv_total_per_day": 711560,
+          "kind": "fact",
+          "proxy_for": null,
+          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-10-12",
+          "source_urls": [
+            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+          ],
+          "timezone": "America/New_York"
+        },
+        {
+          "month": "2026-04",
+          "uber_trips_per_day": 512629,
+          "lyft_trips_per_day": 187236,
+          "uber_share_pct": 73.2,
+          "uber_month_est": 15378870,
+          "lyft_month_est": 5617080,
+          "hv_total_per_day": 699865,
+          "kind": "fact",
+          "proxy_for": null,
+          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-10-12",
+          "source_urls": [
+            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+          ],
+          "timezone": "America/New_York"
+        },
+        {
+          "month": "2026-05",
+          "uber_trips_per_day": 495317,
+          "lyft_trips_per_day": 218417,
+          "uber_share_pct": 69.4,
+          "uber_month_est": 15354827,
+          "lyft_month_est": 6770927,
+          "hv_total_per_day": 713734,
+          "kind": "fact",
+          "proxy_for": null,
+          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-10-12",
+          "source_urls": [
+            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+          ],
+          "timezone": "America/New_York"
+        },
+        {
+          "month": "2026-06",
+          "uber_trips_per_day": 508591,
+          "lyft_trips_per_day": 183938,
+          "uber_share_pct": 73.4,
+          "uber_month_est": 15257730,
+          "lyft_month_est": 5518140,
+          "hv_total_per_day": 692529,
+          "kind": "fact",
+          "proxy_for": null,
+          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-10-12",
+          "source_urls": [
+            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+          ],
+          "timezone": "America/New_York"
+        },
+        {
+          "month": "2026-07",
+          "uber_trips_per_day": 490819,
+          "lyft_trips_per_day": 184060,
+          "uber_share_pct": 72.7,
+          "uber_month_est": 15215389,
+          "lyft_month_est": 5705860,
+          "hv_total_per_day": 674879,
+          "kind": "fact",
+          "proxy_for": null,
+          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-10-12",
+          "source_urls": [
+            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+          ],
+          "timezone": "America/New_York"
+        },
+        {
+          "month": "2026-08",
+          "uber_trips_per_day": 477421,
+          "lyft_trips_per_day": 183659,
+          "uber_share_pct": 72.2,
+          "uber_month_est": 14800051,
+          "lyft_month_est": 5693429,
+          "hv_total_per_day": 661080,
+          "kind": "fact",
+          "proxy_for": null,
+          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-10-12",
+          "source_urls": [
+            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+          ],
+          "timezone": "America/New_York"
+        }
+      ]
+    },
+    "lax_tnc": {
+      "kind": "fact",
+      "observations": [
+        {
+          "month": "2025-06",
+          "tnc_monthly": 593911,
+          "tnc_daily_avg": 19797,
+          "yoy_pct": null,
+          "ytd_tnc": 3390166,
+          "ytd_yoy_pct": null,
+          "source_url": "https://www.lawa.org/sites/lawa/files/2025-07/Ground%20Transportation%20Stats%2006%20Jun%202025.pdf",
+          "collected": "2026-11-05",
+          "kind": "fact",
+          "proxy_for": null,
+          "timezone": "America/Los_Angeles"
+        },
+        {
+          "month": "2026-06",
+          "tnc_monthly": 564892,
+          "tnc_daily_avg": 18830,
+          "yoy_pct": -4.9,
+          "ytd_tnc": 3162279,
+          "ytd_yoy_pct": -6.7,
+          "source_url": "https://www.lawa.org/sites/lawa/files/2026-07/06%20Jun%202026.pdf",
+          "collected": "2026-11-05",
+          "kind": "fact",
+          "proxy_for": null,
+          "timezone": "America/Los_Angeles"
+        },
+        {
+          "month": "2026-09",
+          "tnc_monthly": 579710,
+          "tnc_daily_avg": 19324,
+          "yoy_pct": 2.5,
+          "ytd_tnc": 4813908,
+          "ytd_yoy_pct": -5.7,
+          "source_url": "https://www.lawa.org/sites/lawa/files/2026-10/09%20Sep%202026.pdf",
+          "collected": "2026-11-05",
+          "kind": "fact",
+          "proxy_for": null,
+          "timezone": "America/Los_Angeles"
+        }
+      ]
+    },
+    "driver_bonuses": {
+      "kind": "fact",
+      "observations": [
+        {
+          "city": "New York City",
+          "guarantee_usd": 2175,
+          "trips_required": 159,
+          "window_days": 30,
+          "verified_date": "2026-11-05",
+          "source_url": "https://uberreferralcode.com/uber-driver-referral/new-york",
+          "caveat": "Independent referral aggregator; confirm in Uber Driver app",
+          "kind": "fact",
+          "proxy_for": null,
+          "timezone": "Asia/Jerusalem"
+        },
+        {
+          "city": "San Francisco",
+          "guarantee_usd": 1500,
+          "trips_required": 175,
+          "window_days": 30,
+          "verified_date": "2026-11-05",
+          "source_url": "https://uberreferralcode.com/uber-driver-referral/san-francisco",
+          "caveat": "Independent referral aggregator; confirm in Uber Driver app",
+          "kind": "fact",
+          "proxy_for": null,
+          "timezone": "Asia/Jerusalem"
+        },
+        {
+          "city": "Los Angeles",
+          "guarantee_usd": 1300,
+          "trips_required": 175,
+          "window_days": 30,
+          "verified_date": "2026-11-05",
+          "source_url": "https://uberreferralcode.com/uber-driver-referral/los-angeles",
+          "caveat": "Independent referral aggregator; confirm in Uber Driver app",
+          "kind": "fact",
+          "proxy_for": null,
+          "timezone": "Asia/Jerusalem"
+        },
+        {
+          "city": "Chicago",
+          "guarantee_usd": 1200,
+          "trips_required": 150,
+          "window_days": 30,
+          "verified_date": "2026-11-05",
+          "source_url": "https://uberreferralcode.com/uber-driver-referral/chicago",
+          "caveat": "Independent referral aggregator; confirm in Uber Driver app",
+          "kind": "fact",
+          "proxy_for": null,
+          "timezone": "Asia/Jerusalem"
+        },
+        {
+          "city": "Miami",
+          "guarantee_usd": 1300,
+          "trips_required": 150,
+          "window_days": 30,
+          "verified_date": "2026-11-05",
+          "source_url": "https://uberreferralcode.com/uber-driver-referral/miami",
+          "caveat": "Independent referral aggregator; confirm in Uber Driver app",
+          "kind": "fact",
+          "proxy_for": null,
+          "timezone": "Asia/Jerusalem"
+        },
+        {
+          "city": "Austin",
+          "guarantee_usd": 1000,
+          "trips_required": 100,
+          "window_days": 30,
+          "verified_date": "2026-11-05",
+          "source_url": "https://uberreferralcode.com/uber-driver-referral/austin",
+          "caveat": "Independent referral aggregator; confirm in Uber Driver app",
+          "kind": "fact",
+          "proxy_for": null,
+          "timezone": "Asia/Jerusalem"
+        },
+        {
+          "city": "Boston",
+          "guarantee_usd": 1400,
+          "trips_required": 175,
+          "window_days": 30,
+          "verified_date": "2026-11-05",
+          "source_url": "https://uberreferralcode.com/uber-driver-referral/boston",
+          "caveat": "Independent referral aggregator; confirm in Uber Driver app",
+          "kind": "fact",
+          "proxy_for": null,
+          "timezone": "Asia/Jerusalem"
+        },
+        {
+          "city": "Seattle",
+          "guarantee_usd": 1300,
+          "trips_required": 150,
+          "window_days": 30,
+          "verified_date": "2026-11-05",
+          "source_url": "https://uberreferralcode.com/uber-driver-referral/seattle",
+          "caveat": "Independent referral aggregator; confirm in Uber Driver app",
+          "kind": "fact",
+          "proxy_for": null,
+          "timezone": "Asia/Jerusalem"
+        },
+        {
+          "city": "Washington DC",
+          "guarantee_usd": 1400,
+          "trips_required": 175,
+          "window_days": 30,
+          "verified_date": "2026-11-05",
+          "source_url": "https://uberreferralcode.com/uber-driver-referral/washington-dc",
+          "caveat": "Independent referral aggregator; confirm in Uber Driver app",
+          "kind": "fact",
+          "proxy_for": null,
+          "timezone": "Asia/Jerusalem"
+        },
+        {
+          "city": "Atlanta",
+          "guarantee_usd": 1200,
+          "trips_required": 150,
+          "window_days": 30,
+          "verified_date": "2026-11-05",
+          "source_url": "https://uberreferralcode.com/uber-driver-referral/atlanta",
+          "caveat": "Independent referral aggregator; confirm in Uber Driver app",
+          "kind": "fact",
+          "proxy_for": null,
+          "timezone": "Asia/Jerusalem"
+        }
+      ]
+    },
+    "drive_quotes": {
+      "kind": "unobserved",
+      "observations": []
+    },
+    "eats_customer": {
+      "kind": "unobserved",
+      "observations": []
+    },
+    "eats_basket": {
+      "kind": "unobserved",
+      "observations": []
+    },
+    "eats_merchant": {
+      "kind": "unobserved",
+      "observations": []
+    }
+  },
+  "charts": {
+    "drive_price_index": {
+      "id": "drive_price_index",
+      "title_he": "מדד מחיר לפי עיר",
+      "title_en": "Price index by city",
+      "shows_he": "מחיר מצוטט לאותו מסלול, ובארה\"ב גם מול Lyft, לאורך זמן.",
+      "shows_en": "Quoted price on the same route, and versus Lyft in the US, over time.",
+      "does_not_show_he": "זה לא מספר נסיעות. מחיר גבוה יכול להיות ביקוש חזק או מעט נהגים.",
+      "does_not_show_en": "This is not a trip count. A high price can be strong demand or thin driver supply.",
+      "unit": "index",
+      "kind": "unobserved",
+      "points": []
+    },
+    "drive_eta": {
+      "id": "drive_eta",
+      "title_he": "זמן המתנה לפי עיר",
+      "title_en": "ETA by city",
+      "shows_he": "דקות עד איסוף במסלול הקבוע, באותה שעה מקומית.",
+      "shows_en": "Minutes to pickup on the fixed route, at the same local time.",
+      "does_not_show_he": "זה לא משך הנסיעה כולה ולא זמן הגעה של Eats.",
+      "does_not_show_en": "This is not the full trip duration and not an Eats ETA.",
+      "unit": "minutes",
+      "kind": "unobserved",
+      "points": []
+    },
+    "drive_surge": {
+      "id": "drive_surge",
+      "title_he": "סא'רג' ושיעור אין רכבים",
+      "title_en": "Surge and no-cars rate",
+      "shows_he": "מכפיל או סימון עומס, והאם המסך הראה שאין רכבים.",
+      "shows_en": "A multiplier or busy flag, and whether the screen showed no cars.",
+      "does_not_show_he": "בלי הקריאה עצמה אי אפשר להסיק מחסור בנהגים.",
+      "does_not_show_en": "Without the reading itself this cannot be read as a driver shortage.",
+      "unit": "share",
+      "kind": "unobserved",
+      "points": []
+    },
+    "drive_tightness": {
+      "id": "drive_tightness",
+      "title_he": "דירוג צפיפות מול התקופה הקודמת",
+      "title_en": "Tightness versus last period",
+      "shows_he": "דירוג ערים כשיהיו מחיר, המתנה ואין-רכבים לאותו מסלול ולתקופה קודמת.",
+      "shows_en": "A city rank once price, wait, and no-cars exist for the same route and a prior period.",
+      "does_not_show_he": "מודעות הבונוס לנהגים אינן הדירוג הזה. אין תקופה קודמת של ציטוטים.",
+      "does_not_show_en": "Driver-guarantee ads are not this rank. There is no prior quote period.",
+      "unit": "rank",
+      "kind": "unobserved",
+      "points": []
+    },
+    "eats_coverage": {
+      "id": "eats_coverage",
+      "title_he": "כיסוי מסעדות לפי עיר",
+      "title_en": "Restaurant coverage by city",
+      "shows_he": "מספר מסעדות בכתובת הקבועה לאורך זמן.",
+      "shows_en": "Restaurant count at the fixed address over time.",
+      "does_not_show_he": "זה לא מספר הזמנות ולא משתמשים פעילים.",
+      "does_not_show_en": "This is not an order count and not active users.",
+      "unit": "restaurants",
+      "kind": "unobserved",
+      "points": []
+    },
+    "eats_eta": {
+      "id": "eats_eta",
+      "title_he": "זמן אספקה ממוצע לפי עיר",
+      "title_en": "Average ETA by city",
+      "shows_he": "ETA שמוצג באותה כתובת ובאותו חלון זמן.",
+      "shows_en": "The ETA shown at the same address and time window.",
+      "does_not_show_he": "זה לא זמן אספקה ממוצע אמיתי של כל ההזמנות בעיר.",
+      "does_not_show_en": "This is not the true average delivery time of every order in the city.",
+      "unit": "minutes",
+      "kind": "unobserved",
+      "points": []
+    },
+    "eats_cost": {
+      "id": "eats_cost",
+      "title_he": "מדד עלות הזמנה לפי עיר",
+      "title_en": "Order-cost index by city",
+      "shows_he": "סכום מנות קבועות, משלוח, טיפ מוצע ועמלות. פרוקסי לסל.",
+      "shows_en": "Fixed dishes plus delivery, suggested tip, and fees. A basket proxy.",
+      "does_not_show_he": "זה לא AOV. רכיב חסר משאיר את המדד ריק ולא אפס.",
+      "does_not_show_en": "This is not AOV. A missing component leaves the index empty, not zero.",
+      "unit": "local currency",
+      "kind": "unobserved",
+      "points": []
+    },
+    "eats_promo": {
+      "id": "eats_promo",
+      "title_he": "עוצמת מבצעים",
+      "title_en": "Promo intensity",
+      "shows_he": "חלק המסעדות עם מבצע, ועומק ההנחה שמוצג.",
+      "shows_en": "Share of restaurants on promo, and the visible discount depth.",
+      "does_not_show_he": "באנר שלא נצפה אינו אפס מבצעים.",
+      "does_not_show_en": "An unobserved banner is not zero promotions.",
+      "unit": "percent",
+      "kind": "unobserved",
+      "points": []
+    },
+    "eats_expansion": {
+      "id": "eats_expansion",
+      "title_he": "התרחבות הפאנל",
+      "title_en": "Panel expansion",
+      "shows_he": "כמה ערים פעילות, ומתי עיר חדשה נכנסה.",
+      "shows_en": "How many panel cities are active, and when a new city entered.",
+      "does_not_show_he": "עיר שמוגדרת בסל אבל בלי קריאה אינה עיר שנכנסה. אין שבועות עד בשלות.",
+      "does_not_show_en": "A city listed in the basket without a reading has not entered. Weeks to maturity are unobserved.",
+      "unit": "cities",
+      "kind": "unobserved",
+      "points": []
+    },
+    "eats_coverage_vs_eta": {
+      "id": "eats_coverage_vs_eta",
+      "title_he": "כיסוי מול זמן אספקה",
+      "title_en": "Coverage versus ETA",
+      "shows_he": "שינוי כיסוי מול שינוי ETA באותה כתובת. כיסוי עולה ו-ETA עולה: צמיחה שבירה. כיסוי עולה ו-ETA יציב: אימוץ בריא.",
+      "shows_en": "Coverage change versus ETA change at the same address. Coverage up and ETA up: fragile growth. Coverage up and ETA stable: healthy adoption.",
+      "does_not_show_he": "אין עיר על הגרף. המיפוי הוא כלל קריאה, לא תוצאה.",
+      "does_not_show_en": "No city is plotted. The mapping is a reading rule, not a result.",
+      "unit": "change",
+      "kind": "unobserved",
+      "points": []
+    }
+  }
+}

@@ -85,6 +85,8 @@
     'sidebar.secEquities':{en:'EQUITIES',       he:'מניות'},
     'sidebar.secCrypto':  {en:'CRYPTO',         he:'קריפטו'},
     'sidebar.secTools':   {en:'TOOLS',          he:'כלים'},
+    'sidebar.secResearchDesk': {en:'RESEARCH', he:'מחקרים'},
+    'sidebar.uberTracker': {en:'UBER TRACKER', he:'UBER TRACKER'},
 
     'home.greetingMorning': {en:'Good morning',   he:'בוקר טוב'},
     'home.greetingAfternoon': {en:'Good afternoon', he:'צהריים טובים'},

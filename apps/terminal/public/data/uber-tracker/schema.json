@@ -1,0 +1,47 @@
+{
+  "schema": "wave.uber-tracker.observation.v1",
+  "description": "One row is one reading. An empty cell is unobserved and is never stored as zero. kind is fact or inference. proxy_for is null when the reading is the thing itself.",
+  "required": ["observed_at", "timezone", "city", "metric", "value", "unit", "kind", "source_url"],
+  "fields": {
+    "observed_at": "ISO-8601 timestamp, or a date when the source has no clock time. Do not invent a clock time.",
+    "timezone": "Asia/Jerusalem for collection stamps. City-local fields are separate.",
+    "period": "Source period when the reading describes a month or quarter rather than an instant.",
+    "city": "Panel city. Route-basket spelling is preserved.",
+    "product": "UberX, Comfort, XL, Green, Reserve, or the Lyft equivalent. Blank if the reading is not a product quote.",
+    "metric": "Stable metric name.",
+    "value": "Number, or JSON null when unobserved. Null is not zero.",
+    "unit": "Unit beside the metric.",
+    "kind": "fact or inference.",
+    "proxy_for": "Null, or the concept this reading must not be mistaken for (aov, trips, orders, active_users).",
+    "source_url": "Public page or filing. Blank only when no public URL exists, with the reason in notes.",
+    "competitor": "uber or lyft for a ride quote. DoorDash, Glovo, or Deliveroo only when a merchant reading names that competitor.",
+    "local_weekday": "City-local weekday of a repeated quote. Blank until a quote exists.",
+    "local_hour": "City-local hour of a repeated quote. Blank until a quote exists."
+  },
+  "series_files": {
+    "route_basket.csv": "Definition of fixed Drive routes. Not a price reading.",
+    "nyc_hvfhv_monthly.csv": "Fact. NYC TLC high-volume FHV daily averages by month, Uber (HV0003) and Lyft (HV0005), via the TLC Help aggregation cited in the file.",
+    "lax_tnc_monthly.csv": "Fact. LAWA monthly TNC trips at LAX. Not Uber-only and not citywide trips.",
+    "driver_signup_bonuses.csv": "Fact. Public US driver-guarantee ads. Not driver counts and not trip counts.",
+    "sec_q3_2026.csv": "Fact. Exhibit 99.1 metrics for Q3 2025 and Q3 2026.",
+    "sec_q4_2026_guide.json": "Fact. Company Q4 2026 Gross Bookings outlook from the same exhibit. Not consensus.",
+    "drive_quotes.csv": "Quoted price, ETA, surge, product, and no-cars. Header only until a public or authenticated pass records a row.",
+    "eats_customer.csv": "Delivery fee, ETA, minimum, promos, restaurant count at a fixed address. Header only.",
+    "eats_basket.csv": "Fixed dishes plus delivery, suggested tip, and service fees. A basket proxy, not AOV. Header only.",
+    "eats_merchant.csv": "Restaurant, convenience, and grocery counts, chain entries, courier ads. Header only."
+  },
+  "null_rules": {
+    "basket_index": "Sum item prices, delivery, suggested tip, and service fees only when every component in that city-time is non-null. Otherwise the index is null. Never fill a missing fee with zero.",
+    "promo_share": "Restaurants showing a promo divided by restaurants observed at that address, only when both counts are non-null.",
+    "consensus_score": "hot if a panel proxy is more than 2 percentage points above an observed consensus, in-line within 2, cold more than 2 below. If the panel or the consensus is null, the score is unscored. The official SEC print is not a substitute for either input.",
+    "tightness": "Not ranked from price alone. A high quote can be strong demand or thin driver supply. Ranking waits for price, ETA, and no-cars on the same route and a prior period."
+  },
+  "cadence": {
+    "timezone": "Asia/Jerusalem",
+    "standard_offset": "+02:00",
+    "public_checks_local": ["08:00", "12:00", "17:30", "23:00"],
+    "eats_basket_local": "Monday 09:00",
+    "dst_note": "GitHub cron is pinned to UTC+2. During Israel summer time (UTC+3) the same jobs run one hour earlier on the Jerusalem clock. This is a poll, not a tick.",
+    "quote_collection": "In-app Uber, Lyft, and Eats quotes are not collected without an authenticated session. The job records the skip. It does not scrape behind login."
+  }
+}

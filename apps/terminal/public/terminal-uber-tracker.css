@@ -1,0 +1,42 @@
+.ut{--ut-text:#e2e8f0;--ut-muted:#94a3b8;--ut-line:rgba(255,255,255,.08);--ut-card:#141620;--ut-blue:#4a9eff;--ut-amber:#f59e0b;--ut-green:#86efac;color:var(--ut-text);max-width:1120px;margin:0 auto;font-size:14px;line-height:1.5}
+.ut[dir=rtl]{direction:rtl}
+.ut[dir=ltr]{direction:ltr}
+.ut h1{font-size:clamp(28px,4vw,40px);line-height:1.1;margin:4px 0 6px;letter-spacing:0}
+.ut h2{font-size:22px;margin:22px 0 8px}
+.ut h3{font-size:15px;margin:0}
+.ut p{margin:6px 0}
+.ut-kicker{color:var(--ut-blue);font-size:11px;font-weight:700;letter-spacing:.12em}
+.ut-gloss,.ut-cap,.ut-note{color:var(--ut-muted);font-size:12px;line-height:1.55}
+.ut-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ut-card{background:var(--ut-card);border:1px solid var(--ut-line);border-radius:12px;padding:14px 16px;min-width:0}
+.ut-wide{grid-column:1 / -1}
+.ut-read{border:1px solid rgba(245,158,11,.5);background:rgba(245,158,11,.08);border-radius:12px;padding:14px 16px;margin:14px 0}
+.ut-read strong{font-size:22px}
+.ut-badge{display:inline-block;font-size:10px;letter-spacing:.06em;border-radius:99px;padding:2px 8px;margin-inline-end:6px;vertical-align:middle}
+.ut-fact{color:var(--ut-green);border:1px solid rgba(34,197,94,.45)}
+.ut-inf{color:#fcd34d;border:1px solid rgba(245,158,11,.5)}
+.ut-un{color:#cbd5e1;border:1px solid rgba(148,163,184,.45)}
+.ut-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+.ut-metric{background:#10141d;border:1px solid var(--ut-line);border-radius:10px;padding:10px}
+.ut-metric b{display:block;font-size:18px;margin-top:4px}
+.ut-scroll{overflow:auto}
+.ut table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.ut th,.ut td{padding:7px 8px;border-bottom:1px solid var(--ut-line);vertical-align:top}
+.ut[dir=rtl] th,.ut[dir=rtl] td{text-align:right}
+.ut[dir=ltr] th,.ut[dir=ltr] td{text-align:left}
+.ut .num{direction:ltr;text-align:left;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ut svg{display:block;width:100%;height:auto;direction:ltr}
+.ut a{color:#9bcaff}
+.ut-split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ut-links{display:flex;flex-wrap:wrap;gap:10px 14px;margin-top:8px}
+.ut-sources{margin-top:16px}
+@media(max-width:800px){
+  .ut-grid,.ut-split,.ut-facts{grid-template-columns:1fr 1fr}
+  .ut-wide{grid-column:1 / -1}
+}
+@media(max-width:520px){
+  .ut-grid,.ut-split,.ut-facts{grid-template-columns:1fr}
+  .ut-card{padding:12px}
+  .ut h1{font-size:28px}
+  .ut .num{white-space:normal}
+}

@@ -1,0 +1,14 @@
+{
+  "metric": "Q4_2026_Gross_Bookings_guide",
+  "period": "2026-Q4",
+  "low_usd_b": 63.25,
+  "high_usd_b": 65.25,
+  "cc_yoy_low_pct": 18,
+  "cc_yoy_high_pct": 22,
+  "currency_headwind_reported_yoy_pp": 1,
+  "kind": "fact",
+  "printed_at": "2026-11-04",
+  "source_url": "https://www.sec.gov/Archives/edgar/data/1543151/000154315126000039/uberq326earningspressrelea.htm",
+  "source_title": "Uber Technologies Exhibit 99.1, results for the quarter ended 30 September 2026, filed 4 November 2026",
+  "note": "Company outlook for the following quarter, not a reported result and not a sell-side consensus. Constant-currency year-over-year range, with the exhibit's stated assumption of about a 1 percentage-point currency headwind to reported year-over-year growth. Confirmed against the same Exhibit 99.1 that the Q3 metrics CSV cites. The range is not a column in sec_q3_2026.csv."
+}

@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="ai-tutor.css">
 <link rel="stylesheet" href="terminal-sources.css?v=20261008-1">
 <link rel="stylesheet" href="terminal-gold-expectations.css?v=20261009-2">
+<link rel="stylesheet" href="terminal-uber-tracker.css?v=20261105-1">
 <link rel="stylesheet" href="terminal-valuation.css?v=20261014-report">
 <link rel="stylesheet" href="terminal-price-history.css?v=20261013-material-events">
 <link rel="stylesheet" href="terminal-research.css?v=20261014-persistent-statements">
@@ -194,6 +195,17 @@
         <div class="nav-item" data-page="ideas" onclick="navigate('ideas')">
           <span class="nav-item-icon">💡</span> <span data-i18n="sidebar.tradeIdeas">Trade Ideas</span>
           <span class="nav-item-badge soon" data-i18n="sidebar.soon">Soon</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title" onclick="toggleSection('research-desk')">
+        <span data-i18n="sidebar.secResearchDesk">מחקרים</span> <span class="nav-section-caret open" id="caret-research-desk">▾</span>
+      </div>
+      <div class="nav-items" id="items-research-desk">
+        <div class="nav-item" data-page="uber-tracker" onclick="navigate('uber-tracker')">
+          <span class="nav-item-icon">🚗</span> <span data-i18n="sidebar.uberTracker">UBER TRACKER</span>
         </div>
       </div>
     </div>
@@ -1488,6 +1500,12 @@
 
     <div class="page" id="page-valuation"><div id="valuationRoot" class="val-wrap"></div></div>
 
+    <div class="page" id="page-uber-tracker">
+      <div class="welcome-wrap" style="max-width:1120px">
+        <div id="uberTracker"></div>
+      </div>
+    </div>
+
     <div class="page" id="page-sources">
       <div class="sources-wrap">
         <div class="page-header-title">מקורות ומתודולוגיה</div>
@@ -1540,6 +1558,7 @@ if (window.Chart) Chart.register({
 <script src="terminal-macro.js?v=20261008-sources1"></script>
 <script src="terminal-macro-dashboard.js?v=20261025-calendar1"></script>
 <script src="terminal-earnings.js?v=20261008-sources1"></script>
+<script src="terminal-uber-tracker.js?v=20261105-1"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1"></script>
 <script src="supabase-config.js"></script>
 <script src="platform.js"></script>
