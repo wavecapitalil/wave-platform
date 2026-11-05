@@ -91,7 +91,19 @@
           "items": [
             {
               "type": "paragraph",
-              "text": "א.״דוג׳י תמיד מבשר היפוך״ — שגוי: הצורה אינה תחזית. ב.״דוג׳י ארוך־רגליים פירושו שלא הייתה תנודתיות״ — להפך, הוא עשוי לכלול טווח רחב. ג.״שפירית תמיד שורית ואבן קבורה תמיד דובית״ — שמות קלאסיים אינם תחליף להקשר ולאישור. ד.״כל גוף קטן הוא דוג׳י״ — יש לבחון קרבה אמיתית בין Open ל־.Close"
+              "text": "א. ״דוג׳י תמיד מבשר היפוך״ — שגוי: מבנה הנר אינו תחזית."
+            },
+            {
+              "type": "paragraph",
+              "text": "ב. ״דוג׳י ארוך־רגליים פירושו שלא הייתה תנודתיות״ — להפך: הוא עשוי לכלול טווח מחירים רחב."
+            },
+            {
+              "type": "paragraph",
+              "text": "ג. ״דוג׳י שפירית תמיד שורי ואבן קבורה תמיד דובית״ — השמות אינם תחליף להקשר השוק."
+            },
+            {
+              "type": "paragraph",
+              "text": "ד. ״כל גוף קטן הוא דוג׳י״ — יש לבחון את הקרבה בין Open ל־Close ואת גודל הגוף ביחס לטווח."
             }
           ]
         },
@@ -101,21 +113,41 @@
           "items": [
             {
               "type": "paragraph",
-              "text": "שאלה: Open=50, High=55, Low=45, Close=50.1:1 מה מאפיין את הגוף? האם ניתן להסיק מכך שהמחיר כמעט שלא נע? שאלה:2 איזה סוג Doji מתאפיין בפתיל תחתון ארוך ובפתיחה וסגירה קרובות לגבוה? מה באמת אפשר ללמוד מכך? שאלה: 3 אחרי חמישה נרות עולים נוצר דוג׳י, ולאחריו נר ירוק שסוגר מעל הגבוה של הדוג׳י. האם הדוג׳י הוכיח שהעלייה הסתיימה? שאלה:4 בהסתמך על איור, 4 כתבו מה אתם יודעים בנקודת הדוג׳י, ומה אתם עדיין לא יודעים עד שמגיעים נרות נוספים."
+              "text": "1. נר נפתח ב־50, הגיע לגבוה 55 ולנמוך 45, ונסגר ב־50.1. מה מאפיין את הגוף? האם ניתן להסיק שהמחיר כמעט שלא נע?"
+            },
+            {
+              "type": "paragraph",
+              "text": "2. איזה סוג Doji מתאפיין בפתיל תחתון ארוך ובפתיחה וסגירה סמוכות לגבוה? מה ניתן ללמוד מכך — ומה לא?"
+            },
+            {
+              "type": "paragraph",
+              "text": "3. לאחר חמישה נרות עולים מופיע דוג׳י, ולאחריו נר ירוק שסוגר מעל הגבוה של הדוג׳י. האם הדוג׳י הוכיח שהעלייה הסתיימה?"
+            },
+            {
+              "type": "paragraph",
+              "text": "4. בהסתמך על איור 4, מה ידוע בנקודת היווצרות הדוג׳י, ומה אי אפשר לדעת עד שיופיעו נרות נוספים?"
             }
           ]
         },
         {
-          "heading": "פתרונות",
-          "type": "content",
+          "heading": "פתרונות לתרגול",
+          "type": "solution",
           "items": [
             {
               "type": "paragraph",
-              "text": ".1 הגוף קטן מאוד 0.1 ביחס לטווח;10 המחיר דווקא נע בין 45 ל־.2.55 דוג׳י שפירית; במהלך התקופה נרשם שפל נמוך והמחיר התאושש סמוך לגבוה, אך אין הבטחה להמשך.3. לא. הדוג׳י סימן עצירה יחסית, וההמשך דווקא היה כלפי מעלה.4. יודעים את מבנה ה־ OHLC ואת המיקום ברצף; לא יודעים אם יופיעו בהמשך קונים שידחפו את המחיר למעלה או תנועה שתשבור את האזור."
+              "text": "1. הגוף הוא 0.1 בלבד, לעומת טווח של 10 יחידות (55 פחות 45). המחיר נע במהלך התקופה, גם אם חזר סמוך למחיר הפתיחה."
             },
             {
               "type": "paragraph",
-              "text": "מקורות לקריאה ובדיקה StockCharts, Introduction to Candlesticks / Doji anatomy: https://articles.stockcharts.com/article/articles- dont_ignore_this_chart-2009-02-anatomy-of-a-doji-staa/; CMC Markets, Doji Candlestick Pattern Explained: https://www.cmcmarkets.com/en-gb/technical-analysis/what-are-doji-candlestick-patterns-and-how-to-trade-. them האיורים והנתונים לדוגמה נוצרו לקורס ואינם נתוני שוק בפועל."
+              "text": "2. דוג׳י שפירית (Dragonfly Doji). המחיר ירד והתאושש לקראת הסגירה, אך אין הבטחה להמשך עלייה."
+            },
+            {
+              "type": "paragraph",
+              "text": "3. לא. במקרה הזה הדוג׳י סימן עצירה יחסית, ולאחריה העלייה דווקא נמשכה."
+            },
+            {
+              "type": "paragraph",
+              "text": "4. ידועים מחירי OHLC וההקשר של הנרות הקודמים. לא ידוע אם המחיר ימשיך לעלות או ישבור את האזור."
             }
           ]
         }
@@ -126,7 +158,8 @@
       "qa_status": "requires_final_formula_and_visual_check",
       "editorial_notes": [
         "Text derived only from the corresponding original PDF transcription; review requires numeric and formula verification.",
-        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF."
+        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF.",
+        "Exercises and solutions have been separated and cleaned for review, with original figures and numeric conditions retained."
       ]
     },
     {
@@ -142,7 +175,7 @@
           "items": [
             {
               "type": "paragraph",
-              "text": "Spinning Top ו־ Marubozu מטרה: להבדיל בין גוף קטן עם פתילים משני צדדיו לבין גוף המכסה כמעט את מלוא הטווח, ולתאר את שניהם בלי להסיק כיוון עתידי."
+              "text": "להבחין בין גוף קטן עם פתילים בולטים משני הצדדים (Spinning Top), לבין גוף המכסה כמעט את מלוא הטווח (Marubozu), בלי להסיק מכך כיוון עתידי."
             }
           ]
         },
@@ -166,7 +199,7 @@
           "items": [
             {
               "type": "paragraph",
-              "text": "ב־Marubozuמלא אין פתילים: בנר עולה הפתיחה שווה לנמוך והסגירה לגבוה; בנר יורד הפתיחה שווה לגבוה והסגירה לנמוך. בדוגמה עולה: O=100, H=108, L=100, C=108 הגוף והטווח שווים ל.8-התיאור אינו אומר שהמחיר עלה בקו ישר, מפני שהמסלול בתוך הנר אינו ידוע. בשימוש מעשי קיימות גם גרסאות בעלות פתיל זעיר. נקרא להן כאן ״כמעט Marubozu ״ ונציין את ההקלה, במקום להחליף הגדרה בלי להודיע."
+              "text": "ב־Marubozu מלא אין פתילים: בנר עולה הפתיחה שווה לנמוך והסגירה לגבוה; בנר יורד הפתיחה שווה לגבוה והסגירה לנמוך. בדוגמה עולה: O=100, H=108, L=100, C=108 הגוף והטווח שווים ל־8. התיאור אינו אומר שהמחיר עלה בקו ישר, מפני שהמסלול בתוך הנר אינו ידוע. בשימוש מעשי קיימות גם גרסאות בעלות פתיל זעיר. נקרא להן כאן ״כמעט Marubozu ״ ונציין את ההקלה, במקום להחליף הגדרה בלי להודיע."
             }
           ]
         },
@@ -176,7 +209,7 @@
           "items": [
             {
               "type": "paragraph",
-              "text": "נחשב תחילה גוף חלקי טווח: בסביבון שבדוגמה,2/12 כלומר כ;16.7%-בנר המלא,8/8 כלומר.100%אין כאן סף תקני המכריע מתי נר הופך לסביבון. אם רוצים לבנות סורק, צריך להגדיר מראש מה פירוש ״קטן״ ו״פתיל זעיר״ ולבדוק רגישות לשינוי הסף. נר בעל גוף קטן בתוך רצף גופים קטנים אינו בהכרח חריג. גוף מלא של 0.1 יחידה יכול להיות קטן מאוד ביחס לסביבתו."
+              "text": "נחשב תחילה גוף חלקי טווח: בסביבון שבדוגמה,2/12 כלומר כ־16.7%; בנר המלא,8/8 כלומר 100%. אין כאן סף תקני המכריע מתי נר הופך לסביבון. אם רוצים לבנות סורק, צריך להגדיר מראש מה פירוש ״קטן״ ו״פתיל זעיר״ ולבדוק רגישות לשינוי הסף. נר בעל גוף קטן בתוך רצף גופים קטנים אינו בהכרח חריג. גוף מלא של 0.1 יחידה יכול להיות קטן מאוד ביחס לסביבתו."
             },
             {
               "type": "figure-note",
@@ -190,17 +223,29 @@
           "items": [
             {
               "type": "paragraph",
-              "text": "אחרי רצף עליות יכול להופי ע גוף מלא שורי, ומי ד אחריו ירי דה. צורתו לא משתנה בד י עבד; מה שלא התקיים הוא תרחיש ההמשך. גם סביבון יכול להופיע באמצע מגמה שנמשכת. בשוק עם פערי פתיחה כדאי להשוות בנוסף לסגירה הקודמת Marubozu: ירוק יכול עדיין להסתיים מתחת לסגירת אתמול אם נפתח בפער מטה. בשוק רציף עדיין בודקים איכות נתונים וגודל טיק, כלומר מדרגת המחיר המזערית."
+              "text": "אחרי רצף עליות יכול להופיע גוף מלא שורי, ומיד אחריו ירידה. צורתו לא משתנה בדיעבד; מה שלא התקיים הוא תרחיש ההמשך. גם סביבון יכול להופיע באמצע מגמה שנמשכת. בשוק עם פערי פתיחה כדאי להשוות בנוסף לסגירה הקודמת Marubozu: ירוק יכול עדיין להסתיים מתחת לסגירת אתמול אם נפתח בפער מטה. בשוק רציף עדיין בודקים איכות נתונים וגודל טיק, כלומר מדרגת המחיר המזערית."
             }
           ]
         },
         {
-          "heading": "תרגול לפני הפתרון",
-          "type": "solution",
+          "heading": "תרגול — נסו בעצמכם",
+          "type": "exercise",
           "items": [
             {
               "type": "paragraph",
-              "text": ".1 סווגו O=50, H=58, L=50, C=58 והסבירו מה חסר בו..2 בנר O=100, H=107, L=93, C=101 חשבו גוף וטווח. האם הוא בהכרח דוג׳י?.3 הסגירה הקודמת הייתה 112 והנר הבא הוא: O=100, H=108, L=100, C=108 האם הוא עלה גם ביחס לסגירה הקודמת?.4 מה תבקשו לראות לפני שתכנו נר ״חריג״?"
+              "text": "1. סווגו את הנר O=50, H=58, L=50, C=58. אילו פתילים חסרים בו?"
+            },
+            {
+              "type": "paragraph",
+              "text": "2. בנר O=100, H=107, L=93, C=101 חשבו את גודל הגוף ואת הטווח. האם הוא בהכרח דוג׳י?"
+            },
+            {
+              "type": "paragraph",
+              "text": "3. הסגירה הקודמת הייתה 112, והנר הבא הוא O=100, H=108, L=100, C=108. האם עלה גם ביחס לסגירה הקודמת?"
+            },
+            {
+              "type": "paragraph",
+              "text": "4. מה תבקשו לבדוק לפני שתכנו נר ״חריג״?"
             }
           ]
         },
@@ -210,11 +255,19 @@
           "items": [
             {
               "type": "paragraph",
-              "text": "1. Marubozu שורי מלא, ללא פתילים.2. גוף 1 וטווח.14 הקרבה בין O ל C-דורשת כלל מדידה; אין לקבוע דוג׳י משם או מצבע בלבד.3. הגוף שורי, אך השינוי מסגירה לסגירה הוא מינוס.4. 4 את גופי וטווחי הנרות הקודמים, באותו נכס ובאותו טווח זמן. הסיווג מתאר את הנר; ההקשר והסיכון שייכים לשאלת הפעולה."
+              "text": "1. Marubozu שורי מלא: הפתיחה בנמוך והסגירה בגבוה, ללא פתילים."
             },
             {
               "type": "paragraph",
-              "text": "מקורות R01: היחסים, המחירים, איורי ההמשך והשאלות הם פיתוח מקורי לקורס."
+              "text": "2. גוף הנר הוא 1, והטווח 14. כדי לקרוא לו Doji צריך להגדיר מראש כלל מדידה — לא להסתפק בצבע."
+            },
+            {
+              "type": "paragraph",
+              "text": "3. הנר שורי בתוך עצמו, אך ביחס לסגירה הקודמת 112 הוא סיים ב־108, כלומר ירידה של 4 יחידות."
+            },
+            {
+              "type": "paragraph",
+              "text": "4. יש להשוות לנרות קודמים באותו נכס ובאותו טווח זמן, ולבדוק את גודל הגופים והטווחים."
             }
           ]
         }
@@ -225,7 +278,8 @@
       "qa_status": "requires_final_formula_and_visual_check",
       "editorial_notes": [
         "Text derived only from the corresponding original PDF transcription; review requires numeric and formula verification.",
-        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF."
+        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF.",
+        "Exercises and solutions have been separated and cleaned for review, with original figures and numeric conditions retained."
       ]
     },
     {
@@ -298,20 +352,46 @@
           ]
         },
         {
-          "heading": "תרגול ופתרון",
+          "heading": "תרגול — זיהוי והקשר",
+          "type": "exercise",
+          "items": [
+            {
+              "type": "paragraph",
+              "text": "1. מה שם הנר שבאיור אם קדמו לו שיאים ושפלים עולים?"
+            },
+            {
+              "type": "paragraph",
+              "text": "2. האם צבע אדום פוסל בהכרח Hammer?"
+            },
+            {
+              "type": "paragraph",
+              "text": "3. בדוגמה שבה הגוף הוא 2 והפתיל התחתון הוא 8, מה היחס ביניהם?"
+            },
+            {
+              "type": "paragraph",
+              "text": "4. תקנו את המשפט: ״נוצר פטיש, ולכן התמיכה בטוחה״."
+            }
+          ]
+        },
+        {
+          "heading": "פתרון והסבר",
           "type": "solution",
           "items": [
             {
               "type": "paragraph",
-              "text": ".1 מה שם הנר שבאיור אם קדמו לו שיאים ושפלים עולים?.2 האם צבע אדום פוסל פטיש?.3 חשבו יחס פתיל תחתון לגוף בדוגמה.4. תלמיד אומר ״נוצר פטיש, ולכן התמיכה בטוחה״. תקנו את המשפט."
+              "text": "1. Hanging Man (איש תלוי), אם המבנה והתנועה הקודמת מתאימים להגדרה."
             },
             {
               "type": "paragraph",
-              "text": "פתרון.1: איש תלוי, בכפוף למבנה מתאים ולמגמה שנבחנה.2. לא. היחס בין גוף לפתילים והמיקום חשובים יותר מהצבע לבדו.3. 8/2=4. 4.״נוצר מבנה פטיש באזור תמיכה אפשרי; נבדוק כיצד המחיר מגיב, ונגדיר תנאי שיבטל א ת ה ר ע י ו ן ״. נ י ס ו ח ז ה מ ש א י ר מ ק ו ם ל כ י ש ל ו ן בל י ל ש נ ו ת א ת ה ע ו ב ד ו ת."
+              "text": "2. לא. מבנה הפתילים, גודל הגוף וההקשר קובעים יותר מהצבע לבדו."
             },
             {
               "type": "paragraph",
-              "text": "מקורות R01, R02: תנאי המחיר והתרגילים בדויים ומקוריים."
+              "text": "3. יחס הפתיל התחתון לגוף הוא 8/2 = 4."
+            },
+            {
+              "type": "paragraph",
+              "text": "4. ניסוח מדויק יותר: ״נוצר מבנה של פטיש באזור תמיכה אפשרי; נבדוק כיצד המחיר יגיב ונגדיר מה יבטל את התרחיש״."
             }
           ]
         }
@@ -322,7 +402,8 @@
       "qa_status": "requires_final_formula_and_visual_check",
       "editorial_notes": [
         "Text derived only from the corresponding original PDF transcription; review requires numeric and formula verification.",
-        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF."
+        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF.",
+        "Exercises and solutions have been separated and cleaned for review, with original figures and numeric conditions retained."
       ]
     },
     {
@@ -391,26 +472,46 @@
           ]
         },
         {
-          "heading": "תרגול",
+          "heading": "תרגול — נר בעל פתיל עליון",
           "type": "exercise",
           "items": [
             {
               "type": "paragraph",
-              "text": ".1 בדוגמה, מהו היחס בין הפתיל העליון לגוף?.2 האם אפשר לזהות את השם בלי לדעת מה קרה קודם?.3 כוכב נופל אחריו סגירה ב 112:-מה נחלש?.4 נר O=100, H=110, L=90, C=101: האם הוא דוגמה נקייה לאותה אנטומיה?"
+              "text": "1. בדוגמה שבה הפתיל העליון הוא 8 והגוף הוא 2, מה היחס ביניהם?"
+            },
+            {
+              "type": "paragraph",
+              "text": "2. האם אפשר להבחין בין Inverted Hammer ל־Shooting Star בלי לדעת מה קרה קודם?"
+            },
+            {
+              "type": "paragraph",
+              "text": "3. לאחר Shooting Star הופיעה סגירה במחיר 112. איזה תרחיש נחלש?"
+            },
+            {
+              "type": "paragraph",
+              "text": "4. נר O=100, H=110, L=90, C=101: האם הוא דוגמה נקייה למבנה בעל פתיל עליון ארוך ופתיל תחתון קצר?"
             }
           ]
         },
         {
-          "heading": "פתרונות",
-          "type": "content",
+          "heading": "פתרונות לתרגול",
+          "type": "solution",
           "items": [
             {
               "type": "paragraph",
-              "text": ".1 היחס הוא.4. 2 אפשר לתאר פתיל עליון ארוך, אך ההבחנה בין שני השמות תלויה בהקשר.3. תרחיש של בלימת העלייה באזור 110 נחלש; הנר ההיסטורי עצמו נשאר כפי שהיה.4. לא, גם הפתיל התחתון ארוך. עדיף לתאר במדויק גוף קטן ושני פתילים מאשר לכפות שם שאינו מתאים."
+              "text": "1. יחס הפתיל העליון לגוף הוא 8/2 = 4."
             },
             {
               "type": "paragraph",
-              "text": "מקורות R01, R03: ההקלה בתנאי Gap מוצגת כגרסת עבודה, לא כאחידות בין כל המקורות."
+              "text": "2. לא. אפשר לתאר את האנטומיה, אך השם תלוי בהקשר — לאחר ירידה או לאחר עלייה."
+            },
+            {
+              "type": "paragraph",
+              "text": "3. תרחיש של בלימת העלייה סביב רמת 110 נחלש. מבנה הנר ההיסטורי אינו משתנה."
+            },
+            {
+              "type": "paragraph",
+              "text": "4. לא. גם הפתיל התחתון ארוך, ולכן לא נכון לכפות על הנר את אחת משתי התבניות."
             }
           ]
         }
@@ -421,7 +522,8 @@
       "qa_status": "requires_final_formula_and_visual_check",
       "editorial_notes": [
         "Text derived only from the corresponding original PDF transcription; review requires numeric and formula verification.",
-        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF."
+        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF.",
+        "Exercises and solutions have been separated and cleaned for review, with original figures and numeric conditions retained."
       ]
     },
     {
@@ -478,20 +580,92 @@
           ]
         },
         {
-          "heading": "מפתח פתרונות",
+          "heading": "מפתח פתרונות — כרטיסים 1–6",
           "type": "solution",
           "items": [
             {
               "type": "paragraph",
-              "text": ".1 דוג׳י רגיל O=C=100: פתילים לשני הכיוונים.2. דוג׳י ארוך רגליים: גוף אפסי וטווח רחב יותר.3. דוג׳י שפירית:.O=C=H. 4 דוג׳י אבן קבורה: O=C=L. 5: סביבון שורי: גוף 2 מול טווח 12 ופתילים ארוכים.6. סביבון דובי עם אותה לוגיקה."
+              "text": "1. דוג׳י רגיל: O=C=100 ופתילים לשני הכיוונים."
             },
             {
               "type": "paragraph",
-              "text": "7. Marubozu שורי מלא 8. Marubozu. דובי מלא 9. Hammer. אחרי ירידה 10. Hanging Man. אחרי עלייה, עם אותם מחירי נר 9. 11. Inverted Hammer אחרי ירידה 12. Shooting Star. אחרי עלייה, עם אותם מחירי נר.11 ההקשר הוא שמבדיל בין השמות בכל זוג."
+              "text": "2. דוג׳י ארוך־רגליים: גוף אפסי וטווח רחב יותר."
             },
             {
               "type": "paragraph",
-              "text": ".13 טווח אפס: אין תנועה בטווח הרשום, ואין לחלק באפס. נסמן ״נר ללא טווח״ ולא נייחס לו מסר על איזון שוק.14. גוף רחב ופתילים: אינו Marubozu מלא ואינו סביבון לפי כללי התרגיל.15. גוף 0.6 מתוך טווח,10 כלומר;6%אינו דוג׳י לפי סף,5%ומתאים לסביבון לפי כלל התרגיל. שינוי הסף ל 10%-משנה את הסיווג, ולכן מתעדים את הסף.16. פתיל תחתון גדול, אך הגוף אינו קטן מספיק לפי הקריטריון שנבחר; אין פטיש נקי.17. גוף קטן ופתיל תחתון בולט, אך ללא הקשר לא מכריעים בין Hammer ל Hanging Man. 18-גוף שורי גדול עם פתיל קצר: ״כמעט Marubozu ״, לא Marubozu מלא."
+              "text": "3. דוג׳י שפירית: O=C=H."
+            },
+            {
+              "type": "paragraph",
+              "text": "4. דוג׳י אבן קבורה: O=C=L."
+            },
+            {
+              "type": "paragraph",
+              "text": "5. Spinning Top שורי: גוף בגודל 2 לעומת טווח של 12, עם פתילים ארוכים."
+            },
+            {
+              "type": "paragraph",
+              "text": "6. Spinning Top דובי: אותו היגיון, אך הסגירה נמוכה מהפתיחה."
+            }
+          ]
+        },
+        {
+          "heading": "מפתח פתרונות — כרטיסים 7–12",
+          "type": "solution",
+          "items": [
+            {
+              "type": "paragraph",
+              "text": "7. Marubozu שורי מלא."
+            },
+            {
+              "type": "paragraph",
+              "text": "8. Marubozu דובי מלא."
+            },
+            {
+              "type": "paragraph",
+              "text": "9. Hammer לאחר ירידה."
+            },
+            {
+              "type": "paragraph",
+              "text": "10. Hanging Man לאחר עלייה, עם מחירי נר זהים לאלו של כרטיס 9."
+            },
+            {
+              "type": "paragraph",
+              "text": "11. Inverted Hammer לאחר ירידה."
+            },
+            {
+              "type": "paragraph",
+              "text": "12. Shooting Star לאחר עלייה, עם מחירי נר זהים לאלו של כרטיס 11."
+            }
+          ]
+        },
+        {
+          "heading": "מפתח פתרונות — כרטיסים 13–18",
+          "type": "solution",
+          "items": [
+            {
+              "type": "paragraph",
+              "text": "13. נר ללא טווח: אין לחלק באפס, ואין לייחס לו מסר ודאי על איזון שוק."
+            },
+            {
+              "type": "paragraph",
+              "text": "14. גוף רחב עם פתילים: אינו Marubozu מלא ואינו Spinning Top לפי כללי התרגיל."
+            },
+            {
+              "type": "paragraph",
+              "text": "15. הגוף הוא 0.6 מתוך טווח 10, כלומר 6%. לפי סף Doji של 5% הנר אינו דוג׳י; שינוי הסף ל־10% עשוי לשנות את הסיווג."
+            },
+            {
+              "type": "paragraph",
+              "text": "16. פתיל תחתון גדול, אך הגוף אינו קטן מספיק לפי הקריטריון שנבחר; אין Hammer נקי."
+            },
+            {
+              "type": "paragraph",
+              "text": "17. גוף קטן ופתיל תחתון ארוך, אך בלי הקשר קודם לא ניתן להכריע בין Hammer ל־Hanging Man."
+            },
+            {
+              "type": "paragraph",
+              "text": "18. גוף שורי גדול עם פתיל קצר — ״כמעט Marubozu״, ולא Marubozu מלא."
             }
           ]
         },
@@ -501,11 +675,7 @@
           "items": [
             {
               "type": "paragraph",
-              "text": "תנו נקודה לתיאור אנטומי נכון ונקודה להקשר בכל כרטיס 36, בסך הכול. בדוגמאות 13-18 יש לקבל נימוק מדויק גם כשהשם אינו חד-משמעי. הצלחה היא היכולת להסביר, ולא הזיכרון של הצבע. אם טעיתם בשמות,9-12 חזרו להשוואת ההקשרים לפני המשך ליחידה 4"
-            },
-            {
-              "type": "paragraph",
-              "text": "מקורות R01-R03: להגדרות כלליות. כל 18 הכרטיסים, הספים והניקוד נוצרו לקורס."
+              "text": "תנו נקודה אחת על תיאור אנטומי נכון ונקודה אחת על התייחסות נכונה להקשר בכל כרטיס — 36 נקודות בסך הכול. במקרים הגבוליים 13–18 יש לקבל גם נימוק תקף ללא שם חד־משמעי. אם התקשתם בכרטיסים 9–12, חזרו להשוואה בין מבנה הנר לבין המגמה שקדמה לו."
             }
           ]
         }
@@ -516,7 +686,8 @@
       "qa_status": "requires_final_formula_and_visual_check",
       "editorial_notes": [
         "Text derived only from the corresponding original PDF transcription; review requires numeric and formula verification.",
-        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF."
+        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF.",
+        "Exercises and solutions have been separated and cleaned for review, with original figures and numeric conditions retained."
       ]
     },
     {
@@ -585,20 +756,46 @@
           ]
         },
         {
-          "heading": "תרגול ופתרון",
+          "heading": "תרגול — Engulfing",
+          "type": "exercise",
+          "items": [
+            {
+              "type": "paragraph",
+              "text": "1. האם בדוגמה נבלעו גם שני הפתילים של הנר הראשון?"
+            },
+            {
+              "type": "paragraph",
+              "text": "2. אם C2 היה 105 במקום 107, האם היה מתקיים בולען שורי מלא?"
+            },
+            {
+              "type": "paragraph",
+              "text": "3. אם O2=102 ו־C2=107, מה משתנה לפי הכלל המחמיר?"
+            },
+            {
+              "type": "paragraph",
+              "text": "4. האם בולען שורי מבטיח רצף סגירות עולה?"
+            }
+          ]
+        },
+        {
+          "heading": "פתרון והסבר",
           "type": "solution",
           "items": [
             {
               "type": "paragraph",
-              "text": ".1 האם בדוגמה נבלעו שני הפתילים?.2 אם C2 היה,105 האם היה בולען מלא?.3 אם O2=102 ו C2=107-מה משתנה?.4 האם בולען שורי מבטיח רצף סגירות עולה?"
+              "text": "1. לא; הגוף השני בלע את הגוף הראשון, אך לא את מלוא טווח הפתילים."
             },
             {
               "type": "paragraph",
-              "text": "פתרון.1: לא; נבלע הגוף בלבד.2. לא, משום שהסגירה לא עברה את O1=106. 3 הגרסה המחמירה נפסלת בגלל השוויון, והמקלה עשויה לקבל אותו.4. לא. צריך להפריד זיהוי, תרחיש, ביצוע ותוצאה. את שני הכיוונים בודקים באותו היגיון, בהיפוך סימני האי-שוויון."
+              "text": "2. לא. הסגירה 105 אינה עוברת את פתיחת הנר הראשון, O1=106."
             },
             {
               "type": "paragraph",
-              "text": "מקורות R02, R03, R04: מדיניות שוויון והדוגמאות הן כללי הוראה מפורשים."
+              "text": "3. מתקיים שוויון בגבול הפתיחה, ולכן הכלל המחמיר נפסל; כלל מקל שהוגדר מראש עשוי לקבל את המקרה."
+            },
+            {
+              "type": "paragraph",
+              "text": "4. לא. יש להפריד בין זיהוי התבנית, תרחיש, ביצוע ותוצאה."
             }
           ]
         }
@@ -609,7 +806,8 @@
       "qa_status": "requires_final_formula_and_visual_check",
       "editorial_notes": [
         "Text derived only from the corresponding original PDF transcription; review requires numeric and formula verification.",
-        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF."
+        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF.",
+        "Exercises and solutions have been separated and cleaned for review, with original figures and numeric conditions retained."
       ]
     },
     {
@@ -678,20 +876,46 @@
           ]
         },
         {
-          "heading": "תרגול ופתרון",
+          "heading": "תרגול — Harami לעומת Inside Bar",
+          "type": "exercise",
+          "items": [
+            {
+              "type": "paragraph",
+              "text": "1. בדוגמה, איזה גבול פוסל את הסיווג Inside Bar?"
+            },
+            {
+              "type": "paragraph",
+              "text": "2. אם C2=111 במקום 106, האם גוף הנר השני עדיין כלוא בגוף הראשון?"
+            },
+            {
+              "type": "paragraph",
+              "text": "3. האם גוף קטן מוכיח שבוצעו מעט עסקאות?"
+            },
+            {
+              "type": "paragraph",
+              "text": "4. האם גוף כלוא באמצע דשדוש מוכיח שהתרחש היפוך שורי?"
+            }
+          ]
+        },
+        {
+          "heading": "פתרון והסבר",
           "type": "solution",
           "items": [
             {
               "type": "paragraph",
-              "text": ".1 בדוגמה, איזה גבול פוסל Inside Bar? 2 אם C2=111 האם הגוף עוד כלוא?.3 האם גוף קטן אומר שמעט עסקאות התבצעו?.4 גוף כלוא באמצע דשדוש: האם נכון לכנותו היפוך שורי מוכח?"
+              "text": "1. הגבוה של הנר השני, H2=114, גבוה מהגבוה הראשון H1=112."
             },
             {
               "type": "paragraph",
-              "text": "פתרון.1: הגבוה השני.114. 2 לא, הוא חורג מעל גוף ראשון שמסתיים ב.110. 3-לא; OHLC אינו כולל ספירת עסקאות.4. לא, אפשר לתאר הכלת גוף, אך אין ירידה ברורה להפוך ואין הוכחה על העתיד. במקרה לא נקי עדיף לכתוב את הנתונים ואת הכלל שבו השתמשתם."
+              "text": "2. לא. גוף הנר השני חורג מעל הגבול העליון של הגוף הראשון, שמסתיים ב־110."
             },
             {
               "type": "paragraph",
-              "text": "מקורות R02, R04: בחירת תנאי הגבולות והתרגילים מקוריים."
+              "text": "3. לא. נתוני OHLC אינם כוללים בהכרח מידע על מספר העסקאות."
+            },
+            {
+              "type": "paragraph",
+              "text": "4. לא. אפשר לתאר הכלת גוף, אך אין הוכחה להיפוך או לכיוון העתידי."
             }
           ]
         }
@@ -702,7 +926,8 @@
       "qa_status": "requires_final_formula_and_visual_check",
       "editorial_notes": [
         "Text derived only from the corresponding original PDF transcription; review requires numeric and formula verification.",
-        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF."
+        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF.",
+        "Exercises and solutions have been separated and cleaned for review, with original figures and numeric conditions retained."
       ]
     },
     {
@@ -771,20 +996,46 @@
           ]
         },
         {
-          "heading": "תרגול ופתרון",
+          "heading": "תרגול — חישוב קו חודר",
+          "type": "exercise",
+          "items": [
+            {
+              "type": "paragraph",
+              "text": "1. אם O1=80 ו־C1=70, מהו אמצע הגוף הראשון?"
+            },
+            {
+              "type": "paragraph",
+              "text": "2. אם C2=74, האם הסגירה השנייה עברה את האמצע?"
+            },
+            {
+              "type": "paragraph",
+              "text": "3. אם C2=78 ו־O2=C1, האם מתקיימת הגרסה המחמירה הדורשת פער מתחת לנמוך הראשון?"
+            },
+            {
+              "type": "paragraph",
+              "text": "4. מדוע חשוב לתעד איזו גרסה של ההגדרה נבחרה?"
+            }
+          ]
+        },
+        {
+          "heading": "פתרון והסבר",
           "type": "solution",
           "items": [
             {
               "type": "paragraph",
-              "text": "1. O1=80, C1=70: מה האמצע? 2. C2=74: האם החצייה מתקיימת? 3. C2=78 ו O2=C1:-האם זו הגרסה המחמירה?.4 מדוע חשוב לתעד את גרסת ההגדרה?"
+              "text": "1. האמצע הוא (80+70)/2 = 75."
             },
             {
               "type": "paragraph",
-              "text": "פתרון.1. 75. 2: לא.3. לא, חסר פער מתחת לנמוך; ייתכן מבנה מותאם לפי כללים אחרים.4. משום ששינוי בתנאי הכניסה למדגם משנה את קבוצת המקרים. אין להעביר מסקנות בין קבוצות בלי בדיקה."
+              "text": "2. לא. המחיר 74 נמוך מ־75."
             },
             {
               "type": "paragraph",
-              "text": "מקורות R02, R04, R05: ההשוואה חושפת במפורש הבדלי הגדרות בין מקורות."
+              "text": "3. לא. פתיחה בשוויון לסגירה הקודמת אינה מוכיחה פער מתחת לנמוך הראשון."
+            },
+            {
+              "type": "paragraph",
+              "text": "4. שינוי בתנאי הסיווג משנה את קבוצת המקרים הנבדקת, ולכן אין להשוות מסקנות בלי לציין את התנאים."
             }
           ]
         }
@@ -795,7 +1046,8 @@
       "qa_status": "requires_final_formula_and_visual_check",
       "editorial_notes": [
         "Text derived only from the corresponding original PDF transcription; review requires numeric and formula verification.",
-        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF."
+        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF.",
+        "Exercises and solutions have been separated and cleaned for review, with original figures and numeric conditions retained."
       ]
     },
     {
@@ -864,20 +1116,46 @@
           ]
         },
         {
-          "heading": "תרגול ופתרון",
+          "heading": "תרגול — Dark Cloud Cover",
+          "type": "exercise",
+          "items": [
+            {
+              "type": "paragraph",
+              "text": "1. בנר הראשון O1=200 ו־C1=220. מהו אמצע הגוף?"
+            },
+            {
+              "type": "paragraph",
+              "text": "2. אם C2=209, האם מתקיים תנאי הסגירה מתחת לאמצע הגוף?"
+            },
+            {
+              "type": "paragraph",
+              "text": "3. האם ניתן לקבוע תבנית מחמירה בלי לדעת את O2 ואת H1?"
+            },
+            {
+              "type": "paragraph",
+              "text": "4. מה ההבדל בין טעות בסיווג התבנית לבין תרחיש שנכשל?"
+            }
+          ]
+        },
+        {
+          "heading": "פתרון והסבר",
           "type": "solution",
           "items": [
             {
               "type": "paragraph",
-              "text": "1. O1=200, C1=220: מה האמצע? 2. C2=209: האם מתקיים תנאי הסגירה?.3 האם ניתן לקבוע את התבנית בלי O2 ו H1? 4-מה ההבדל בין כישלון תרחיש לבין טעות בסיווג?"
+              "text": "1. אמצע הגוף הוא 210."
             },
             {
               "type": "paragraph",
-              "text": "פתרון.1. 210. 2: כן, והוא עדיין מעל.200. 3 לא בגרסה המחמירה, כי לא בדקנו את הפער.4. סיווג שגוי מפר את תנאי הצורה; תרחיש יכול להיכשל גם כאשר הצורה סווגה נכון. את שני המצבים צריך להפריד ביומן."
+              "text": "2. כן. 209 נמוך מ־210, ועדיין גבוה מפתיחת הנר הראשון, 200."
             },
             {
               "type": "paragraph",
-              "text": "מקורות R03-R05: דוגמאות ומסגרת ההחלטה מקוריות."
+              "text": "3. לא. דרישת הפער אינה ניתנת לבדיקה בלי נתוני הפתיחה והגבוה."
+            },
+            {
+              "type": "paragraph",
+              "text": "4. טעות בסיווג מפרה את תנאי התבנית; תרחיש עתידי עלול להיכשל גם אם הזיהוי היה נכון."
             }
           ]
         }
@@ -888,7 +1166,8 @@
       "qa_status": "requires_final_formula_and_visual_check",
       "editorial_notes": [
         "Text derived only from the corresponding original PDF transcription; review requires numeric and formula verification.",
-        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF."
+        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF.",
+        "Exercises and solutions have been separated and cleaned for review, with original figures and numeric conditions retained."
       ]
     },
     {
@@ -957,20 +1236,46 @@
           ]
         },
         {
-          "heading": "תרגול ופתרון",
+          "heading": "תרגול — Tweezer",
+          "type": "exercise",
+          "items": [
+            {
+              "type": "paragraph",
+              "text": "1. שני שיאים הם 120.00 ו־120.04; גודל הטיק הוא 0.01, והסובלנות שהוגדרה מראש היא טיק אחד. האם הם דומים לפי הכלל?"
+            },
+            {
+              "type": "paragraph",
+              "text": "2. מה ישתנה אם הסובלנות תורחב לחמישה טיקים?"
+            },
+            {
+              "type": "paragraph",
+              "text": "3. מדוע אסור לשנות את הסובלנות לאחר שרואים את הנרות הבאים?"
+            },
+            {
+              "type": "paragraph",
+              "text": "4. האם שתי תחתיות סמוכות מבטיחות אזור תמיכה שיחזיק?"
+            }
+          ]
+        },
+        {
+          "heading": "פתרון והסבר",
           "type": "solution",
           "items": [
             {
               "type": "paragraph",
-              "text": ".1 שני שיאים 120.00 ו,120.04-טיק 0.01 וסובלנות טיק אחד: האם דומים לפי הכלל?.2 אם מתירים חמישה טיקים, מה משתנה?.3 מדוע אי אפשר לשנות סובלנות אחרי שרואים את העתיד?.4 האם כל שתי תחתיות סמוכות מבטיחות תמיכה?"
+              "text": "1. לא. ההפרש הוא ארבעה טיקים, מעל הסובלנות שנבחרה."
             },
             {
               "type": "paragraph",
-              "text": "פתרון.1: לא, המרחק ארבעה טיקים.2. הסיווג מתקבל.3. שינוי בדיעבד בורר מקרים על פי התוצאה.4. לא; זו רמה משותפת שנצפתה, וכל תרחיש המשך עוד טעון בד יקה. תע דו כישלונות לצד הצלחות."
+              "text": "2. הזוג יעמוד בכלל המורחב, אך יש לתעד שההגדרה השתנתה."
             },
             {
               "type": "paragraph",
-              "text": "מקורות R24: להגדרת;Tweezer סובלנות הטיקים היא כלל תרגיל מקורי."
+              "text": "3. שינוי הסף בדיעבד עלול לברור מקרים לפי התוצאה וליצור הטיה."
+            },
+            {
+              "type": "paragraph",
+              "text": "4. לא. אלו שפלים דומים שנצפו, ולא הוכחה לתמיכה עתידית."
             }
           ]
         }
@@ -981,7 +1286,8 @@
       "qa_status": "requires_final_formula_and_visual_check",
       "editorial_notes": [
         "Text derived only from the corresponding original PDF transcription; review requires numeric and formula verification.",
-        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF."
+        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF.",
+        "Exercises and solutions have been separated and cleaned for review, with original figures and numeric conditions retained."
       ]
     },
     {
@@ -1050,20 +1356,58 @@
           ]
         },
         {
-          "heading": "תרגול ופתרון",
+          "heading": "תרגול — Inside Bar ו־Outside Bar",
+          "type": "exercise",
+          "items": [
+            {
+              "type": "paragraph",
+              "text": "נר ראשון: H1=110 ו־L1=100. סווגו כל אחד מהמקרים לפי ההגדרה המחמירה:"
+            },
+            {
+              "type": "paragraph",
+              "text": "1. H2=109, L2=101."
+            },
+            {
+              "type": "paragraph",
+              "text": "2. H2=111, L2=99."
+            },
+            {
+              "type": "paragraph",
+              "text": "3. H2=115, L2=111."
+            },
+            {
+              "type": "paragraph",
+              "text": "4. H2=110, L2=101."
+            },
+            {
+              "type": "paragraph",
+              "text": "הסבירו מדוע צבע הנרות אינו נדרש לצורך בדיקת הכלת טווח."
+            }
+          ]
+        },
+        {
+          "heading": "פתרון והסבר",
           "type": "solution",
           "items": [
             {
               "type": "paragraph",
-              "text": "1. H1=110, L1=100; H2=109, L2=101. 2. H2=111, L2=99. 3. H2=115, L2=111. 4. H2=110,.L2=101 סווגו לפי הכלל המחמיר והסבירו מדוע הצבע לא נדרש."
+              "text": "1. Inside Bar — הטווח השני כולו בתוך הראשון."
             },
             {
               "type": "paragraph",
-              "text": "פתרון.1. Inside. 2. Outside. 3: אף אחד: כל הטווח גבוה יותר ולא מכסה את הקודם.4. מקרה גבול, אינו Inside מחמיר. הצבע נגזר מ O-ו C-ואינו חלק מההשוואה שנבחרה. אם כלל אחר משתמש בצבע, הוא מוסיף תנאי נפרד."
+              "text": "2. Outside Bar — הגבוה השני מעל הראשון והנמוך השני מתחתיו."
             },
             {
               "type": "paragraph",
-              "text": "מקורות R06, R04: ההשוואות המספריות נגזרות ישירות מאי-השוויונות."
+              "text": "3. אף אחד — כל הטווח השני גבוה יותר, ואינו מכסה את הראשון."
+            },
+            {
+              "type": "paragraph",
+              "text": "4. מקרה גבול — אינו Inside Bar לפי הגדרה מחמירה הדורשת H2<H1."
+            },
+            {
+              "type": "paragraph",
+              "text": "הצבע נקבע לפי Open ו־Close, ואינו חלק מהשוואת High ו־Low."
             }
           ]
         }
@@ -1074,7 +1418,8 @@
       "qa_status": "requires_final_formula_and_visual_check",
       "editorial_notes": [
         "Text derived only from the corresponding original PDF transcription; review requires numeric and formula verification.",
-        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF."
+        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF.",
+        "Exercises and solutions have been separated and cleaned for review, with original figures and numeric conditions retained."
       ]
     },
     {
@@ -1139,24 +1484,92 @@
           ]
         },
         {
-          "heading": "פתרונות והערכת היחידה",
-          "type": "content",
+          "heading": "פתרונות להשוואת ארבעת הזוגות",
+          "type": "solution",
           "items": [
             {
               "type": "paragraph",
-              "text": "A: הגוף השני מכסה את הגוף הראשון, אך הקצוות אינם מכסים את הטווח B:. הטווח בפנים והגוף בחוץ C:. הגרסה המחמירה נפסלת והמקלה מתקבלת אם הוגדרה מראש D:. התאוששות חלקית, ללא Piercing לפי תנאי אמצע הגוף. אין להס יק לאף זוג שי עור הצלחה."
+              "text": "A. הגוף השני בולע את הגוף הראשון, אך טווחי ה־High–Low אינם מכילים זה את זה."
             },
             {
               "type": "paragraph",
-              "text": "בדיקת יחידה.1: איזה מחירים משווה Engulfing? 2 מה ההבדל בין Harami ל Inside? 3-חשבו אמצע גוף: O=120, C=100. 4 האם סגירה ב־109 עוברת אותו?.5 מה נדרש כדי לפרש זוג כהיפוך?.6 למה טיק ושוויון חשובים?.7 האם נר עוקב לצורך אישור הופך את התבנית לשלושה נרות?"
+              "text": "B. הטווח השני נמצא בתוך הראשון, אך גופו אינו כלוא בגוף הראשון."
             },
             {
               "type": "paragraph",
-              "text": "מפתח.1: פתיחה וסגירה.2. גוף לעומת טווח.3. 110. 4. לא.5. כיוון קודם רלוונטי ופרשנות מותנית.6. הם משנים חברות במדגם.7. לא; התבנית נשארת בת נר אחד או שניים, והאישור הוא כלל החלטה נפרד. מי שמתקשה בשאלות 1-4 יחזור לאנטומיה; מי שמתקשה בשאלות 5-7 יחזור להבדלה בין עובדה לתרחיש."
+              "text": "C. הגבולות שווים: ההגדרה המחמירה נפסלת, והמקלה עשויה להתקבל אם הוגדרה מראש."
             },
             {
               "type": "paragraph",
-              "text": "מקורות R01-R06, R24: דף הכללים וההערכה פותחו לקורס."
+              "text": "D. קיימת התאוששות חלקית, אך לא מתקיים תנאי הסגירה מעבר לאמצע הגוף הדרוש ל־Piercing Line."
+            }
+          ]
+        },
+        {
+          "heading": "בדיקת היחידה",
+          "type": "exercise",
+          "items": [
+            {
+              "type": "paragraph",
+              "text": "1. אילו מחירים משווים בזיהוי Engulfing?"
+            },
+            {
+              "type": "paragraph",
+              "text": "2. מה ההבדל בין Harami ל־Inside Bar?"
+            },
+            {
+              "type": "paragraph",
+              "text": "3. חשבו את אמצע הגוף אם O=120 ו־C=100."
+            },
+            {
+              "type": "paragraph",
+              "text": "4. האם סגירה ב־109 עברה את האמצע?"
+            },
+            {
+              "type": "paragraph",
+              "text": "5. מה עוד נדרש כדי לפרש זוג נרות כתבנית היפוך?"
+            },
+            {
+              "type": "paragraph",
+              "text": "6. מדוע גודל הטיק וכללי שוויון חשובים?"
+            },
+            {
+              "type": "paragraph",
+              "text": "7. האם נר עוקב שנדרש לאישור הופך את התבנית עצמה לתבנית של שלושה נרות?"
+            }
+          ]
+        },
+        {
+          "heading": "מפתח תשובות לבדיקת היחידה",
+          "type": "solution",
+          "items": [
+            {
+              "type": "paragraph",
+              "text": "1. ב־Engulfing משווים את גופי הנרות לפי Open ו־Close."
+            },
+            {
+              "type": "paragraph",
+              "text": "2. Harami בודק הכלת גוף; Inside Bar בודק הכלת טווח High–Low."
+            },
+            {
+              "type": "paragraph",
+              "text": "3. האמצע הוא 110."
+            },
+            {
+              "type": "paragraph",
+              "text": "4. לא. 109 נמוך מ־110."
+            },
+            {
+              "type": "paragraph",
+              "text": "5. יש לבדוק את כיוון התנועה הקודמת ולנסח פרשנות מותנית, לא ודאית."
+            },
+            {
+              "type": "paragraph",
+              "text": "6. שוויון, גודל טיק וסובלנות משנים את מספר המקרים שיעברו את הסיווג."
+            },
+            {
+              "type": "paragraph",
+              "text": "7. לא. התבנית עדיין בת נר אחד או שניים; כלל האישור הוא רכיב נפרד בתהליך ההחלטה."
             }
           ]
         }
@@ -1167,7 +1580,8 @@
       "qa_status": "requires_final_formula_and_visual_check",
       "editorial_notes": [
         "Text derived only from the corresponding original PDF transcription; review requires numeric and formula verification.",
-        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF."
+        "The approved lesson illustration is a separate asset and may not illustrate every figure caption in the PDF.",
+        "Exercises and solutions have been separated and cleaned for review, with original figures and numeric conditions retained."
       ]
     }
   ]
