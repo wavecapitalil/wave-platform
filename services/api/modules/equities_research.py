@@ -515,7 +515,8 @@ def peers():
 
     def fetch_peer(p):
         try:
-            info = yf.Ticker(p).info
+            from services.peer_quotes import peer_info
+            info = peer_info(p)
 
             def g(key):
                 v = info.get(key)
@@ -560,3 +561,14 @@ def peers():
     })
 
 
+
+@bp.route('/api/sector-universe')
+def sector_universe():
+    from services.sector_universe import collect_universe, FUNDS
+    fund=request.args.get('sector','').upper()
+    if fund not in FUNDS:
+        return jsonify({'error':'Unsupported sector fund'}),400
+    try:
+        return jsonify(collect_universe(fund))
+    except Exception:
+        return jsonify({'error':'Official sector holdings unavailable or invalid'}),502

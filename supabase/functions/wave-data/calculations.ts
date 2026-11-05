@@ -36,6 +36,8 @@ export function validateConfig(config:any){if(!config||typeof config!=='object'|
 export function runMetric(def:any,expression:string,inputs:any){if((def.positive||[]).some((k:string)=>!(inputs[k]>0)))return null;if(def.key==='peg_historical'&&!(inputs.eps_annual>inputs.eps_previous))return null;return evaluate(expression,inputs,def.variables);}
 
 const MAP:any={cash:['CashAndCashEquivalentsAtCarryingValue'],short_investments:['ShortTermInvestments','MarketableSecuritiesCurrent'],receivables:['AccountsReceivableNetCurrent'],current_assets:['AssetsCurrent'],current_liabilities:['LiabilitiesCurrent'],inventory:['InventoryNet'],other_current_assets:['OtherAssetsCurrent'],equity:['StockholdersEquity'],assets:['Assets'],revenue:['RevenueFromContractWithCustomerExcludingAssessedTax','Revenues','SalesRevenueNet'],gross_profit:['GrossProfit'],operating_income:['OperatingIncomeLoss'],net_income:['NetIncomeLoss'],eps_annual:['EarningsPerShareDiluted']};
+export const COMPANY_INPUT_GROUPS=Object.freeze(Object.values(MAP) as string[][]);
+export const COMPANY_INPUT_CONCEPTS=Object.freeze([...new Set(Object.values(MAP).flat() as string[])]);
 export function buildInputs(document:any,body:any){
  const facts=document?.facts?.['us-gaap']||{},trace:any={},inputs:any={};
  const rows=(key:string,annual=false)=>MAP[key].flatMap((tag:string,priority:number)=>(facts[tag]?.units?.[key==='eps_annual'?'USD/shares':'USD']||[]).filter((r:any)=>['10-K','10-K/A','10-Q','10-Q/A'].includes(r.form)&&typeof r.val==='number'&&Number.isFinite(r.val)&&(annual?(r.start&&(Date.parse(r.end)-Date.parse(r.start))/86400000>=330&&(Date.parse(r.end)-Date.parse(r.start))/86400000<=390):!r.start)).map((r:any)=>({...r,tag,priority}))).sort((a:any,b:any)=>String(b.end).localeCompare(a.end)||a.priority-b.priority||String(b.filed).localeCompare(a.filed));
@@ -98,4 +100,17 @@ export const SHARE_CLASS_SUM = {key:'reviewed_common_share_classes',expression:'
 export function calculateReviewedShareTotal(a:number,b:number):number|null {
  if(!Number.isSafeInteger(a)||!Number.isSafeInteger(b)||a<=0||b<=0)return null;
  return runMetric(SHARE_CLASS_SUM,SHARE_CLASS_SUM.expression,{class_a:a,class_b:b});
+}
+
+// Arithmetic for explicitly sampled ratio histories and selected-peer baskets.
+export const RATIO_COMPARISON_DEFINITIONS=Object.freeze([
+ {key:'ratio_sample_mean',title:'Arithmetic mean of eligible ratio observations',expression:'total / count',variables:['total','count'],basis:'Equal-weight valid observations only; coverage and sampling basis accompany the result',read_only:true},
+ {key:'ratio_historical_market_cap',title:'Fiscal-end market capitalization',expression:'price * shares',variables:['price','shares'],basis:'Same fiscal-end price and reported common shares, USD and verified split basis',read_only:true}
+]);
+export function calculateRatioComparison(key:string,inputs:Record<string,unknown>):number|null {
+ const d=RATIO_COMPARISON_DEFINITIONS.find(d=>d.key===key);if(!d)throw Error('Unknown ratio comparison calculation');
+ if(d.variables.some(k=>typeof inputs[k]!=='number'||!Number.isFinite(inputs[k])))return null;
+ if(key==='ratio_sample_mean'&&!(Number(inputs.count)>0))return null;
+ if(key==='ratio_historical_market_cap'&&(!(Number(inputs.price)>0)||!(Number(inputs.shares)>0)))return null;
+ return evaluate(d.expression,inputs,d.variables);
 }
