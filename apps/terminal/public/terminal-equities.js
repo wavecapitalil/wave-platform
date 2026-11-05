@@ -1709,6 +1709,7 @@ function loadRatioComparisons(d,host){var node=host.querySelector('.ratio-compar
  Object.keys(ratioLabels).forEach(function(k){var row=node.querySelector('[data-ratio-key="'+k+'"]'),v=data.rows[k]||{},h=v.history||{},p=v.peers||{},s=v.sector||{};
  var history='<small class="ratio-mobile">Company 5-year history</small><strong>'+ratioValue(k,h.value)+'</strong>';
  history+='<small>'+ratioEscape(h.reason||((h.partial?'Partial · ':'')+h.count+'/5 annual samples'))+'</small>';
+ if(h.price_availability){var pa=h.price_availability;history+='<small>'+ratioEscape(pa.label)+(pa.acquired_at?' · acquired '+ratioEscape(pa.acquired_at):'')+'</small>';if(pa.retry_at)history+='<small>Retry after '+ratioEscape(pa.retry_at)+'</small>';}
  if(h.value!=null)history+='<small>'+ratioEscape(h.period_start)+' – '+ratioEscape(h.period_end)+'</small><small>Fiscal-year-end basis</small>';
  if(['gross_margin','operating_margin','net_margin','roe','roa','revenue_growth','earnings_growth'].indexOf(k)>=0)history+='<small>Annual SEC basis; current may use provider TTM</small>';
  row.querySelector('[data-ratio-history]').innerHTML=history;

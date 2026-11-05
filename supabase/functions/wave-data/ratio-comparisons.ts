@@ -26,6 +26,7 @@ export function ratioHistory(document:any,historical:any,now=Date.now()){
   for(const unit of units){const rows=tags.flatMap(tag=>(facts[tag]?.units?.[unit]||[]).map((r:any)=>({...r,_tag:tag})));for(const r of cleanPeriodRows(rows,today)){clean[r._tag]||={units:{}};clean[r._tag].units[unit]||=[];clean[r._tag].units[unit].push(r);}}
  }
  const guardedShares=buildValuationInputs(historical?.symbol||'',{document},{currency:'USD'},now).history;
+ const availability=historical?.meta?.price_availability;
  const samples:any={};RATIO_KEYS.forEach(k=>samples[k]=[]);
  for(const end of dates){
   const filtered:any={};for(const [tag,f] of Object.entries(clean) as any){filtered[tag]={...f,units:Object.fromEntries(Object.entries(f.units||{}).map(([u,rs]:any)=>[u,rs.filter((x:any)=>x.end<=end)]))};}
@@ -52,7 +53,7 @@ export function ratioHistory(document:any,historical:any,now=Date.now()){
    samples[key].push({period_end:end,value,inputs:context.trace,price_observation:obs||null,shares:shares||null,reason:value==null?(!matched?'No exact matching fiscal-end denominator':!priceValid?(obs?.price_reason||'Verified fiscal-end price basis unavailable'):key!=='peg_historical'&&!sharesValid?(shares?.reason||'Guarded entity-wide annual share count unavailable'):(obs?.reason||'Verified fiscal inputs unavailable')):null});
   }
  }
- return Object.fromEntries(RATIO_KEYS.map(key=>{const data=samples[key],valid=data.filter((x:any)=>numeric(x.value));return [key,{value:mean(valid.map((x:any)=>x.value)),count:valid.length,eligible_count:dates.length,expected_count:5,period_start:valid[0]?.period_end??null,period_end:valid.at(-1)?.period_end??null,samples:data,basis:'Arithmetic mean of fiscal-year-end annual samples; restated SEC filings',reason:valid.length?null:(unsupported[key]||'No valid annual samples'),partial:valid.length<5}];}));
+ return Object.fromEntries(RATIO_KEYS.map(key=>{const data=samples[key],valid=data.filter((x:any)=>numeric(x.value));return [key,{value:mean(valid.map((x:any)=>x.value)),count:valid.length,eligible_count:dates.length,expected_count:5,period_start:valid[0]?.period_end??null,period_end:valid.at(-1)?.period_end??null,samples:data,basis:'Arithmetic mean of fiscal-year-end annual samples; restated SEC filings',reason:valid.length?null:(unsupported[key]||'No valid annual samples'),partial:valid.length<5,...(['pe_trailing','ps_ratio','pb_ratio','peg_historical'].includes(key)&&availability?{price_availability:availability,...(availability.status==='unavailable'?{reason:availability.label+' ('+availability.error+')'}:{})}:{})}];}));
 }
 // A snapshot timestamp is only its publication envelope, never acquisition evidence.
 function observationTime(p:any,now:number){

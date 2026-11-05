@@ -28,9 +28,12 @@ export function annualHistoricalPE(cache:any,payload:any,symbol:string,now=Date.
  });
  return {symbol,data,basis:'Fiscal-year-end P/E using the latest reported annual diluted EPS; restated history, not an as-known investment backtest',forward_pe_history:null,meta:{source:'SEC EDGAR annual diluted EPS and Yahoo completed daily close',price_basis:'Provider split-adjusted close, excluding dividend adjustment',earnings_basis:'Reported full fiscal-year diluted EPS; latest filing version, which may postdate the price',split_guard:'Observation withheld for any split during or after its earnings period. No unverified EPS rebasing.',fetched_at:new Date(now).toISOString(),forward_limitation:'Historical point-in-time analyst forecast snapshots are not supplied by the current providers'}};
 }
-export async function collectHistoricalPE(cache:any,symbol:string,now=Date.now(),fetcher=fetch) {
- if(!/^[A-Z0-9][A-Z0-9.=-]{0,19}$/.test(symbol))throw Error('Invalid symbol');
- const start=Date.UTC(new Date(now).getUTCFullYear()-7,0,1);
- const r=await fetcher('https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(symbol)+'?'+new URLSearchParams({period1:String(start/1000),period2:String(Math.floor(now/1000)),interval:'1d',events:'div,splits',includeAdjustedClose:'true'}),{headers:{'User-Agent':'WaveResearch/1.0'},signal:AbortSignal.timeout(15000)});
- if(!r.ok)throw Error('Historical price provider unavailable');return annualHistoricalPE(cache,await r.json(),symbol,now);
+export function historicalPEWithAvailability(cache:any,prices:any,symbol:string,now=Date.now()) {
+ let availability=prices.availability;
+ const latestFiled=Object.values(cache?.document?.facts?.['us-gaap']||{}).flatMap((f:any)=>Object.values(f.units||{}).flatMap((rows:any)=>rows.map((r:any)=>r.filed||''))).sort().at(-1);
+ if(prices.payload&&availability.status==='retained'&&latestFiled>availability.acquired_at.slice(0,10)){
+  prices={...prices,payload:null};availability={...availability,status:'unavailable',error:'filing_newer_than_retained_prices',label:'New SEC filing requires refreshed historical price/split inputs'};
+ }
+ const result=prices.payload?annualHistoricalPE(cache,prices.payload,symbol,now):{symbol,data:[],meta:{},basis:'Fiscal-year-end annual samples unavailable while price retrieval is interrupted'};
+ return {...result,meta:{...result.meta,fetched_at:availability.acquired_at,calculated_at:new Date(now).toISOString(),sec_fetched_at:cache?.fetched_at||null,price_availability:availability}};
 }
