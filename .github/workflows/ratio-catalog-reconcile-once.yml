@@ -1,0 +1,26 @@
+name: Reconcile ratio source catalogue once
+on:
+  push:
+    branches: [codex/ratio-catalog-reconcile]
+    paths: [.github/workflows/ratio-catalog-reconcile-once.yml]
+permissions:
+  contents: write
+jobs:
+  regenerate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Regenerate and verify catalogue
+        run: |
+          python scripts/build-calculation-catalog.py
+          test "$(git hash-object supabase/functions/wave-data/calculation-catalog.ts)" = c59e48a1c1dcf67027b118e7b7cf08fe896252d8
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add supabase/functions/wave-data/calculation-catalog.ts
+          git commit -m 'Reconcile source catalogue with merged sector research sources'
+          git push origin HEAD:refs/heads/codex/ratio-catalog-reconcile
