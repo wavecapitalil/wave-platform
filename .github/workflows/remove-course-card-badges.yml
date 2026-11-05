@@ -1,0 +1,30 @@
+name: Clean course card lesson numbers
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/remove_course_card_badges.py"
+      - ".github/workflows/remove-course-card-badges.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  clean-art:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Install image-processing dependencies
+        run: python -m pip install --quiet pillow opencv-python-headless
+      - name: Reconstruct only the badge area on 26 source images
+        run: python scripts/remove_course_card_badges.py
+      - name: Publish lossless image changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "apps/terminal/public/assets/Candlesticks_Approved_Card_Art_Units_1-3 (2)/assets" apps/terminal/public/assets/candlesticks-unit4
+          if ! git diff --staged --quiet; then
+            git commit -m "fix(course): remove baked lesson numbers from cover art"
+            git push origin HEAD:main
+          fi
