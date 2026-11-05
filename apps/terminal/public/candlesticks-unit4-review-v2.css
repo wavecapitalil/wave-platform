@@ -55,3 +55,7 @@ a{color:#addbff}.top{padding:25px clamp(18px,4vw,58px);border-bottom:1px solid #
 .learning-opener-copy{flex:1;min-width:0;unicode-bidi:plaintext;text-align:right}
 .learning-opener bdi.term-ltr{direction:ltr;unicode-bidi:isolate;display:inline;font-family:Arial,system-ui,sans-serif}
 @media(max-width:850px){.learning-opener{padding:17px 18px;margin:14px 0 20px}.learning-opener .learning-opener-lead{font-size:15px;line-height:1.85}.learning-opener .learning-opener-points li{font-size:14.5px;gap:9px}}
+
+/* 4.11: show the replacement high-resolution teaching diagram at its full intended aspect ratio */
+.hero:has(img[src*="fig-4-11-main.svg"]) img{max-height:none;aspect-ratio:16/9;object-fit:contain;background:#071b30}
+@media(max-width:850px){.hero:has(img[src*="fig-4-11-main.svg"]) img{max-height:none}}
