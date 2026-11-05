@@ -104,7 +104,8 @@ async function flowLoad(){
         +flowCard('MoM Change',flowPct(d.shares_short_change_pct))
         +'</div><div data-wave-source="Cross-Asset Flows — sources" style="font-size:10px;color:#597895;margin-top:8px">'+d.symbol+' · '+((d.meta&&d.meta.note)||'')+'</div>';
     }
-    if(status) status.textContent='Updated '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    if(status) status.textContent='';
+    if(window.WaveDataLog)WaveDataLog.record('flows:'+_flowTab,{section:'Cross-Asset Flows',metric:_flowTab,source:'Venue, futures, options or short-interest feed',pulledAt:new Date().toISOString(),skipSources:true});
   }catch(e){
     content.innerHTML='<div class="callout red">Could not load '+_flowTab+' data: '+e.message+'</div>';
     if(status) status.textContent='Data unavailable';

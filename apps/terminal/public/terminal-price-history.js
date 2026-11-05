@@ -66,10 +66,11 @@
     var sourceDate=published.length===10?date(published):published.replace('T',' ').replace(/\.\d+Z$/,' UTC').replace(/Z$/,' UTC');
     var relationship=(event.category||'Company event')+' · '+(event.sentiment||'neutral');
     var timing=event.timing_label||(typeof event.timing==='string'?event.timing.replace(/_/g,' '):'');
-    var html='<div class="ph-detail-top"><span class="ph-sentiment ph-'+esc(event.sentiment||'neutral')+'"></span><div><span class="ph-tag">'+esc(relationship)+'</span><h4>'+esc(event.title)+'</h4></div></div><p>'+esc(event.summary||'')+'</p><div class="ph-event-meta">'+esc(event.source)+' · '+esc(event.timestamp_kind||'Publication')+': '+esc(sourceDate)+'</div><div class="ph-event-meta">'+(event.event_date?'Reported event date: '+esc(event.event_date)+' (may precede publication). ':'')+(event.effective_date?'Effective: '+esc(event.effective_date)+'. ':'')+esc(event.sentiment_basis||'Direction uncertain; not a causal explanation.')+'</div><div class="ph-session">'+text('Chart session','יום מסחר בגרף')+': '+date(event.date)+(timing?' · '+esc(timing):'')+'</div><div class="ph-performance"><span>'+esc(state.symbol)+': <strong>'+pct(event.change_pct)+'</strong></span>';
+    var html='<div class="ph-detail-top"><span class="ph-sentiment ph-'+esc(event.sentiment||'neutral')+'"></span><div><span class="ph-tag">'+esc(relationship)+'</span><h4>'+esc(event.title)+'</h4></div></div><p>'+esc(event.summary||'')+'</p><div class="ph-performance"><span>'+esc(state.symbol)+': <strong>'+pct(event.change_pct)+'</strong></span>';
     if(finite(event.benchmark_change_pct))html+='<span>SPY: <strong>'+pct(event.benchmark_change_pct)+'</strong></span>';
     if(finite(event.excess_change_pp))html+='<span>'+text('vs. SPY','מול SPY')+': <strong>'+(event.excess_change_pp>0?'+':'')+event.excess_change_pp.toFixed(2)+' '+text('pp','נק׳ אחוז')+'</strong></span>';
-    html+='</div>'+(event.related_sources||[]).filter(function(x){return url(x.url);}).map(function(x){return '<p><a class="ph-article" href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">'+esc(x.title)+' · '+esc(x.published_at)+'</a></p>';}).join('')+(safe?'<a class="ph-article" href="'+esc(safe)+'" target="_blank" rel="noopener noreferrer">'+text('Read original article','לכתבה המקורית')+' ↗</a>':'');
+    html+='</div>'+(event.related_sources||[]).filter(function(x){return url(x.url);}).map(function(x){return '<p><a class="ph-article" href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">'+esc(x.title)+'</a></p>';}).join('')+(safe?'<a class="ph-article" href="'+esc(safe)+'" target="_blank" rel="noopener noreferrer">'+text('Read original article','לכתבה המקורית')+' ↗</a>':'');
+    if(window.WaveDataLog)WaveDataLog.record('price-event:'+state.symbol+':'+event.id,{section:'Equity Research · Price',metric:state.symbol+' · '+(event.title||'Event'),source:event.source||'',pulledAt:sourceDate||'',notes:[timing,event.sentiment_basis,event.event_date?('Reported event date '+event.event_date):'',event.effective_date?('Effective '+event.effective_date):''].filter(Boolean).join('\n'),skipSources:true});
     el('ph-detail').innerHTML=html;
     if(state.chart){state.chart.update('none');}
     document.querySelectorAll('#resPriceHistory [data-ph-marker]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.phMarker===state.selected));});
@@ -82,7 +83,8 @@
     if(!points.length){el('ph-status').textContent='Weekly candles unavailable from this backend. Select Daily.';return;}
     var hasCandles=points.every(function(p){return finite(p.open)&&finite(p.high)&&finite(p.low);});
     el('ph-status').textContent='';el('ph-body').hidden=false;el('ph-chart').setAttribute('aria-label',data.symbol+' '+state.interval+' '+(hasCandles?'candlestick chart':'closing-price chart')+'. Dated event controls and article details follow alongside.');
-    el('ph-period').textContent=data.symbol+' · '+date(points[0].date)+' – '+date(last.date);
+    el('ph-period').textContent=data.symbol;
+    if(window.WaveDataLog)WaveDataLog.record('price-history-window:'+data.symbol,{section:'Equity Research · Price',metric:data.symbol+' · '+state.range,source:(data.meta&&data.meta.price_source)||'Yahoo Finance',coverage:date(points[0].date)+' – '+date(last.date),skipSources:true});
     el('ph-latest').textContent=money(last.close);
     el('ph-change').textContent=pct(s.change_pct)+' '+text('in period','בתקופה');el('ph-change').className=finite(s.change_pct)?s.change_pct>=0?'ph-positive':'ph-negative':'';
     var basisLabel=data.price_basis==='dividend_and_split_adjusted_close'?text('Split & dividend adjusted','מותאם לפיצולים ולדיבידנדים'):data.price_basis==='split_adjusted_close'?text('Split adjusted','מותאם לפיצולים'):'';
@@ -96,7 +98,7 @@
     el('ph-marker-rail').replaceChildren();
     var coverage=data.meta&&data.meta.news_coverage||{},sources=coverage.sources||[];
     var gaps=sources.filter(function(c){return !['available','empty'].includes(c.status);}).length;
-    el('ph-coverage').textContent=text('Gray marks uncertain sentiment.','אפור מסמן סנטימנט לא ודאי.');
+    el('ph-coverage').textContent='';
     if(window.WaveDataLog)WaveDataLog.record('price-history-coverage:'+data.symbol,{section:'Equity Research · Price',metric:data.symbol+' · Price & events',source:(data.meta&&data.meta.price_source)||'Yahoo Finance',pulledAt:(data.meta&&data.meta.fetched_at)||'',coverage:allEvents.length+' plotted events'+(awaiting.length?' · '+awaiting.length+' awaiting a session':''),notes:(hasCandles?(state.interval==='weekly'?'Weekly OHLC. The latest week may be partial.':'Daily OHLC.'):'Closing-price line. OHLC is unavailable.')+' Partial archive: newsroom history has gaps'+(gaps?' · '+gaps+' source gap(s)':'')+'.',skipSources:true});
 
     var plotted={id:'waveEventPositions',afterDraw:function(chart){

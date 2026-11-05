@@ -57,7 +57,6 @@
     saved=data;register(data);host.replaceChildren();host.dir=isHebrew()?'rtl':'ltr';host.lang=isHebrew()?'he':'en';
     var head=node('div',null,'gold-expectations-heading');
     head.appendChild(node('h2','Central-bank gold expectations'));host.appendChild(head);
-    host.appendChild(node('p','How respondents expect their own institution’s gold reserves to change over the next 12 months (% of respondents)','gold-expectations-label'));
     var rows=data.rows.slice().sort(function(a,b){return a.year-b.year;});
     if(!rows.length){host.appendChild(node('p',data.statusText||'Historical survey series is not available yet.','gold-expectations-status'));return;}
     var wrap=node('div',null,'gold-expectations-chart');

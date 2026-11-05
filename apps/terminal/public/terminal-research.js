@@ -20,7 +20,8 @@
  el('er-panel-compare').innerHTML='<div id="resPeersSection"></div><div id="er-chart-compare"></div>';
  el('er-panel-holders').innerHTML='<div id="erHolders" class="er-card"></div>';
  ['income','balance','cash','dilution'].forEach(function(t){el('er-panel-'+t).innerHTML='<div id="er-chart-'+t+'"></div>';});
- el('er-panel-technical').innerHTML=card('Technical configuration pending','<p>Indicator rules, weights and score thresholds have not been approved. No technical score or trading signal is calculated.</p><div class="er-kv"><span>Rules</span><strong>Not configured</strong></div><div class="er-kv"><span>Weights</span><strong>Not configured</strong></div>');
+ el('er-panel-technical').innerHTML=card('Technical','<div class="er-kv"><span>Rules</span><strong>—</strong></div><div class="er-kv"><span>Weights</span><strong>—</strong></div>');
+if(window.WaveDataLog)WaveDataLog.record('equity:technical',{section:'Equity Research · Technical',metric:'Technical score',source:'Not configured',notes:'Indicator rules, weights and score thresholds have not been approved. No technical score or trading signal is calculated.',skipSources:true});
  // One retained engine preserves multi-metric controls, separate units, ranges,
  // annual/quarterly, absolute/YoY, comparison, tables and PNG export.
  var old=el('page-fundchart'),engine=old.querySelector('.welcome-wrap');engine.id='erFinancialEngine';engine.classList.add('er-financial');engine.querySelector('.page-header').remove();el('er-chart-income').appendChild(engine);

@@ -22,3 +22,4 @@
 .data-log-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .data-log-links a{color:#93c5fd;font-size:11px}
 .data-log-empty{color:#94a3b8;font-size:13px;margin:0}
+.vw-footnote,.vw-assumption-note,.vw-change-sentence{display:none!important}

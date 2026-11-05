@@ -36,7 +36,7 @@ function openStockDetail(symbol, name){
   document.getElementById('stockDetailMcap').textContent = '—';
   document.getElementById('stockDetailIndustry').textContent = '—';
   document.getElementById('stockDetailContent').innerHTML = '<div style="color:#334155;font-size:12px;padding:30px 0 20px">Loading KPIs...</div>';
-  document.getElementById('stockDetailStatus').textContent = 'Fetching data from yfinance...';
+  document.getElementById('stockDetailStatus').textContent = 'Loading…';
   fetch(API + '/api/stock-info?symbol=' + symbol)
     .then(function(r){ return r.json(); })
     .then(function(d){
@@ -1351,9 +1351,9 @@ async function loadBreadthGauge(){
     pill.textContent = label;
     pill.style.color = color;
     pill.style.background = bg;
-    document.getElementById('breadthInterpret').textContent = interpret;
-    document.getElementById('breadthStatus').textContent = '● Live';
-    document.getElementById('breadthStatus').style.color = '#22c55e';
+    document.getElementById('breadthInterpret').textContent = '';
+    document.getElementById('breadthStatus').textContent = '';
+    if(window.WaveDataLog)WaveDataLog.record('home:breadth',{section:'Home',metric:'SPY vs RSP',source:'Daily change',notes:interpret,skipSources:true});
   }catch(e){
     document.getElementById('breadthStatus').textContent = 'Error loading';
   }
@@ -1414,7 +1414,8 @@ async function loadBreadthPage(){
     pill.textContent = verdict;
     pill.style.color = verdictColor;
     pill.style.background = verdictBg;
-    document.getElementById('bpInterpret').textContent = interpret;
+    document.getElementById('bpInterpret').textContent = '';
+    if(window.WaveDataLog)WaveDataLog.record('breadth:interpretation',{section:'Market Breadth',metric:'Cap-weight vs equal-weight',source:'SPY and RSP daily change',notes:interpret,skipSources:true});
 
     // ── Cap Tier bars ──
     var tiers = [
@@ -1476,7 +1477,8 @@ async function loadBreadthPage(){
     } else {
       diagText = 'Cap tiers moving in line with SPY — no significant breadth divergence today.';
     }
-    document.getElementById('bpDiagnosis').textContent = diagText;
+    document.getElementById('bpDiagnosis').textContent = '';
+    if(window.WaveDataLog)WaveDataLog.record('breadth:diagnosis',{section:'Market Breadth',metric:'Cap tiers',source:'QQQ, SPY, RSP, MDY, IWM',notes:diagText,skipSources:true});
 
     // ── Summary cards ──
     var qvs = qqqPct - spyPct, mvs = mdyPct - spyPct, ivs = iwmPct - spyPct;
@@ -1491,8 +1493,8 @@ async function loadBreadthPage(){
     el.textContent = (ivs >= 0 ? '+' : '') + ivs.toFixed(2) + '%';
     el.style.color = ivs >= 0 ? 'var(--green)' : 'var(--red)';
 
-    document.getElementById('bpStatus').textContent =
-      'Updated ' + new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}) + ' · QQQ / SPY / RSP / MDY / IWM';
+    document.getElementById('bpStatus').textContent = '';
+    if(window.WaveDataLog)WaveDataLog.record('breadth:pull',{section:'Market Breadth',metric:'QQQ / SPY / RSP / MDY / IWM',source:'Daily change',pulledAt:new Date().toISOString(),skipSources:true});
   }catch(e){
     document.getElementById('bpStatus').textContent = 'Error loading';
     document.getElementById('bpTierBars').innerHTML = '<div style="color:#ef4444;font-size:12px;padding:20px 0">Error: ' + e.message + '</div>';
@@ -1532,8 +1534,8 @@ async function loadSectors(){
         '</div>';
     });
     document.getElementById('sectorBars').innerHTML = html;
-    document.getElementById('sectorsUpdated').textContent =
-      'Updated ' + new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}) + ' · Click any sector to drill down';
+    document.getElementById('sectorsUpdated').textContent = '';
+    if(window.WaveDataLog)WaveDataLog.record('sectors:pull',{section:'Sector Strength',metric:'Sector performance',source:'Sector ETFs',pulledAt:new Date().toISOString(),skipSources:true});
   }catch(e){
     document.getElementById('sectorBars').innerHTML = '<div style="color:#ef4444;font-size:12px;padding:20px 0">Error: ' + e.message + '</div>';
     document.getElementById('sectorsUpdated').textContent = 'Failed to load';

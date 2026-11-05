@@ -40,10 +40,10 @@ function renderGsrMetrics(d){
   var z=d.z_score;
 
   document.getElementById('gsrCurrent').textContent=current!=null?current.toFixed(1):'—';
-  document.getElementById('gsrCurrentSub').textContent=d.end_date||'';
+  document.getElementById('gsrCurrentSub').textContent='';
   document.getElementById('gsrMeanLabel').textContent=(d.n_years||10)+'Y Mean';
   document.getElementById('gsrMean').textContent=mean!=null?mean.toFixed(1):'—';
-  document.getElementById('gsrMeanSub').textContent=d.start_date ? d.start_date.slice(0,4)+'–present' : '';
+  document.getElementById('gsrMeanSub').textContent='';
   document.getElementById('gsrVsMean').textContent=percentile!=null?percentile.toFixed(0)+'th':'—';
   document.getElementById('gsrSignal').textContent=z!=null ? 'z-score '+(z>=0?'+':'')+z.toFixed(2)+'σ' : '';
   document.getElementById('gsrGold').textContent=d.gold_price!=null?'$'+d.gold_price.toLocaleString(undefined,{maximumFractionDigits:0}):'—';
@@ -53,19 +53,12 @@ function renderGsrMetrics(d){
   if(verdict) verdict.style.display='none';
 
   var banner=document.getElementById('gsrBanner');
-  if(!banner) return;
-  banner.style.display='block';
-  banner.style.background='rgba(85,170,255,.06)';
-  banner.style.border='1px solid rgba(85,170,255,.18)';
-  banner.style.color='#b9d9f4';
-
+  if(banner){banner.style.display='none';banner.textContent='';}
   var relation='near the center of its 10-year distribution';
-  if(percentile!=null && percentile>=80) relation='high relative to its 10-year distribution; silver is relatively cheap versus gold compared with most observations in the sample';
-  else if(percentile!=null && percentile<=20) relation='low relative to its 10-year distribution; gold is relatively cheap versus silver compared with most observations in the sample';
-
+  if(percentile!=null && percentile>=80) relation='high relative to its 10-year distribution';
+  else if(percentile!=null && percentile<=20) relation='low relative to its 10-year distribution';
   var meanText=(pctDiff==null)?'':(' It is '+Math.abs(pctDiff).toFixed(1)+'% '+(pctDiff>=0?'above':'below')+' the 10-year mean.');
-  banner.innerHTML='<b>Historical context:</b> The Gold/Silver Ratio is '+relation+'.'+meanText
-    +'';
+  if(window.WaveDataLog)WaveDataLog.record('metals:gsr-context',{section:'Commodities · Gold / Silver',metric:'Gold/Silver ratio',source:(d.meta&&d.meta.source)||'Yahoo Finance',pulledAt:new Date().toISOString(),coverage:(d.n_years||10)+' years'+(d.start_date?' · '+d.start_date+' – '+(d.end_date||''):''),notes:'The ratio is '+relation+'.'+meanText,skipSources:true});
 
   WaveSources.record('metals:methodology','Gold / Silver — methodology','Descriptive relative-value context based on the 10-year distribution; not a mean-reversion or trade signal.');
   var meta=document.getElementById('gsrMeta');

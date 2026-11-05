@@ -25,8 +25,8 @@ async function loadCryptoDash(){
     loadCohortChart(),
     loadOnchainChart(),
   ]);
-  document.getElementById('cdLastUpdated').textContent =
-    'Updated ' + new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('cdLastUpdated').textContent = '';
+  if(window.WaveDataLog)WaveDataLog.record('crypto:dashboard',{section:'Crypto Dashboard',metric:'Market totals',source:'Crypto market feed',pulledAt:new Date().toISOString(),skipSources:true});
 }
 
 async function loadCryptoGlobal(){
@@ -639,8 +639,8 @@ function _renderOnchainLineChart(data){
   });
 
   var kpiName = {tvl:'TVL',dex_volume:'DEX Volume',fees:'Fees',revenue:'Revenue'}[_onchainKpi];
-  document.getElementById('onchainMeta').textContent =
-    protocols.length+' protocols · '+_onchainDays+'D history · '+kpiName;
+  document.getElementById('onchainMeta').textContent = '';
+  if(window.WaveDataLog)WaveDataLog.record('crypto:onchain-coverage',{section:'Crypto Dashboard',metric:kpiName,source:'DeFiLlama',coverage:protocols.length+' protocols · '+_onchainDays+'D',skipSources:true});
   WaveSources.record('crypto:onchain','On-chain — sources','DeFiLlama · '+kpiName+' · '+_onchainDays+'D history',[{title:'DeFiLlama',url:'https://defillama.com/'}]);
 }
 
@@ -686,8 +686,8 @@ async function loadScannerData(){
     var d = await r.json();
     scannerData = d.chains || [];
     var now = new Date();
-    document.getElementById('scannerStatus').textContent = '● Live · Updated ' + now.toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'});
-    document.getElementById('scannerStatus').style.color = '#22c55e';
+    document.getElementById('scannerStatus').textContent = '';
+    if(window.WaveDataLog)WaveDataLog.record('crypto:scanner',{section:'Crypto Scanner',metric:'Chain screen',source:'CoinGecko, DeFiLlama, GitHub',pulledAt:now.toISOString(),coverage:(scannerData.length||0)+' chains',skipSources:true});
     renderScannerTable();
   }catch(e){
     document.getElementById('scannerStatus').textContent = 'Error loading data';

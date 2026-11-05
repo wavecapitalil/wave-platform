@@ -13,7 +13,7 @@
     var el = node('button', cls, label); el.type = 'button';
     el.addEventListener('click', action); return el;
   }
-  function sources() { if (typeof navigate === 'function') navigate('sources'); }
+  function sources() { if (typeof navigate === 'function') navigate('data-log'); }
   function dateText(date) {
     return new Date(date + 'T12:00:00Z').toLocaleDateString('he-IL', {day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Jerusalem'});
   }
@@ -196,7 +196,7 @@
       var body=node('div','brief-story-body');(s.paragraphs||[]).forEach(function(p){appendParagraph(body,p);});section.appendChild(body);article.appendChild(section);
     });
     var footer=node('footer','brief-paper-footer');
-    footer.appendChild(button('מקורות, שיטות ומגבלות הכיסוי',sources,'brief-source-link'));
+    footer.appendChild(button('יומן נתונים',sources,'brief-source-link'));
     footer.appendChild(node('span','',dateText(data.date)));article.appendChild(footer);
     var host=document.getElementById('briefArticle');
     var rail=node('aside','brief-reader-rail');rail.dir='rtl';

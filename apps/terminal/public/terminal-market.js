@@ -211,7 +211,7 @@ function drawRatioChart(btcPrices, goldPrices, labels, periodLabel){
       }
     }
   });
-  if(periodLabel) document.getElementById('ratioPeriodLabel').textContent = periodLabel;
+  if(periodLabel){document.getElementById('ratioPeriodLabel').textContent='';if(window.WaveDataLog)WaveDataLog.record('btcgold:period',{section:'BTC / Gold',metric:'Ratio history',source:'BTC and GLD',coverage:periodLabel,skipSources:true});}
 }
 
 async function loadRatioPeriod(period, btn){
