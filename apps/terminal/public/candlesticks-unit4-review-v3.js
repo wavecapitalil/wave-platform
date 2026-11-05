@@ -16,12 +16,12 @@ function textBlock(host,value){
 }
 function drawCaption(host,label,lesson,index){
  const figure=elem('figure','internal-figure');
- const isFirst=index===1;
+ const isFirst=index===1 || (lesson===1&&index===2);
  const img=elem('img');img.loading='lazy';img.decoding='async';
  img.src=isFirst?root+'internal/fig-4-'+String(lesson).padStart(2,'0')+'-approved.webp':'';
- if(lesson===1&&isFirst)img.src=root+'fig-4-1-01.svg';
+ if(lesson===1&&index===1)img.src=root+'fig-4-1-01.svg';
  img.alt='איור לימודי לשיעור 4.'+lesson;
- const fallback=elem('div','figure-pending',isFirst&&lesson!==1?'האיור אושר ונמצא בחבילת הנכסים; ממתין להעלאת הקובץ ל־GitHub.':'נדרשת השלמת איור פנימי נוסף מתוך חומר המקור.');
+ const fallback=elem('div','figure-pending',isFirst&&(lesson!==1||index===2)?'האיור אושר ונמצא בחבילת הנכסים; ממתין להעלאת הקובץ ל־GitHub.':'נדרשת השלמת איור פנימי נוסף מתוך חומר המקור.');
  if(!img.src)img.style.display='none';
  else {img.onerror=()=>{img.style.display='none';fallback.hidden=false};img.onload=()=>{fallback.hidden=true};}
  figure.append(img,fallback);
