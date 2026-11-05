@@ -54,37 +54,57 @@ export function ratioHistory(document:any,historical:any,now=Date.now()){
  }
  return Object.fromEntries(RATIO_KEYS.map(key=>{const data=samples[key],valid=data.filter((x:any)=>numeric(x.value));return [key,{value:mean(valid.map((x:any)=>x.value)),count:valid.length,eligible_count:dates.length,expected_count:5,period_start:valid[0]?.period_end??null,period_end:valid.at(-1)?.period_end??null,samples:data,basis:'Arithmetic mean of fiscal-year-end annual samples; restated SEC filings',reason:valid.length?null:(unsupported[key]||'No valid annual samples'),partial:valid.length<5}];}));
 }
+// A snapshot timestamp is only its publication envelope, never acquisition evidence.
+function observationTime(p:any,now:number){
+ const raw=p?.acquired_at;
+ if(typeof raw!=='string'||!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(raw))return {reason:'Original UTC acquisition timestamp unavailable (legacy or invalid observation)'};
+ const ts=Date.parse(raw);
+ if(!Number.isFinite(ts))return {reason:'Original UTC acquisition timestamp invalid'};
+ if(ts>now||now-ts>48*3600000)return {reason:'Original acquisition timestamp is future or older than 48 hours'};
+ return {ts,as_of:new Date(ts).toISOString(),reason:null};
+}
+function freshSnapshot(row:any,now:number){return Date.parse(row?.expires_at||'')>now;}
 export function ratioComparisons(history:any,peerRow:any,symbol:string,custom:string[]=[],now=Date.now()){
  const payload=peerRow?.data?.payload||peerRow?.data,peers=payload?.peers||[];
- const age=now-Date.parse(peerRow?.fetched_at||''),fresh=age>=0&&age<=48*3600000&&Date.parse(peerRow?.expires_at||'')>now;
+ const fresh=freshSnapshot(peerRow,now);
  const universe=[...new Set(peers.map((p:any)=>p.symbol).filter((s:any)=>typeof s==='string'&&s!==symbol))];
+ const observed=universe.map(s=>peers.find((p:any)=>p.symbol===s)).map(p=>({...p,...observationTime(p,now)}));
+ const excluded=observed.filter(p=>p.reason).map(p=>({symbol:p.symbol,reason:p.reason}));
  const rows:any={};for(const key of RATIO_KEYS){
   let h=history?.[key]||gap('Historical data unavailable'),sector:any=gap('A verified whole-sector universe is not available');
   let peer:any=gap(key==='pe_forward'?'Provider forward P/E does not match the current fiscal-year consensus horizon':'Matching selected-peer inputs are not supplied');
   if(peerKeys.includes(key)){
-   const valid=universe.map(s=>peers.find((p:any)=>p.symbol===s)).filter((p:any)=>numeric(p[key])&&(key!=='pe_trailing'||p[key]>0));
-   peer={value:fresh?mean(valid.map((p:any)=>p[key])):null,count:fresh?valid.length:0,eligible_count:universe.length,universe,valid_symbols:fresh?valid.map((p:any)=>p.symbol):[],observations:fresh?valid.map((p:any)=>({symbol:p.symbol,value:p[key],as_of:peerRow.fetched_at})):[],as_of:peerRow?.fetched_at||null,label:(payload?.subsector||'Selected')+' peers · mean',reason:!fresh?'Selected-peer snapshot missing or stale':valid.length?null:'No eligible peer values',basis:key==='pe_trailing'?'Provider trailing P/E; positive earnings only':'Provider ratio definition; same field as uncustomized current value'};
+   const valid=observed.filter(p=>!p.reason&&numeric(p[key])&&(key!=='pe_trailing'||p[key]>0));
+   const dates=fresh?valid.map(p=>p.as_of).sort():[];
+   peer={value:fresh?mean(valid.map(p=>p[key])):null,count:fresh?valid.length:0,eligible_count:universe.length,universe,valid_symbols:fresh?valid.map(p=>p.symbol):[],observations:fresh?valid.map(p=>({symbol:p.symbol,value:p[key],as_of:p.as_of})):[],excluded_observations:excluded,as_of_start:dates[0]||null,as_of:dates.at(-1)||null,label:(payload?.subsector||'Selected')+' peers · mean',reason:!fresh?'Selected-peer snapshot missing or expired':valid.length?null:excluded.length?'Original acquisition timestamps unavailable, invalid or stale; observations excluded':'No eligible peer values',basis:key==='pe_trailing'?'Provider trailing P/E; positive earnings only':'Provider ratio definition; same field as uncustomized current value'};
   }
   if(custom.includes(key)){h={...h,value:null,reason:'Current owner formula is customized; baseline history is incompatible'};peer={...peer,value:null,reason:'Current owner formula is customized; provider peer ratios are incompatible'};}
   rows[key]={history:h,sector,peers:peer};
  }
- return {symbol,rows,generated_at:new Date(now).toISOString(),version:'ratio-comparisons-v1',sector:payload?.sector||null,methodology:'History uses up to five annual fiscal-end samples in the trailing five calendar years, latest restated SEC filings and verified same-date price/split/currency inputs. It is not a daily/monthly average or as-known backtest. Annual margin/return history is labeled separately from current provider TTM definitions. Selected peers exclude the target and are not a whole-sector benchmark. Peer means use one stored snapshot (maximum age 48 hours, unexpired); no on-demand peer fan-out. Current values retain their own timestamp. Constituent timestamps identify cache collection, not underlying financial reporting dates or synchronized market quotes. The provider does not supply verified per-metric fiscal dates here; fiscal ends can differ. Collection ranges are shown, and no premium/discount or valuation verdict is calculated.'};
+ return {symbol,rows,generated_at:new Date(now).toISOString(),version:'ratio-comparisons-v2',sector:payload?.sector||null,methodology:'History uses up to five annual fiscal-end samples in the trailing five calendar years, latest restated SEC filings and verified same-date price/split/currency inputs. It is not a daily/monthly average or as-known backtest. Annual margin/return history is labeled separately from current provider TTM definitions. Selected peers exclude the target and are not a whole-sector benchmark. Constituent freshness and deduplication use original provider acquisition times (maximum age 48 hours) inside unexpired snapshots; cache reuse and publication never reset acquisition time. Legacy observations without verified acquisition timestamps are excluded. No on-demand peer fan-out. Current values retain their own timestamp. Constituent timestamps identify provider response acquisition, not underlying financial reporting dates or synchronized market quotes. The provider does not supply verified per-metric fiscal dates here; fiscal ends can differ. Acquisition ranges are shown, and no premium/discount or valuation verdict is calculated.'};
 }
 
 export function sectorComparisons(universe:any,snapshotRows:any[],symbol:string,custom:string[]=[],now=Date.now()){
  const membership=universe?.members||[],members=membership.filter((s:string)=>s!==symbol);
  const age=now-Date.parse(universe?.as_of||'');
  const universeOK=membership.includes(symbol)&&age>=0&&age<=7*86400000;
- const observations=new Map<string,any>();let target:any=null;
- for(const row of snapshotRows){const ts=Date.parse(row.fetched_at||'');if(!(now-ts>=0&&now-ts<=48*3600000&&Date.parse(row.expires_at||'')>now))continue;
-  for(const p of (row.data?.payload||row.data)?.peers||[]){if(p.symbol===symbol&&(!target||ts>target.ts))target={...p,ts,as_of:row.fetched_at};if(!members.includes(p.symbol))continue;const prev=observations.get(p.symbol);if(!prev||ts>prev.ts)observations.set(p.symbol,{...p,ts,as_of:row.fetched_at});}
+ const observations=new Map<string,any>(),excluded=new Map<string,any>();let target:any=null;
+ for(const row of snapshotRows){if(!freshSnapshot(row,now))continue;
+  for(const p of (row.data?.payload||row.data)?.peers||[]){
+   if(p.symbol!==symbol&&!members.includes(p.symbol))continue;
+   const time=observationTime(p,now);
+   if(time.reason){if(p.symbol!==symbol)excluded.set(p.symbol,{symbol:p.symbol,reason:time.reason});continue;}
+   if(p.symbol===symbol){if(!target||time.ts!>target.ts)target={...p,...time};continue;}
+   const prev=observations.get(p.symbol);if(!prev||time.ts!>prev.ts)observations.set(p.symbol,{...p,...time});
+  }
  }
+ for(const s of observations.keys())excluded.delete(s);
  return Object.fromEntries(RATIO_KEYS.map(key=>{
   const valid=[...observations.values()].filter(p=>numeric(p[key])&&(key!=='pe_trailing'||p[key]>0));
   const supported=peerKeys.includes(key),eligible=universeOK&&supported&&!custom.includes(key);
-  const dates=valid.map(p=>p.as_of).sort();
-  return [key,{value:eligible?mean(valid.map(p=>p[key])):null,count:eligible?valid.length:0,eligible_count:members.length,universe:members,valid_symbols:eligible?valid.map(p=>p.symbol):[],observations:eligible?valid.map(p=>({symbol:p.symbol,value:p[key],as_of:p.as_of})):[],target_snapshot_value:eligible&&numeric(target?.[key])&&dates.length&&dates.every(d=>d===target.as_of)?target[key]:null,holdings_as_of:universe?.as_of||null,source_url:universe?.source_url||null,as_of_start:dates[0]||null,as_of:dates.at(-1)||null,label:(universe?.fund||'Sector')+' covered-constituent mean',partial:valid.length<members.length,
-   reason:!universeOK?'No current official sector-fund membership for this ticker':custom.includes(key)?'Current owner formula is incompatible with provider constituent ratios':!supported?(key==='pe_forward'?'Constituent forecasts do not match the current fiscal-year horizon':'Matching constituent inputs are not present in the scheduled cache'):!valid.length?'No fresh compatible constituent observations in the scheduled cache':null,
-   basis:'Equal-weight arithmetic mean of available official sector-fund equity constituents, excluding target. Incomplete coverage is not the full sector mean. Positive earnings required for trailing P/E; no fund-level forward or harmonic multiple reused.'}];
+  const dates=eligible?valid.map(p=>p.as_of).sort():[];
+  return [key,{value:eligible?mean(valid.map(p=>p[key])):null,count:eligible?valid.length:0,eligible_count:members.length,universe:members,valid_symbols:eligible?valid.map(p=>p.symbol):[],observations:eligible?valid.map(p=>({symbol:p.symbol,value:p[key],as_of:p.as_of})):[],excluded_observations:[...excluded.values()],target_snapshot_value:eligible&&numeric(target?.[key])&&dates.length&&dates.every(d=>d===target.as_of)?target[key]:null,holdings_as_of:universe?.as_of||null,source_url:universe?.source_url||null,as_of_start:dates[0]||null,as_of:dates.at(-1)||null,label:(universe?.fund||'Sector')+' covered-constituent mean',partial:valid.length<members.length,
+   reason:!universeOK?'No current official sector-fund membership for this ticker':custom.includes(key)?'Current owner formula is incompatible with provider constituent ratios':!supported?(key==='pe_forward'?'Constituent forecasts do not match the current fiscal-year horizon':'Matching constituent inputs are not present in the scheduled cache'):!valid.length?(excluded.size?'Original acquisition timestamps unavailable, invalid or stale; observations excluded':'No fresh compatible constituent observations in the scheduled cache'):null,
+   basis:'Equal-weight arithmetic mean of available official sector-fund equity constituents, excluding target. Incomplete coverage is not the full sector mean. Positive earnings required for trailing P/E; no fund-level forward or harmonic multiple reused. Original provider acquisition times govern freshness and deduplication; publication timestamps do not rejuvenate cached values.'}];
  }));
 }

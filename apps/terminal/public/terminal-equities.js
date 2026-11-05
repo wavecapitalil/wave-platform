@@ -1714,9 +1714,9 @@ function loadRatioComparisons(d,host){var node=host.querySelector('.ratio-compar
  row.querySelector('[data-ratio-history]').innerHTML=history;
  var sector='<small class="ratio-mobile">Sector comparison</small><strong>'+ratioValue(k,s.value)+'</strong><small>'+ratioEscape(s.label||'Sector cohort')+'</small><small>'+ratioEscape(s.reason||((s.partial?'Partial · ':'')+s.count+'/'+s.eligible_count+' constituents · excludes '+d.symbol))+'</small>';
  if(s.target_snapshot_value!=null)sector+='<small>'+ratioEscape(d.symbol)+' at same snapshot: '+ratioValue(k,s.target_snapshot_value)+'</small>';
- if(s.value!=null)sector+='<small>Holdings '+ratioEscape(s.holdings_as_of)+' · collected '+ratioEscape(s.as_of_start)+' – '+ratioEscape(s.as_of)+'</small>';
+ if(s.value!=null)sector+='<small>Holdings '+ratioEscape(s.holdings_as_of)+' · acquired '+ratioEscape(s.as_of_start)+' – '+ratioEscape(s.as_of)+'</small>';
  sector+='<strong class="ratio-peer-value">'+ratioValue(k,p.value)+'</strong><small>'+ratioEscape(p.label||'Selected peers')+'</small><small>'+ratioEscape(p.reason||p.count+'/'+p.eligible_count+' eligible peers · excludes '+d.symbol)+'</small>';
- if(p.value!=null)sector+='<small>Collected '+ratioEscape(p.as_of)+'</small>';
+ if(p.value!=null)sector+='<small>Acquired '+ratioEscape(p.as_of_start)+' – '+ratioEscape(p.as_of)+'</small>';
  row.querySelector('[data-ratio-sector]').innerHTML=sector;
  });
  if(window.WaveSources)WaveSources.record('ratio-comparisons:'+d.symbol,d.symbol+' ratio comparison methodology',data.methodology+'\n'+JSON.stringify(data.rows,null,2),[]);
