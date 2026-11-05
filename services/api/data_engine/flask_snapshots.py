@@ -130,6 +130,12 @@ def route_specs():
         specs.append(_spec("/api/analyst-estimates", {"symbol":symbol}, "equity_research", 360, optional=True))
         specs.append(_spec("/api/insider-activity", {"symbol":symbol}, "equity_research", 720, optional=True))
         specs.append(_spec("/api/correlation", {"symbol":symbol,"benchmark":"SPY"}, "equity_research", 60, optional=True))
+
+    # One daily snapshot per configured subsector supplies its whole curated
+    # peer basket. Bounded by SECTOR_DETAIL; no request-time provider fan-out.
+    sector_representatives = {symbols[0] for sector in SECTOR_DETAIL.values()
+                              for symbols in sector['subsectors'].values() if symbols}
+    for symbol in sorted(set(COMMON_EQUITIES) | sector_representatives):
         specs.append(_spec("/api/peers", {"symbol":symbol}, "equity_research", 1440, optional=True))
 
     # Ticker Mover search has no fixed default; cache the most-used research universe.

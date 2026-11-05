@@ -5,6 +5,9 @@ import re
 import zipfile
 import xml.etree.ElementTree as ET
 import requests
+import json
+from pathlib import Path
+REGISTRY=json.loads(Path(__file__).with_name("sector_equity_registry.json").read_text())
 
 FUNDS = {'XLK':'Technology','XLC':'Communication Services','XLY':'Consumer Discretionary','XLP':'Consumer Staples','XLE':'Energy','XLF':'Financials','XLV':'Health Care','XLI':'Industrials','XLB':'Materials','XLRE':'Real Estate','XLU':'Utilities'}
 def source_url(fund):
@@ -32,10 +35,14 @@ def parse_holdings(content, fund, now=None):
     members=[]
     for row in rows[header+1:]:
         ticker=row.get('B','')
-        if re.fullmatch(r'[A-Z]{1,5}(?:[.\-][A-Z])?',ticker) and row.get('H')=='USD' and row.get('C') and float(row.get('G') or 0)>0 and not re.search(r'\b(CASH|FUTURE|TRUST|MONEY MARKET)\b',row.get('A','')):
-            members.append(ticker.replace('.','-'))
+        if re.fullmatch(r'[A-Z]{1,5}(?:[.\-][A-Z])?',ticker) and row.get('H')=='USD' and re.fullmatch(r'[A-Z0-9]{9}',row.get('C','')) and float(row.get('G') or 0)>0 and not re.search(r'\b(CASH|FUTURE|MONEY MARKET)\b',row.get('A','')):
+            symbol=ticker.replace('.','-')
+            identity=REGISTRY['funds'][fund].get(symbol)
+            if not identity or identity['identifier']!=row['C'] or identity['name']!=row['A']:
+                raise ValueError('Unreviewed holding identity; equity classification requires review: '+symbol)
+            members.append(symbol)
     if len(set(members))!=len(members) or not 15<=len(members)<=150: raise ValueError('Invalid or incomplete equity membership')
-    return {'fund':fund,'sector':FUNDS[fund],'as_of':asof.date().isoformat(),'members':members,'source_url':source_url(fund),'fetched_at':now.isoformat(),'basis':'Official fund USD equity holdings; cash, derivatives and cash-management holdings excluded'}
+    return {'fund':fund,'sector':FUNDS[fund],'as_of':asof.date().isoformat(),'members':members,'source_url':source_url(fund),'fetched_at':now.isoformat(),'classification_reviewed_as_of':REGISTRY['reviewed_as_of'],'basis':REGISTRY['basis']}
 
 def collect_universe(fund):
     response=requests.get(source_url(fund),timeout=25)

@@ -1,4 +1,5 @@
-import {DEFINITIONS,buildInputs,runMetric,calculateRatioComparison} from './calculations.ts';
+import {buildValuationInputs} from './valuation-inputs.ts';
+import {COMPANY_INPUT_GROUPS,DEFINITIONS,buildInputs,runMetric,calculateRatioComparison} from './calculations.ts';
 export const RATIO_KEYS=['pe_trailing','pe_forward','peg_ratio','peg_historical','ps_ratio','pb_ratio','ev_ebitda','gross_margin','operating_margin','net_margin','roe','roa','debt_to_equity','current_ratio','quick_ratio','dividend_yield','payout_ratio','revenue_growth','earnings_growth'];
 const numeric=(v:any)=>typeof v==='number'&&Number.isFinite(v);
 const mean=(xs:number[])=>calculateRatioComparison('ratio_sample_mean',{total:xs.reduce((a,b)=>a+b,0),count:xs.length});
@@ -6,15 +7,28 @@ const gap=(reason:string)=>({value:null,count:0,reason});
 const annualKeys=['current_ratio','quick_ratio','gross_margin','operating_margin','net_margin','roe','roa','revenue_growth','earnings_growth'];
 const peerKeys=['pe_trailing','gross_margin','operating_margin','net_margin','roe','revenue_growth'];
 const unsupported:any={pe_forward:'Historical point-in-time matched fiscal-year forecasts are unavailable',peg_ratio:'Historical provider forecast PEG snapshots are unavailable',ev_ebitda:'Matched historical enterprise value and EBITDA are unavailable',debt_to_equity:'Historical provider debt/equity definition is not verified',dividend_yield:'Historical provider dividend-yield basis is not verified',payout_ratio:'Matched historical provider payout inputs are unavailable'};
+// A conflicting newest filing poisons every older version of that period.
+// Do not turn the conflict into missing rows that could select an old filing.
+function cleanPeriodRows(rows:any[],today:string){
+ const valid=rows.filter(r=>r.filed<=today&&['10-K','10-K/A','10-Q','10-Q/A'].includes(r.form)&&!['segment','dimensions','dim','axis','member'].some(k=>r[k]!=null&&Object.keys(Object(r[k])).length));
+ const latest=new Map<string,{filed:string,values:Set<any>}>();
+ for(const r of valid){const k=r.end+'|'+(r.start||''),p=latest.get(k);if(!p||r.filed>p.filed)latest.set(k,{filed:r.filed,values:new Set([numeric(r.val)?r.val:null])});else if(r.filed===p.filed)p.values.add(numeric(r.val)?r.val:null);}
+ return valid.filter(r=>r.filed===latest.get(r.end+'|'+(r.start||''))!.filed).map(r=>({...r,val:latest.get(r.end+'|'+(r.start||''))!.values.size!==1||!numeric(r.val)?null:r.val}));
+}
 // Restated annual samples, not a point-in-time series. Never reuse a current
 // quote, forecast, share count, or denominator for a past fiscal year.
 export function ratioHistory(document:any,historical:any,now=Date.now()){
  const today=new Date(now).toISOString().slice(0,10),cutoff=(Number(today.slice(0,4))-5)+today.slice(4);
  const facts=document?.facts?.['us-gaap']||{};
  const dates=[...new Set(['RevenueFromContractWithCustomerExcludingAssessedTax','Revenues','SalesRevenueNet','EarningsPerShareDiluted'].map(k=>facts[k]).filter(Boolean).flatMap((f:any)=>Object.values(f.units||{}).flatMap((rs:any)=>rs.filter((x:any)=>['10-K','10-K/A'].includes(x.form)&&x.start&&x.end>=cutoff&&x.end<=today&&x.filed<=today&&(Date.parse(x.end)-Date.parse(x.start))/86400000>=340&&(Date.parse(x.end)-Date.parse(x.start))/86400000<=380).map((x:any)=>x.end))))].sort().slice(-5) as string[];
+ const clean:any={};for(const tags of COMPANY_INPUT_GROUPS){
+  const units=[...new Set(tags.flatMap(tag=>Object.keys(facts[tag]?.units||{})))];
+  for(const unit of units){const rows=tags.flatMap(tag=>(facts[tag]?.units?.[unit]||[]).map((r:any)=>({...r,_tag:tag})));for(const r of cleanPeriodRows(rows,today)){clean[r._tag]||={units:{}};clean[r._tag].units[unit]||=[];clean[r._tag].units[unit].push(r);}}
+ }
+ const guardedShares=buildValuationInputs(historical?.symbol||'',{document},{currency:'USD'},now).history;
  const samples:any={};RATIO_KEYS.forEach(k=>samples[k]=[]);
  for(const end of dates){
-  const filtered:any={};for(const [tag,f] of Object.entries(facts) as any){filtered[tag]={...f,units:Object.fromEntries(Object.entries(f.units||{}).map(([u,rs]:any)=>[u,rs.filter((x:any)=>x.end<=end&&x.filed<=today).map((x:any)=>({...x,val:rs.some((y:any)=>y.end===x.end&&y.start===x.start&&y.filed===x.filed&&y.val!==x.val)?null:x.val}))]))};}
+  const filtered:any={};for(const [tag,f] of Object.entries(clean) as any){filtered[tag]={...f,units:Object.fromEntries(Object.entries(f.units||{}).map(([u,rs]:any)=>[u,rs.filter((x:any)=>x.end<=end)]))};}
   const context=buildInputs({facts:{'us-gaap':filtered}},{currency:'USD'});
   for(const key of annualKeys){const def=DEFINITIONS.find(d=>d.key===key);let reason=null,value=null;
    const balance=['current_ratio','quick_ratio'].includes(key);
@@ -27,15 +41,15 @@ export function ratioHistory(document:any,historical:any,now=Date.now()){
   samples.pe_trailing.push({period_end:end,observation:obs||null,value:obs?.pe??null,reason:obs?.reason||(!obs?'Verified fiscal-end price/EPS observation unavailable':null)});
   // Point-in-time common shares are necessary for market-cap based multiples.
   // Weighted-average diluted EPS shares are deliberately not substituted.
-  const shareRows=(filtered.CommonStockSharesOutstanding?.units?.shares||[]).filter((x:any)=>!x.start&&x.end===end).sort((a:any,b:any)=>b.filed.localeCompare(a.filed));
-  const shares=shareRows[0],same=shareRows.filter((x:any)=>x.filed===shares?.filed);
-  const sharesValid=shares&&new Set(same.map((x:any)=>x.val)).size===1&&shares.val>0;
-  const multipleClasses=Object.keys(facts).some(k=>/Class[AB].*SharesOutstanding|SharesOutstanding.*Class[AB]/i.test(k));
-  const cap=obs?.pe!=null&&sharesValid&&!multipleClasses?calculateRatioComparison('ratio_historical_market_cap',{price:obs.price,shares:shares.val}):null;
+  const shares=guardedShares.find((x:any)=>x.period_end===end)?.shares_outstanding;
+  const sharesValid=shares?.status==='ok'&&shares.period_end===end&&shares.value>0;
+  const priceValid=obs?.price_basis_verified===true;
+  const cap=priceValid&&sharesValid?calculateRatioComparison('ratio_historical_market_cap',{price:obs.price,shares:shares.value}):null;
   for(const key of ['ps_ratio','pb_ratio','peg_historical']){
    const def=DEFINITIONS.find(d=>d.key===key),inputs={...context.inputs,market_cap:cap,price:obs?.price??null,eps_ttm:obs?.reported_diluted_eps??null};
-   const value=obs?.pe!=null&&context.fiscal_year===end?runMetric(def,def.expression,inputs):null;
-   samples[key].push({period_end:end,value,inputs:context.trace,price_observation:obs||null,shares:sharesValid?shares:null,reason:value==null?(obs?.reason||'Verified same-date price, common shares or fiscal inputs unavailable'):null});
+   const matched=context.fiscal_year===end&&(key!=='pb_ratio'||(context.balance_date===end&&context.trace.equity_latest?.period_end===end));
+   const value=priceValid&&matched&&(key!=='peg_historical'||obs?.pe!=null)?runMetric(def,def.expression,inputs):null;
+   samples[key].push({period_end:end,value,inputs:context.trace,price_observation:obs||null,shares:shares||null,reason:value==null?(!matched?'No exact matching fiscal-end denominator':!priceValid?(obs?.price_reason||'Verified fiscal-end price basis unavailable'):key!=='peg_historical'&&!sharesValid?(shares?.reason||'Guarded entity-wide annual share count unavailable'):(obs?.reason||'Verified fiscal inputs unavailable')):null});
   }
  }
  return Object.fromEntries(RATIO_KEYS.map(key=>{const data=samples[key],valid=data.filter((x:any)=>numeric(x.value));return [key,{value:mean(valid.map((x:any)=>x.value)),count:valid.length,eligible_count:dates.length,expected_count:5,period_start:valid[0]?.period_end??null,period_end:valid.at(-1)?.period_end??null,samples:data,basis:'Arithmetic mean of fiscal-year-end annual samples; restated SEC filings',reason:valid.length?null:(unsupported[key]||'No valid annual samples'),partial:valid.length<5}];}));
@@ -49,12 +63,12 @@ export function ratioComparisons(history:any,peerRow:any,symbol:string,custom:st
   let peer:any=gap(key==='pe_forward'?'Provider forward P/E does not match the current fiscal-year consensus horizon':'Matching selected-peer inputs are not supplied');
   if(peerKeys.includes(key)){
    const valid=universe.map(s=>peers.find((p:any)=>p.symbol===s)).filter((p:any)=>numeric(p[key])&&(key!=='pe_trailing'||p[key]>0));
-   peer={value:fresh?mean(valid.map((p:any)=>p[key])):null,count:fresh?valid.length:0,eligible_count:universe.length,universe,valid_symbols:fresh?valid.map((p:any)=>p.symbol):[],as_of:peerRow?.fetched_at||null,label:(payload?.subsector||'Selected')+' peers · mean',reason:!fresh?'Selected-peer snapshot missing or stale':valid.length?null:'No eligible peer values',basis:key==='pe_trailing'?'Provider trailing P/E; positive earnings only':'Provider ratio definition; same field as uncustomized current value'};
+   peer={value:fresh?mean(valid.map((p:any)=>p[key])):null,count:fresh?valid.length:0,eligible_count:universe.length,universe,valid_symbols:fresh?valid.map((p:any)=>p.symbol):[],observations:fresh?valid.map((p:any)=>({symbol:p.symbol,value:p[key],as_of:peerRow.fetched_at})):[],as_of:peerRow?.fetched_at||null,label:(payload?.subsector||'Selected')+' peers · mean',reason:!fresh?'Selected-peer snapshot missing or stale':valid.length?null:'No eligible peer values',basis:key==='pe_trailing'?'Provider trailing P/E; positive earnings only':'Provider ratio definition; same field as uncustomized current value'};
   }
   if(custom.includes(key)){h={...h,value:null,reason:'Current owner formula is customized; baseline history is incompatible'};peer={...peer,value:null,reason:'Current owner formula is customized; provider peer ratios are incompatible'};}
   rows[key]={history:h,sector,peers:peer};
  }
- return {symbol,rows,generated_at:new Date(now).toISOString(),version:'ratio-comparisons-v1',sector:payload?.sector||null,methodology:'History uses up to five annual fiscal-end samples in the trailing five calendar years, latest restated SEC filings and verified same-date price/split/currency inputs. It is not a daily/monthly average or as-known backtest. Annual margin/return history is labeled separately from current provider TTM definitions. Selected peers exclude the target and are not a whole-sector benchmark. Peer means use one stored snapshot (maximum age 48 hours, unexpired); no on-demand peer fan-out. Current values retain their own timestamp.'};
+ return {symbol,rows,generated_at:new Date(now).toISOString(),version:'ratio-comparisons-v1',sector:payload?.sector||null,methodology:'History uses up to five annual fiscal-end samples in the trailing five calendar years, latest restated SEC filings and verified same-date price/split/currency inputs. It is not a daily/monthly average or as-known backtest. Annual margin/return history is labeled separately from current provider TTM definitions. Selected peers exclude the target and are not a whole-sector benchmark. Peer means use one stored snapshot (maximum age 48 hours, unexpired); no on-demand peer fan-out. Current values retain their own timestamp. Constituent timestamps identify cache collection, not underlying financial reporting dates or synchronized market quotes. The provider does not supply verified per-metric fiscal dates here; fiscal ends can differ. Collection ranges are shown, and no premium/discount or valuation verdict is calculated.'};
 }
 
 export function sectorComparisons(universe:any,snapshotRows:any[],symbol:string,custom:string[]=[],now=Date.now()){
@@ -69,7 +83,7 @@ export function sectorComparisons(universe:any,snapshotRows:any[],symbol:string,
   const valid=[...observations.values()].filter(p=>numeric(p[key])&&(key!=='pe_trailing'||p[key]>0));
   const supported=peerKeys.includes(key),eligible=universeOK&&supported&&!custom.includes(key);
   const dates=valid.map(p=>p.as_of).sort();
-  return [key,{value:eligible?mean(valid.map(p=>p[key])):null,count:eligible?valid.length:0,eligible_count:members.length,universe:members,valid_symbols:eligible?valid.map(p=>p.symbol):[],target_snapshot_value:eligible&&numeric(target?.[key])&&dates.length&&dates.every(d=>d===target.as_of)?target[key]:null,holdings_as_of:universe?.as_of||null,source_url:universe?.source_url||null,as_of_start:dates[0]||null,as_of:dates.at(-1)||null,label:(universe?.fund||'Sector')+' constituent mean',partial:valid.length<members.length,
+  return [key,{value:eligible?mean(valid.map(p=>p[key])):null,count:eligible?valid.length:0,eligible_count:members.length,universe:members,valid_symbols:eligible?valid.map(p=>p.symbol):[],observations:eligible?valid.map(p=>({symbol:p.symbol,value:p[key],as_of:p.as_of})):[],target_snapshot_value:eligible&&numeric(target?.[key])&&dates.length&&dates.every(d=>d===target.as_of)?target[key]:null,holdings_as_of:universe?.as_of||null,source_url:universe?.source_url||null,as_of_start:dates[0]||null,as_of:dates.at(-1)||null,label:(universe?.fund||'Sector')+' covered-constituent mean',partial:valid.length<members.length,
    reason:!universeOK?'No current official sector-fund membership for this ticker':custom.includes(key)?'Current owner formula is incompatible with provider constituent ratios':!supported?(key==='pe_forward'?'Constituent forecasts do not match the current fiscal-year horizon':'Matching constituent inputs are not present in the scheduled cache'):!valid.length?'No fresh compatible constituent observations in the scheduled cache':null,
    basis:'Equal-weight arithmetic mean of available official sector-fund equity constituents, excluding target. Incomplete coverage is not the full sector mean. Positive earnings required for trailing P/E; no fund-level forward or harmonic multiple reused.'}];
  }));

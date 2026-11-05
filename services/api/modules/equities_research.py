@@ -515,7 +515,8 @@ def peers():
 
     def fetch_peer(p):
         try:
-            info = yf.Ticker(p).info
+            from services.peer_quotes import peer_info
+            info = peer_info(p)
 
             def g(key):
                 v = info.get(key)

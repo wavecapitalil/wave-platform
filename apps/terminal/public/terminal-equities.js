@@ -24,7 +24,9 @@ function registerCalculationSources(d){
 }
 
 // ── Stock detail ──────────────────────────────────────────
+var stockDetailGeneration=0;
 function openStockDetail(symbol, name){
+  var requestGeneration=++stockDetailGeneration;
   document.getElementById('sectorDetailView').style.display = 'none';
   document.getElementById('stockDetailView').style.display = 'block';
   document.getElementById('stockDetailBreadcrumb').textContent = 'Equities · ' + (_detailSector || '') + ' · ' + name;
@@ -39,15 +41,19 @@ function openStockDetail(symbol, name){
     .then(function(r){ return r.json(); })
     .then(function(d){
       if(d.error) throw new Error(d.error);
+      if(requestGeneration!==stockDetailGeneration)return;
       renderStockDetail(d);
     })
     .catch(function(e){
+      if(requestGeneration!==stockDetailGeneration)return;
       document.getElementById('stockDetailStatus').textContent = 'Error: ' + e.message;
       document.getElementById('stockDetailContent').innerHTML = '<div style="color:#ef4444;font-size:12px">Failed to load KPIs.</div>';
     });
 }
 
 function closeStockDetail(){
+  stockDetailGeneration++;
+  document.getElementById('stockDetailContent').replaceChildren();
   document.getElementById('stockDetailView').style.display = 'none';
   document.getElementById('sectorDetailView').style.display = 'block';
 }
@@ -892,7 +898,7 @@ function researchTicker(sym){
   document.getElementById('researchStatus').textContent = 'Loading ' + sym + '...';
   document.getElementById('researchResult').style.display = 'none';
   document.getElementById('researchDetails').style.display = window.WaveResearch ? 'block' : 'none';
-  document.getElementById('resKpiContent').innerHTML    = '';
+  document.getElementById('resKpiContent').textContent = 'Loading ratios for '+sym+'…';
   document.getElementById('resInsiderSection').innerHTML = '';
   document.getElementById('resAnalystSection').innerHTML = '';
   document.getElementById('resPeersSection').innerHTML  = '';
@@ -1708,9 +1714,9 @@ function loadRatioComparisons(d,host){var node=host.querySelector('.ratio-compar
  row.querySelector('[data-ratio-history]').innerHTML=history;
  var sector='<small class="ratio-mobile">Sector comparison</small><strong>'+ratioValue(k,s.value)+'</strong><small>'+ratioEscape(s.label||'Sector cohort')+'</small><small>'+ratioEscape(s.reason||((s.partial?'Partial · ':'')+s.count+'/'+s.eligible_count+' constituents · excludes '+d.symbol))+'</small>';
  if(s.target_snapshot_value!=null)sector+='<small>'+ratioEscape(d.symbol)+' at same snapshot: '+ratioValue(k,s.target_snapshot_value)+'</small>';
- if(s.value!=null)sector+='<small>Holdings '+ratioEscape(s.holdings_as_of)+' · ratios '+ratioEscape(s.as_of)+'</small>';
+ if(s.value!=null)sector+='<small>Holdings '+ratioEscape(s.holdings_as_of)+' · collected '+ratioEscape(s.as_of_start)+' – '+ratioEscape(s.as_of)+'</small>';
  sector+='<strong class="ratio-peer-value">'+ratioValue(k,p.value)+'</strong><small>'+ratioEscape(p.label||'Selected peers')+'</small><small>'+ratioEscape(p.reason||p.count+'/'+p.eligible_count+' eligible peers · excludes '+d.symbol)+'</small>';
- if(p.value!=null)sector+='<small>'+ratioEscape(p.as_of)+'</small>';
+ if(p.value!=null)sector+='<small>Collected '+ratioEscape(p.as_of)+'</small>';
  row.querySelector('[data-ratio-sector]').innerHTML=sector;
  });
  if(window.WaveSources)WaveSources.record('ratio-comparisons:'+d.symbol,d.symbol+' ratio comparison methodology',data.methodology+'\n'+JSON.stringify(data.rows,null,2),[]);

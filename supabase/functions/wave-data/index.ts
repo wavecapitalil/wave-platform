@@ -709,7 +709,7 @@ Deno.serve(async(req:Request)=>{
       const [history,peers,config]=await Promise.all([cachedRatioHistory(symbol).catch(()=>null),snapshot('api:/api/peers?symbol='+symbol).catch(()=>null),settings(admin)]);
       const comparison=ratioComparisons(history,peers,symbol,Object.keys(config.formulas));
       const {data:universeRows}=await db.from('data_snapshots').select('data').like('dataset_key','api:/api/sector-universe?sector=%').limit(11);
-      const universes={...SECTOR_UNIVERSES};for(const row of universeRows||[]){const v=row.data?.payload||row.data;if(v?.fund&&Array.isArray(v.members))universes[v.fund]=v;}
+      const universes={...SECTOR_UNIVERSES};for(const row of universeRows||[]){const v=row.data?.payload||row.data;if(v?.fund&&Array.isArray(v.members)&&(!universes[v.fund]||v.as_of>=universes[v.fund].as_of))universes[v.fund]=v;}
       const universe=Object.values(universes).find((v:any)=>v.members.includes(symbol));
       const {data:peerRows}=await db.from('data_snapshots').select('data,fetched_at,expires_at').like('dataset_key','api:/api/peers?symbol=%').limit(100);
       const sectors=sectorComparisons(universe,peerRows||[],symbol,Object.keys(config.formulas));
