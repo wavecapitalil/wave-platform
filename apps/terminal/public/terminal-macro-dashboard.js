@@ -142,7 +142,7 @@
     var useHistory=p&&(!r||p.period>r.period);
     var value=useHistory?p.value:r?r.actual:null,period=useHistory?p.period:r?r.period:null;
     var points=h.points;
-    return '<button type="button" class="macro-indicator" data-macro-id="'+s.id+'" aria-haspopup="dialog"><span class="macro-indicator-name">'+esc(he()?s.he:s.name)+'</span><strong dir="ltr">'+num(value)+'</strong><span class="macro-unit" dir="ltr">'+esc(s.unit)+'</span>'+'<small class="macro-state">'+t('Revised observations','תצפיות מתוקנות')+'</small>'+chart(points,false,s.unit)+(events(s).length?comparison(s,false):'')+nextRelease(s,h)+'<span class="macro-period" dir="ltr">'+esc(period?period.slice(0,s.frequency==='weekly'?10:7):'—')+'</span></button>';
+    return '<button type="button" class="macro-indicator" data-macro-id="'+s.id+'" aria-haspopup="dialog"><span class="macro-indicator-name">'+esc(he()?s.he:s.name)+'</span><strong dir="ltr">'+num(value)+'</strong><span class="macro-unit" dir="ltr">'+esc(s.unit)+'</span>'+chart(points,false,s.unit)+(events(s).length?comparison(s,false):'')+nextRelease(s,h)+'<span class="macro-period" dir="ltr">'+esc(period?period.slice(0,s.frequency==='weekly'?10:7):'—')+'</span></button>';
   }
   function render(){
     var host=document.getElementById('macroDashboard');if(!host)return;

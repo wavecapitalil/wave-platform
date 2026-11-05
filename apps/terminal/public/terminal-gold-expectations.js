@@ -48,14 +48,15 @@
     if(data.comparabilityNote&&!isHebrew())text+=' '+data.comparabilityNote;
     if(data.statusText)text+=' '+data.statusText;
     data.rows.forEach(function(r){text+='\n'+r.year+L(': published ',': פורסם ב־')+(r.publishedAt||L('unverified','לא אומת'))+L('; fieldwork ','; תקופת הסקר: ')+(r.fieldworkStart||L('unverified','לא אומת'))+L(' to ',' עד ')+(r.fieldworkEnd||L('unverified','לא אומת'))+L('; question n=','; משיבים לשאלה: ')+(r.questionRespondents==null?L('unverified','לא אומת'):r.questionRespondents)+L('; total survey n=','; משיבים בסקר: ')+(r.totalRespondents==null?L('unverified','לא אומת'):r.totalRespondents)+'. '+(isHebrew()?(r.noteHe||''):(r.note||''));});
-    root.WaveSources.record('metals:central-bank-expectations',L('Central-bank gold expectations · World Gold Council','ציפיות הבנקים המרכזיים לזהב · World Gold Council'),text,data.rows.flatMap(function(r){var links=[];if(safeUrl(r.sourceUrl))links.push({title:r.year+L(' · WGC survey',' · סקר WGC'),url:r.sourceUrl});if(safeUrl(r.distributionSourceUrl)&&r.distributionSourceUrl!==r.sourceUrl)links.push({title:r.year+L(' · Distribution evidence',' · מקור ההתפלגות'),url:r.distributionSourceUrl});return links;}));
+    var surveyLinks=data.rows.flatMap(function(r){var links=[];if(safeUrl(r.sourceUrl))links.push({title:r.year+L(' · WGC survey',' · סקר WGC'),url:r.sourceUrl});if(safeUrl(r.distributionSourceUrl)&&r.distributionSourceUrl!==r.sourceUrl)links.push({title:r.year+L(' · Distribution evidence',' · מקור ההתפלגות'),url:r.distributionSourceUrl});return links;});
+    root.WaveSources.record('metals:central-bank-expectations',L('Central-bank gold expectations · World Gold Council','ציפיות הבנקים המרכזיים לזהב · World Gold Council'),text,surveyLinks);
+    if(root.WaveDataLog)data.rows.forEach(function(r){var links=[];if(safeUrl(r.sourceUrl))links.push({title:'WGC survey',url:r.sourceUrl});root.WaveDataLog.record('gold-expectations:'+r.year,{section:'Commodities · Gold expectations',metric:String(r.year)+' · Own-institution survey',source:'World Gold Council / YouGov',pulledAt:data.asOf||r.publishedAt||'',coverage:(r.questionRespondents==null?'Question n not verified':('Question n='+r.questionRespondents))+(r.totalRespondents==null?'':(' · survey n='+r.totalRespondents)),notes:[r.fieldworkStart?('Fieldwork '+r.fieldworkStart+' to '+(r.fieldworkEnd||'—')):'',r.missingReason,(r.notOffered||[]).length?'Not offered: '+r.notOffered.join(', '):'',isHebrew()&&r.noteHe?r.noteHe:r.note].filter(Boolean).join('\n'),links:links,skipSources:true});});
   }
   function render(data){
     validate(data);host=document.getElementById('goldExpectationsPanel');if(!host)return;
     saved=data;register(data);host.replaceChildren();host.dir=isHebrew()?'rtl':'ltr';host.lang=isHebrew()?'he':'en';
     var head=node('div',null,'gold-expectations-heading');
-    head.appendChild(node('h2','Central-bank gold expectations'));
-    head.appendChild(node('span','World Gold Council / YouGov · Annual survey','gold-expectations-attribution'));host.appendChild(head);
+    head.appendChild(node('h2','Central-bank gold expectations'));host.appendChild(head);
     host.appendChild(node('p','How respondents expect their own institution’s gold reserves to change over the next 12 months (% of respondents)','gold-expectations-label'));
     var rows=data.rows.slice().sort(function(a,b){return a.year-b.year;});
     if(!rows.length){host.appendChild(node('p',data.statusText||'Historical survey series is not available yet.','gold-expectations-status'));return;}
@@ -66,27 +67,18 @@
     var defs=svg('defs');categories.forEach(function(c){var g=svg('linearGradient',{id:'gold-expectations-'+c[0],x1:'0%',y1:'0%',x2:'100%',y2:'0%'});g.appendChild(svg('stop',{offset:'0%','stop-color':c[2],'stop-opacity':'.72'}));g.appendChild(svg('stop',{offset:'25%','stop-color':c[2]}));g.appendChild(svg('stop',{offset:'78%','stop-color':c[2]}));g.appendChild(svg('stop',{offset:'100%','stop-color':c[2],'stop-opacity':'.76'}));defs.appendChild(g);});chart.appendChild(defs);
     [0,25,50,75,100].forEach(function(t){var y=base-t*height/100;chart.appendChild(svg('line',{x1:left,y1:y,x2:chartWidth-28,y2:y,class:'gold-expectations-grid'}));chart.appendChild(svg('text',{x:left-10,y:y+4,'text-anchor':'end',class:'gold-expectations-axis'},t+'%'));});
     var breakIndex=rows.findIndex(function(r){return (r.notOffered||[]).indexOf('dontKnow')>=0;});
-    if(breakIndex>0){var bx=left+breakIndex*step;chart.appendChild(svg('line',{x1:bx,y1:28,x2:bx,y2:base,class:'gold-expectations-break'}));chart.appendChild(svg('text',{x:bx+7,y:18,class:'gold-expectations-axis'},compact?String(rows[breakIndex].year):rows[breakIndex].year+L(' · “Don’t know” removed',' · האפשרות ״לא יודע״ הוסרה')));}
-    var legend=node('div',null,'gold-expectations-legend');categories.forEach(function(c){var item=node('span',c[1]);item.style.color=c[2];legend.appendChild(item);});host.appendChild(legend);if(compact&&breakIndex>0)host.appendChild(node('p',rows[breakIndex].year+L(' · “Don’t know” removed',' · האפשרות ״לא יודע״ הוסרה'),'gold-expectations-break-note'));
+    if(breakIndex>0){var bx=left+breakIndex*step;chart.appendChild(svg('line',{x1:bx,y1:28,x2:bx,y2:base,class:'gold-expectations-break'}));}
+    var legend=node('div',null,'gold-expectations-legend');categories.forEach(function(c){var item=node('span',c[1]);item.style.color=c[2];legend.appendChild(item);});host.appendChild(legend);
     var controls=node('div',null,'gold-expectations-years');controls.setAttribute('aria-label',L('Select survey year','בחירת שנת סקר'));controls.dir='ltr';
     var detail=node('div',null,'gold-expectations-detail');detail.setAttribute('aria-live','polite');
     var buttons=[];
     function select(r){selected=r.year;buttons.forEach(function(b){b.setAttribute('aria-pressed',String(Number(b.dataset.year)===selected));});detail.replaceChildren();
       detail.appendChild(node('strong',r.year+L(' · Own-institution expectations',' · ציפיות לגבי המוסד עצמו')));
       categories.forEach(function(c){var answer=node('div',null,'gold-expectations-response');answer.appendChild(node('span',c[1]));var value=node('strong',r.shares[c[0]]==null?((r.notOffered||[]).indexOf(c[0])>=0?'Not offered':'Not verified'):r.shares[c[0]]+'%');value.style.color=c[2];answer.appendChild(value);detail.appendChild(answer);});
-      var metadata=node('details',null,'gold-expectations-metadata');metadata.appendChild(node('summary',L('Survey details','פרטי הסקר')));
-      metadata.appendChild(node('span',L('Published ','פורסם ב־')+(r.publishedAt||L('date unverified','תאריך לא אומת'))+L(' · Next 12 months from survey response',' · 12 החודשים ממועד המענה לסקר')));
-      if(r.fieldworkStart&&r.fieldworkEnd)metadata.appendChild(node('span',L('Fieldwork ','תקופת הסקר: ')+r.fieldworkStart+L(' to ',' עד ')+r.fieldworkEnd));
-      metadata.appendChild(node('span',L('Question n = ','משיבים לשאלה: ')+(r.questionRespondents==null?L('not verified','לא אומת'):r.questionRespondents)+L(' · Total survey n = ',' · משיבים בסקר: ')+(r.totalRespondents==null?L('not verified','לא אומת'):r.totalRespondents)));
-      if(r.missingReason)metadata.appendChild(node('span',r.missingReason));
-      var rawTotal=categories.reduce(function(v,c){return v+(r.shares[c[0]]||0);},0);if(categories.every(function(c){return r.shares[c[0]]!=null||(r.notOffered||[]).includes(c[0]);}))metadata.appendChild(node('span',L('Published total: ','סכום האחוזים שפורסם: ')+rawTotal+'%'+(rawTotal!==100?L(' · Segment heights scaled to 100% for display only.',' · גובה המקטעים מותאם ל־100% לצורך התצוגה בלבד.'):'')));
-      if(r.note)metadata.appendChild(node('span',isHebrew()&&r.noteHe?r.noteHe:r.note));
-      detail.appendChild(metadata);
     }
     rows.forEach(function(r,i){var group=svg('g',{role:'button',tabindex:'0','aria-label':r.year+L(' survey; select to read all response shares',' · בחירה להצגת אחוזי כל התשובות')});group.appendChild(svg('title',{},r.year+' · '+categories.map(function(c){return tr(c[1])+': '+(r.shares[c[0]]==null?((r.notOffered||[]).includes(c[0])?L('not offered','לא הוצע'):L('not verified','לא אומת')):r.shares[c[0]]+'%');}).join(' · ')+' · World Gold Council / YouGov · '+r.sourceUrl));group.addEventListener('click',function(){select(r);});group.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();select(r);}});chart.appendChild(group);var x=left+step*(i+.5),barWidth=Math.min(54,step*(compact?.78:.58));
       var complete=categories.every(function(c){return r.shares[c[0]]!=null||(r.notOffered||[]).includes(c[0]);}),sum=categories.reduce(function(v,c){return v+(r.shares[c[0]]||0);},0),scale=complete&&sum?100/sum:1;
       var cumulative=0;categories.forEach(function(c){var value=r.shares[c[0]];if(value==null)return;var y=base-(cumulative+value)*scale*height/100;group.appendChild(svg('rect',{x:x-barWidth/2,y:y,width:barWidth,height:value*scale*height/100,fill:'url(#gold-expectations-'+c[0]+')',class:'gold-expectations-segment'}));if(value>=(compact?12:8))group.appendChild(svg('text',{x:x,y:y+value*scale*height/200+4,'text-anchor':'middle',class:'gold-expectations-segment-value'},value+'%'));cumulative+=value;});
-      if(categories.some(function(c){return r.shares[c[0]]==null&&(r.notOffered||[]).indexOf(c[0])<0;}))group.appendChild(svg('text',{x:x,y:base-cumulative*height/100-10,'text-anchor':'middle',class:'gold-expectations-axis'},'Partial'));
       group.appendChild(svg('text',{x:x,y:base+25,'text-anchor':'middle',class:'gold-expectations-axis'},r.year));
       var b=node('button',r.year);b.type='button';b.dataset.year=r.year;b.addEventListener('click',function(){select(r);});buttons.push(b);controls.appendChild(b);
     });

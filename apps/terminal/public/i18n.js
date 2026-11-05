@@ -157,6 +157,18 @@
     'manifesto.quote': {en:'"Markets don\'t reward the busiest trader.<br>They reward the one who understands <strong>what matters today</strong>,<br>ignores the noise, and acts with conviction."',
                          he:'"השוק לא מתגמל את הסוחר העסוק ביותר.<br>הוא מתגמל את מי שמבין <strong>מה חשוב היום</strong>,<br>מתעלם מהרעש ופועל בביטחון."'},
     'manifesto.author':{en:'— Wave Capital Philosophy', he:'— הפילוסופיה של Wave Capital'},
+
+    'datalog.tag':     {en:'Reference', he:'עיון'},
+    'datalog.title':   {en:'Data Log', he:'יומן נתונים'},
+    'datalog.subtitle':{en:'Source, last pull, sample coverage and methodology for each metric.', he:'מקור, מועד משיכה, כיסוי מדגם ומתודולוגיה לכל מדד.'},
+    'datalog.link':    {en:'Data log', he:'יומן נתונים'},
+    'datalog.empty':   {en:'No provenance recorded yet. Open a market or research screen to pull data.', he:'עדיין אין רישומי מקור. פתחו מסך שוק או מחקר כדי למשוך נתונים.'},
+    'datalog.col.section': {en:'Section', he:'מדור'},
+    'datalog.col.metric':  {en:'Metric', he:'מדד'},
+    'datalog.col.source':  {en:'Source', he:'מקור'},
+    'datalog.col.pulled':  {en:'Last pull', he:'משיכה אחרונה'},
+    'datalog.col.coverage':{en:'Coverage', he:'כיסוי'},
+    'datalog.col.notes':   {en:'Notes', he:'הערות'},
   };
 
   function getLang(){

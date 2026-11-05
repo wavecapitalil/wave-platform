@@ -370,9 +370,8 @@ function pcrRenderExplainer(v){
        : v < 1.30 ? 'Balanced activity between puts and calls. No extreme signal. Markets are functioning with normal two-sided hedging activity.'
        : v < 1.60 ? 'Elevated put buying. Traders are paying up to hedge downside. This can indicate worry, but also a healthy wall of worry that markets often climb.'
        : 'Very high put activity. Fear is elevated. Historically, extreme PCR readings have preceded short-term bounces — though timing is imprecise.'},
-    {icon:'💡', title:'Important caveats',
-     text:'This ratio uses SPY (S&P 500 ETF) options — a mix of retail and institutional flow, making it a better sentiment gauge than pure index options (SPX). The zones are calibrated for SPY\'s natural range (higher than equity-only PCR). The 5-day and 20-day averages are better signals than any single day.'}
   ];
+  if(window.WaveDataLog)WaveDataLog.record('put-call:caveats',{section:'Macro · Put/Call',metric:'SPY put/call ratio',source:'CBOE SPX options chain',notes:'This ratio uses SPY options, a mix of retail and institutional flow. The zones are calibrated for SPY, which runs higher than equity-only put/call. The 5-day and 20-day averages are steadier than a single day.',skipSources:true});
 
   var html = '<div class="mini-section"><div class="ms-header"><div class="ms-title">💬 Understanding the Put/Call Ratio</div></div>';
   html += '<div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">';

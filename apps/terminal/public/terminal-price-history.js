@@ -85,7 +85,8 @@
     el('ph-period').textContent=data.symbol+' · '+date(points[0].date)+' – '+date(last.date);
     el('ph-latest').textContent=money(last.close);
     el('ph-change').textContent=pct(s.change_pct)+' '+text('in period','בתקופה');el('ph-change').className=finite(s.change_pct)?s.change_pct>=0?'ph-positive':'ph-negative':'';
-    el('ph-basis').textContent=(hasCandles?(state.interval==='weekly'?'Weekly OHLC · last week may be partial':'Daily OHLC'):'Closing-price line · OHLC unavailable')+' · '+(data.currency||'')+' · '+(data.price_basis==='dividend_and_split_adjusted_close'?text('Split & dividend adjusted','מותאם לפיצולים ולדיבידנדים'):data.price_basis==='split_adjusted_close'?text('Split adjusted','מותאם לפיצולים'):String(data.price_basis||''));
+    var basisLabel=data.price_basis==='dividend_and_split_adjusted_close'?text('Split & dividend adjusted','מותאם לפיצולים ולדיבידנדים'):data.price_basis==='split_adjusted_close'?text('Split adjusted','מותאם לפיצולים'):'';
+    el('ph-basis').textContent=[data.currency,basisLabel].filter(Boolean).join(' · ');
     var allEvents=data.events,awaiting=(data.pending_events||[]).filter(function(e){return url(e.url);}),categories=Array.from(new Set(allEvents.concat(awaiting).map(function(e){return e.category||e.reason||'event';}))).sort();
     if(state.category!=='all'&&!categories.includes(state.category))state.category='all';
     el('ph-category').innerHTML='<option value="all">All material events</option>'+categories.map(function(c){return '<option value="'+esc(c)+'">'+esc(c.replace(/_/g,' '))+'</option>';}).join('');el('ph-category').value=state.category;
@@ -95,7 +96,8 @@
     el('ph-marker-rail').replaceChildren();
     var coverage=data.meta&&data.meta.news_coverage||{},sources=coverage.sources||[];
     var gaps=sources.filter(function(c){return !['available','empty'].includes(c.status);}).length;
-    el('ph-coverage').textContent=allEvents.length+' plotted events'+(awaiting.length?' · '+awaiting.length+' awaiting a completed session':'')+' · Partial archive: newsroom history has gaps'+(gaps?' · '+gaps+' source gap(s)':'')+'. Source windows and details: Sources & methodology. Gray means uncertain sentiment.';
+    el('ph-coverage').textContent=text('Gray marks uncertain sentiment.','אפור מסמן סנטימנט לא ודאי.');
+    if(window.WaveDataLog)WaveDataLog.record('price-history-coverage:'+data.symbol,{section:'Equity Research · Price',metric:data.symbol+' · Price & events',source:(data.meta&&data.meta.price_source)||'Yahoo Finance',pulledAt:(data.meta&&data.meta.fetched_at)||'',coverage:allEvents.length+' plotted events'+(awaiting.length?' · '+awaiting.length+' awaiting a session':''),notes:(hasCandles?(state.interval==='weekly'?'Weekly OHLC. The latest week may be partial.':'Daily OHLC.'):'Closing-price line. OHLC is unavailable.')+' Partial archive: newsroom history has gaps'+(gaps?' · '+gaps+' source gap(s)':'')+'.',skipSources:true});
 
     var plotted={id:'waveEventPositions',afterDraw:function(chart){
       var area=chart.chartArea,slots=Math.max(3,Math.floor(area.width/60)),groups=new Map();
