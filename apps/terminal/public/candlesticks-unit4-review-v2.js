@@ -71,11 +71,35 @@ function addFigure(section,label,idx){
   x.append(node('small','','קובץ האיור עצמו עדיין חסר בריפו. לא נוסף תרשים משוער.'));
   section.append(x);
 }
+const imagePlacement={6:'מה נבלע?',7:'הצורה וההקשר',8:'צעד אחר צעד',9:'חישוב ודוגמה',10:'הרמה המשותפת',11:'שתי תצורות Price Action',12:'ארבעת הזוגות באיור'};
+let editorialCache=null;
+async function getEditorial(){if(editorialCache)return editorialCache;const res=await fetch('assets/candlesticks-unit4/unit4-editorial-review.json?v=2');if(!res.ok)throw Error('גרסת התוכן הערוכה אינה זמינה');const json=await res.json();if(json.policy!=='review_only_not_for_approved_registry'||!Array.isArray(json.lessons))throw Error('נתוני ביקורת לא תקינים');editorialCache=json;return json;}
+function illustration(section,lessonIndex){
+ const number=lessonIndex+1,figure=node('figure','source-illustration');
+ const img=node('img');img.src='assets/candlesticks-unit4/fig-4-'+String(number).padStart(2,'0')+'-main.svg';img.alt='איור לימודי מקצועי: '+titles[lessonIndex];img.loading='lazy';img.decoding='async';img.width=1200;img.height=520;
+ figure.append(img,node('figcaption','','איור וקטורי לימודי — גרסת ביקורת; נתוני המחירים סינתטיים. ציור מחדש בסגנון מאושר, לא קובץ ה־PNG המקורי.'));
+ section.append(figure);
+}
+function renderEditorialLesson(lesson,index){
+ const frag=document.createDocumentFragment();let placed=false;
+ for(const block of lesson.sections){
+   let section=node('section','section '+(block.type==='intro'?'intro':block.type==='exercise'?'exercise':block.type==='solution'?'solution':''));
+   const h=node('h3');h.dir='rtl';addBilingualText(h,block.heading);section.append(h);
+   for(const item of block.items){
+     if(item.type==='figure-note'){const note=node('p','figure-caption-source');addBilingualText(note,item.text);section.append(note);continue;}
+     addContent(section,item.text);
+   }
+   if(!placed && block.heading===imagePlacement[index+1]){illustration(section,index);placed=true;}
+   frag.append(section);
+ }
+ if(!placed){const section=node('section','section');section.append(node('h3','','המחשה לימודית'));illustration(section,index);frag.append(section);}
+ return frag;
+}
 function compose(parts){const frag=document.createDocumentFragment();let current=null,sectionNumber=0,figureNumber=0;for(let part of parts){if(part.kind==='heading'){sectionNumber++;let section=node('section','section '+labelClass(part.text));let h=node('h3','');h.dir='rtl';const num=headingNumber(part.text);if(num){h.classList.add('numbered-heading');h.append(node('span','heading-number',num.number+'.'));addBilingualText(h,num.label)}else addBilingualText(h,part.text);section.append(h);frag.append(section);current=section;continue;}if(!current){sectionNumber++;current=node('section','section intro');current.append(node('h3','','מה נלמד בשיעור הזה?'));frag.append(current)}
 if(part.kind==='figure')addFigure(current,part.text,++figureNumber);else addContent(current,part.text)}return {fragment:frag,figureNumber,sectionNumber}}
 async function openLesson(index){if(index<0||index>=12)return;selected=index;let buttons=nav.querySelectorAll('button');buttons.forEach((button,i)=>button.classList.toggle('selected',i===index));host.replaceChildren(node('p','status','טוען את שיעור 4.'+(index+1)+'...'));let source=sources[index],raw;
 try{raw=cache.get(source);if(!raw){const resp=await fetch(root+'docs/course-workspace/lessons/'+source+'.md');if(!resp.ok)throw Error('קובץ מקור לא זמין: '+resp.status);raw=await resp.text();cache.set(source,raw)}if(selected!==index)return;host.replaceChildren();let hero=node('div','hero'),img=node('img');img.src='assets/candlesticks-unit4/lesson-4-'+String(index+1).padStart(2,'0')+'.webp';img.alt='תמונת שער שיעור 4.'+(index+1);img.loading='lazy';hero.append(img);let block=node('div','hero-text');block.append(node('div','kicker','יחידה 4 · '+(index<5?'חלק א׳ — תבניות נר בודד':'חלק ב׳ — תבניות שני נרות')));block.append(node('h2','','4.'+(index+1)+' — '+titles[index]));block.append(node('div','meta','גרסת תוכן לעריכה · מקור '+source+' · טרם אושר לפרסום'));hero.append(block);host.append(hero);
-let elements=extract(raw);let {fragment,figureNumber,sectionNumber}=compose(elements);host.append(fragment);if(!figureNumber){host.append(node('div','fig-placeholder','איורי ההוראה הפנימיים לא זוהו כקבצים נפרדים. יש לבצע התאמה מול ה־PDF המקורי.'))}
+if(index>=5){const editorial=await getEditorial();if(selected!==index)return;const lesson=editorial.lessons.find(x=>x.id==='4.'+(index+1));if(!lesson)throw Error('שיעור לא נמצא בקובץ הביקורת');host.append(renderEditorialLesson(lesson,index))}else{let elements=extract(raw);let {fragment,figureNumber,sectionNumber}=compose(elements);host.append(fragment);if(!figureNumber){host.append(node('div','fig-placeholder','איורי ההוראה הפנימיים לא זוהו כקבצים נפרדים. יש לבצע התאמה מול ה־PDF המקורי.'))}}
 let footer=node('div','actions'),prev=node('button','','השיעור הקודם'),next=node('button','','השיעור הבא');prev.disabled=index===0;next.disabled=index===11;prev.onclick=()=>openLesson(index-1);next.onclick=()=>openLesson(index+1);footer.append(prev,next);host.append(footer);
 let details=node('details','source-preview'),summary=node('summary','','לבדיקת התאמה: תמלול המקור ללא עריכה');details.append(summary,node('pre','',raw));host.append(details);
 const solutions=host.querySelectorAll('.section.solution');for(const section of solutions){let h=section.querySelector('h3'),remaining=[...section.children].filter(e=>e!==h),d=node('details');d.append(node('summary','','הצגת פתרון והסבר'));let body=node('div','solution-body');remaining.forEach(e=>body.append(e));d.append(body);section.append(d)}
