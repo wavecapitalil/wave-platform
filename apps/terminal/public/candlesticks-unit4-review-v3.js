@@ -43,7 +43,7 @@ function panel(lesson,section,index,figureCounter){
 }
 async function load(){
  try{
-  const r=await fetch(root+'unit4-editorial-review.json?v=20261105');if(!r.ok)throw Error('HTTP '+r.status);
+  const r=await fetch(root+'unit4-editorial-review.json?v=20261105-edited');if(!r.ok)throw Error('HTTP '+r.status);
   const data=await r.json();if(!Array.isArray(data.lessons)||data.lessons.length!==12)throw Error('Incomplete 12-lesson set');
   rows=data.lessons;
   rows.forEach((lesson,i)=>{if(i===0||i===5)nav.append(elem('div','nav-heading',i===0?'חלק א׳ — נר בודד':'חלק ב׳ — שני נרות'));const b=elem('button','',lesson.id+' — '+lesson.title);b.onclick=()=>select(i);nav.append(b)});
