@@ -74,6 +74,8 @@ function navigate(page){
     setTimeout(function(){ document.getElementById('researchInput').focus(); }, 100);
   }
 
+  if(page === 'sector-research' && window.SectorResearch) SectorResearch.open();
+
   if(page === 'institutions'){
     setTimeout(loadInstitutionsList, 50);
   }

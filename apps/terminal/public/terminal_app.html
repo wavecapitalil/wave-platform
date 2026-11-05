@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="terminal-valuation.css?v=20261014-report">
 <link rel="stylesheet" href="terminal-price-history.css?v=20261013-material-events">
 <link rel="stylesheet" href="terminal-research.css?v=20261014-persistent-statements">
+<link rel="stylesheet" href="terminal-sector-research.css?v=20261105-sector1">
 <link rel="stylesheet" href="terminal-brief.css?v=20261009-brighter-reader1">
 <link rel="stylesheet" href="wave-header.css?v=20261101-1"><script src="wave-header.js?v=20261101-1"></script><style>
 .ratio-comparisons{margin-top:20px;color:#dbe5f1;direction:ltr;text-align:left}.ratio-comparisons h3{font-size:18px;margin:0 0 16px}.ratio-head,.ratio-row{display:grid;grid-template-columns:minmax(100px,.8fr) minmax(110px,1fr) minmax(155px,1.2fr) minmax(180px,1.5fr);gap:16px;padding:16px 8px;border-bottom:1px solid #26364b}.ratio-head{color:#b9c9dc;font-size:12px;background:#101d2d}.ratio-row h4{font-size:13px;margin:0}.ratio-row strong{display:block;font-size:18px;font-variant-numeric:tabular-nums}.ratio-row small{display:block;font-size:11px;line-height:1.6;color:#a8b8cd;overflow-wrap:anywhere}.ratio-row .ratio-mobile{display:none}.ratio-earnings{padding:18px 8px;font-size:12px;color:#b9c9dc}
@@ -141,6 +142,9 @@
         </div>
         <div class="nav-item" data-page="research" onclick="navigate('research')">
           <span class="nav-item-icon">🔎</span> <span data-i18n="sidebar.companyResearch">Equity Research</span>
+        </div>
+        <div class="nav-item" data-page="sector-research" onclick="navigate('sector-research')">
+          <span class="nav-item-icon">🥧</span> <span data-i18n="sidebar.sectorResearch">Sector Research</span>
         </div>
 
         <div class="nav-item" data-page="mover" onclick="navigate('mover')">
@@ -912,6 +916,42 @@
       </div>
     </div>
 
+    <!-- ─── SECTOR RESEARCH PAGE ─── -->
+    <div class="page" id="page-sector-research">
+      <div class="welcome-wrap sr-wrap" dir="ltr">
+        <div class="page-header" style="margin-bottom:24px">
+          <div class="page-header-tag" data-i18n="sidebar.secEquities">EQUITIES</div>
+          <div class="page-header-title" data-i18n="sidebar.sectorResearch">Sector Research</div>
+        </div>
+        <div class="mini-section" style="margin-bottom:14px">
+          <div class="sr-search">
+            <input id="srInput" type="text" value="SOXX" data-i18n-placeholder="sector.placeholder" placeholder="Ticker" autocomplete="off" spellcheck="false"
+              onkeydown="if(event.key==='Enter') SectorResearch.submit()">
+            <button type="button" onclick="SectorResearch.submit()" data-i18n="sector.show">Show</button>
+          </div>
+          <div class="sr-chips" id="srChips">
+            <button type="button" class="ratio-btn active" data-symbol="SOXX" onclick="SectorResearch.load('SOXX')">SOXX</button>
+            <button type="button" class="ratio-btn" data-symbol="SMH" onclick="SectorResearch.load('SMH')">SMH</button>
+            <button type="button" class="ratio-btn" data-symbol="XLK" onclick="SectorResearch.load('XLK')">XLK</button>
+            <button type="button" class="ratio-btn" data-symbol="XLF" onclick="SectorResearch.load('XLF')">XLF</button>
+            <button type="button" class="ratio-btn" data-symbol="XLE" onclick="SectorResearch.load('XLE')">XLE</button>
+            <button type="button" class="ratio-btn" data-symbol="XLV" onclick="SectorResearch.load('XLV')">XLV</button>
+            <button type="button" class="ratio-btn" data-symbol="QQQ" onclick="SectorResearch.load('QQQ')">QQQ</button>
+            <button type="button" class="ratio-btn" data-symbol="SPY" onclick="SectorResearch.load('SPY')">SPY</button>
+          </div>
+        </div>
+        <div class="mini-section">
+          <div class="sr-fund">
+            <div class="ms-title" id="srName"></div>
+            <div class="sr-symbol" id="srSymbol"></div>
+          </div>
+          <div class="sr-chart-box"><canvas id="srChart" aria-label="Holdings"></canvas></div>
+          <ul class="sr-legend" id="srLegend"></ul>
+        </div>
+        <div class="sr-metrics" id="srMetrics"></div>
+      </div>
+    </div>
+
     <!-- ─── INSTITUTIONAL HOLDINGS PAGE ─── -->
     <div class="page" id="page-institutions">
       <div class="welcome-wrap" style="max-width:960px">
@@ -1506,6 +1546,8 @@
 <script src="terminal-brief.js?v=20261009-dark-reader1"></script>
 <script src="terminal.js?v=20261020-drawer-resize"></script>
 <script src="terminal-market.js?v=20261012-equity"></script>
+<script src="terminal-data-log.js?v=20261105-sector1"></script>
+<script src="terminal-sector-research.js?v=20261105-sector1"></script>
 <script src="terminal-content.js?v=20261013-article-fallback"></script>
 <script src="terminal-flows.js?v=20261008-sources1"></script>
 <script src="terminal-hormuz.js?v=20261008-sources1"></script>
