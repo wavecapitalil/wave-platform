@@ -65,6 +65,10 @@ for n,(x0,y0,x1,y1) in badges.items():
     k=min(35, (len(median)//2)*2-1)
     if k>=3:
         median=cv2.GaussianBlur(median.reshape(-1,1,3),(1,k),0).reshape(-1,3)
+    if n==11:
+        # The source beside this badge includes a bright green candle. Keep
+        # the reconstructed corner a restrained dark terminal background.
+        median=np.minimum(median,np.array([35.,47.,58.],dtype=np.float32))
     for row in range(b,d):
         rgb[row,a:c]=np.clip(median[row-b],0,255).astype(np.uint8)
     feather=14
