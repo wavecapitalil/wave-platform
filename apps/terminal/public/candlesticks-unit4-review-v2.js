@@ -71,6 +71,31 @@ function addFigure(section,label,idx){
   x.append(node('small','','קובץ האיור עצמו עדיין חסר בריפו. לא נוסף תרשים משוער.'));
   section.append(x);
 }
+// Single consistent opening panel across all twelve unit-4 lessons.
+const learningOpeners=[
+ {intro:'נכיר את משפחת הדוג׳י ונלמד מה אפשר להבין מגוף נר קטן מאוד.',points:['איך מזהים דוג׳י ואת ארבע הצורות המרכזיות שלו.','מדוע מיקום הנר בגרף חשוב יותר מהשם שלו.']},
+ {intro:'נלמד להבחין בין נר בעל גוף קטן לנר בעל גוף כמעט מלא.',points:['איך מזהים Spinning Top לפי הגוף והפתילים.','איך מזהים Marubozu ומה ההבדל בין שתי הצורות.']},
+ {intro:'נכיר את תבניות הפטיש והאיש התלוי ונבין מדוע ההקשר משנה.',points:['איך מזהים גוף קטן ופתיל תחתון ארוך.','איך מבחינים בין Hammer ל־Hanging Man לפי המגמה שקדמה לנר.']},
+ {intro:'נכיר שתי תבניות עם גוף קטן ופתיל עליון ארוך.',points:['איך מזהים את המבנה של Inverted Hammer ו־Shooting Star.','למה חשוב לבדוק אם הנר הופיע אחרי ירידה או עלייה.']},
+ {intro:'נתרגל לזהות נרות לפי המבנה שלהם, בלי להסתמך מיד על שם התבנית.',points:['איך מתארים גוף ופתילים לפני שנותנים שם לנר.','איך מזהים מקרים גבוליים ומתי חסר מידע לסיווג.']},
+ {intro:'בשיעור הזה נכיר את תבנית הבולען (Engulfing) ונלמד לזהות אותה בגרף.',points:['איך מזהים בליעה של גוף נר אחד על ידי גוף הנר הבא.','מה ההבדל בין בולען שורי לבולען דובי, ומדוע פתילים אינם חייבים להיבלע.']},
+ {intro:'נכיר את תבנית ההרמי (Harami), שבה גוף הנר השני נמצא בתוך גוף הנר הראשון.',points:['איך מזהים הרמי שורי והרמי דובי.','מה ההבדל בין הכלת גוף נר לבין Inside Bar.']},
+ {intro:'נלמד לזהות תבנית Piercing Line אחרי ירידה.',points:['איך מחשבים את אמצע הגוף של הנר הראשון.','מתי סגירת הנר השני מעל האמצע מתאימה להגדרת התבנית.']},
+ {intro:'נכיר את תבנית Dark Cloud Cover אחרי עלייה.',points:['איך מזהים חזרה של המחיר אל מתחת לאמצע גוף הנר הראשון.','איך מבדילים בין התבנית הזאת לבין בולען דובי.']},
+ {intro:'נכיר תבניות Tweezer שבהן שני נרות יוצרים קצוות מחיר דומים.',points:['איך מזהים שיאים דומים ב־Tweezer Top ושפלים דומים ב־Tweezer Bottom.','למה צריך להגדיר מראש מה נחשב מחיר שווה או קרוב.']},
+ {intro:'נלמד להשוות את טווחי המחיר של שני נרות.',points:['איך מזהים Inside Bar ו־Outside Bar בעזרת High ו־Low.','במה נבדלת השוואת טווחים מהשוואת גופי נרות.']},
+ {intro:'נסכם את תבניות יחידה 4 ונלמד להתמודד עם מקרים שאינם חד־משמעיים.',points:['איך מבדילים בין תבניות דומות באמצעות גוף, טווח ומחירי סגירה.','איך מגדירים כללי סיווג שאפשר לבדוק בלי להתבלבל בין זיהוי לתחזית.']}
+];
+function buildLearningOpener(index){
+ const d=learningOpeners[index],panel=node('section','learning-opener');
+ panel.setAttribute('aria-label','מה נלמד בשיעור?');
+ const heading=node('h3','learning-opener-title','מה נלמד בשיעור?');
+ panel.append(heading);
+ const intro=node('p','learning-opener-lead');intro.dir='rtl';addBilingualText(intro,d.intro);panel.append(intro);
+ const ul=node('ul','learning-opener-points');
+ d.points.forEach(point=>{const li=node('li');li.dir='rtl';const tick=node('span','learning-opener-tick','✓');tick.setAttribute('aria-hidden','true');const span=node('span','learning-opener-copy');addBilingualText(span,point);li.append(tick,span);ul.append(li)});
+ panel.append(ul);return panel;
+}
 const imagePlacement={6:'מה נבלע?',7:'הצורה וההקשר',8:'צעד אחר צעד',9:'חישוב ודוגמה',10:'הרמה המשותפת',11:'שתי תצורות Price Action',12:'ארבעת הזוגות באיור'};
 let editorialCache=null;
 async function getEditorial(){if(editorialCache)return editorialCache;const res=await fetch('assets/candlesticks-unit4/unit4-editorial-review.json?v=2');if(!res.ok)throw Error('גרסת התוכן הערוכה אינה זמינה');const json=await res.json();if(json.policy!=='review_only_not_for_approved_registry'||!Array.isArray(json.lessons))throw Error('נתוני ביקורת לא תקינים');editorialCache=json;return json;}
@@ -83,6 +108,7 @@ function illustration(section,lessonIndex){
 function renderEditorialLesson(lesson,index){
  const frag=document.createDocumentFragment();let placed=false;
  for(const block of lesson.sections){
+   if(block.type==='intro')continue; // The reusable short opener now replaces the PDF objective block.
    let section=node('section','section '+(block.type==='intro'?'intro':block.type==='exercise'?'exercise':block.type==='solution'?'solution':''));
    const h=node('h3');h.dir='rtl';addBilingualText(h,block.heading);section.append(h);
    for(const item of block.items){
@@ -98,8 +124,8 @@ function renderEditorialLesson(lesson,index){
 function compose(parts){const frag=document.createDocumentFragment();let current=null,sectionNumber=0,figureNumber=0;for(let part of parts){if(part.kind==='heading'){sectionNumber++;let section=node('section','section '+labelClass(part.text));let h=node('h3','');h.dir='rtl';const num=headingNumber(part.text);if(num){h.classList.add('numbered-heading');h.append(node('span','heading-number',num.number+'.'));addBilingualText(h,num.label)}else addBilingualText(h,part.text);section.append(h);frag.append(section);current=section;continue;}if(!current){sectionNumber++;current=node('section','section intro');current.append(node('h3','','מה נלמד בשיעור הזה?'));frag.append(current)}
 if(part.kind==='figure')addFigure(current,part.text,++figureNumber);else addContent(current,part.text)}return {fragment:frag,figureNumber,sectionNumber}}
 async function openLesson(index){if(index<0||index>=12)return;selected=index;let buttons=nav.querySelectorAll('button');buttons.forEach((button,i)=>button.classList.toggle('selected',i===index));host.replaceChildren(node('p','status','טוען את שיעור 4.'+(index+1)+'...'));let source=sources[index],raw;
-try{raw=cache.get(source);if(!raw){const resp=await fetch(root+'docs/course-workspace/lessons/'+source+'.md');if(!resp.ok)throw Error('קובץ מקור לא זמין: '+resp.status);raw=await resp.text();cache.set(source,raw)}if(selected!==index)return;host.replaceChildren();let hero=node('div','hero'),img=node('img');img.src='assets/candlesticks-unit4/lesson-4-'+String(index+1).padStart(2,'0')+'.webp';img.alt='תמונת שער שיעור 4.'+(index+1);img.loading='lazy';hero.append(img);let block=node('div','hero-text');block.append(node('div','kicker','יחידה 4 · '+(index<5?'חלק א׳ — תבניות נר בודד':'חלק ב׳ — תבניות שני נרות')));block.append(node('h2','','4.'+(index+1)+' — '+titles[index]));block.append(node('div','meta','גרסת תוכן לעריכה · מקור '+source+' · טרם אושר לפרסום'));hero.append(block);host.append(hero);
-if(index>=5){const editorial=await getEditorial();if(selected!==index)return;const lesson=editorial.lessons.find(x=>x.id==='4.'+(index+1));if(!lesson)throw Error('שיעור לא נמצא בקובץ הביקורת');host.append(renderEditorialLesson(lesson,index))}else{let elements=extract(raw);let {fragment,figureNumber,sectionNumber}=compose(elements);host.append(fragment);if(!figureNumber){host.append(node('div','fig-placeholder','איורי ההוראה הפנימיים לא זוהו כקבצים נפרדים. יש לבצע התאמה מול ה־PDF המקורי.'))}}
+try{raw=cache.get(source);if(!raw){const resp=await fetch(root+'docs/course-workspace/lessons/'+source+'.md');if(!resp.ok)throw Error('קובץ מקור לא זמין: '+resp.status);raw=await resp.text();cache.set(source,raw)}if(selected!==index)return;host.replaceChildren();let hero=node('div','hero'),img=node('img');img.src='assets/candlesticks-unit4/lesson-4-'+String(index+1).padStart(2,'0')+'.webp';img.alt='תמונת שער שיעור 4.'+(index+1);img.loading='lazy';hero.append(img);let block=node('div','hero-text');block.append(node('div','kicker','יחידה 4 · '+(index<5?'חלק א׳ — תבניות נר בודד':'חלק ב׳ — תבניות שני נרות')));block.append(node('h2','','4.'+(index+1)+' — '+titles[index]));block.append(node('div','meta','גרסת תוכן לעריכה · מקור '+source+' · טרם אושר לפרסום'));hero.append(block);host.append(hero);host.append(buildLearningOpener(index));
+if(index>=5){const editorial=await getEditorial();if(selected!==index)return;const lesson=editorial.lessons.find(x=>x.id==='4.'+(index+1));if(!lesson)throw Error('שיעור לא נמצא בקובץ הביקורת');host.append(renderEditorialLesson(lesson,index))}else{let elements=extract(raw);let {fragment,figureNumber,sectionNumber}=compose(elements.filter((part,i,arr)=>!/^מטרת השיעור\b|^מטרה\s*:/.test(part.text) && !(i>0 && /^מטרת השיעור\b/.test(arr[i-1].text))));host.append(fragment);if(!figureNumber){host.append(node('div','fig-placeholder','איורי ההוראה הפנימיים לא זוהו כקבצים נפרדים. יש לבצע התאמה מול ה־PDF המקורי.'))}}
 let footer=node('div','actions'),prev=node('button','','השיעור הקודם'),next=node('button','','השיעור הבא');prev.disabled=index===0;next.disabled=index===11;prev.onclick=()=>openLesson(index-1);next.onclick=()=>openLesson(index+1);footer.append(prev,next);host.append(footer);
 let details=node('details','source-preview'),summary=node('summary','','לבדיקת התאמה: תמלול המקור ללא עריכה');details.append(summary,node('pre','',raw));host.append(details);
 const solutions=host.querySelectorAll('.section.solution');for(const section of solutions){let h=section.querySelector('h3'),remaining=[...section.children].filter(e=>e!==h),d=node('details');d.append(node('summary','','הצגת פתרון והסבר'));let body=node('div','solution-body');remaining.forEach(e=>body.append(e));d.append(body);section.append(d)}
