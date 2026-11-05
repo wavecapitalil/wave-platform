@@ -114,6 +114,7 @@ def route_specs():
 
     # Sector drill-down for every UI sector and every UI period.
     for sector in sorted(SECTOR_DETAIL):
+        specs.append(_spec("/api/sector-universe", {"sector":sector}, "sectors", 1440, optional=True))
         for period, ttl in (("1d",15),("1w",60),("1m",240),("3m",1440)):
             specs.append(_spec("/api/sector-detail", {"sector":sector,"period":period}, "sectors", ttl))
 

@@ -298,7 +298,8 @@ function renderStockDetail(d){
   html += '</div>';
 
   html += '</div>';
-  document.getElementById('stockDetailContent').innerHTML = html;
+  document.getElementById('stockDetailContent').innerHTML = buildOverviewHtml(d) + forwardPanel(d) + ratioComparisonShell(d);
+  loadRatioComparisons(d,document.getElementById('stockDetailContent'));
   loadOwnership(d.symbol);
 }
 
@@ -973,7 +974,8 @@ function renderResearchResult(d){
     kpiRow('Payout Ratio',   fmtPct(d.payout_ratio)),
   ]);
   html += '</div></div>';
-  document.getElementById('resKpiContent').innerHTML = html;
+  document.getElementById('resKpiContent').innerHTML = forwardPanel(d) + ratioComparisonShell(d);
+  loadRatioComparisons(d,document.getElementById('resKpiContent'));
   if(window.WaveResearch)WaveResearch.update(d);
   loadOwnership(d.symbol);
   loadResearchInsiders(d.symbol);
@@ -1688,3 +1690,29 @@ function renderSectorDetail(data){
 
 
 
+
+// Comparison cells are updated only inside the original, still-connected node.
+// A subsequent ticker render replaces that node and cannot receive stale data.
+var ratioLabels={pe_trailing:'P/E Trailing',pe_forward:'P/E Forward',peg_ratio:'PEG Provider',peg_historical:'PEG Historical',ps_ratio:'P/S',pb_ratio:'P/B',ev_ebitda:'EV/EBITDA',gross_margin:'Gross margin',operating_margin:'Operating margin',net_margin:'Net margin',roe:'ROE',roa:'ROA',debt_to_equity:'Debt / Equity',current_ratio:'Current ratio',quick_ratio:'Quick ratio',dividend_yield:'Dividend yield',payout_ratio:'Payout ratio',revenue_growth:'Revenue growth',earnings_growth:'Earnings growth'};
+function ratioEscape(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function ratioValue(key,v){return typeof v==='number'&&isFinite(v)?v.toFixed(2)+(/margin|^ro[ea]$|yield|payout|growth|debt_to_equity/.test(key)?'%':'×'):'—';}
+function ratioComparisonShell(d){return '<section class="ratio-comparisons" data-ratio-symbol="'+ratioEscape(d.symbol)+'"><h3>Ratio comparisons</h3><div class="ratio-head"><span>Ratio</span><span>Current</span><span>Company 5-year history<br>Annual sample mean</span><span>Sector comparison</span></div>'+Object.keys(ratioLabels).map(function(k){return '<div class="ratio-row" data-ratio-key="'+k+'"><h4>'+ratioLabels[k]+'</h4><div><small class="ratio-mobile">Current</small><strong>'+ratioValue(k,d[k])+'</strong><small>'+ratioEscape(calculationPeriod(d,k,'')||'')+'</small><small>'+ratioEscape(d.price_timestamp||'Quote time unavailable')+'</small></div><div data-ratio-history><small class="ratio-mobile">Company 5-year history</small><span role="status">Loading annual samples…</span></div><div data-ratio-sector><small class="ratio-mobile">Sector comparison</small><span role="status">Loading coverage…</span></div></div>';}).join('')+'<div class="ratio-earnings">EPS trailing: '+ratioEscape(d.eps_trailing==null?'—':d.eps_trailing)+' · EPS forward: '+ratioEscape(d.eps_forward==null?'—':d.eps_forward)+' '+ratioEscape(d.currency||'')+'</div></section>';}
+function loadRatioComparisons(d,host){var node=host.querySelector('.ratio-comparisons');if(!node)return;
+ fetch(API+'/api/research-ratio-comparisons?symbol='+encodeURIComponent(d.symbol)).then(function(r){if(!r.ok)throw Error('Comparison endpoint unavailable');return r.json();}).then(function(data){
+ if(!node.isConnected||node.dataset.ratioSymbol!==d.symbol)return;if(data.symbol!==d.symbol||!data.rows)throw Error('Comparison response mismatch');
+ Object.keys(ratioLabels).forEach(function(k){var row=node.querySelector('[data-ratio-key="'+k+'"]'),v=data.rows[k]||{},h=v.history||{},p=v.peers||{},s=v.sector||{};
+ var history='<small class="ratio-mobile">Company 5-year history</small><strong>'+ratioValue(k,h.value)+'</strong>';
+ history+='<small>'+ratioEscape(h.reason||((h.partial?'Partial · ':'')+h.count+'/5 annual samples'))+'</small>';
+ if(h.value!=null)history+='<small>'+ratioEscape(h.period_start)+' – '+ratioEscape(h.period_end)+'</small><small>Fiscal-year-end basis</small>';
+ if(['gross_margin','operating_margin','net_margin','roe','roa','revenue_growth','earnings_growth'].indexOf(k)>=0)history+='<small>Annual SEC basis; current may use provider TTM</small>';
+ row.querySelector('[data-ratio-history]').innerHTML=history;
+ var sector='<small class="ratio-mobile">Sector comparison</small><strong>'+ratioValue(k,s.value)+'</strong><small>'+ratioEscape(s.label||'Sector cohort')+'</small><small>'+ratioEscape(s.reason||((s.partial?'Partial · ':'')+s.count+'/'+s.eligible_count+' constituents · excludes '+d.symbol))+'</small>';
+ if(s.target_snapshot_value!=null)sector+='<small>'+ratioEscape(d.symbol)+' at same snapshot: '+ratioValue(k,s.target_snapshot_value)+'</small>';
+ if(s.value!=null)sector+='<small>Holdings '+ratioEscape(s.holdings_as_of)+' · ratios '+ratioEscape(s.as_of)+'</small>';
+ sector+='<strong class="ratio-peer-value">'+ratioValue(k,p.value)+'</strong><small>'+ratioEscape(p.label||'Selected peers')+'</small><small>'+ratioEscape(p.reason||p.count+'/'+p.eligible_count+' eligible peers · excludes '+d.symbol)+'</small>';
+ if(p.value!=null)sector+='<small>'+ratioEscape(p.as_of)+'</small>';
+ row.querySelector('[data-ratio-sector]').innerHTML=sector;
+ });
+ if(window.WaveSources)WaveSources.record('ratio-comparisons:'+d.symbol,d.symbol+' ratio comparison methodology',data.methodology+'\n'+JSON.stringify(data.rows,null,2),[]);
+ }).catch(function(){if(!node.isConnected)return;node.querySelectorAll('[data-ratio-history],[data-ratio-sector]').forEach(function(cell){cell.textContent='Comparison data unavailable — retry by reopening this ticker.';});});
+}

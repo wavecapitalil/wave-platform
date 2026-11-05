@@ -6,6 +6,8 @@ import { buildValuationInputs } from "./valuation-inputs.ts";
 import { withFundamentalReporting } from "./fundamental-reporting.ts";
 import { collectCompanyEvents } from "./company-events.ts";
 import { collectPriceHistory } from "./price-history.ts";
+import {SECTOR_UNIVERSES} from './sector-universes.ts';
+import {ratioHistory,ratioComparisons,sectorComparisons} from './ratio-comparisons.ts';
 import {collectHistoricalPE} from './historical-pe.ts';
 import {insiderFilingLinks,statementSeries,collectResearchSeasonality,collectDailyTape} from './research-data.ts';
 import {createCompanyFactsLoader} from './company-facts.ts';
@@ -18,6 +20,15 @@ const db=createClient(SUPABASE_URL,ANON,{auth:{persistSession:false}});
 const admin=createClient(SUPABASE_URL,SERVICE_KEY,{auth:{persistSession:false}});
 const companyFacts=createCompanyFactsLoader(symbol=>admin.rpc('wave_get_companyfacts',{p_ticker:symbol,p_force:false}));
 
+const ratioHistoryCache=new Map<string,{expires:number,promise:Promise<any>}>();
+async function cachedRatioHistory(symbol:string){
+ const cached=ratioHistoryCache.get(symbol);if(cached&&cached.expires>Date.now())return cached.promise;
+ if(ratioHistoryCache.size>=100)ratioHistoryCache.delete(ratioHistoryCache.keys().next().value!);
+ const promise=(async()=>{const r=await companyFacts(symbol);if(r.error||!r.data?.document)throw Error('SEC companyfacts unavailable');
+ const prices=await collectHistoricalPE(r.data,symbol).catch(()=>null);return ratioHistory(r.data.document,prices);})();
+ ratioHistoryCache.set(symbol,{expires:Date.now()+3600000,promise});
+ promise.catch(()=>ratioHistoryCache.delete(symbol));return promise;
+}
 const cors={
   "access-control-allow-origin":"*",
   "access-control-allow-methods":"GET,POST,OPTIONS",
@@ -691,6 +702,19 @@ Deno.serve(async(req:Request)=>{
       const filings=await reportingFilings(String(r.data.cik));
       if(!filings)return json({error:'SEC submissions unavailable'},502);
       return json({symbol,filings:insiderFilingLinks(filings.document,String(r.data.cik)),meta:{source:'SEC submissions',fetched_at:filings.fetched_at,coverage:'Latest 20 Form4/4A filing records, not matched to provider transaction rows'}});
+    }
+    if(p.endsWith("/api/research-ratio-comparisons")){
+      const symbol=String(u.searchParams.get('symbol')||'').trim().toUpperCase();
+      if(!/^[A-Z0-9][A-Z0-9.=-]{0,19}$/.test(symbol))return json({error:'Invalid symbol'},400);
+      const [history,peers,config]=await Promise.all([cachedRatioHistory(symbol).catch(()=>null),snapshot('api:/api/peers?symbol='+symbol).catch(()=>null),settings(admin)]);
+      const comparison=ratioComparisons(history,peers,symbol,Object.keys(config.formulas));
+      const {data:universeRows}=await db.from('data_snapshots').select('data').like('dataset_key','api:/api/sector-universe?sector=%').limit(11);
+      const universes={...SECTOR_UNIVERSES};for(const row of universeRows||[]){const v=row.data?.payload||row.data;if(v?.fund&&Array.isArray(v.members))universes[v.fund]=v;}
+      const universe=Object.values(universes).find((v:any)=>v.members.includes(symbol));
+      const {data:peerRows}=await db.from('data_snapshots').select('data,fetched_at,expires_at').like('dataset_key','api:/api/peers?symbol=%').limit(100);
+      const sectors=sectorComparisons(universe,peerRows||[],symbol,Object.keys(config.formulas));
+      for(const key of Object.keys(comparison.rows))comparison.rows[key].sector=sectors[key];
+      return json(comparison,200,{'cache-control':'no-store'});
     }
     if(p.endsWith("/api/research-historical-pe")){
       const symbol=String(u.searchParams.get('symbol')||'').trim().toUpperCase();

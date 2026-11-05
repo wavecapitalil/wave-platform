@@ -61,6 +61,9 @@ jobs:
         working-directory: services/api/data_engine
         run: python -m unittest -v test_calculations.py test_route_registry.py test_resilience.py test_fundamentals.py test_sec_concept_merge.py test_flows.py
 
+      - name: Official sector holdings parser
+        run: python scripts/sector_universe_test.py
+
       - name: Build due snapshots
         shell: bash
         run: |
