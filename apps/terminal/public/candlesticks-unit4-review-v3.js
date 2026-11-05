@@ -27,16 +27,15 @@ function drawCaption(host,label,lesson,index){
  figure.append(img,fallback);
  const cap=elem('figcaption','');bilingual(cap,label);figure.append(cap);host.append(figure);
 }
-function panel(lesson,section,index){
+function panel(lesson,section,index,figureCounter){
  const isPractice=section.type==='exercise',isSolution=section.type==='solution';
  const el=elem('section','lesson-panel '+(section.type||'content'));
  let title=elem('h2','panel-title');const match=section.heading.match(/^(\d{1,2})\.\s+(.+)$/);
  if(match){title.append(elem('span','section-index',match[1]+'. '));bilingual(title,match[2])}else bilingual(title,section.heading);
  el.append(title);
  const body=elem('div','panel-body');
- let figIdx=0;
  for(const item of section.items||[]){
-  if(item.type==='figure-note')drawCaption(body,item.text,lesson,++figIdx+index*100);
+  if(item.type==='figure-note')drawCaption(body,item.text,lesson,++figureCounter.value);
   else textBlock(body,item.text);
  }
  if(isSolution){const details=elem('details','answer-details');const summary=elem('summary','','הצגת הפתרון וההסבר');details.append(summary,body);el.append(details)}else el.append(body);
@@ -58,7 +57,7 @@ function select(i){
  host.replaceChildren();
  const hero=elem('section','lesson-hero');const cover=elem('img','cover');cover.src=root+'lesson-4-'+String(i+1).padStart(2,'0')+'.webp';cover.alt='איור שער לשיעור '+lesson.id;cover.loading='lazy';hero.append(cover);
  const heading=elem('div','hero-body');heading.append(elem('span','eyebrow','יחידה 4 · '+(i<5?'חלק א׳ — תבניות נר בודד':'חלק ב׳ — תבניות שני נרות')));const h=elem('h1','',lesson.id+' — '+lesson.title);heading.append(h);heading.append(elem('p','hero-meta','גרסת תוכן לעריכה · לא אושרה לפרסום'));hero.append(heading);host.append(hero);
- lesson.sections.forEach((section,j)=>host.append(panel(i+1,section,j)));
+ const figureCounter={value:0};lesson.sections.forEach((section,j)=>host.append(panel(i+1,section,j,figureCounter)));
  const controls=elem('div','lesson-controls');const prev=elem('button','','השיעור הקודם'),next=elem('button','','השיעור הבא');prev.disabled=i===0;next.disabled=i===11;prev.onclick=()=>select(i-1);next.onclick=()=>select(i+1);controls.append(prev,next);host.append(controls);
  const audit=elem('details','audit-details');audit.append(elem('summary','','פרטי מקור ובקרת איכות'));audit.append(elem('p','', 'קובץ מקור: '+lesson.source_path+' · מזהה מקור: '+lesson.source_id));audit.append(elem('p','', 'גרסת הביקורת שומרת על כל ההסברים והדוגמאות; נוסחאות וערכים שיובאו מ־PDF מחייבים בדיקה לפני פרסום.'));host.append(audit);
  if(history.replaceState){const u=new URL(location.href);u.searchParams.set('lesson',String(i+1));history.replaceState({},'',u.pathname+u.search)}
