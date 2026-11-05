@@ -516,7 +516,8 @@ def peers():
     def fetch_peer(p):
         try:
             from services.peer_quotes import peer_info
-            info = peer_info(p)
+            observation = peer_info(p)
+            info = observation['info']
 
             def g(key):
                 v = info.get(key)
@@ -528,6 +529,7 @@ def peers():
 
             return {
                 'symbol':           p,
+                'acquired_at':      observation['acquired_at'],
                 'name':             g('shortName') or p,
                 'market_cap':       g('marketCap'),
                 'pe_trailing':      g('trailingPE'),
