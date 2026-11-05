@@ -6,6 +6,7 @@ import { buildValuationInputs } from "./valuation-inputs.ts";
 import { withFundamentalReporting } from "./fundamental-reporting.ts";
 import { collectCompanyEvents } from "./company-events.ts";
 import { collectPriceHistory } from "./price-history.ts";
+import { collectCatalysts } from "./catalysts.ts";
 import {SECTOR_UNIVERSES} from './sector-universes.ts';
 import {ratioHistory,ratioComparisons,sectorComparisons} from './ratio-comparisons.ts';
 import {historicalPEWithAvailability} from './historical-pe.ts';
@@ -752,6 +753,12 @@ Deno.serve(async(req:Request)=>{
       let issuer=null;try{issuer=await secTickerRecord(symbol);}catch{/* Price remains available with explicit event coverage gaps. */}
       const companyEvents=collectCompanyEvents(symbol,issuer?.cik||null).catch(()=>({events:[],coverage:[{source:'Company event collector',status:'unavailable',gap:'Event sources unavailable; prices remain independently available.'}]}));
       return json(await collectPriceHistory(symbol,range,{companyEvents}),200,{"cache-control":"public, max-age=300","x-wave-source":"price-history"});
+    }
+    if(p.endsWith("/api/catalysts")){
+      const symbol=String(u.searchParams.get("symbol")||"").trim().toUpperCase();
+      if(!/^[A-Z][A-Z0-9.-]{0,14}$/.test(symbol))return json({error:"valid symbol required"},400);
+      try{return json(await collectCatalysts(symbol),200,{"cache-control":"public, max-age=300","x-wave-source":"catalysts"});}
+      catch{return json({error:"price history unavailable",symbol},502);}
     }
 
     // Isolated valuation data contract; does not change stock-info calculations.

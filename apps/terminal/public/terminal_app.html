@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="terminal-sources.css?v=20261105-datalog1">
 <link rel="stylesheet" href="terminal-gold-expectations.css?v=20261009-2">
 <link rel="stylesheet" href="terminal-valuation.css?v=20261014-report">
-<link rel="stylesheet" href="terminal-price-history.css?v=20261013-material-events">
+<link rel="stylesheet" href="terminal-price-history.css?v=20261106-dots">
+<link rel="stylesheet" href="terminal-catalysts.css?v=20261106-dots">
 <link rel="stylesheet" href="terminal-research.css?v=20261014-persistent-statements">
 <link rel="stylesheet" href="terminal-sector-research.css?v=20261105-sector1">
 <link rel="stylesheet" href="terminal-brief.css?v=20261009-brighter-reader1">
@@ -145,6 +146,9 @@
         </div>
         <div class="nav-item" data-page="sector-research" onclick="navigate('sector-research')">
           <span class="nav-item-icon">🥧</span> <span data-i18n="sidebar.sectorResearch">Sector Research</span>
+        </div>
+        <div class="nav-item" data-page="catalysts" onclick="navigate('catalysts')">
+          <span class="nav-item-icon">📍</span> <span data-i18n="sidebar.catalysts">Catalyst Calendar</span>
         </div>
 
         <div class="nav-item" data-page="mover" onclick="navigate('mover')">
@@ -953,6 +957,48 @@
       </div>
     </div>
 
+    <div class="page" id="page-catalysts">
+      <div class="welcome-wrap cc-wrap">
+        <div class="page-header" style="margin-bottom:20px">
+          <div class="page-header-tag" data-i18n="catalysts.tag">Equities</div>
+          <div class="page-header-title" data-i18n="sidebar.catalysts">Catalyst Calendar</div>
+        </div>
+        <form id="ccForm" class="mini-section" style="margin-bottom:16px" autocomplete="off">
+          <div class="cc-controls">
+            <input id="ccTicker" type="text" maxlength="15" value="AAPL" spellcheck="false" aria-label="Ticker" data-i18n-placeholder="catalysts.tickerPlaceholder" placeholder="Ticker">
+            <button type="submit" data-i18n="catalysts.show">Show</button>
+          </div>
+          <div class="cc-quick">
+            <button type="button" data-cc-symbol="AAPL">AAPL</button>
+            <button type="button" data-cc-symbol="MSFT">MSFT</button>
+            <button type="button" data-cc-symbol="NVDA">NVDA</button>
+            <button type="button" data-cc-symbol="META">META</button>
+            <button type="button" data-cc-symbol="GOOGL">GOOGL</button>
+            <button type="button" data-cc-symbol="AMZN">AMZN</button>
+            <button type="button" data-cc-symbol="JPM">JPM</button>
+            <button type="button" data-cc-symbol="PFE">PFE</button>
+          </div>
+        </form>
+        <div class="cc-layout" id="ccBody">
+          <section class="cc-card" aria-label="Price">
+            <div class="cc-legend">
+              <span><i class="cc-pip positive"></i> <span id="ccLegendRally" data-i18n="catalysts.rally">Rally</span></span>
+              <span><i class="cc-pip negative"></i> <span id="ccLegendDrop" data-i18n="catalysts.drop">Drop</span></span>
+              <span><i class="cc-pip"></i> <span id="ccLegendOpen" data-i18n="catalysts.open">Open</span></span>
+            </div>
+            <div class="cc-chart-wrap"><canvas id="ccChart" role="img" aria-label="Price chart"></canvas></div>
+          </section>
+          <section class="cc-card">
+            <div id="ccFilters" class="cc-filters"></div>
+            <div class="cc-table-scroll">
+              <table class="cc-table" id="ccTable"></table>
+            </div>
+          </section>
+        </div>
+        <div id="ccStatus" class="cc-status" role="status"></div>
+      </div>
+    </div>
+
     <!-- ─── INSTITUTIONAL HOLDINGS PAGE ─── -->
     <div class="page" id="page-institutions">
       <div class="welcome-wrap" style="max-width:960px">
@@ -1578,7 +1624,8 @@ if (window.Chart) Chart.register({
   }
 });
 </script>
-<script src="terminal-price-history.js?v=20261106-clean1"></script>
+<script src="terminal-catalysts.js?v=20261106-dots"></script>
+<script src="terminal-price-history.js?v=20261106-dots"></script>
 <script src="terminal-equities.js?v=20261106-clean1"></script>
 <script src="terminal-research.js?v=20261106-clean1"></script>
 <script src="terminal-research-markets.js?v=20261106-clean1"></script>
