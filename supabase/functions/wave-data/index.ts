@@ -8,7 +8,8 @@ import { collectCompanyEvents } from "./company-events.ts";
 import { collectPriceHistory } from "./price-history.ts";
 import {SECTOR_UNIVERSES} from './sector-universes.ts';
 import {ratioHistory,ratioComparisons,sectorComparisons} from './ratio-comparisons.ts';
-import {collectHistoricalPE} from './historical-pe.ts';
+import {historicalPEWithAvailability} from './historical-pe.ts';
+import {createHistoricalPriceLoader} from './historical-price-cache.ts';
 import {insiderFilingLinks,statementSeries,collectResearchSeasonality,collectDailyTape} from './research-data.ts';
 import {createCompanyFactsLoader} from './company-facts.ts';
 
@@ -20,15 +21,18 @@ const db=createClient(SUPABASE_URL,ANON,{auth:{persistSession:false}});
 const admin=createClient(SUPABASE_URL,SERVICE_KEY,{auth:{persistSession:false}});
 const companyFacts=createCompanyFactsLoader(symbol=>admin.rpc('wave_get_companyfacts',{p_ticker:symbol,p_force:false}));
 
-const ratioHistoryCache=new Map<string,{expires:number,promise:Promise<any>}>();
-async function cachedRatioHistory(symbol:string){
- const cached=ratioHistoryCache.get(symbol);if(cached&&cached.expires>Date.now())return cached.promise;
- if(ratioHistoryCache.size>=100)ratioHistoryCache.delete(ratioHistoryCache.keys().next().value!);
- const promise=(async()=>{const r=await companyFacts(symbol);if(r.error||!r.data?.document)throw Error('SEC companyfacts unavailable');
- const prices=await collectHistoricalPE(r.data,symbol).catch(()=>null);return ratioHistory(r.data.document,prices);})();
- ratioHistoryCache.set(symbol,{expires:Date.now()+3600000,promise});
- promise.catch(()=>ratioHistoryCache.delete(symbol));return promise;
+const historicalPrices=createHistoricalPriceLoader({
+ read:async(key:string)=>{const {data,error}=await admin.from('data_snapshots').select('data').eq('dataset_key',key).maybeSingle().abortSignal(AbortSignal.timeout(3000));if(error)throw error;return data?.data;},
+ write:async(key:string,value:any)=>{const now=new Date().toISOString(),acquired=value.acquired_at||value.attempted_at||now;
+  const {error}=await admin.from('data_snapshots').upsert({dataset_key:key,dataset_group:'research_history',data:value,source:'Yahoo historical chart cache',source_timestamp:acquired,fetched_at:acquired,calculated_at:now,expires_at:value.retry_at||new Date(Date.parse(acquired)+86400000).toISOString(),logic_version:'historical-price-cache-v1',freshness:'snapshot',stale:false,fallback:false,status:value.error?'error':'ok',error:value.error||null},{onConflict:'dataset_key'}).abortSignal(AbortSignal.timeout(3000));if(error)throw error;
+ }
+});
+async function historicalInputs(symbol:string){
+ const r=await companyFacts(symbol);if(r.error||!r.data?.document)throw Error('SEC companyfacts unavailable');
+ const prices=await historicalPrices(symbol);
+ return {document:r.data.document,historical:historicalPEWithAvailability(r.data,prices,symbol)};
 }
+async function cachedRatioHistory(symbol:string){const r=await historicalInputs(symbol);return ratioHistory(r.document,r.historical);}
 const cors={
   "access-control-allow-origin":"*",
   "access-control-allow-methods":"GET,POST,OPTIONS",
@@ -719,9 +723,8 @@ Deno.serve(async(req:Request)=>{
     if(p.endsWith("/api/research-historical-pe")){
       const symbol=String(u.searchParams.get('symbol')||'').trim().toUpperCase();
       if(!/^[A-Z0-9][A-Z0-9.=-]{0,19}$/.test(symbol))return json({error:'Invalid symbol'},400);
-      const r=await companyFacts(symbol);
-      if(r.error||!r.data?.document)return json({error:'SEC companyfacts unavailable'},502);
-      return json(await collectHistoricalPE(r.data,symbol));
+      const {historical}=await historicalInputs(symbol);
+      return json(historical,200,{'cache-control':'no-store'});
     }
     if(p.endsWith("/api/research-tape")){
       const symbol=String(u.searchParams.get('symbol')||'').trim().toUpperCase();
