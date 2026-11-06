@@ -76,6 +76,7 @@ function navigate(page){
   }
 
   if(page === 'sector-research' && window.SectorResearch) SectorResearch.open();
+  if(page === 'catalysts' && window.WaveCatalysts) WaveCatalysts.open();
 
   if(page === 'institutions'){
     setTimeout(loadInstitutionsList, 50);
@@ -420,9 +421,13 @@ function _newsTimeAgo(pubStr){
 window.addEventListener('load', function(){
   var deep = new URLSearchParams((location.hash||'').replace(/^#/, ''));
   var deepPage = deep.get('page');
+  var deepSymbol = deep.get('symbol');
   if(deepPage && document.getElementById('page-' + deepPage)){
+    if(deepSymbol && deepPage === 'catalysts'){
+      var catalystInput = document.getElementById('ccTicker');
+      if(catalystInput) catalystInput.value = deepSymbol;
+    }
     navigate(deepPage);
-    var deepSymbol = deep.get('symbol');
     if(deepSymbol && deepPage === 'mover'){
       var deepInput = document.getElementById('moverInput');
       if(deepInput){

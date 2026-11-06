@@ -15,6 +15,7 @@
     ['sectors','Sector Strength','Equity sectors'],
     ['breadth','Market Breadth','SPY vs RSP breadth'],
     ['research','Equity Research','Company research workspace'],
+    ['catalysts','Catalyst Calendar','Price chart and catalyst dates'],
     ['institutions','Institutions','Institutional activity'],
     ['comm-flows','Cross-Asset Flows','Futures, options and crypto flows'],
     ['confluence','Confluence Monitor','Multi-factor evidence'],
