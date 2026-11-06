@@ -90,7 +90,7 @@
   function comparisonPoints(s){return events(s).map(function(r){
     var c=verifiedConsensus(r,s),actual=Date.parse(r.scheduled_at)<=Date.now()&&typeof r.actual==='number'?r.actual:null;
     var difference=actual!==null&&c?actual-c.value:null;
-    var tip=t('Actual','בפועל')+': '+readable(actual,s.unit)+' '+s.unit+' · '+t('Consensus','צפי')+': '+readable(c&&c.value,s.unit)+' '+s.unit+' · '+t('Difference','הפרש')+': '+num(difference)+' '+s.unit;
+    var tip=r.period+' · '+t('Actual','בפועל')+': '+readable(actual,s.unit)+' '+s.unit+' · '+t('Consensus','צפי')+': '+readable(c&&c.value,s.unit)+' '+s.unit+' · '+t('Difference','הפרש')+': '+num(difference)+' '+s.unit;
     return {period:r.scheduled_at.slice(0,10),value:actual,consensus:c?c.value:null,tooltip:tip,reference_period:r.period};
   });}
   function nextRelease(s,h){

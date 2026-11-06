@@ -66,6 +66,7 @@ function navigate(page){
 
   if(page === 'sources') WaveSources.render();
   if(page === 'data-log' && window.WaveDataLog) WaveDataLog.render();
+  if(page === 'uber-tracker' && window.WaveUberTracker) WaveUberTracker.open();
   var mainPane = document.querySelector('.main');
   if(mainPane) mainPane.classList.toggle('valuation-active', page === 'valuation');
   if(page === 'valuation' && window.WaveValuation) WaveValuation.open();
