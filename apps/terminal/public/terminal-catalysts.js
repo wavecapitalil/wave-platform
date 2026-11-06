@@ -64,6 +64,44 @@
     }
     ctx.restore();
   }
+  var outsideBound = false;
+  function bindPointer(canvas, chart){
+    function hit(event){
+      var rect = canvas.getBoundingClientRect();
+      var x = event.clientX - rect.left;
+      var y = event.clientY - rect.top;
+      var best = null;
+      var bestDistance = 22 * 22;
+      (chart.$dotPositions||[]).forEach(function(point){
+        if(!point || !point.visible || !point.row || !point.row.line) return;
+        var dx = point.px - x;
+        var dy = point.py - y;
+        var distance = dx * dx + dy * dy;
+        if(distance <= bestDistance){best = point; bestDistance = distance;}
+      });
+      return best;
+    }
+    function show(event){
+      var best = hit(event);
+      if(!best){hideTip(); return;}
+      showTip(best.row, event.clientX, event.clientY);
+    }
+    var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    canvas.style.touchAction = 'manipulation';
+    canvas.onpointermove = function(event){if(fine) show(event);};
+    canvas.onpointerup = function(event){show(event);};
+    canvas.onpointerleave = function(){if(fine) hideTip();};
+    canvas.onpointercancel = function(){if(fine) hideTip();};
+    if(!outsideBound){
+      outsideBound = true;
+      document.addEventListener('pointerdown', function(event){
+        var node = el('wave-catalyst-tip');
+        if(!node || node.hidden) return;
+        if(event.target && event.target.closest && event.target.closest('canvas')) return;
+        hideTip();
+      });
+    }
+  }
   function tipNode(){
     var node = el('wave-catalyst-tip');
     if(!node){
@@ -145,39 +183,12 @@
         var py = chart.scales.y.getPixelForValue(point.y);
         return {px:px, py:py, row:row, visible:px>=area.left-8 && px<=area.right+8 && py>=area.top-8 && py<=area.bottom+8};
       });
+      chart.$dotPositions = positions;
       positions.forEach(function(point){
         if(!point.visible || !Number.isFinite(point.px) || !Number.isFinite(point.py)) return;
         drawDot(chart.ctx, point.px, point.py, toneOf(point.row.outcome), {radius:5, ring:true});
       });
     }};
-    function externalTooltip(context){
-      var chart = context.chart;
-      var native = chart.$catalystEvent;
-      if(!native){hideTip(); return;}
-      var rect = chart.canvas.getBoundingClientRect();
-      var x = native.clientX - rect.left;
-      var y = native.clientY - rect.top;
-      var best = null;
-      var bestDistance = 16 * 16;
-      positions.forEach(function(point){
-        if(!point.visible) return;
-        var dx = point.px - x;
-        var dy = point.py - y;
-        var distance = dx * dx + dy * dy;
-        if(distance <= bestDistance){best = point; bestDistance = distance;}
-      });
-      if(!best){hideTip(); return;}
-      showTip(best.row, native.clientX, native.clientY);
-    }
-    canvas.onpointermove = function(event){
-      if(!state.chart) return;
-      state.chart.$catalystEvent = event;
-      externalTooltip({chart:state.chart, tooltip:state.chart.tooltip});
-    };
-    canvas.onpointerleave = function(){
-      if(state.chart) state.chart.$catalystEvent = null;
-      hideTip();
-    };
     state.chart = new Chart(canvas, {
       type:'line',
       data:{
@@ -195,7 +206,7 @@
         interaction:{mode:'nearest', intersect:true},
         plugins:{
           legend:{display:false},
-          tooltip:{enabled:false, external:externalTooltip}
+          tooltip:{enabled:false}
         },
         scales:{
           x:{type:'category', grid:{display:false}, ticks:{color:'#9cacc2', maxTicksLimit:6, maxRotation:0, autoSkipPadding:12, callback:function(value){var label=this.getLabelForValue(value);if(!/^\d{4}-\d{2}-\d{2}$/.test(String(label||'')))return label;return new Date(label+'T12:00:00Z').toLocaleDateString('en-US',{month:'short',year:'2-digit',timeZone:'UTC'});}}},
@@ -208,6 +219,7 @@
         }
       }
     });
+    bindPointer(canvas, state.chart);
     return state.chart;
   }
   function setStatus(text, retrySymbol){
@@ -332,6 +344,6 @@
       {title:'Yahoo Finance', url:'https://finance.yahoo.com/'}
     ]);
   }
-  window.WaveCatalystChart = {colors:COLORS, color:color, drawDot:drawDot};
+  window.WaveCatalystChart = {colors:COLORS, color:color, drawDot:drawDot, bindPointer:bindPointer, hideTip:hideTip};
   window.WaveCatalysts = {open:open, load:load};
 })();
