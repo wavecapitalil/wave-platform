@@ -236,7 +236,7 @@
       'הקריאה הכוללת "' + data.inference.label_he + '" היא הסקה מפרוקסי הנפח הציבוריים, בפס שטוח של ' + data.inference.flat_band_pct + '% לכל רכיב. כשהרכיבים חלוקים, הקריאה יציבה. הדפסת ה-SEC אינה נכנסת לציון. סדרה ריקה אינה אפס.\n' +
       data.inference.components.map(function(row){return row.id + ': ' + row.change_pct + '% ' + row.read + ' (' + row.detail + ')';}).join('\n') + '\n' +
       data.inference.excluded.join('\n') + '\n' +
-      'ניו יורק: ממוצע יומי של נסיעות HVFHV, Uber מול Lyft, מספטמבר 2025 עד אוגוסט 2026. המקור הוא אגרגציית TLC Help של קובצי TLC (HV0003/HV0005), שנמשכה ב-' + nyc[0].source_pulled + '. זה לא ציטוט מחיר ולא נפח ארצי. החודש האחרון בקובץ הוא אוגוסט 2026.\n' +
+      'ניו יורק: ממוצע יומי של נסיעות HVFHV, Uber מול Lyft, מ-' + nyc[0].month + ' עד ' + nyc[nyc.length-1].month + '. החודשים עד אוגוסט 2026 הם אגרגציית TLC Help שנמשכה ב-' + nyc[0].source_pulled + '. ספטמבר 2026 נספר מקובץ TLC החודשי. זה לא ציטוט מחיר ולא נפח ארצי.\n' +
       'LAX: נסיעות TNC חודשיות מדוחות LAWA. זה לא Uber בלבד ולא כל העיר. חודשים שאינם בקובץ לא הושלמו.\n' +
       'בונוס נהגים: מודעות פומביות מאתר הפניה עצמאי, אומתו ב-5 בנובמבר 2026. לא מספר נהגים ולא מספר נסיעות.\n' +
       'הדפסת Q3 2026: Exhibit 99.1, הוגש ב-4 בנובמבר 2026. מדד Q4 הוא תחזית החברה, לא קונצנזוס מכירות.\n' +
@@ -247,7 +247,7 @@
       'The overall read "' + data.inference.label_en + '" is an inference from the public volume proxies, using a flat band of ' + data.inference.flat_band_pct + '% per component. Disagreement is read as stable. The SEC print is not an input. An empty series is not zero.\n' +
       data.inference.components.map(function(row){return row.id + ': ' + row.change_pct + '% ' + row.read + ' (' + row.detail + ')';}).join('\n') + '\n' +
       data.inference.excluded.join('\n') + '\n' +
-      'New York: HVFHV daily averages, Uber versus Lyft, September 2025 through August 2026. Source is the TLC Help aggregation of TLC files (HV0003/HV0005), pulled ' + nyc[0].source_pulled + '. Not a fare quote and not national volume. The latest month in the file is August 2026.\n' +
+      'New York: HVFHV daily averages, Uber versus Lyft, ' + nyc[0].month + ' through ' + nyc[nyc.length-1].month + '. Months through August 2026 are the TLC Help aggregation pulled ' + nyc[0].source_pulled + '. September 2026 was counted from the TLC monthly file. Not a fare quote and not national volume.\n' +
       'LAX: monthly TNC trips from LAWA reports. Not Uber-only and not citywide. Missing months are not filled.\n' +
       'Driver guarantees: public ads on an independent referral site, verified 5 November 2026. Not driver counts and not trip counts.\n' +
       'Q3 2026 print: Exhibit 99.1, filed 4 November 2026. The Q4 range is the company outlook, not sell-side consensus.\n' +
@@ -256,7 +256,8 @@
       data.baseline_pull.note_en
     );
     var links = [{title:'Exhibit 99.1 Q3 2026', url:data.sec_print[0].source_url}];
-    nyc[0].source_urls.forEach(function(url){links.push({title:'NYC HVFHV', url:url});});
+    var seenNyc = {};
+    nyc.forEach(function(row){(row.source_urls||[]).forEach(function(url){if(!seenNyc[url]){seenNyc[url]=1; links.push({title:'NYC HVFHV', url:url});}});});
     data.series.lax_tnc.observations.forEach(function(row){links.push({title:'LAX TNC ' + row.month, url:row.source_url});});
     data.series.driver_bonuses.observations.forEach(function(row){links.push({title:row.city + ' driver ad', url:row.source_url});});
     root.WaveSources.record('uber-tracker', L('UBER TRACKER · מקורות ומתודולוגיה', 'UBER TRACKER · sources and methodology'), text, links);
@@ -357,20 +358,20 @@
     var observed = el('div', 'ut-grid');
     var nycCard = card(observed, true);
     badge(nycCard, 'ut-fact', L('עובדה', 'Fact'));
-    heading(nycCard, L('נסיעות HVFHV ביום, ניו יורק', 'NYC HVFHV trips per day'), 'Uber vs Lyft · Sep 2025–Aug 2026');
     var nyc = data.series.nyc_hvfhv.observations;
+    heading(nycCard, L('נסיעות HVFHV ביום, ניו יורק', 'NYC HVFHV trips per day'), 'Uber vs Lyft · ' + nyc[0].month + '–' + nyc[nyc.length-1].month);
     nycCard.appendChild(linePlot([
       {name:'Uber', color:'#4a9eff', points:nyc.map(function(row){return row.uber_trips_per_day;})},
       {name:'Lyft', color:'#fb923c', points:nyc.map(function(row){return row.lyft_trips_per_day;})}
     ], nyc.map(function(row){return row.month;})));
     nycCard.appendChild(el('p', 'ut-gloss', L('כחול: Uber. כתום: Lyft. הציר ביחידות של אלף נסיעות ביום.', 'Blue: Uber. Orange: Lyft. The axis is in thousands of trips per day.')));
     nycCard.appendChild(table(
-      [[L('חודש', 'Month'), true], ['Uber', true], ['Lyft', true], [L('נתח Uber', 'Uber share'), true]],
-      nyc.map(function(row){return [row.month, fmt(row.uber_trips_per_day, 0), fmt(row.lyft_trips_per_day, 0), fmt(row.uber_share_pct, 1) + '%'];})
+      [[L('חודש', 'Month'), true], ['Uber', true], ['Lyft', true], [L('נתח Uber', 'Uber share'), true], [L('מול שנה', 'YoY'), true]],
+      nyc.map(function(row){return [row.month, fmt(row.uber_trips_per_day, 0), fmt(row.lyft_trips_per_day, 0), fmt(row.uber_share_pct, 1) + '%', row.uber_yoy_pct == null ? '—' : signed(row.uber_yoy_pct, 1) + '%'];})
     ));
     captions(nycCard,
-      L('ממוצע נסיעות ביום ברישומי TLC לרישיונות HV0003 ו-HV0005.', 'Average daily trips in the TLC records for licenses HV0003 and HV0005.'),
-      L('זה לא מחיר, לא זמן המתנה, ולא נפח של נובמבר 2026. האגרגציה נמשכה ב-12 באוקטובר 2026.', 'Not a fare, not a wait time, and not November 2026 volume. The aggregation was pulled on 12 October 2026.')
+      L('ממוצע נסיעות ביום ברישומי TLC לרישיונות HV0003 ו-HV0005. שינוי שנתי הוא מול אותו חודש אשתקד.', 'Average daily trips in the TLC records for licenses HV0003 and HV0005. Year-over-year is versus the same month a year earlier.'),
+      L('זה לא מחיר ולא זמן המתנה. חודש בלי זוג להשוואה נשאר ריק, לא אפס.', 'Not a fare and not a wait time. A month with no comparison pair stays empty, not zero.')
     );
 
     var laxCard = card(observed);
@@ -467,6 +468,7 @@
       L('צמיחת Delivery בהדפסה אינה ציון cold או hot של הפאנל.', 'Delivery growth in the print is not a cold or hot score for the panel.')
     );
     host.appendChild(eatsGrid);
+    renderMethodology(host, data);
 
     var files = card(host, true);
     heading(files, L('קבצי ההיסטוריה', 'History files'), L('השורות נשמרות כאן כדי שהסדרה תצטבר.', 'Rows stay here so the series can compound.'));
@@ -491,6 +493,45 @@
     foot.appendChild(sourceLink);
     foot.appendChild(document.createTextNode(L(' · קלט מחקר, לא המלצת מסחר. תא ריק הוא ערך שלא נצפה.', ' · Research input, not a trade recommendation. An empty cell was not observed.')));
     host.appendChild(foot);
+  }
+
+  function partNode(part){
+    if(part.url){
+      var href = /^https?:/i.test(part.url) ? part.url : asset(part.url);
+      var link = document.createElement('a');
+      link.href = href;
+      link.dir = 'ltr';
+      if(/^https?:/i.test(href)){link.target = '_blank'; link.rel = 'noopener noreferrer';}
+      link.appendChild(bdi(part.text || part.url));
+      return link;
+    }
+    if(part.ltr) return bdi(part.text);
+    return document.createTextNode(part.text || '');
+  }
+  function fillParts(node, parts){
+    (parts || []).forEach(function(part){node.appendChild(partNode(part));});
+  }
+  function renderMethodology(parent, data){
+    var section = el('section', 'ut-method');
+    section.dir = he() ? 'rtl' : 'ltr';
+    section.appendChild(el('h2', null, L('איך זה מחושב', 'How this is calculated')));
+    (data.methodology || []).forEach(function(item){
+      var block = el('article');
+      block.appendChild(el('h3', null, L(item.title_he, item.title_en)));
+      var calc = el('p');
+      fillParts(calc, he() ? item.calc_he : item.calc_en);
+      block.appendChild(calc);
+      if(item.links && item.links.length){
+        var links = el('p', 'ut-links');
+        fillParts(links, item.links);
+        block.appendChild(links);
+      }
+      var freq = el('p', 'ut-note');
+      fillParts(freq, he() ? item.freq_he : item.freq_en);
+      block.appendChild(freq);
+      section.appendChild(block);
+    });
+    parent.appendChild(section);
   }
 
   function mount(node){

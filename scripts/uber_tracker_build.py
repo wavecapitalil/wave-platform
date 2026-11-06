@@ -119,8 +119,8 @@ def inference(nyc, lax):
     components = [
         {"id": "nyc_uber_daily_full_window", "change_pct": round(nyc_full, 2), "read": direction(nyc_full),
          "detail": f"{first['month']} to {last['month']}"},
-        {"id": "nyc_uber_daily_may_to_aug", "change_pct": round(nyc_recent, 2), "read": direction(nyc_recent),
-         "detail": "2026-05 to 2026-08, not seasonally adjusted"},
+        {"id": "nyc_uber_daily_since_may", "change_pct": round(nyc_recent, 2), "read": direction(nyc_recent),
+         "detail": f"2026-05 to {last['month']}, not seasonally adjusted"},
         {"id": "lax_tnc_latest_month_yoy", "change_pct": aug["yoy_pct"], "read": direction(aug["yoy_pct"]),
          "detail": aug["month"]},
         {"id": "lax_tnc_ytd_yoy", "change_pct": aug["ytd_yoy_pct"], "read": direction(aug["ytd_yoy_pct"]),
@@ -138,14 +138,14 @@ def inference(nyc, lax):
     share_last = last["uber_share_pct"]
     line_he = (
         f"יציב — נפח יומי של Uber בניו יורק {nyc_full:+.1f}% מ-{first['month']} ל-{last['month']} "
-        f"(מ-2026-05 עד 2026-08 {nyc_recent:+.1f}%, בלי התאמה עונתית), "
+        f"(מ-2026-05 עד {last['month']} {nyc_recent:+.1f}%, בלי התאמה עונתית), "
         f"נתח Uber מול Lyft {share_last}% אחרי {share_first}%. "
         f"ב-LAX נפח TNC מתחילת השנה {aug['ytd_yoy_pct']:+.1f}% והחודש האחרון {aug['yoy_pct']:+.1f}%. "
         "סל המחירים, ההמתנה והסא'רג' לא נצפו."
     )
     line_en = (
         f"Stable — NYC Uber daily volume {nyc_full:+.1f}% from {first['month']} to {last['month']} "
-        f"(May to August 2026 {nyc_recent:+.1f}%, not seasonally adjusted), "
+        f"(May 2026 to {last['month']} {nyc_recent:+.1f}%, not seasonally adjusted), "
         f"Uber share versus Lyft {share_last}% after {share_first}%. "
         f"LAX TNC year-to-date {aug['ytd_yoy_pct']:+.1f}% and the latest month {aug['yoy_pct']:+.1f}%. "
         "The fare, wait, and surge basket is unobserved."
@@ -166,6 +166,231 @@ def inference(nyc, lax):
         ],
         "not_a_recommendation": True,
     }
+
+
+def seg(text, ltr=False, url=None):
+    item = {"text": text}
+    if ltr or url:
+        item["ltr"] = True
+    if url:
+        item["url"] = url
+    return item
+
+
+def methodology_notes(nyc, lax, bonuses, guide, routes, cadence, proxy):
+    """Short Hebrew/English method notes built only from rows already in the bundle."""
+    checks = ", ".join(cadence["public_checks_local"])
+    older = next(row for row in nyc if row["month"] == "2025-09")
+    latest = nyc[-1]
+    yoy = latest.get("uber_yoy_pct")
+    yoy_text = "ריק" if yoy is None else f"{yoy:+.1f}%"
+    nyc_links = []
+    seen = set()
+    for row in nyc:
+        for url in row["source_urls"]:
+            if url not in seen:
+                seen.add(url)
+                nyc_links.append(seg(url, url=url))
+                nyc_links.append(seg(" "))
+    lax_links = []
+    for row in lax:
+        lax_links.append(seg(row["month"] + " ", ltr=True))
+        lax_links.append(seg(row["source_url"], url=row["source_url"]))
+        lax_links.append(seg(" "))
+    ad_links = []
+    for row in bonuses:
+        ad_links.append(seg(row["city"] + " ", ltr=True))
+        ad_links.append(seg(row["source_url"], url=row["source_url"]))
+        ad_links.append(seg(" "))
+    component_he = " ".join(
+        f"{row['id']} {row['change_pct']:+.1f}% {row['read']}" for row in proxy["components"]
+    )
+    return [
+        {
+            "id": "sec-q3",
+            "title_he": "הדפסת Q3 2026",
+            "title_en": "Q3 2026 print",
+            "calc_he": [
+                seg("המספרים הם העמודות שפורסמו בטבלה: "),
+                seg("Q3 2026", ltr=True),
+                seg(" מול "),
+                seg("Q3 2025", ltr=True),
+                seg(". צמיחה במטבע קבוע היא העמודה שהחברה הדפיסה, לא חישוב מחדש. "),
+                seg("UBER", ltr=True),
+                seg(" נשאר הטיקר."),
+            ],
+            "calc_en": [
+                seg("Figures are the published table columns, Q3 2026 versus Q3 2025. Constant-currency growth is the column the company printed, not a recalculation."),
+            ],
+            "links": [seg(guide["source_url"], url=guide["source_url"])],
+            "freq_he": [seg("רבעוני, עם הגשת הדוח. "), seg("Q3 2026", ltr=True), seg(" הוגש ב-4 בנובמבר 2026.")],
+            "freq_en": [seg("Quarterly, with the filing. Q3 2026 was filed on 4 November 2026.")],
+        },
+        {
+            "id": "q4-guide",
+            "title_he": "תחזית Q4 2026",
+            "title_en": "Q4 2026 outlook",
+            "calc_he": [
+                seg("טווח הזמנות ברוטו שהחברה נתנה לרבעון הבא, "),
+                seg(f"${guide['low_usd_b']}–{guide['high_usd_b']}B", ltr=True),
+                seg(", וצמיחה במטבע קבוע "),
+                seg(f"{guide['cc_yoy_low_pct']}–{guide['cc_yoy_high_pct']}%", ltr=True),
+                seg(". זו תחזית החברה, לא תוצאה ולא קונצנזוס."),
+            ],
+            "calc_en": [
+                seg(f"Company Gross Bookings range ${guide['low_usd_b']}–{guide['high_usd_b']}B and constant-currency growth {guide['cc_yoy_low_pct']}–{guide['cc_yoy_high_pct']}%. A company outlook, not a result and not consensus."),
+            ],
+            "links": [seg(guide["source_url"], url=guide["source_url"])],
+            "freq_he": [seg("מתפרסם עם אותו דוח רבעוני. אין עדכון עד הדוח הבא.")],
+            "freq_en": [seg("Published with the same quarterly filing. No update until the next report.")],
+        },
+        {
+            "id": "nyc",
+            "title_he": "ניו יורק, נסיעות HVFHV ביום ונתח",
+            "title_en": "New York HVFHV trips per day and share",
+            "calc_he": [
+                seg("נסיעות ליום = סך נסיעות "),
+                seg("HV0003", ltr=True),
+                seg(" (Uber) או "),
+                seg("HV0005", ltr=True),
+                seg(" (Lyft) בקובץ החודשי ÷ ימי החודש. נתח "),
+                seg("Uber", ltr=True),
+                seg(" = Uber ÷ (Uber+Lyft). שינוי שנתי = החודש מול אותו חודש אשתקד; בלי זוג להשוואה הערך נשאר ריק. לספטמבר 2026: "),
+                seg("15,412,555", ltr=True),
+                seg(" ÷ "),
+                seg("30", ltr=True),
+                seg(" מעוגל ל-"),
+                seg(f"{latest['uber_trips_per_day']:,}", ltr=True),
+                seg(", ו-"),
+                seg("5,575,126", ltr=True),
+                seg(" ÷ "),
+                seg("30", ltr=True),
+                seg(" מעוגל ל-"),
+                seg(f"{latest['lyft_trips_per_day']:,}", ltr=True),
+                seg(". מול ספטמבר 2025: "),
+                seg(yoy_text, ltr=True),
+                seg("."),
+            ],
+            "calc_en": [
+                seg("Trips per day = monthly HVFHV trips ÷ days in the month. Uber share = Uber ÷ (Uber+Lyft). Year-over-year = the month versus the same month a year earlier; with no pair the value stays empty. September 2026 raw counts 15,412,555 and 5,575,126 ÷ 30 round to the stored daily averages. Versus September 2025: " + yoy_text + "."),
+            ],
+            "links": nyc_links,
+            "freq_he": [
+                seg("קובץ TLC חודשי, בדרך כלל בפיגור של כחודשיים עד שלושה. ספטמבר 2026 נספר ב-"),
+                seg(latest.get("collected_at") or latest["source_pulled"], ltr=True),
+                seg(". החודשים הקודמים נמשכו ב-"),
+                seg(older["source_pulled"], ltr=True),
+                seg("."),
+            ],
+            "freq_en": [
+                seg("TLC publishes a monthly file, usually with about a two to three month lag. September 2026 was counted at " + str(latest.get("collected_at") or latest["source_pulled"]) + ". Earlier months were pulled " + older["source_pulled"] + "."),
+            ],
+        },
+        {
+            "id": "lax",
+            "title_he": "LAX, נסיעות TNC",
+            "title_en": "LAX TNC trips",
+            "calc_he": [
+                seg("הנסיעות החודשיות, הממוצע היומי, השינוי השנתי והמצטבר הם העמודות המודפסות בדוח "),
+                seg("LAWA", ltr=True),
+                seg(". תא ריק נשאר ריק ולא מתמלא באפס. זה לא "),
+                seg("Uber", ltr=True),
+                seg(" בלבד ולא כל "),
+                seg("Los Angeles", ltr=True),
+                seg("."),
+            ],
+            "calc_en": [
+                seg("Monthly trips, the daily average, year-over-year and year-to-date are the columns printed in the LAWA report. An empty cell stays empty. This is not Uber-only and not all of Los Angeles."),
+            ],
+            "links": lax_links,
+            "freq_he": [seg("חודשי. בקובץ נמצאים רק החודשים שנאספו ב-5 בנובמבר 2026.")],
+            "freq_en": [seg("Monthly. The file contains only the months collected on 5 November 2026.")],
+        },
+        {
+            "id": "driver-ads",
+            "title_he": "מודעות בונוס לנהגים",
+            "title_en": "Driver signup bonus ads",
+            "calc_he": [
+                seg("הסכום, מספר הנסיעות הנדרש והחלון בימים הם כפי שמופיעים במודעה. אין חלוקה לשכר לנסיעה, ואין ספירת נהגים."),
+            ],
+            "calc_en": [
+                seg("The guarantee, required trips and window in days are printed on the ad. There is no earnings-per-trip figure and no driver count."),
+            ],
+            "links": ad_links,
+            "freq_he": [seg("צילום חד-פעמי שאומת ב-5 בנובמבר 2026. אין תקופה קודמת.")],
+            "freq_en": [seg("One-off snapshot verified on 5 November 2026. No prior period.")],
+        },
+        {
+            "id": "routes",
+            "title_he": "סל המסלולים",
+            "title_en": "Route basket",
+            "calc_he": [
+                seg("רשימה קבועה של "),
+                seg(str(len(routes)), ltr=True),
+                seg(" מסלולים ב-"),
+                seg(str(len({row['city'] for row in routes})), ltr=True),
+                seg(" ערים. אין בה מחיר, "),
+                seg("ETA", ltr=True),
+                seg(" או סא'רג'."),
+            ],
+            "calc_en": [
+                seg(f"A fixed list of {len(routes)} routes in {len({row['city'] for row in routes})} cities. It holds no price, ETA or surge."),
+            ],
+            "links": [seg("route_basket.csv", url="route_basket.csv")],
+            "freq_he": [seg("ההגדרה קבועה. ציטוט חי יתווסף רק כשתהיה קריאה.")],
+            "freq_en": [seg("The definition is fixed. A live quote is added only when a reading exists.")],
+        },
+        {
+            "id": "proxy",
+            "title_he": "הקריאה הכוללת",
+            "title_en": "Overall read",
+            "calc_he": [
+                seg("הסקה, לא ספירת נסיעות ולא הזמנות. הרכיבים: "),
+                seg(component_he, ltr=True),
+                seg(". פס שטוח של "),
+                seg(str(proxy["flat_band_pct"]) + "%", ltr=True),
+                seg(" לכל רכיב. כשהרכיבים חלוקים הקריאה "),
+                seg(proxy["label_he"]),
+                seg(". הדפסת "),
+                seg("SEC", ltr=True),
+                seg(" ומודעות הנהגים לא נכנסות לציון."),
+            ],
+            "calc_en": [
+                seg("An inference, not a trip count and not an order count. Components: " + component_he + f". Flat band of {proxy['flat_band_pct']}% per component. Disagreement is read as {proxy['label_en']}. The SEC print and the driver ads are not inputs."),
+            ],
+            "links": [],
+            "freq_he": [seg("מתעדכן כשנוספת שורת נפח ציבורית. הסריקה עצמה לא ממציאה נקודה.")],
+            "freq_en": [seg("Updates when a new public volume row is added. The poll does not invent a point.")],
+        },
+        {
+            "id": "empty",
+            "title_he": "סדרות ריקות: ציטוטים ו-Eats",
+            "title_en": "Empty series: quotes and Eats",
+            "calc_he": [
+                seg("אין שורות, ולכן אין נקודות. ציטוט מחיר, "),
+                seg("ETA", ltr=True),
+                seg(", סא'רג', כיסוי מסעדות, מבצע וסל מנות דורשים סשן מחובר באפליקציה. האיסוף לא נכנס לחשבון, ולא הומצא ערך."),
+            ],
+            "calc_en": [
+                seg("There are no rows, so there are no points. A fare, ETA, surge, restaurant coverage, promo or dish basket needs a signed-in app session. The collector does not log in, and no value was fabricated."),
+            ],
+            "links": [],
+            "freq_he": [
+                seg("הסריקה רצה ב-"),
+                seg(checks, ltr=True),
+                seg(" לפי "),
+                seg("UTC+2", ltr=True),
+                seg(", וחלון "),
+                seg("Eats", ltr=True),
+                seg(" ב-"),
+                seg(cadence["eats_basket_local"], ltr=True),
+                seg(". בשעון קיץ הריצה מוקדמת בשעה. זו סריקה, לא זרם מחירים."),
+            ],
+            "freq_en": [
+                seg("Checks run at " + checks + " on a UTC+2 clock, with an Eats window " + cadence["eats_basket_local"] + ". In summer the run is an hour earlier. This is a poll, not a price tick."),
+            ],
+        },
+    ]
 
 
 def build() -> dict:
@@ -199,7 +424,21 @@ def build() -> dict:
             "source_pulled": row["source_pulled"],
             "source_urls": urls,
             "timezone": "America/New_York",
+            "collected_at": None,
         })
+    by_month = {row["month"]: row for row in nyc}
+    for raw, row in zip(nyc_raw, nyc):
+        year, month = row["month"].split("-")
+        prior = by_month.get(f"{int(year) - 1}-{month}")
+        row["uber_yoy_pct"] = None if prior is None else round(pct_change(row["uber_trips_per_day"], prior["uber_trips_per_day"]), 1)
+        note = raw.get("notes") or ""
+        marker = "collected_at "
+        if marker in note:
+            row["collected_at"] = note.split(marker, 1)[1].split(" ", 1)[0].strip()
+            row["collected_timezone"] = "Asia/Jerusalem"
+        else:
+            row["collected_at"] = None
+            row["collected_timezone"] = None
     lax = []
     for row in lax_raw:
         lax.append({
@@ -267,6 +506,8 @@ def build() -> dict:
 
     last_attempt = fetches[-1] if fetches else None
     generated_at = (last_attempt or {}).get("at")
+    proxy = inference(nyc, lax)
+    cadence = json.loads((DATA / "schema.json").read_text(encoding="utf-8"))["cadence"]
     bundle = {
         "schema": "wave.uber-tracker.bundle.v1",
         "generated_at": generated_at,
@@ -281,8 +522,9 @@ def build() -> dict:
             "note_en": "Baseline pull is dated 5 November 2026, Asia/Jerusalem (UTC+2). The collection log has no clock time.",
         },
         "last_attempt": last_attempt,
-        "cadence": json.loads((DATA / "schema.json").read_text(encoding="utf-8"))["cadence"],
-        "inference": inference(nyc, lax),
+        "cadence": cadence,
+        "inference": proxy,
+        "methodology": methodology_notes(nyc, lax, bonuses, guide, routes, cadence, proxy),
         "sec_print": sec,
         "q4_guide": guide,
         "consensus": {

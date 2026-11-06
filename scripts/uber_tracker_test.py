@@ -55,8 +55,23 @@ def main():
         if bundle["charts"][key]["points"]:
             fail(f"{key} plotted an empty series")
     nyc = bundle["series"]["nyc_hvfhv"]["observations"]
-    if len(nyc) != 12 or nyc[0]["month"] != "2025-09" or nyc[-1]["uber_trips_per_day"] != 477421:
+    if len(nyc) != 13 or nyc[0]["month"] != "2025-09" or nyc[-2]["uber_trips_per_day"] != 477421:
         fail("NYC baseline rows changed")
+    sep = nyc[-1]
+    if sep["month"] != "2026-09" or sep["uber_trips_per_day"] != 513752 or sep["lyft_trips_per_day"] != 185838:
+        fail("September 2026 NYC daily averages drifted")
+    if sep["hv_total_per_day"] != 513752 + 185838 or sep["uber_month_est"] != 513752 * 30 or sep["lyft_month_est"] != 185838 * 30:
+        fail("September 2026 derived totals drifted")
+    if sep["uber_share_pct"] != 73.4 or sep["uber_yoy_pct"] != 9.7:
+        fail(f"September 2026 share or year-over-year drifted: {sep['uber_share_pct']} {sep['uber_yoy_pct']}")
+    if nyc[0]["uber_yoy_pct"] is not None:
+        fail("September 2025 year-over-year was filled without a prior September")
+    if not any("fhvhv_tripdata_2026-09.parquet" in url for url in sep["source_urls"]):
+        fail("September 2026 lost the TLC parquet URL")
+    if sep["collected_at"] != "2026-11-06T10:47:00+02:00" or sep["collected_timezone"] != "Asia/Jerusalem":
+        fail("September 2026 collection timestamp missing")
+    if sep["kind"] != "fact":
+        fail("September 2026 must stay a fact")
     if any(row["uber_trips_per_day"] in (None, 0) for row in nyc):
         fail("NYC trip cell blank or zero")
     lax = bundle["series"]["lax_tnc"]["observations"]
@@ -82,6 +97,16 @@ def main():
     if any(row["kind"] != "fact" for row in bundle["series"]["driver_bonuses"]["observations"]):
         fail("driver ads must stay facts")
     page = (ROOT / "apps/terminal/public/terminal-uber-tracker.js").read_text(encoding="utf-8")
+    method_ids = [item["id"] for item in bundle["methodology"]]
+    for key in ("sec-q3", "q4-guide", "nyc", "lax", "driver-ads", "routes", "proxy", "empty"):
+        if key not in method_ids:
+            fail(f"methodology missing {key}")
+    nyc_note = next(item for item in bundle["methodology"] if item["id"] == "nyc")
+    joined = json.dumps(nyc_note, ensure_ascii=False)
+    if "fhvhv_tripdata_2026-09.parquet" not in joined or "tlchelp.io" not in joined:
+        fail("NYC methodology lost a source that is in the data file")
+    if "ut-method" not in page:
+        fail("tracker page does not render the methodology section")
     if "bdi" not in page or "rtl" not in page:
         fail("tracker page lost rtl/bdi number handling")
     if "real-time" in page.lower() or "realtime" in page.lower():

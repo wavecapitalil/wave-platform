@@ -31,7 +31,7 @@ jobs:
           node scripts/brief_dom_test.cjs
       - name: Install browser test tools
         run: |
-          pip install playwright==1.58.0
+          pip install playwright==1.64.1
           python -m playwright install --with-deps chromium
       - name: Test desktop, iPad and phone reader
         run: python scripts/brief_browser_qa.py

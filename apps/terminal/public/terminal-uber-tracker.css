@@ -30,6 +30,10 @@
 .ut-split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .ut-links{display:flex;flex-wrap:wrap;gap:10px 14px;margin-top:8px}
 .ut-sources{margin-top:16px}
+.ut-method{margin-top:22px}
+.ut-method article{border-top:1px solid var(--ut-line);padding:10px 0}
+.ut-method h3{font-size:14px;margin:0 0 4px}
+.ut-method a{word-break:break-all}
 @media(max-width:800px){
   .ut-grid,.ut-split,.ut-facts{grid-template-columns:1fr 1fr}
   .ut-wide{grid-column:1 / -1}
