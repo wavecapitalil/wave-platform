@@ -1,3 +1,4 @@
+import {createHistoricalPriceLoader} from '../supabase/functions/wave-data/historical-price-cache.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -28,7 +29,7 @@ function handler({cached=emptyFacts,stock=null,quote=null,quoteFailure=false}={}
     }
   };
   const context={
-    Deno:{env:{get:()=>''},serve:h=>{route=h}},createClient:()=>client,buildValuationInputs,withFundamentalReporting,createCompanyFactsLoader,
+    Deno:{env:{get:()=>''},serve:h=>{route=h}},createClient:()=>client,buildValuationInputs,withFundamentalReporting,createCompanyFactsLoader,createHistoricalPriceLoader,
     settings:async(...args)=>{calls.settings++;return settings(...args);},
     calculateCompany:async(...args)=>{calls.company++;return calculateCompany(...args);},
     adminCalculations:async(...args)=>{calls.admin++;return adminCalculations(...args);},

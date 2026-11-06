@@ -1,0 +1,2040 @@
+{
+  "reviewed_as_of": "2026-11-04",
+  "basis": "Reviewed issuer-equity identity tuples from official Select Sector SPDR holdings. Cash, money-market positions, futures and the Hologic contingent-value right excluded. New or changed identities require review; never infer equity type from ticker syntax.",
+  "funds": {
+    "XLK": {
+      "AAPL": {
+        "identifier": "037833100",
+        "name": "APPLE INC"
+      },
+      "NVDA": {
+        "identifier": "67066G104",
+        "name": "NVIDIA CORP"
+      },
+      "MSFT": {
+        "identifier": "594918104",
+        "name": "MICROSOFT CORP"
+      },
+      "AVGO": {
+        "identifier": "11135F101",
+        "name": "BROADCOM INC"
+      },
+      "AMD": {
+        "identifier": "007903107",
+        "name": "ADVANCED MICRO DEVICES"
+      },
+      "MU": {
+        "identifier": "595112103",
+        "name": "MICRON TECHNOLOGY INC"
+      },
+      "CSCO": {
+        "identifier": "17275R102",
+        "name": "CISCO SYSTEMS INC"
+      },
+      "PLTR": {
+        "identifier": "69608A108",
+        "name": "PALANTIR TECHNOLOGIES INC A"
+      },
+      "AMAT": {
+        "identifier": "038222105",
+        "name": "APPLIED MATERIALS INC"
+      },
+      "INTC": {
+        "identifier": "458140100",
+        "name": "INTEL CORP"
+      },
+      "TXN": {
+        "identifier": "882508104",
+        "name": "TEXAS INSTRUMENTS INC"
+      },
+      "PANW": {
+        "identifier": "697435105",
+        "name": "PALO ALTO NETWORKS INC"
+      },
+      "LRCX": {
+        "identifier": "512807306",
+        "name": "LAM RESEARCH CORP"
+      },
+      "CRWD": {
+        "identifier": "22788C105",
+        "name": "CROWDSTRIKE HOLDINGS INC   A"
+      },
+      "ORCL": {
+        "identifier": "68389X105",
+        "name": "ORACLE CORP"
+      },
+      "IBM": {
+        "identifier": "459200101",
+        "name": "INTL BUSINESS MACHINES CORP"
+      },
+      "ADI": {
+        "identifier": "032654105",
+        "name": "ANALOG DEVICES INC"
+      },
+      "KLAC": {
+        "identifier": "482480100",
+        "name": "KLA CORP"
+      },
+      "APH": {
+        "identifier": "032095101",
+        "name": "AMPHENOL CORP CL A"
+      },
+      "ANET": {
+        "identifier": "040413205",
+        "name": "ARISTA NETWORKS INC"
+      },
+      "CRM": {
+        "identifier": "79466L302",
+        "name": "SALESFORCE INC"
+      },
+      "QCOM": {
+        "identifier": "747525103",
+        "name": "QUALCOMM INC"
+      },
+      "ACN": {
+        "identifier": "G1151C101",
+        "name": "ACCENTURE PLC CL A"
+      },
+      "SNDK": {
+        "identifier": "80004C200",
+        "name": "SANDISK CORP"
+      },
+      "MRVL": {
+        "identifier": "573874104",
+        "name": "MARVELL TECHNOLOGY INC"
+      },
+      "STX": {
+        "identifier": "G7997R103",
+        "name": "SEAGATE TECHNOLOGY HOLDINGS"
+      },
+      "WDC": {
+        "identifier": "958102105",
+        "name": "WESTERN DIGITAL CORP"
+      },
+      "DELL": {
+        "identifier": "24703L202",
+        "name": "DELL TECHNOLOGIES  C"
+      },
+      "NOW": {
+        "identifier": "81762P102",
+        "name": "SERVICENOW INC"
+      },
+      "ADBE": {
+        "identifier": "00724F101",
+        "name": "ADOBE INC"
+      },
+      "INTU": {
+        "identifier": "461202103",
+        "name": "INTUIT INC"
+      },
+      "GLW": {
+        "identifier": "219350105",
+        "name": "CORNING INC"
+      },
+      "CDNS": {
+        "identifier": "127387108",
+        "name": "CADENCE DESIGN SYS INC"
+      },
+      "SNPS": {
+        "identifier": "871607107",
+        "name": "SYNOPSYS INC"
+      },
+      "MSI": {
+        "identifier": "620076307",
+        "name": "MOTOROLA SOLUTIONS INC"
+      },
+      "FTNT": {
+        "identifier": "34959E109",
+        "name": "FORTINET INC"
+      },
+      "NXPI": {
+        "identifier": "N6596X109",
+        "name": "NXP SEMICONDUCTORS NV"
+      },
+      "HPE": {
+        "identifier": "42824C109",
+        "name": "HEWLETT PACKARD ENTERPRISE"
+      },
+      "TEL": {
+        "identifier": "G87052109",
+        "name": "TE CONNECTIVITY PLC"
+      },
+      "DDOG": {
+        "identifier": "23804L103",
+        "name": "DATADOG INC   CLASS A"
+      },
+      "MPWR": {
+        "identifier": "609839105",
+        "name": "MONOLITHIC POWER SYSTEMS INC"
+      },
+      "ADSK": {
+        "identifier": "052769106",
+        "name": "AUTODESK INC"
+      },
+      "LITE": {
+        "identifier": "55024U109",
+        "name": "LUMENTUM HOLDINGS INC"
+      },
+      "KEYS": {
+        "identifier": "49338L103",
+        "name": "KEYSIGHT TECHNOLOGIES IN"
+      },
+      "ROP": {
+        "identifier": "776696106",
+        "name": "ROPER TECHNOLOGIES INC"
+      },
+      "MCHP": {
+        "identifier": "595017104",
+        "name": "MICROCHIP TECHNOLOGY INC"
+      },
+      "WDAY": {
+        "identifier": "98138H101",
+        "name": "WORKDAY INC CLASS A"
+      },
+      "TER": {
+        "identifier": "880770102",
+        "name": "TERADYNE INC"
+      },
+      "CIEN": {
+        "identifier": "171779309",
+        "name": "CIENA CORP"
+      },
+      "COHR": {
+        "identifier": "19247G107",
+        "name": "COHERENT CORP"
+      },
+      "P": {
+        "identifier": "74624M102",
+        "name": "EVERPURE INC A"
+      },
+      "NTAP": {
+        "identifier": "64110D104",
+        "name": "NETAPP INC"
+      },
+      "CTSH": {
+        "identifier": "192446102",
+        "name": "COGNIZANT TECH SOLUTIONS A"
+      },
+      "TDY": {
+        "identifier": "879360105",
+        "name": "TELEDYNE TECHNOLOGIES INC"
+      },
+      "FLEX": {
+        "identifier": "Y2573F102",
+        "name": "FLEX LTD"
+      },
+      "ON": {
+        "identifier": "682189105",
+        "name": "ON SEMICONDUCTOR"
+      },
+      "HPQ": {
+        "identifier": "40434L105",
+        "name": "HP INC"
+      },
+      "JBL": {
+        "identifier": "466313103",
+        "name": "JABIL INC"
+      },
+      "VRSN": {
+        "identifier": "92343E102",
+        "name": "VERISIGN INC"
+      },
+      "Q": {
+        "identifier": "74743L100",
+        "name": "QNITY ELECTRONICS INC"
+      },
+      "TWLO": {
+        "identifier": "90138F102",
+        "name": "TWILIO INC   A"
+      },
+      "OKTA": {
+        "identifier": "679295105",
+        "name": "OKTA INC"
+      },
+      "PTC": {
+        "identifier": "69370C100",
+        "name": "PTC INC"
+      },
+      "CDW": {
+        "identifier": "12514G108",
+        "name": "CDW CORP/DE"
+      },
+      "FSLR": {
+        "identifier": "336433107",
+        "name": "FIRST SOLAR INC"
+      },
+      "SWKS": {
+        "identifier": "83088M102",
+        "name": "SKYWORKS SOLUTIONS INC"
+      },
+      "FFIV": {
+        "identifier": "315616102",
+        "name": "F5 INC"
+      },
+      "SMCI": {
+        "identifier": "86800U302",
+        "name": "SUPER MICRO COMPUTER INC"
+      },
+      "GEN": {
+        "identifier": "668771108",
+        "name": "GEN DIGITAL INC"
+      },
+      "TYL": {
+        "identifier": "902252105",
+        "name": "TYLER TECHNOLOGIES INC"
+      },
+      "ZBRA": {
+        "identifier": "989207105",
+        "name": "ZEBRA TECHNOLOGIES CORP CL A"
+      },
+      "FICO": {
+        "identifier": "303250104",
+        "name": "FAIR ISAAC CORP"
+      },
+      "GDDY": {
+        "identifier": "380237107",
+        "name": "GODADDY INC   CLASS A"
+      },
+      "IT": {
+        "identifier": "366651107",
+        "name": "GARTNER INC"
+      },
+      "TRMB": {
+        "identifier": "896239100",
+        "name": "TRIMBLE INC"
+      },
+      "AKAM": {
+        "identifier": "00971T101",
+        "name": "AKAMAI TECHNOLOGIES INC"
+      }
+    },
+    "XLC": {
+      "META": {
+        "identifier": "30303M102",
+        "name": "META PLATFORMS INC CLASS A"
+      },
+      "GOOGL": {
+        "identifier": "02079K305",
+        "name": "ALPHABET INC CL A"
+      },
+      "GOOG": {
+        "identifier": "02079K107",
+        "name": "ALPHABET INC CL C"
+      },
+      "DIS": {
+        "identifier": "254687106",
+        "name": "WALT DISNEY CO/THE"
+      },
+      "CMCSA": {
+        "identifier": "20030N101",
+        "name": "COMCAST CORP CLASS A"
+      },
+      "TTWO": {
+        "identifier": "874054109",
+        "name": "TAKE TWO INTERACTIVE SOFTWRE"
+      },
+      "VZ": {
+        "identifier": "92343V104",
+        "name": "VERIZON COMMUNICATIONS INC"
+      },
+      "TMUS": {
+        "identifier": "872590104",
+        "name": "T MOBILE US INC"
+      },
+      "APP": {
+        "identifier": "03831W108",
+        "name": "APPLOVIN CORP CLASS A"
+      },
+      "NFLX": {
+        "identifier": "64110L106",
+        "name": "NETFLIX INC"
+      },
+      "T": {
+        "identifier": "00206R102",
+        "name": "AT+T INC"
+      },
+      "LYV": {
+        "identifier": "538034109",
+        "name": "LIVE NATION ENTERTAINMENT IN"
+      },
+      "OMC": {
+        "identifier": "681919106",
+        "name": "OMNICOM GROUP"
+      },
+      "RDDT": {
+        "identifier": "75734B100",
+        "name": "REDDIT INC CL A"
+      },
+      "FOXA": {
+        "identifier": "35137L105",
+        "name": "FOX CORP   CLASS A"
+      },
+      "ECHO": {
+        "identifier": "278768106",
+        "name": "ECHOSTAR CORP A"
+      },
+      "CHTR": {
+        "identifier": "16119P108",
+        "name": "CHARTER COMMUNICATIONS INC A"
+      },
+      "TKO": {
+        "identifier": "87256C101",
+        "name": "TKO GROUP HOLDINGS INC"
+      },
+      "NWSA": {
+        "identifier": "65249B109",
+        "name": "NEWS CORP   CLASS A"
+      },
+      "FOX": {
+        "identifier": "35137L204",
+        "name": "FOX CORP   CLASS B"
+      },
+      "SKYD": {
+        "identifier": "69932A204",
+        "name": "SKYDANCE CORP"
+      },
+      "NWS": {
+        "identifier": "65249B208",
+        "name": "NEWS CORP   CLASS B"
+      }
+    },
+    "XLY": {
+      "AMZN": {
+        "identifier": "023135106",
+        "name": "AMAZON.COM INC"
+      },
+      "TSLA": {
+        "identifier": "88160R101",
+        "name": "TESLA INC"
+      },
+      "HD": {
+        "identifier": "437076102",
+        "name": "HOME DEPOT INC"
+      },
+      "MCD": {
+        "identifier": "580135101",
+        "name": "MCDONALD S CORP"
+      },
+      "TJX": {
+        "identifier": "872540109",
+        "name": "TJX COMPANIES INC"
+      },
+      "LOW": {
+        "identifier": "548661107",
+        "name": "LOWE S COS INC"
+      },
+      "BKNG": {
+        "identifier": "09857L108",
+        "name": "BOOKING HOLDINGS INC"
+      },
+      "SBUX": {
+        "identifier": "855244109",
+        "name": "STARBUCKS CORP"
+      },
+      "MAR": {
+        "identifier": "571903202",
+        "name": "MARRIOTT INTERNATIONAL  CL A"
+      },
+      "HLT": {
+        "identifier": "43300A203",
+        "name": "HILTON WORLDWIDE HOLDINGS IN"
+      },
+      "RCL": {
+        "identifier": "V7780T103",
+        "name": "ROYAL CARIBBEAN CRUISES LTD"
+      },
+      "GM": {
+        "identifier": "37045V100",
+        "name": "GENERAL MOTORS CO"
+      },
+      "ROST": {
+        "identifier": "778296103",
+        "name": "ROSS STORES INC"
+      },
+      "DASH": {
+        "identifier": "25809K105",
+        "name": "DOORDASH INC   A"
+      },
+      "ORLY": {
+        "identifier": "67103H107",
+        "name": "O REILLY AUTOMOTIVE INC"
+      },
+      "ABNB": {
+        "identifier": "009066101",
+        "name": "AIRBNB INC CLASS A"
+      },
+      "CVNA": {
+        "identifier": "146869102",
+        "name": "CARVANA CO"
+      },
+      "AZO": {
+        "identifier": "053332102",
+        "name": "AUTOZONE INC"
+      },
+      "EBAY": {
+        "identifier": "278642103",
+        "name": "EBAY INC"
+      },
+      "F": {
+        "identifier": "345370860",
+        "name": "FORD MOTOR CO"
+      },
+      "NKE": {
+        "identifier": "654106103",
+        "name": "NIKE INC  CL B"
+      },
+      "GRMN": {
+        "identifier": "H2906T109",
+        "name": "GARMIN LTD"
+      },
+      "YUM": {
+        "identifier": "988498101",
+        "name": "YUM  BRANDS INC"
+      },
+      "CMG": {
+        "identifier": "169656105",
+        "name": "CHIPOTLE MEXICAN GRILL INC"
+      },
+      "DHI": {
+        "identifier": "23331A109",
+        "name": "DR HORTON INC"
+      },
+      "CCL": {
+        "identifier": "G2004J103",
+        "name": "CARNIVAL CORP LTD"
+      },
+      "EXPE": {
+        "identifier": "30212P303",
+        "name": "EXPEDIA GROUP INC"
+      },
+      "WSM": {
+        "identifier": "969904101",
+        "name": "WILLIAMS SONOMA INC"
+      },
+      "ULTA": {
+        "identifier": "90384S303",
+        "name": "ULTA BEAUTY INC"
+      },
+      "DRI": {
+        "identifier": "237194105",
+        "name": "DARDEN RESTAURANTS INC"
+      },
+      "PHM": {
+        "identifier": "745867101",
+        "name": "PULTEGROUP INC"
+      },
+      "TPR": {
+        "identifier": "876030107",
+        "name": "TAPESTRY INC"
+      },
+      "BBY": {
+        "identifier": "086516101",
+        "name": "BEST BUY CO INC"
+      },
+      "TSCO": {
+        "identifier": "892356106",
+        "name": "TRACTOR SUPPLY COMPANY"
+      },
+      "LEN": {
+        "identifier": "526057104",
+        "name": "LENNAR CORP A"
+      },
+      "GPC": {
+        "identifier": "372460105",
+        "name": "GENUINE PARTS CO"
+      },
+      "HAS": {
+        "identifier": "418056107",
+        "name": "HASBRO INC"
+      },
+      "NVR": {
+        "identifier": "62944T105",
+        "name": "NVR INC"
+      },
+      "RL": {
+        "identifier": "751212101",
+        "name": "RALPH LAUREN CORP"
+      },
+      "DECK": {
+        "identifier": "243537107",
+        "name": "DECKERS OUTDOOR CORP"
+      },
+      "LULU": {
+        "identifier": "550021109",
+        "name": "LULULEMON ATHLETICA INC"
+      },
+      "DPZ": {
+        "identifier": "25754A201",
+        "name": "DOMINO S PIZZA INC"
+      },
+      "LVS": {
+        "identifier": "517834107",
+        "name": "LAS VEGAS SANDS CORP"
+      },
+      "APTV": {
+        "identifier": "G3265R107",
+        "name": "APTIV PLC"
+      },
+      "NCLH": {
+        "identifier": "G66721104",
+        "name": "NORWEGIAN CRUISE LINE HOLDIN"
+      },
+      "WYNN": {
+        "identifier": "983134107",
+        "name": "WYNN RESORTS LTD"
+      },
+      "MGM": {
+        "identifier": "552953101",
+        "name": "MGM RESORTS INTERNATIONAL"
+      }
+    },
+    "XLP": {
+      "WMT": {
+        "identifier": "931142103",
+        "name": "WALMART INC"
+      },
+      "COST": {
+        "identifier": "22160K105",
+        "name": "COSTCO WHOLESALE CORP"
+      },
+      "PG": {
+        "identifier": "742718109",
+        "name": "PROCTER + GAMBLE CO/THE"
+      },
+      "KO": {
+        "identifier": "191216100",
+        "name": "COCA COLA CO/THE"
+      },
+      "PM": {
+        "identifier": "718172109",
+        "name": "PHILIP MORRIS INTERNATIONAL"
+      },
+      "MO": {
+        "identifier": "02209S103",
+        "name": "ALTRIA GROUP INC"
+      },
+      "CL": {
+        "identifier": "194162103",
+        "name": "COLGATE PALMOLIVE CO"
+      },
+      "MDLZ": {
+        "identifier": "609207105",
+        "name": "MONDELEZ INTERNATIONAL INC A"
+      },
+      "PEP": {
+        "identifier": "713448108",
+        "name": "PEPSICO INC"
+      },
+      "TGT": {
+        "identifier": "87612E106",
+        "name": "TARGET CORP"
+      },
+      "MNST": {
+        "identifier": "61174X109",
+        "name": "MONSTER BEVERAGE CORP"
+      },
+      "KMB": {
+        "identifier": "494368103",
+        "name": "KIMBERLY CLARK CORP"
+      },
+      "KDP": {
+        "identifier": "49271V100",
+        "name": "KEURIG DR PEPPER INC"
+      },
+      "KR": {
+        "identifier": "501044101",
+        "name": "KROGER CO"
+      },
+      "SYY": {
+        "identifier": "871829107",
+        "name": "SYSCO CORP"
+      },
+      "ADM": {
+        "identifier": "039483102",
+        "name": "ARCHER DANIELS MIDLAND CO"
+      },
+      "DG": {
+        "identifier": "256677105",
+        "name": "DOLLAR GENERAL CORP"
+      },
+      "DLTR": {
+        "identifier": "256746108",
+        "name": "DOLLAR TREE INC"
+      },
+      "EL": {
+        "identifier": "518439104",
+        "name": "ESTEE LAUDER COMPANIES CL A"
+      },
+      "CHD": {
+        "identifier": "171340102",
+        "name": "CHURCH + DWIGHT CO INC"
+      },
+      "HSY": {
+        "identifier": "427866108",
+        "name": "HERSHEY CO/THE"
+      },
+      "VYLR": {
+        "identifier": "92892R108",
+        "name": "VYLOR INC"
+      },
+      "CASY": {
+        "identifier": "147528103",
+        "name": "CASEY S GENERAL STORES INC"
+      },
+      "KHC": {
+        "identifier": "500754106",
+        "name": "KRAFT HEINZ CO/THE"
+      },
+      "STZ": {
+        "identifier": "21036P108",
+        "name": "CONSTELLATION BRANDS INC A"
+      },
+      "GIS": {
+        "identifier": "370334104",
+        "name": "GENERAL MILLS INC"
+      },
+      "TSN": {
+        "identifier": "902494103",
+        "name": "TYSON FOODS INC CL A"
+      },
+      "BG": {
+        "identifier": "H11356104",
+        "name": "BUNGE GLOBAL SA"
+      },
+      "SJM": {
+        "identifier": "832696405",
+        "name": "JM SMUCKER CO/THE"
+      },
+      "MKC": {
+        "identifier": "579780206",
+        "name": "MCCORMICK + CO NON VTG SHRS"
+      },
+      "CLX": {
+        "identifier": "189054109",
+        "name": "CLOROX COMPANY"
+      },
+      "HRL": {
+        "identifier": "440452100",
+        "name": "HORMEL FOODS CORP"
+      },
+      "BF-B": {
+        "identifier": "115637209",
+        "name": "BROWN FORMAN CORP CLASS B"
+      }
+    },
+    "XLE": {
+      "XOM": {
+        "identifier": "30233Q108",
+        "name": "EXXONMOBIL HOLDINGS CORP"
+      },
+      "CVX": {
+        "identifier": "166764100",
+        "name": "CHEVRON CORP"
+      },
+      "COP": {
+        "identifier": "20825C104",
+        "name": "CONOCOPHILLIPS"
+      },
+      "PSX": {
+        "identifier": "718546104",
+        "name": "PHILLIPS 66"
+      },
+      "MPC": {
+        "identifier": "56585A102",
+        "name": "MARATHON PETROLEUM CORP"
+      },
+      "VLO": {
+        "identifier": "91913Y100",
+        "name": "VALERO ENERGY CORP"
+      },
+      "WMB": {
+        "identifier": "969457100",
+        "name": "WILLIAMS COS INC"
+      },
+      "EOG": {
+        "identifier": "26875P101",
+        "name": "EOG RESOURCES INC"
+      },
+      "SLB": {
+        "identifier": "806857108",
+        "name": "SLB LTD"
+      },
+      "KMI": {
+        "identifier": "49456B101",
+        "name": "KINDER MORGAN INC"
+      },
+      "TRGP": {
+        "identifier": "87612G101",
+        "name": "TARGA RESOURCES CORP"
+      },
+      "OKE": {
+        "identifier": "30609A109",
+        "name": "ONEOK INC"
+      },
+      "BKR": {
+        "identifier": "05722G100",
+        "name": "BAKER HUGHES CO"
+      },
+      "DVN": {
+        "identifier": "25179M103",
+        "name": "DEVON ENERGY CORP"
+      },
+      "OXY": {
+        "identifier": "674599105",
+        "name": "OCCIDENTAL PETROLEUM CORP"
+      },
+      "FANG": {
+        "identifier": "25278X109",
+        "name": "DIAMONDBACK ENERGY INC"
+      },
+      "EQT": {
+        "identifier": "26884L109",
+        "name": "EQT CORP"
+      },
+      "HAL": {
+        "identifier": "406216101",
+        "name": "HALLIBURTON CO"
+      },
+      "EXE": {
+        "identifier": "165167735",
+        "name": "EXPAND ENERGY CORP"
+      },
+      "TPL": {
+        "identifier": "88262P102",
+        "name": "TEXAS PACIFIC LAND CORP"
+      },
+      "APA": {
+        "identifier": "03743Q108",
+        "name": "APA CORP"
+      }
+    },
+    "XLF": {
+      "BRK-B": {
+        "identifier": "084670702",
+        "name": "BERKSHIRE HATHAWAY INC CL B"
+      },
+      "JPM": {
+        "identifier": "46625H100",
+        "name": "JPMORGAN CHASE + CO"
+      },
+      "V": {
+        "identifier": "92826C839",
+        "name": "VISA INC CLASS A SHARES"
+      },
+      "MA": {
+        "identifier": "57636Q104",
+        "name": "MASTERCARD INC   A"
+      },
+      "BAC": {
+        "identifier": "060505104",
+        "name": "BANK OF AMERICA CORP"
+      },
+      "GS": {
+        "identifier": "38141G104",
+        "name": "GOLDMAN SACHS GROUP INC"
+      },
+      "WFC": {
+        "identifier": "949746101",
+        "name": "WELLS FARGO + CO"
+      },
+      "MS": {
+        "identifier": "617446448",
+        "name": "MORGAN STANLEY"
+      },
+      "C": {
+        "identifier": "172967424",
+        "name": "CITIGROUP INC"
+      },
+      "BLK": {
+        "identifier": "09290D101",
+        "name": "BLACKROCK INC"
+      },
+      "AXP": {
+        "identifier": "025816109",
+        "name": "AMERICAN EXPRESS CO"
+      },
+      "SCHW": {
+        "identifier": "808513105",
+        "name": "SCHWAB (CHARLES) CORP"
+      },
+      "SPGI": {
+        "identifier": "78409V104",
+        "name": "S+P GLOBAL INC"
+      },
+      "PGR": {
+        "identifier": "743315103",
+        "name": "PROGRESSIVE CORP"
+      },
+      "CB": {
+        "identifier": "H1467J104",
+        "name": "CHUBB LTD"
+      },
+      "COF": {
+        "identifier": "14040H105",
+        "name": "CAPITAL ONE FINANCIAL CORP"
+      },
+      "CME": {
+        "identifier": "12572Q105",
+        "name": "CME GROUP INC"
+      },
+      "BNY": {
+        "identifier": "064058100",
+        "name": "BANK OF NEW YORK MELLON CORP"
+      },
+      "MRSH": {
+        "identifier": "571748102",
+        "name": "MARSH + MCLENNAN COS"
+      },
+      "ICE": {
+        "identifier": "45866F104",
+        "name": "INTERCONTINENTAL EXCHANGE IN"
+      },
+      "USB": {
+        "identifier": "902973304",
+        "name": "US BANCORP"
+      },
+      "BX": {
+        "identifier": "09260D107",
+        "name": "BLACKSTONE INC"
+      },
+      "PNC": {
+        "identifier": "693475105",
+        "name": "PNC FINANCIAL SERVICES GROUP"
+      },
+      "TRV": {
+        "identifier": "89417E109",
+        "name": "TRAVELERS COS INC/THE"
+      },
+      "MCO": {
+        "identifier": "615369105",
+        "name": "MOODY S CORP"
+      },
+      "AJG": {
+        "identifier": "363576109",
+        "name": "ARTHUR J GALLAGHER + CO"
+      },
+      "AON": {
+        "identifier": "G0403H108",
+        "name": "AON PLC CLASS A"
+      },
+      "KKR": {
+        "identifier": "48251W104",
+        "name": "KKR + CO INC"
+      },
+      "HOOD": {
+        "identifier": "770700102",
+        "name": "ROBINHOOD MARKETS INC   A"
+      },
+      "ALL": {
+        "identifier": "020002101",
+        "name": "ALLSTATE CORP"
+      },
+      "TFC": {
+        "identifier": "89832Q109",
+        "name": "TRUIST FINANCIAL CORP"
+      },
+      "APO": {
+        "identifier": "03769M106",
+        "name": "APOLLO GLOBAL MANAGEMENT INC"
+      },
+      "AFL": {
+        "identifier": "001055102",
+        "name": "AFLAC INC"
+      },
+      "MET": {
+        "identifier": "59156R108",
+        "name": "METLIFE INC"
+      },
+      "PYPL": {
+        "identifier": "70450Y103",
+        "name": "PAYPAL HOLDINGS INC"
+      },
+      "FITB": {
+        "identifier": "316773100",
+        "name": "FIFTH THIRD BANCORP"
+      },
+      "MSCI": {
+        "identifier": "55354G100",
+        "name": "MSCI INC"
+      },
+      "NDAQ": {
+        "identifier": "631103108",
+        "name": "NASDAQ INC"
+      },
+      "STT": {
+        "identifier": "857477103",
+        "name": "STATE STREET CORP"
+      },
+      "XYZ": {
+        "identifier": "852234103",
+        "name": "BLOCK INC"
+      },
+      "AMP": {
+        "identifier": "03076C106",
+        "name": "AMERIPRISE FINANCIAL INC"
+      },
+      "PRU": {
+        "identifier": "744320102",
+        "name": "PRUDENTIAL FINANCIAL INC"
+      },
+      "AIG": {
+        "identifier": "026874784",
+        "name": "AMERICAN INTERNATIONAL GROUP"
+      },
+      "ACGL": {
+        "identifier": "G0450A105",
+        "name": "ARCH CAPITAL GROUP LTD"
+      },
+      "HIG": {
+        "identifier": "416515104",
+        "name": "HARTFORD INSURANCE GROUP INC"
+      },
+      "CBOE": {
+        "identifier": "12503M108",
+        "name": "CBOE GLOBAL MARKETS INC"
+      },
+      "IBKR": {
+        "identifier": "45841N107",
+        "name": "INTERACTIVE BROKERS GRO CL A"
+      },
+      "COIN": {
+        "identifier": "19260Q107",
+        "name": "COINBASE GLOBAL INC  CLASS A"
+      },
+      "FISV": {
+        "identifier": "337738108",
+        "name": "FISERV INC"
+      },
+      "NTRS": {
+        "identifier": "665859104",
+        "name": "NORTHERN TRUST CORP"
+      },
+      "HBAN": {
+        "identifier": "446150104",
+        "name": "HUNTINGTON BANCSHARES INC"
+      },
+      "MTB": {
+        "identifier": "55261F104",
+        "name": "M + T BANK CORP"
+      },
+      "WTW": {
+        "identifier": "G96629103",
+        "name": "WILLIS TOWERS WATSON PLC"
+      },
+      "ARES": {
+        "identifier": "03990B101",
+        "name": "ARES MANAGEMENT CORP   A"
+      },
+      "CINF": {
+        "identifier": "172062101",
+        "name": "CINCINNATI FINANCIAL CORP"
+      },
+      "RJF": {
+        "identifier": "754730109",
+        "name": "RAYMOND JAMES FINANCIAL INC"
+      },
+      "CFG": {
+        "identifier": "174610105",
+        "name": "CITIZENS FINANCIAL GROUP"
+      },
+      "CPAY": {
+        "identifier": "219948106",
+        "name": "CORPAY INC"
+      },
+      "RF": {
+        "identifier": "7591EP100",
+        "name": "REGIONS FINANCIAL CORP"
+      },
+      "SYF": {
+        "identifier": "87165B103",
+        "name": "SYNCHRONY FINANCIAL"
+      },
+      "TROW": {
+        "identifier": "74144T108",
+        "name": "T ROWE PRICE GROUP INC"
+      },
+      "PFG": {
+        "identifier": "74251V102",
+        "name": "PRINCIPAL FINANCIAL GROUP"
+      },
+      "GPN": {
+        "identifier": "37940X102",
+        "name": "GLOBAL PAYMENTS INC"
+      },
+      "BRO": {
+        "identifier": "115236101",
+        "name": "BROWN + BROWN INC"
+      },
+      "KEY": {
+        "identifier": "493267108",
+        "name": "KEYCORP"
+      },
+      "L": {
+        "identifier": "540424108",
+        "name": "LOEWS CORP"
+      },
+      "WRB": {
+        "identifier": "084423102",
+        "name": "WR BERKLEY CORP"
+      },
+      "FIS": {
+        "identifier": "31620M106",
+        "name": "FIDELITY NATIONAL INFO SERV"
+      },
+      "AIZ": {
+        "identifier": "04621X108",
+        "name": "ASSURANT INC"
+      },
+      "EG": {
+        "identifier": "G3223R108",
+        "name": "EVEREST GROUP LTD"
+      },
+      "IVZ": {
+        "identifier": "G491BT108",
+        "name": "INVESCO LTD"
+      },
+      "JKHY": {
+        "identifier": "426281101",
+        "name": "JACK HENRY + ASSOCIATES INC"
+      },
+      "GL": {
+        "identifier": "37959E102",
+        "name": "GLOBE LIFE INC"
+      },
+      "FDS": {
+        "identifier": "303075105",
+        "name": "FACTSET RESEARCH SYSTEMS INC"
+      },
+      "BEN": {
+        "identifier": "354613101",
+        "name": "FRANKLIN TEMPLETON INC"
+      },
+      "ERIE": {
+        "identifier": "29530P102",
+        "name": "ERIE INDEMNITY COMPANY CL A"
+      }
+    },
+    "XLV": {
+      "LLY": {
+        "identifier": "532457108",
+        "name": "ELI LILLY + CO"
+      },
+      "JNJ": {
+        "identifier": "478160104",
+        "name": "JOHNSON + JOHNSON"
+      },
+      "ABBV": {
+        "identifier": "00287Y109",
+        "name": "ABBVIE INC"
+      },
+      "MRK": {
+        "identifier": "58933Y105",
+        "name": "MERCK + CO. INC."
+      },
+      "UNH": {
+        "identifier": "91324P102",
+        "name": "UNITEDHEALTH GROUP INC"
+      },
+      "TMO": {
+        "identifier": "883556102",
+        "name": "THERMO FISHER SCIENTIFIC INC"
+      },
+      "AMGN": {
+        "identifier": "031162100",
+        "name": "AMGEN INC"
+      },
+      "GILD": {
+        "identifier": "375558103",
+        "name": "GILEAD SCIENCES INC"
+      },
+      "ABT": {
+        "identifier": "002824100",
+        "name": "ABBOTT LABORATORIES"
+      },
+      "PFE": {
+        "identifier": "717081103",
+        "name": "PFIZER INC"
+      },
+      "ISRG": {
+        "identifier": "46120E602",
+        "name": "INTUITIVE SURGICAL INC"
+      },
+      "DHR": {
+        "identifier": "235851102",
+        "name": "DANAHER CORP"
+      },
+      "VRTX": {
+        "identifier": "92532F100",
+        "name": "VERTEX PHARMACEUTICALS INC"
+      },
+      "BMY": {
+        "identifier": "110122108",
+        "name": "BRISTOL MYERS SQUIBB CO"
+      },
+      "MDT": {
+        "identifier": "G5960L103",
+        "name": "MEDTRONIC PLC"
+      },
+      "MCK": {
+        "identifier": "58155Q103",
+        "name": "MCKESSON CORP"
+      },
+      "SYK": {
+        "identifier": "863667101",
+        "name": "STRYKER CORP"
+      },
+      "CVS": {
+        "identifier": "126650100",
+        "name": "CVS HEALTH CORP"
+      },
+      "MRNA": {
+        "identifier": "60770K107",
+        "name": "MODERNA INC"
+      },
+      "ELV": {
+        "identifier": "036752103",
+        "name": "ELEVANCE HEALTH INC"
+      },
+      "REGN": {
+        "identifier": "75886F107",
+        "name": "REGENERON PHARMACEUTICALS"
+      },
+      "CI": {
+        "identifier": "125523100",
+        "name": "THE CIGNA GROUP"
+      },
+      "HCA": {
+        "identifier": "40412C101",
+        "name": "HCA HEALTHCARE INC"
+      },
+      "COR": {
+        "identifier": "03073E105",
+        "name": "CENCORA INC"
+      },
+      "BSX": {
+        "identifier": "101137107",
+        "name": "BOSTON SCIENTIFIC CORP"
+      },
+      "CAH": {
+        "identifier": "14149Y108",
+        "name": "CARDINAL HEALTH INC"
+      },
+      "EW": {
+        "identifier": "28176E108",
+        "name": "EDWARDS LIFESCIENCES CORP"
+      },
+      "BDX": {
+        "identifier": "075887109",
+        "name": "BECTON DICKINSON AND CO"
+      },
+      "IDXX": {
+        "identifier": "45168D104",
+        "name": "IDEXX LABORATORIES INC"
+      },
+      "HUM": {
+        "identifier": "444859102",
+        "name": "HUMANA INC"
+      },
+      "A": {
+        "identifier": "00846U101",
+        "name": "AGILENT TECHNOLOGIES INC"
+      },
+      "VEEV": {
+        "identifier": "922475108",
+        "name": "VEEVA SYSTEMS INC CLASS A"
+      },
+      "WAT": {
+        "identifier": "941848103",
+        "name": "WATERS CORP"
+      },
+      "IQV": {
+        "identifier": "46266C105",
+        "name": "IQVIA HOLDINGS INC"
+      },
+      "GEHC": {
+        "identifier": "36266G107",
+        "name": "GE HEALTHCARE TECHNOLOGY"
+      },
+      "BIIB": {
+        "identifier": "09062X103",
+        "name": "BIOGEN INC"
+      },
+      "CNC": {
+        "identifier": "15135B101",
+        "name": "CENTENE CORP"
+      },
+      "ZTS": {
+        "identifier": "98978V103",
+        "name": "ZOETIS INC"
+      },
+      "RMD": {
+        "identifier": "761152107",
+        "name": "RESMED INC"
+      },
+      "MTD": {
+        "identifier": "592688105",
+        "name": "METTLER TOLEDO INTERNATIONAL"
+      },
+      "ILMN": {
+        "identifier": "452327109",
+        "name": "ILLUMINA INC"
+      },
+      "DXCM": {
+        "identifier": "252131107",
+        "name": "DEXCOM INC"
+      },
+      "LH": {
+        "identifier": "504922105",
+        "name": "LABCORP HOLDINGS INC"
+      },
+      "WST": {
+        "identifier": "955306105",
+        "name": "WEST PHARMACEUTICAL SERVICES"
+      },
+      "DGX": {
+        "identifier": "74834L100",
+        "name": "QUEST DIAGNOSTICS INC"
+      },
+      "STE": {
+        "identifier": "G8473T100",
+        "name": "STERIS PLC"
+      },
+      "VTRS": {
+        "identifier": "92556V106",
+        "name": "VIATRIS INC"
+      },
+      "ZBH": {
+        "identifier": "98956P102",
+        "name": "ZIMMER BIOMET HOLDINGS INC"
+      },
+      "INCY": {
+        "identifier": "45337C102",
+        "name": "INCYTE CORP"
+      },
+      "RVTY": {
+        "identifier": "714046109",
+        "name": "REVVITY INC"
+      },
+      "CRL": {
+        "identifier": "159864107",
+        "name": "CHARLES RIVER LABORATORIES"
+      },
+      "BAX": {
+        "identifier": "071813109",
+        "name": "BAXTER INTERNATIONAL INC"
+      },
+      "SOLV": {
+        "identifier": "83444M101",
+        "name": "SOLVENTUM CORP"
+      },
+      "COO": {
+        "identifier": "216648501",
+        "name": "COOPER COS INC/THE"
+      },
+      "PODD": {
+        "identifier": "45784P101",
+        "name": "INSULET CORP"
+      },
+      "TECH": {
+        "identifier": "09073M104",
+        "name": "BIO TECHNE CORP"
+      },
+      "ALGN": {
+        "identifier": "016255101",
+        "name": "ALIGN TECHNOLOGY INC"
+      },
+      "UHS": {
+        "identifier": "913903100",
+        "name": "UNIVERSAL HEALTH SERVICES B"
+      },
+      "HSIC": {
+        "identifier": "806407102",
+        "name": "HENRY SCHEIN INC"
+      },
+      "DVA": {
+        "identifier": "23918K108",
+        "name": "DAVITA INC"
+      }
+    },
+    "XLI": {
+      "GE": {
+        "identifier": "369604301",
+        "name": "GENERAL ELECTRIC"
+      },
+      "CAT": {
+        "identifier": "149123101",
+        "name": "CATERPILLAR INC"
+      },
+      "RTX": {
+        "identifier": "75513E101",
+        "name": "RTX CORP"
+      },
+      "GEV": {
+        "identifier": "36828A101",
+        "name": "GE VERNOVA INC"
+      },
+      "UNP": {
+        "identifier": "907818108",
+        "name": "UNION PACIFIC CORP"
+      },
+      "DE": {
+        "identifier": "244199105",
+        "name": "DEERE + CO"
+      },
+      "UBER": {
+        "identifier": "90353T100",
+        "name": "UBER TECHNOLOGIES INC"
+      },
+      "BA": {
+        "identifier": "097023105",
+        "name": "BOEING CO/THE"
+      },
+      "ETN": {
+        "identifier": "G29183103",
+        "name": "EATON CORP PLC"
+      },
+      "LMT": {
+        "identifier": "539830109",
+        "name": "LOCKHEED MARTIN CORP"
+      },
+      "ADP": {
+        "identifier": "053015103",
+        "name": "AUTOMATIC DATA PROCESSING"
+      },
+      "PH": {
+        "identifier": "701094104",
+        "name": "PARKER HANNIFIN CORP"
+      },
+      "MMM": {
+        "identifier": "88579Y101",
+        "name": "3M CO"
+      },
+      "CSX": {
+        "identifier": "126408103",
+        "name": "CSX CORP"
+      },
+      "EMR": {
+        "identifier": "291011104",
+        "name": "EMERSON ELECTRIC CO"
+      },
+      "GD": {
+        "identifier": "369550108",
+        "name": "GENERAL DYNAMICS CORP"
+      },
+      "TT": {
+        "identifier": "G8994E103",
+        "name": "TRANE TECHNOLOGIES PLC"
+      },
+      "WM": {
+        "identifier": "94106L109",
+        "name": "WASTE MANAGEMENT INC"
+      },
+      "PWR": {
+        "identifier": "74762E102",
+        "name": "QUANTA SERVICES INC"
+      },
+      "UPS": {
+        "identifier": "911312106",
+        "name": "UNITED PARCEL SERVICE CL B"
+      },
+      "HWM": {
+        "identifier": "443201108",
+        "name": "HOWMET AEROSPACE INC"
+      },
+      "JCI": {
+        "identifier": "G51502105",
+        "name": "JOHNSON CONTROLS INTERNATION"
+      },
+      "VRT": {
+        "identifier": "92537N108",
+        "name": "VERTIV HOLDINGS CO A"
+      },
+      "CTAS": {
+        "identifier": "172908105",
+        "name": "CINTAS CORP"
+      },
+      "NSC": {
+        "identifier": "655844108",
+        "name": "NORFOLK SOUTHERN CORP"
+      },
+      "ITW": {
+        "identifier": "452308109",
+        "name": "ILLINOIS TOOL WORKS"
+      },
+      "FDX": {
+        "identifier": "31428X106",
+        "name": "FEDEX CORP"
+      },
+      "HON": {
+        "identifier": "438516205",
+        "name": "HONEYWELL INTERNATIONAL INC"
+      },
+      "NOC": {
+        "identifier": "666807102",
+        "name": "NORTHROP GRUMMAN CORP"
+      },
+      "URI": {
+        "identifier": "911363109",
+        "name": "UNITED RENTALS INC"
+      },
+      "TDG": {
+        "identifier": "893641100",
+        "name": "TRANSDIGM GROUP INC"
+      },
+      "CMI": {
+        "identifier": "231021106",
+        "name": "CUMMINS INC"
+      },
+      "GWW": {
+        "identifier": "384802104",
+        "name": "WW GRAINGER INC"
+      },
+      "FAST": {
+        "identifier": "311900104",
+        "name": "FASTENAL CO"
+      },
+      "BE": {
+        "identifier": "093712107",
+        "name": "BLOOM ENERGY CORP  A"
+      },
+      "PCAR": {
+        "identifier": "693718108",
+        "name": "PACCAR INC"
+      },
+      "AME": {
+        "identifier": "031100100",
+        "name": "AMETEK INC"
+      },
+      "DAL": {
+        "identifier": "247361702",
+        "name": "DELTA AIR LINES INC"
+      },
+      "WAB": {
+        "identifier": "929740108",
+        "name": "WABTEC CORP"
+      },
+      "HONA": {
+        "identifier": "43849R105",
+        "name": "HONEYWELL AEROSPACE INC"
+      },
+      "ROK": {
+        "identifier": "773903109",
+        "name": "ROCKWELL AUTOMATION INC"
+      },
+      "LHX": {
+        "identifier": "502431109",
+        "name": "L3HARRIS TECHNOLOGIES INC"
+      },
+      "RSG": {
+        "identifier": "760759100",
+        "name": "REPUBLIC SERVICES INC"
+      },
+      "FERG": {
+        "identifier": "31488V107",
+        "name": "FERGUSON ENTERPRISES INC"
+      },
+      "CARR": {
+        "identifier": "14448C104",
+        "name": "CARRIER GLOBAL CORP"
+      },
+      "FIX": {
+        "identifier": "199908104",
+        "name": "COMFORT SYSTEMS USA INC"
+      },
+      "PAYX": {
+        "identifier": "704326107",
+        "name": "PAYCHEX INC"
+      },
+      "UAL": {
+        "identifier": "910047109",
+        "name": "UNITED AIRLINES HOLDINGS INC"
+      },
+      "AXON": {
+        "identifier": "05464C101",
+        "name": "AXON ENTERPRISE INC"
+      },
+      "ODFL": {
+        "identifier": "679580100",
+        "name": "OLD DOMINION FREIGHT LINE"
+      },
+      "OTIS": {
+        "identifier": "68902V107",
+        "name": "OTIS WORLDWIDE CORP"
+      },
+      "IR": {
+        "identifier": "45687V106",
+        "name": "INGERSOLL RAND INC"
+      },
+      "DOV": {
+        "identifier": "260003108",
+        "name": "DOVER CORP"
+      },
+      "VLTO": {
+        "identifier": "92338C103",
+        "name": "VERALTO CORP"
+      },
+      "EME": {
+        "identifier": "29084Q100",
+        "name": "EMCOR GROUP INC"
+      },
+      "CPRT": {
+        "identifier": "217204106",
+        "name": "COPART INC"
+      },
+      "EXPD": {
+        "identifier": "302130109",
+        "name": "EXPEDITORS INTL WASH INC"
+      },
+      "VRSK": {
+        "identifier": "92345Y106",
+        "name": "VERISK ANALYTICS INC"
+      },
+      "XYL": {
+        "identifier": "98419M100",
+        "name": "XYLEM INC"
+      },
+      "HUBB": {
+        "identifier": "443510607",
+        "name": "HUBBELL INC"
+      },
+      "LUV": {
+        "identifier": "844741108",
+        "name": "SOUTHWEST AIRLINES CO"
+      },
+      "EFX": {
+        "identifier": "294429105",
+        "name": "EQUIFAX INC"
+      },
+      "BR": {
+        "identifier": "11133T103",
+        "name": "BROADRIDGE FINANCIAL SOLUTIO"
+      },
+      "FTV": {
+        "identifier": "34959J108",
+        "name": "FORTIVE CORP"
+      },
+      "DD": {
+        "identifier": "26614N201",
+        "name": "DUPONT DE NEMOURS INC"
+      },
+      "SNA": {
+        "identifier": "833034101",
+        "name": "SNAP ON INC"
+      },
+      "J": {
+        "identifier": "46982L108",
+        "name": "JACOBS SOLUTIONS INC"
+      },
+      "SWK": {
+        "identifier": "854502101",
+        "name": "STANLEY BLACK + DECKER INC"
+      },
+      "NDSN": {
+        "identifier": "655663102",
+        "name": "NORDSON CORP"
+      },
+      "IEX": {
+        "identifier": "45167R104",
+        "name": "IDEX CORP"
+      },
+      "MAS": {
+        "identifier": "574599106",
+        "name": "MASCO CORP"
+      },
+      "LDOS": {
+        "identifier": "525327102",
+        "name": "LEIDOS HOLDINGS INC"
+      },
+      "JBHT": {
+        "identifier": "445658107",
+        "name": "HUNT (JB) TRANSPRT SVCS INC"
+      },
+      "ALLE": {
+        "identifier": "G0176J109",
+        "name": "ALLEGION PLC"
+      },
+      "CHRW": {
+        "identifier": "12541W209",
+        "name": "C.H. ROBINSON WORLDWIDE INC"
+      },
+      "FDXF": {
+        "identifier": "314352105",
+        "name": "FEDEX FREIGHT HOLDING CO"
+      },
+      "TXT": {
+        "identifier": "883203101",
+        "name": "TEXTRON INC"
+      },
+      "HII": {
+        "identifier": "446413106",
+        "name": "HUNTINGTON INGALLS INDUSTRIE"
+      },
+      "PNR": {
+        "identifier": "G7S00T104",
+        "name": "PENTAIR PLC"
+      },
+      "ROL": {
+        "identifier": "775711104",
+        "name": "ROLLINS INC"
+      },
+      "LII": {
+        "identifier": "526107107",
+        "name": "LENNOX INTERNATIONAL INC"
+      },
+      "GNRC": {
+        "identifier": "368736104",
+        "name": "GENERAC HOLDINGS INC"
+      },
+      "AOS": {
+        "identifier": "831865209",
+        "name": "SMITH (A.O.) CORP"
+      }
+    },
+    "XLB": {
+      "LIN": {
+        "identifier": "G54950103",
+        "name": "LINDE PLC"
+      },
+      "NEM": {
+        "identifier": "651639106",
+        "name": "NEWMONT CORP"
+      },
+      "VMC": {
+        "identifier": "929160109",
+        "name": "VULCAN MATERIALS CO"
+      },
+      "ECL": {
+        "identifier": "278865100",
+        "name": "ECOLAB INC"
+      },
+      "SHW": {
+        "identifier": "824348106",
+        "name": "SHERWIN WILLIAMS CO/THE"
+      },
+      "CRH": {
+        "identifier": "G25508105",
+        "name": "CRH PLC"
+      },
+      "MLM": {
+        "identifier": "573284106",
+        "name": "MARTIN MARIETTA MATERIALS"
+      },
+      "APD": {
+        "identifier": "009158106",
+        "name": "AIR PRODUCTS + CHEMICALS INC"
+      },
+      "FCX": {
+        "identifier": "35671D857",
+        "name": "FREEPORT MCMORAN INC"
+      },
+      "NUE": {
+        "identifier": "670346105",
+        "name": "NUCOR CORP"
+      },
+      "STLD": {
+        "identifier": "858119100",
+        "name": "STEEL DYNAMICS INC"
+      },
+      "PPG": {
+        "identifier": "693506107",
+        "name": "PPG INDUSTRIES INC"
+      },
+      "SW": {
+        "identifier": "G8267P108",
+        "name": "SMURFIT WESTROCK PLC"
+      },
+      "DOW": {
+        "identifier": "260557103",
+        "name": "DOW INC"
+      },
+      "PKG": {
+        "identifier": "695156109",
+        "name": "PACKAGING CORP OF AMERICA"
+      },
+      "AMCR": {
+        "identifier": "G0250X149",
+        "name": "AMCOR PLC"
+      },
+      "IFF": {
+        "identifier": "459506101",
+        "name": "INTL FLAVORS + FRAGRANCES"
+      },
+      "IP": {
+        "identifier": "460146103",
+        "name": "INTERNATIONAL PAPER CO"
+      },
+      "BALL": {
+        "identifier": "058498106",
+        "name": "BALL CORP"
+      },
+      "CF": {
+        "identifier": "125269100",
+        "name": "CF INDUSTRIES HOLDINGS INC"
+      },
+      "LYB": {
+        "identifier": "N53745100",
+        "name": "LYONDELLBASELL INDU CL A"
+      },
+      "AVY": {
+        "identifier": "053611109",
+        "name": "AVERY DENNISON CORP"
+      },
+      "ALB": {
+        "identifier": "012653101",
+        "name": "ALBEMARLE CORP"
+      },
+      "MOS": {
+        "identifier": "61945C103",
+        "name": "MOSAIC CO/THE"
+      }
+    },
+    "XLRE": {
+      "WELL": {
+        "identifier": "95040Q104",
+        "name": "WELLTOWER INC"
+      },
+      "PLD": {
+        "identifier": "74340W103",
+        "name": "PROLOGIS INC"
+      },
+      "EQIX": {
+        "identifier": "29444U700",
+        "name": "EQUINIX INC"
+      },
+      "AMT": {
+        "identifier": "03027X100",
+        "name": "AMERICAN TOWER CORP"
+      },
+      "PSA": {
+        "identifier": "74460D109",
+        "name": "PUBLIC STORAGE"
+      },
+      "SPG": {
+        "identifier": "828806109",
+        "name": "SIMON PROPERTY GROUP INC"
+      },
+      "CBRE": {
+        "identifier": "12504L109",
+        "name": "CBRE GROUP INC   A"
+      },
+      "VTR": {
+        "identifier": "92276F100",
+        "name": "VENTAS INC"
+      },
+      "O": {
+        "identifier": "756109104",
+        "name": "REALTY INCOME CORP"
+      },
+      "VMRK": {
+        "identifier": "29476L107",
+        "name": "VIVMARK RESIDENTIAL"
+      },
+      "DLR": {
+        "identifier": "253868103",
+        "name": "DIGITAL REALTY TRUST INC"
+      },
+      "CCI": {
+        "identifier": "22822V101",
+        "name": "CROWN CASTLE INC"
+      },
+      "IRM": {
+        "identifier": "46284V101",
+        "name": "IRON MOUNTAIN INC"
+      },
+      "EXR": {
+        "identifier": "30225T102",
+        "name": "EXTRA SPACE STORAGE INC"
+      },
+      "VICI": {
+        "identifier": "925652109",
+        "name": "VICI PROPERTIES INC"
+      },
+      "SBAC": {
+        "identifier": "78410G104",
+        "name": "SBA COMMUNICATIONS CORP"
+      },
+      "HST": {
+        "identifier": "44107P104",
+        "name": "HOST HOTELS + RESORTS INC"
+      },
+      "ESS": {
+        "identifier": "297178105",
+        "name": "ESSEX PROPERTY TRUST INC"
+      },
+      "KIM": {
+        "identifier": "49446R109",
+        "name": "KIMCO REALTY CORP"
+      },
+      "WY": {
+        "identifier": "962166104",
+        "name": "WEYERHAEUSER CO"
+      },
+      "INVH": {
+        "identifier": "46187W107",
+        "name": "INVITATION HOMES INC"
+      },
+      "MAA": {
+        "identifier": "59522J103",
+        "name": "MID AMERICA APARTMENT COMM"
+      },
+      "DOC": {
+        "identifier": "42250P103",
+        "name": "HEALTHPEAK PROPERTIES INC"
+      },
+      "CSGP": {
+        "identifier": "22160N109",
+        "name": "COSTAR GROUP INC"
+      },
+      "REG": {
+        "identifier": "758849103",
+        "name": "REGENCY CENTERS CORP"
+      },
+      "UDR": {
+        "identifier": "902653104",
+        "name": "UDR INC"
+      },
+      "BXP": {
+        "identifier": "101121101",
+        "name": "BXP INC"
+      },
+      "CPT": {
+        "identifier": "133131102",
+        "name": "CAMDEN PROPERTY TRUST"
+      },
+      "FRT": {
+        "identifier": "313745101",
+        "name": "FEDERAL REALTY INVS TRUST"
+      },
+      "ARE": {
+        "identifier": "015271109",
+        "name": "ALEXANDRIA REAL ESTATE EQUIT"
+      }
+    },
+    "XLU": {
+      "NEE": {
+        "identifier": "65339F101",
+        "name": "NEXTERA ENERGY INC"
+      },
+      "SO": {
+        "identifier": "842587107",
+        "name": "SOUTHERN CO/THE"
+      },
+      "DUK": {
+        "identifier": "26441C204",
+        "name": "DUKE ENERGY CORP"
+      },
+      "CEG": {
+        "identifier": "21037T109",
+        "name": "CONSTELLATION ENERGY"
+      },
+      "AEP": {
+        "identifier": "025537101",
+        "name": "AMERICAN ELECTRIC POWER"
+      },
+      "D": {
+        "identifier": "25746U109",
+        "name": "DOMINION ENERGY INC"
+      },
+      "SRE": {
+        "identifier": "816851109",
+        "name": "SEMPRA"
+      },
+      "ETR": {
+        "identifier": "29364G103",
+        "name": "ENTERGY CORP"
+      },
+      "XEL": {
+        "identifier": "98389B100",
+        "name": "XCEL ENERGY INC"
+      },
+      "EXC": {
+        "identifier": "30161N101",
+        "name": "EXELON CORP"
+      },
+      "ED": {
+        "identifier": "209115104",
+        "name": "CONSOLIDATED EDISON INC"
+      },
+      "WEC": {
+        "identifier": "92939U106",
+        "name": "WEC ENERGY GROUP INC"
+      },
+      "VST": {
+        "identifier": "92840M102",
+        "name": "VISTRA CORP"
+      },
+      "PEG": {
+        "identifier": "744573106",
+        "name": "PUBLIC SERVICE ENTERPRISE GP"
+      },
+      "AEE": {
+        "identifier": "023608102",
+        "name": "AMEREN CORPORATION"
+      },
+      "ATO": {
+        "identifier": "049560105",
+        "name": "ATMOS ENERGY CORP"
+      },
+      "AWK": {
+        "identifier": "030420103",
+        "name": "AMERICAN WATER WORKS CO INC"
+      },
+      "PCG": {
+        "identifier": "69331C108",
+        "name": "P G + E CORP"
+      },
+      "DTE": {
+        "identifier": "233331107",
+        "name": "DTE ENERGY COMPANY"
+      },
+      "CNP": {
+        "identifier": "15189T107",
+        "name": "CENTERPOINT ENERGY INC"
+      },
+      "PPL": {
+        "identifier": "69351T106",
+        "name": "PPL CORP"
+      },
+      "ES": {
+        "identifier": "30040W108",
+        "name": "EVERSOURCE ENERGY"
+      },
+      "FE": {
+        "identifier": "337932107",
+        "name": "FIRSTENERGY CORP"
+      },
+      "EIX": {
+        "identifier": "281020107",
+        "name": "EDISON INTERNATIONAL"
+      },
+      "CMS": {
+        "identifier": "125896100",
+        "name": "CMS ENERGY CORP"
+      },
+      "NI": {
+        "identifier": "65473P105",
+        "name": "NISOURCE INC"
+      },
+      "EVRG": {
+        "identifier": "30034W106",
+        "name": "EVERGY INC"
+      },
+      "LNT": {
+        "identifier": "018802108",
+        "name": "ALLIANT ENERGY CORP"
+      },
+      "NRG": {
+        "identifier": "629377508",
+        "name": "NRG ENERGY INC"
+      },
+      "PNW": {
+        "identifier": "723484101",
+        "name": "PINNACLE WEST CAPITAL"
+      },
+      "AES": {
+        "identifier": "00130H105",
+        "name": "AES CORP"
+      }
+    }
+  }
+}

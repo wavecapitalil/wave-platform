@@ -165,7 +165,8 @@ function loadEarningsPage(){
     var ts = d.ts ? new Date(d.ts).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : '';
     var todayS = new Date().toISOString().slice(0,10);
     var upcoming = _earnData.filter(function(e){ return e.date >= todayS && (_earnMinMktCap===0||(e.mktcap_B||0)>=_earnMinMktCap); }).length;
-    document.getElementById('earnStatus').textContent = 'Updated: ' + ts + ' · ' + upcoming + ' upcoming companies';
+    document.getElementById('earnStatus').textContent = '';
+    if(window.WaveDataLog)WaveDataLog.record('earnings:calendar',{section:'Earnings',metric:'S&P 500 calendar',source:'Nasdaq earnings calendar',pulledAt:ts||'',coverage:upcoming+' upcoming companies',skipSources:true});
     earnRender();
   }).catch(function(){
     earnStartPolling();
@@ -174,7 +175,7 @@ function loadEarningsPage(){
 
 function earnRender(){
   if(!_earnData.length){
-    document.getElementById('earnContent').innerHTML = '<div style="color:#334155;font-size:13px;padding:40px 0;text-align:center">Loading earnings data from Nasdaq calendar...</div>';
+    document.getElementById('earnContent').innerHTML = '<div style="color:#334155;font-size:13px;padding:40px 0;text-align:center">Loading…</div>';
     return;
   }
   earnRenderBeatSummary();

@@ -19,6 +19,16 @@
     if(entries.size>100)entries.delete(Array.from(entries.keys()).filter(function(k){return k.indexOf('guide:')!==0;})[0]);
     try{sessionStorage.setItem('wave.sources.v1',JSON.stringify(Array.from(entries)));}catch(e){}
     render();
+    if(window.WaveDataLog&&String(key).indexOf('datalog:')!==0){
+      window.WaveDataLog.record('src:'+key,{
+        section:e.title.indexOf(' · ')>=0?e.title.split(' · ')[0]:'Sources',
+        metric:e.title,
+        source:e.links.map(function(l){return l.title;}).join(', '),
+        notes:e.body,
+        links:e.links,
+        skipSources:true
+      });
+    }
   }
   function html(key,title,content){
     var t=document.createElement('template');t.innerHTML=String(content||'');

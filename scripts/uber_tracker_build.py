@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import calendar
 import csv
 import json
 from pathlib import Path
@@ -180,7 +181,6 @@ def seg(text, ltr=False, url=None):
 def methodology_notes(nyc, lax, bonuses, guide, routes, cadence, proxy):
     """Short Hebrew/English method notes built only from rows already in the bundle."""
     checks = ", ".join(cadence["public_checks_local"])
-    older = next(row for row in nyc if row["month"] == "2025-09")
     latest = nyc[-1]
     yoy = latest.get("uber_yoy_pct")
     yoy_text = "ריק" if yoy is None else f"{yoy:+.1f}%"
@@ -253,37 +253,29 @@ def methodology_notes(nyc, lax, bonuses, guide, routes, cadence, proxy):
                 seg("HV0003", ltr=True),
                 seg(" (Uber) או "),
                 seg("HV0005", ltr=True),
-                seg(" (Lyft) בקובץ החודשי ÷ ימי החודש. נתח "),
+                seg(" (Lyft) בקובץ החודשי ÷ ימי החודש. הסכום החודשי נשמר כפי שנספר, בלי עיגול חזרה. נתח "),
                 seg("Uber", ltr=True),
-                seg(" = Uber ÷ (Uber+Lyft). שינוי שנתי = החודש מול אותו חודש אשתקד; בלי זוג להשוואה הערך נשאר ריק. לספטמבר 2026: "),
-                seg("15,412,555", ltr=True),
-                seg(" ÷ "),
-                seg("30", ltr=True),
-                seg(" מעוגל ל-"),
-                seg(f"{latest['uber_trips_per_day']:,}", ltr=True),
-                seg(", ו-"),
-                seg("5,575,126", ltr=True),
-                seg(" ÷ "),
-                seg("30", ltr=True),
-                seg(" מעוגל ל-"),
-                seg(f"{latest['lyft_trips_per_day']:,}", ltr=True),
+                seg(" = סך Uber ÷ (Uber+Lyft). שינוי שנתי = הממוצע היומי מול אותו חודש אשתקד; בלי זוג הערך נשאר ריק. ספטמבר 2026: "),
+                seg(f"{int(latest['uber_month_est']):,}", ltr=True),
+                seg(" ו-"),
+                seg(f"{int(latest['lyft_month_est']):,}", ltr=True),
                 seg(". מול ספטמבר 2025: "),
                 seg(yoy_text, ltr=True),
                 seg("."),
             ],
             "calc_en": [
-                seg("Trips per day = monthly HVFHV trips ÷ days in the month. Uber share = Uber ÷ (Uber+Lyft). Year-over-year = the month versus the same month a year earlier; with no pair the value stays empty. September 2026 raw counts 15,412,555 and 5,575,126 ÷ 30 round to the stored daily averages. Versus September 2025: " + yoy_text + "."),
+                seg("Trips per day = raw monthly HVFHV trips ÷ days in the month. The monthly total is the counted file total, not a rounded daily figure times the number of days. Uber share = Uber trips ÷ (Uber+Lyft). Year-over-year compares daily averages with the same month a year earlier; with no pair the value stays empty. September 2026 raw totals are " + f"{int(latest['uber_month_est']):,} and {int(latest['lyft_month_est']):,}. Versus September 2025: " + yoy_text + "."),
             ],
             "links": nyc_links,
             "freq_he": [
-                seg("קובץ TLC חודשי, בדרך כלל בפיגור של כחודשיים עד שלושה. ספטמבר 2026 נספר ב-"),
-                seg(latest.get("collected_at") or latest["source_pulled"], ltr=True),
-                seg(". החודשים הקודמים נמשכו ב-"),
-                seg(older["source_pulled"], ltr=True),
-                seg("."),
+                seg("כל חודש בקובץ נספר מקובץ ה-parquet של "),
+                seg("TLC", ltr=True),
+                seg(" ב-"),
+                seg(str(latest.get("collected_at") or latest["source_pulled"]), ltr=True),
+                seg(". הפרסום החודשי מגיע בדרך כלל בפיגור של כחודשיים עד שלושה."),
             ],
             "freq_en": [
-                seg("TLC publishes a monthly file, usually with about a two to three month lag. September 2026 was counted at " + str(latest.get("collected_at") or latest["source_pulled"]) + ". Earlier months were pulled " + older["source_pulled"] + "."),
+                seg("Every month in the file was counted from that month's TLC parquet at " + str(latest.get("collected_at") or latest["source_pulled"]) + ". The monthly file usually arrives with about a two to three month lag."),
             ],
         },
         {
@@ -410,14 +402,19 @@ def build() -> dict:
     for row in nyc_raw:
         note = blank(row.get("notes")) or ""
         urls = [part.strip() for part in note.split(";") if part.strip().startswith("http")]
+        year, month_num = row["month"].split("-")
+        days = calendar.monthrange(int(year), int(month_num))[1]
+        uber_month = num(row["uber_month_est"])
+        lyft_month = num(row["lyft_month_est"])
         nyc.append({
             "month": row["month"],
-            "uber_trips_per_day": num(row["uber_trips_per_day"]),
-            "lyft_trips_per_day": num(row["lyft_trips_per_day"]),
-            "uber_share_pct": num(row["uber_share_pct"]),
-            "uber_month_est": num(row["uber_month_est"]),
-            "lyft_month_est": num(row["lyft_month_est"]),
-            "hv_total_per_day": num(row["hv_total_per_day"]),
+            "days": days,
+            "uber_trips_per_day": None if uber_month is None else uber_month / days,
+            "lyft_trips_per_day": None if lyft_month is None else lyft_month / days,
+            "uber_share_pct": None if not uber_month or lyft_month is None else round(100 * uber_month / (uber_month + lyft_month), 1),
+            "uber_month_est": uber_month,
+            "lyft_month_est": lyft_month,
+            "hv_total_per_day": None if uber_month is None or lyft_month is None else (uber_month + lyft_month) / days,
             "kind": "fact",
             "proxy_for": None,
             "source": row["source"],

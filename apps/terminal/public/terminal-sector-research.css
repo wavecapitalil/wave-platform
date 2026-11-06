@@ -1,0 +1,37 @@
+#page-sector-research .sr-wrap { max-width: 1140px; }
+#page-sector-research .sr-search { display: flex; gap: 10px; align-items: center; }
+#page-sector-research .sr-search input {
+  flex: 1; min-width: 0; background: #0f1117; border: 1px solid var(--border2);
+  border-radius: 8px; padding: 10px 14px; font-size: 14px; color: #e2e8f0;
+  font-family: inherit; outline: none;
+}
+#page-sector-research .sr-search input:focus { border-color: #4a9eff; }
+#page-sector-research .sr-search button {
+  background: #4a9eff; color: #fff; border: none; border-radius: 8px;
+  padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: inherit; flex-shrink: 0;
+}
+#page-sector-research .sr-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+#page-sector-research .sr-fund {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 8px;
+}
+#page-sector-research .sr-symbol { color: #94a3b8; font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+#page-sector-research .sr-chart-box { position: relative; height: 320px; }
+#page-sector-research .sr-legend {
+  display: flex; flex-wrap: wrap; gap: 8px 14px; list-style: none; margin: 14px 0 0; padding: 0;
+}
+#page-sector-research .sr-legend li { display: flex; align-items: center; gap: 6px; color: #cbd5e1; font-size: 12px; }
+#page-sector-research .sr-swatch { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+#page-sector-research .sr-legend b { font-weight: 700; color: #e2e8f0; font-variant-numeric: tabular-nums; }
+#page-sector-research .sr-metrics {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 10px; margin-top: 14px;
+}
+#page-sector-research .sr-metrics .sc-val { font-variant-numeric: tabular-nums; }
+#page-sector-research .sr-up { color: var(--green); }
+#page-sector-research .sr-dn { color: var(--red); }
+#page-sector-research .sr-range { font-size: 13px; letter-spacing: 0; }
+@media (max-width: 700px) {
+  #page-sector-research .sr-search { flex-direction: column; align-items: stretch; }
+  #page-sector-research .sr-chart-box { height: 260px; }
+  #page-sector-research .sr-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

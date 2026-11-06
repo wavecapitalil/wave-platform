@@ -479,6 +479,18 @@ def sectors():
         return jsonify({'error': str(e)}), 500
 
 
+@bp.route('/api/etf-holdings')
+def etf_holdings():
+    from services.etf_research import collect_etf
+    symbol = request.args.get('symbol', '')
+    try:
+        return jsonify(collect_etf(symbol))
+    except ValueError:
+        return jsonify({'error': 'invalid symbol'}), 400
+    except Exception:
+        return jsonify({'error': 'etf data unavailable'}), 502
+
+
 # ── News: RSS feeds ───────────────────────────────────────────────────────────
 _NEWS_CATEGORIES = {
     'MACRO':    ['fed', 'rate', 'inflation', 'gdp', 'recession', 'economy', 'treasury', 'yield', 'fomc', 'powell', 'cpi', 'pce', 'jobs', 'unemployment'],

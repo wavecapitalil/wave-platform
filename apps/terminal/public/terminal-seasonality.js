@@ -120,7 +120,8 @@ async function seasLoad(sym,label,btn){
     var data=await seasFetch(sym);
     if(data.error) throw new Error(data.error);
     seasRender(data);
-    if(upd) upd.textContent=_seasLabel+' · 10Y historical average vs '+data.current_year+' · Updated '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    if(upd) upd.textContent=_seasLabel;
+    if(window.WaveDataLog)WaveDataLog.record('seasonality-scanner:'+sym,{section:'Seasonality',metric:(label||sym)+' · 10-year path',source:'Daily price history',pulledAt:new Date().toISOString(),coverage:((data.years_used||[]).length)+'/10 completed years',notes:(data.years_used||[]).join(', '),skipSources:true});
   }catch(e){
     console.error('seasLoad:',e);
     if(upd) upd.textContent='Error: '+e.message;

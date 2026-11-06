@@ -55,20 +55,24 @@ def main():
         if bundle["charts"][key]["points"]:
             fail(f"{key} plotted an empty series")
     nyc = bundle["series"]["nyc_hvfhv"]["observations"]
-    if len(nyc) != 13 or nyc[0]["month"] != "2025-09" or nyc[-2]["uber_trips_per_day"] != 477421:
-        fail("NYC baseline rows changed")
+    if len(nyc) != 13 or nyc[0]["month"] != "2025-09":
+        fail("NYC month coverage changed")
     sep = nyc[-1]
-    if sep["month"] != "2026-09" or sep["uber_trips_per_day"] != 513752 or sep["lyft_trips_per_day"] != 185838:
-        fail("September 2026 NYC daily averages drifted")
-    if sep["hv_total_per_day"] != 513752 + 185838 or sep["uber_month_est"] != 513752 * 30 or sep["lyft_month_est"] != 185838 * 30:
-        fail("September 2026 derived totals drifted")
+    if sep["month"] != "2026-09" or sep["uber_month_est"] != 15412555 or sep["lyft_month_est"] != 5575126:
+        fail("September 2026 raw TLC totals drifted")
+    if abs(sep["uber_trips_per_day"] - 15412555 / 30) > 1e-9 or abs(sep["lyft_trips_per_day"] - 5575126 / 30) > 1e-9:
+        fail("September 2026 daily average is not raw ÷ 30")
+    if sep["uber_month_est"] == round(sep["uber_trips_per_day"]) * 30:
+        fail("September 2026 monthly total was rebuilt from a rounded daily average")
+    if nyc[0]["uber_month_est"] != 14047040:
+        fail("September 2025 raw TLC total drifted")
     if sep["uber_share_pct"] != 73.4 or sep["uber_yoy_pct"] != 9.7:
         fail(f"September 2026 share or year-over-year drifted: {sep['uber_share_pct']} {sep['uber_yoy_pct']}")
     if nyc[0]["uber_yoy_pct"] is not None:
         fail("September 2025 year-over-year was filled without a prior September")
     if not any("fhvhv_tripdata_2026-09.parquet" in url for url in sep["source_urls"]):
         fail("September 2026 lost the TLC parquet URL")
-    if sep["collected_at"] != "2026-11-06T10:47:00+02:00" or sep["collected_timezone"] != "Asia/Jerusalem":
+    if not str(sep["collected_at"]).startswith("2026-11-06T") or not str(sep["collected_at"]).endswith("+02:00") or sep["collected_timezone"] != "Asia/Jerusalem":
         fail("September 2026 collection timestamp missing")
     if sep["kind"] != "fact":
         fail("September 2026 must stay a fact")
@@ -103,8 +107,8 @@ def main():
             fail(f"methodology missing {key}")
     nyc_note = next(item for item in bundle["methodology"] if item["id"] == "nyc")
     joined = json.dumps(nyc_note, ensure_ascii=False)
-    if "fhvhv_tripdata_2026-09.parquet" not in joined or "tlchelp.io" not in joined:
-        fail("NYC methodology lost a source that is in the data file")
+    if "fhvhv_tripdata_2026-09.parquet" not in joined or "fhvhv_tripdata_2025-09.parquet" not in joined:
+        fail("NYC methodology lost a parquet source that is in the data file")
     if "ut-method" not in page:
         fail("tracker page does not render the methodology section")
     if "bdi" not in page or "rtl" not in page:

@@ -15,20 +15,25 @@ export function annualHistoricalPE(cache:any,payload:any,symbol:string,now=Date.
  const data=[...groups].sort().map(([end,rs])=>{
   const filed=rs.map(r=>r.filed).sort().at(-1),latest=rs.filter(r=>r.filed===filed),r=latest[0];
   const price=chart.points.filter(p=>p.date<=end).at(-1);let reason:string|null=null;
+  let priceReason:string|null=null;
+  if(chart.currency!=='USD')priceReason='Price and SEC statement currencies do not match';
+  else if(!price||!(price.raw_close>0)||(Date.parse(end)-Date.parse(price.date))/DAY>7)priceReason='No positive completed price session near fiscal year-end';
+  else if(rs.some((fact:any)=>splits.some(d=>d>=fact.start)))priceReason='A split during or after this fiscal period requires separately verified share/price rebasing';
   if(new Set(latest.map(r=>r.start+'|'+r.val)).size!==1)reason='Conflicting reported annual EPS contexts';
-  else if(chart.currency!=='USD')reason='Price and SEC EPS currencies do not match';
-  else if(!price||(Date.parse(end)-Date.parse(price.date))/DAY>7)reason='No completed price session near fiscal year-end';
-  else if(splits.some(d=>d>=r.start))reason='A split during or after this earnings period requires separately verified EPS rebasing';
+  else if(priceReason)reason=priceReason;
   else if(r.val<=0)reason='P/E not meaningful with non-positive annual diluted EPS';
   return {period_start:r.start,period_end:end,price_date:price?.date||null,price:price?.raw_close??null,currency:chart.currency,
-   reported_diluted_eps:r.val,eps_filed:r.filed,eps_accession:r.accn,pe:reason?null:calculateStatement('statement_historical_pe',{price:price!.raw_close,eps:r.val}),reason,
+   price_basis_verified:priceReason===null,price_reason:priceReason,reported_diluted_eps:r.val,eps_filed:r.filed,eps_accession:r.accn,pe:reason?null:calculateStatement('statement_historical_pe',{price:price!.raw_close,eps:r.val}),reason,
    source_url:cache?.cik?'https://www.sec.gov/Archives/edgar/data/'+Number(cache.cik)+'/'+r.accn.replace(/-/g,'')+'/':null};
  });
  return {symbol,data,basis:'Fiscal-year-end P/E using the latest reported annual diluted EPS; restated history, not an as-known investment backtest',forward_pe_history:null,meta:{source:'SEC EDGAR annual diluted EPS and Yahoo completed daily close',price_basis:'Provider split-adjusted close, excluding dividend adjustment',earnings_basis:'Reported full fiscal-year diluted EPS; latest filing version, which may postdate the price',split_guard:'Observation withheld for any split during or after its earnings period. No unverified EPS rebasing.',fetched_at:new Date(now).toISOString(),forward_limitation:'Historical point-in-time analyst forecast snapshots are not supplied by the current providers'}};
 }
-export async function collectHistoricalPE(cache:any,symbol:string,now=Date.now(),fetcher=fetch) {
- if(!/^[A-Z0-9][A-Z0-9.=-]{0,19}$/.test(symbol))throw Error('Invalid symbol');
- const start=Date.UTC(new Date(now).getUTCFullYear()-7,0,1);
- const r=await fetcher('https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(symbol)+'?'+new URLSearchParams({period1:String(start/1000),period2:String(Math.floor(now/1000)),interval:'1d',events:'div,splits',includeAdjustedClose:'true'}),{headers:{'User-Agent':'WaveResearch/1.0'},signal:AbortSignal.timeout(15000)});
- if(!r.ok)throw Error('Historical price provider unavailable');return annualHistoricalPE(cache,await r.json(),symbol,now);
+export function historicalPEWithAvailability(cache:any,prices:any,symbol:string,now=Date.now()) {
+ let availability=prices.availability;
+ const latestFiled=Object.values(cache?.document?.facts?.['us-gaap']||{}).flatMap((f:any)=>Object.values(f.units||{}).flatMap((rows:any)=>rows.map((r:any)=>r.filed||''))).sort().at(-1);
+ if(prices.payload&&availability.status==='retained'&&latestFiled>availability.acquired_at.slice(0,10)){
+  prices={...prices,payload:null};availability={...availability,status:'unavailable',error:'filing_newer_than_retained_prices',label:'New SEC filing requires refreshed historical price/split inputs'};
+ }
+ const result=prices.payload?annualHistoricalPE(cache,prices.payload,symbol,now):{symbol,data:[],meta:{},basis:'Fiscal-year-end annual samples unavailable while price retrieval is interrupted'};
+ return {...result,meta:{...result.meta,fetched_at:availability.acquired_at,calculated_at:new Date(now).toISOString(),sec_fetched_at:cache?.fetched_at||null,price_availability:availability}};
 }

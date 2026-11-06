@@ -9,14 +9,18 @@
 <script src="i18n.js?v=20261013-he-default"></script>
   <link rel="stylesheet" href="wave-university-theme.css?v=20261008-depth1">
 <link rel="stylesheet" href="ai-tutor.css">
-<link rel="stylesheet" href="terminal-sources.css?v=20261008-1">
+<link rel="stylesheet" href="terminal-sources.css?v=20261105-datalog1">
 <link rel="stylesheet" href="terminal-gold-expectations.css?v=20261009-2">
 <link rel="stylesheet" href="terminal-uber-tracker.css?v=20261105-1">
 <link rel="stylesheet" href="terminal-valuation.css?v=20261014-report">
 <link rel="stylesheet" href="terminal-price-history.css?v=20261013-material-events">
 <link rel="stylesheet" href="terminal-research.css?v=20261014-persistent-statements">
+<link rel="stylesheet" href="terminal-sector-research.css?v=20261105-sector1">
 <link rel="stylesheet" href="terminal-brief.css?v=20261009-brighter-reader1">
-<link rel="stylesheet" href="wave-header.css?v=20261101-1"><script src="wave-header.js?v=20261101-1"></script></head>
+<link rel="stylesheet" href="wave-header.css?v=20261101-1"><script src="wave-header.js?v=20261101-1"></script><style>
+.ratio-comparisons{margin-top:20px;color:#dbe5f1;direction:ltr;text-align:left}.ratio-comparisons h3{font-size:18px;margin:0 0 16px}.ratio-head,.ratio-row{display:grid;grid-template-columns:minmax(100px,.8fr) minmax(110px,1fr) minmax(155px,1.2fr) minmax(180px,1.5fr);gap:16px;padding:16px 8px;border-bottom:1px solid #26364b}.ratio-head{color:#b9c9dc;font-size:12px;background:#101d2d}.ratio-row h4{font-size:13px;margin:0}.ratio-row strong{display:block;font-size:18px;font-variant-numeric:tabular-nums}.ratio-row small{display:block;font-size:11px;line-height:1.6;color:#a8b8cd;overflow-wrap:anywhere}.ratio-row .ratio-mobile{display:none}.ratio-label{display:block;margin-top:10px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#7f93ab}.ratio-earnings{padding:18px 8px;font-size:12px;color:#b9c9dc}
+@media(max-width:1100px){.ratio-head{display:none}.ratio-row{grid-template-columns:1fr 1fr;gap:14px;background:#101b2b;border:1px solid #2b3c52;border-radius:8px;margin:12px 0;padding:16px}.ratio-row h4{grid-column:1/-1;font-size:15px}.ratio-row>div:last-child{grid-column:1/-1;border-top:1px solid #2b3c52;padding-top:12px}.ratio-row .ratio-mobile{display:block;color:#d2deee;margin-bottom:5px;font-weight:600}}
+</style></head>
 <body class="wave-terminal-shell">
 
 <!-- ══════════════════════════════════════
@@ -140,6 +144,9 @@
         <div class="nav-item" data-page="research" onclick="navigate('research')">
           <span class="nav-item-icon">🔎</span> <span data-i18n="sidebar.companyResearch">Equity Research</span>
         </div>
+        <div class="nav-item" data-page="sector-research" onclick="navigate('sector-research')">
+          <span class="nav-item-icon">🥧</span> <span data-i18n="sidebar.sectorResearch">Sector Research</span>
+        </div>
 
         <div class="nav-item" data-page="mover" onclick="navigate('mover')">
           <span class="nav-item-icon">⚡</span> <span data-i18n="sidebar.whatsMoving">What's Moving</span>
@@ -219,6 +226,7 @@
     <div class="nav-footer">
       <div class="user-avatar">DA</div>
       <span class="nav-user-name">Daniel</span>
+      <button type="button" class="nav-data-log" data-i18n="datalog.link" onclick="navigate('data-log')">Data log</button>
     </div>
 
   </nav>
@@ -434,7 +442,7 @@
         <div class="page-header" style="margin-bottom:24px">
           <div class="page-header-tag">Macro · Fixed Income</div>
           <div class="page-header-title">Rates &amp; Yields</div>
-          <div class="page-header-sub">US Treasury yield curve — the market's real-time view on growth, inflation and recession risk</div>
+          <div class="page-header-sub"></div>
         </div>
 
         <!-- Yield curve cards -->
@@ -469,7 +477,7 @@
         <div class="page-header" style="margin-bottom:16px">
           <div class="page-header-tag">Metals · Relative Value</div>
           <div class="page-header-title">Metals Dashboard</div>
-          <div class="page-header-sub">Gold / Silver Ratio relative to its 10-year historical distribution</div>
+          <div class="page-header-sub"></div>
         </div>
 
         <div class="cd-section" id="gsrSection">
@@ -520,7 +528,7 @@
           <div data-wave-source="Gold / Silver — sources" id="gsrMeta" style="margin-top:8px;font-size:10px;color:#597895;text-align:right"></div>
         </div>
 
-        <div class="callout" style="margin-top:12px">
+        <div class="callout" data-wave-source="Gold / Silver — interpretation" style="margin-top:12px">
           Relative-value context only. A historically high or low ratio does not by itself imply that the ratio must mean-revert.
         </div>
 
@@ -533,7 +541,7 @@
         <div class="page-header" style="margin-bottom:16px">
           <div class="page-header-tag">Macro · Energy Supply Risk</div>
           <div class="page-header-title">Hormuz Energy Risk Monitor</div>
-          <div class="page-header-sub">Recent Strait of Hormuz developments combined with Brent and WTI price confirmation</div>
+          <div class="page-header-sub"></div>
         </div>
 
         <div class="hero-card" id="hormuzHero" style="padding:20px;margin-bottom:14px">
@@ -556,12 +564,12 @@
           </div>
         </div>
 
-        <div class="callout" style="margin-bottom:14px">
+        <div class="callout" data-wave-source="Hormuz — methodology" style="margin-bottom:14px">
           This is a macro supply-chain risk monitor. It does not rank stocks or generate trade recommendations. Risk state combines recent Hormuz-specific developments with Brent/WTI market confirmation.
         </div>
 
         <div class="mini-section">
-          <div class="ms-header"><div class="ms-title">Supply-Risk Developments</div><div style="font-size:10px;color:#90a8c2">Latest monitored headlines</div></div>
+          <div class="ms-header"><div class="ms-title">Supply-Risk Developments</div></div>
           <div id="hPanel-events" style="margin-top:12px">
             <button id="hTab-events" style="display:none"></button>
             <div id="hormuzEventList"><div style="padding:24px;text-align:center;color:#90a8c2">Loading…</div></div>
@@ -575,7 +583,7 @@
         <div class="page-header" style="margin-bottom:24px">
           <div class="page-header-tag">Clean Energy · Autos</div>
           <div class="page-header-title">EV Industry</div>
-          <div class="page-header-sub">Global electric vehicle adoption, delivery leaders &amp; public company financials</div>
+          <div class="page-header-sub"></div>
         </div>
 
         <!-- EV vs Petrol/Diesel adoption trend -->
@@ -601,7 +609,7 @@
           <div style="margin-top:14px;position:relative;height:280px">
             <canvas id="evDeliveryChart"></canvas>
           </div>
-          <div style="font-size:10px;color:#334155;margin-top:6px">BEV = Battery Electric only · PHEV = includes Plug-in Hybrids · 2024 full year data</div>
+          <div data-wave-source="EV — delivery definitions">BEV is battery-electric only. PHEV includes plug-in hybrids. Delivery bars use 2024 full-year data.</div>
         </div>
 
         <!-- Public company financials -->
@@ -858,7 +866,7 @@
         <div class="page-header" style="margin-bottom:24px">
           <div class="page-header-tag">Equities</div>
           <div class="page-header-title">Equity Research</div>
-          <div class="page-header-sub">Company, price action and financial research in one workspace</div>
+          <div class="page-header-sub"></div>
         </div>
 
         <!-- Search box -->
@@ -921,6 +929,42 @@
       </div>
     </div>
 
+    <!-- ─── SECTOR RESEARCH PAGE ─── -->
+    <div class="page" id="page-sector-research">
+      <div class="welcome-wrap sr-wrap" dir="ltr">
+        <div class="page-header" style="margin-bottom:24px">
+          <div class="page-header-tag" data-i18n="sidebar.secEquities">EQUITIES</div>
+          <div class="page-header-title" data-i18n="sidebar.sectorResearch">Sector Research</div>
+        </div>
+        <div class="mini-section" style="margin-bottom:14px">
+          <div class="sr-search">
+            <input id="srInput" type="text" value="SOXX" data-i18n-placeholder="sector.placeholder" placeholder="Ticker" autocomplete="off" spellcheck="false"
+              onkeydown="if(event.key==='Enter') SectorResearch.submit()">
+            <button type="button" onclick="SectorResearch.submit()" data-i18n="sector.show">Show</button>
+          </div>
+          <div class="sr-chips" id="srChips">
+            <button type="button" class="ratio-btn active" data-symbol="SOXX" onclick="SectorResearch.load('SOXX')">SOXX</button>
+            <button type="button" class="ratio-btn" data-symbol="SMH" onclick="SectorResearch.load('SMH')">SMH</button>
+            <button type="button" class="ratio-btn" data-symbol="XLK" onclick="SectorResearch.load('XLK')">XLK</button>
+            <button type="button" class="ratio-btn" data-symbol="XLF" onclick="SectorResearch.load('XLF')">XLF</button>
+            <button type="button" class="ratio-btn" data-symbol="XLE" onclick="SectorResearch.load('XLE')">XLE</button>
+            <button type="button" class="ratio-btn" data-symbol="XLV" onclick="SectorResearch.load('XLV')">XLV</button>
+            <button type="button" class="ratio-btn" data-symbol="QQQ" onclick="SectorResearch.load('QQQ')">QQQ</button>
+            <button type="button" class="ratio-btn" data-symbol="SPY" onclick="SectorResearch.load('SPY')">SPY</button>
+          </div>
+        </div>
+        <div class="mini-section">
+          <div class="sr-fund">
+            <div class="ms-title" id="srName"></div>
+            <div class="sr-symbol" id="srSymbol"></div>
+          </div>
+          <div class="sr-chart-box"><canvas id="srChart" aria-label="Holdings"></canvas></div>
+          <ul class="sr-legend" id="srLegend"></ul>
+        </div>
+        <div class="sr-metrics" id="srMetrics"></div>
+      </div>
+    </div>
+
     <!-- ─── INSTITUTIONAL HOLDINGS PAGE ─── -->
     <div class="page" id="page-institutions">
       <div class="welcome-wrap" style="max-width:960px">
@@ -928,7 +972,7 @@
         <div class="page-header" style="margin-bottom:24px">
           <div class="page-header-tag">Equities</div>
           <div class="page-header-title">Institutional Holdings</div>
-          <div class="page-header-sub">13F filings from SEC EDGAR — top positions & quarter-over-quarter changes</div>
+          <div class="page-header-sub"></div>
         </div>
 
         <!-- Institution picker -->
@@ -947,7 +991,7 @@
         <div class="page-header" style="margin-bottom:18px">
           <div class="page-header-tag">Cross-Asset · Positioning & Flows</div>
           <div class="page-header-title">Cross-Asset Flows</div>
-          <div class="page-header-sub">Venue positioning, futures, options and short interest — positioning and market activity by asset class</div>
+          <div class="page-header-sub"></div>
         </div>
 
         <div class="mini-section" style="margin-bottom:14px">
@@ -963,7 +1007,7 @@
         <div id="flowControls" class="mini-section" style="margin-bottom:14px"></div>
         <div id="flowContent"></div>
 
-        <div class="callout" style="margin-top:14px">
+        <div class="callout" data-wave-source="Cross-Asset Flows — methodology" style="margin-top:14px">
           WAVE does not combine these measures into one synthetic “money flow” score. Futures positioning, options open interest, exchange positioning and short interest have different reporting conventions and should be interpreted separately.
         </div>
       </div>
@@ -975,7 +1019,7 @@
         <div class="page-header" style="margin-bottom:24px">
           <div class="page-header-tag">Equities</div>
           <div class="page-header-title">Fundamental Chart</div>
-          <div class="page-header-sub">Compare financial KPIs across companies over time</div>
+          <div class="page-header-sub"></div>
         </div>
 
         <!-- Controls -->
@@ -1116,7 +1160,7 @@
         <div class="page-header" style="margin-bottom:16px">
           <div class="page-header-tag">Equities · Evidence Overlap</div>
           <div class="page-header-title">Confluence Monitor</div>
-          <div class="page-header-sub">Institutional accumulation + insider buying + analyst upgrades/revisions</div>
+          <div class="page-header-sub"></div>
         </div>
 
         <div class="mini-section" style="margin-bottom:14px">
@@ -1134,7 +1178,7 @@
 
         <div id="confResults"></div>
 
-        <div class="callout" style="margin-top:14px">
+        <div class="callout" data-wave-source="Confluence — methodology" style="margin-top:14px">
           Institutional evidence is based on 13F filings and is therefore quarterly and lagged. The selected 7D / 30D / 90D window applies directly to insider and analyst evidence, not to the filing date of institutional holdings.
         </div>
       </div>
@@ -1145,7 +1189,7 @@
         <div class="page-header" style="margin-bottom:20px">
           <div class="page-header-tag">Equities · Corporate Calendar</div>
           <div class="page-header-title">Earnings Dashboard</div>
-          <div class="page-header-sub">Upcoming earnings from the S&amp;P 500 universe — EPS &amp; revenue consensus estimates</div>
+          <div class="page-header-sub"></div>
         </div>
 
         <!-- Controls -->
@@ -1172,7 +1216,7 @@
         <!-- Beat Rate Summary -->
         <div id="earnBeatBanner" style="display:none;margin-bottom:16px"></div>
 
-        <div id="earnContent"><div style="color:#334155;font-size:13px;padding:40px 0;text-align:center">Loading earnings data — scanning ~150 stocks, takes ~30 seconds...</div></div>
+        <div id="earnContent"><div style="color:#334155;font-size:13px;padding:40px 0;text-align:center">Loading…</div></div>
       </div>
     </div>
 
@@ -1182,7 +1226,7 @@
         <div class="page-header" style="margin-bottom:24px">
           <div class="page-header-tag">Equities · Statistical</div>
           <div class="page-header-title">Correlation</div>
-          <div class="page-header-sub">Pearson correlation of daily returns — stock vs benchmark · refreshes once per day</div>
+          <div class="page-header-sub"></div>
         </div>
 
         <!-- Controls -->
@@ -1232,9 +1276,7 @@
           <div style="position:relative;height:280px">
             <canvas id="corrChart"></canvas>
           </div>
-          <div style="text-align:center;font-size:10px;color:#334155;margin-top:6px">
-            r &gt; 0.7 = strong positive · r 0.3–0.7 = moderate · |r| &lt; 0.3 = weak · r &lt; -0.3 = inverse
-          </div>
+          <div data-wave-source="Correlation — scale">r above 0.7 is strong positive, 0.3 to 0.7 is moderate, absolute r below 0.3 is weak, and r below -0.3 is inverse. Correlations refresh once per day.</div>
         </div>
       </div>
     </div>
@@ -1245,7 +1287,7 @@
         <div class="page-header" style="margin-bottom:24px">
           <div class="page-header-tag">Risk Gauge</div>
           <div class="page-header-title">BTC / Gold Ratio</div>
-          <div class="page-header-sub">Intraday performance — risk-on vs flight-to-safety</div>
+          <div class="page-header-sub"></div>
         </div>
 
         <!-- Stats row -->
@@ -1310,7 +1352,7 @@
         <div class="page-header" style="margin-bottom:24px">
           <div class="page-header-tag">Sentiment · Options Flow</div>
           <div class="page-header-title">Put/Call Ratio</div>
-          <div class="page-header-sub">Options market sentiment — extreme readings are contrarian signals</div>
+          <div class="page-header-sub"></div>
         </div>
 
         <!-- Gauge + meta -->
@@ -1341,7 +1383,7 @@
         <div class="page-header" style="margin-bottom:20px">
           <div class="page-header-tag">Artemis Data</div>
           <div class="page-header-title">Crypto Scanner</div>
-          <div class="page-header-sub">Live token squeeze, protocol fundamentals & chain activity — powered by Artemis Sheets</div>
+          <div class="page-header-sub"></div>
         </div>
 
         <!-- Tab buttons -->
@@ -1459,7 +1501,7 @@
         <div class="page-header" style="margin-bottom:16px">
           <div class="page-header-tag">Macro · Historical Context</div>
           <div class="page-header-title">Seasonality Scanner</div>
-          <div class="page-header-sub" id="seas-updated">10-year average cumulative path vs current year</div>
+          <div class="page-header-sub" id="seas-updated"></div>
         </div>
 
         <div class="seas-asset-bar" id="seas-asset-bar">
@@ -1478,18 +1520,17 @@
         <div class="mini-section" style="margin-top:14px">
           <div class="ms-header">
             <div class="ms-title" id="seasChartTitle">SPY · Current year vs 10Y average</div>
-            <div style="font-size:10px;color:#90a8c2">Cumulative return from first available trading day</div>
+            <div data-wave-source="Seasonality — path">Cumulative return from the first available trading day. The path is descriptive and is not a trading signal.</div>
           </div>
           <div style="position:relative;height:430px;margin-top:14px">
             <canvas id="seas-line-chart"></canvas>
           </div>
         </div>
 
-        <div id="seas-summary" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px">
+        <div id="seas-summary" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px">
           <div class="td-stat"><div class="td-stat-label">Current Year</div><div class="td-stat-val" id="seasCurrentRet">—</div></div>
           <div class="td-stat"><div class="td-stat-label">10Y Average at Same Point</div><div class="td-stat-val" id="seasAvgRet">—</div></div>
           <div class="td-stat"><div class="td-stat-label">Gap vs History</div><div class="td-stat-val" id="seasGap">—</div></div>
-          <div class="td-stat"><div class="td-stat-label">Historical Sample</div><div class="td-stat-val" id="seasSample">—</div><div class="td-stat-sub">completed years</div></div>
         </div>
 
         <div data-wave-source="Seasonality — methodology" class="callout" style="margin-top:12px">
@@ -1499,6 +1540,17 @@
     </div>
 
     <div class="page" id="page-valuation"><div id="valuationRoot" class="val-wrap"></div></div>
+
+    <div class="page" id="page-data-log">
+      <div class="welcome-wrap">
+        <div class="page-header" style="margin-bottom:20px">
+          <div class="page-header-tag" data-i18n="datalog.tag">Reference</div>
+          <div class="page-header-title" data-i18n="datalog.title">Data Log</div>
+          <div class="page-header-sub" data-i18n="datalog.subtitle">Source, last pull, sample coverage and methodology for each metric.</div>
+        </div>
+        <div class="mini-section" id="dataLogContent"></div>
+      </div>
+    </div>
 
     <div class="page" id="page-uber-tracker">
       <div class="welcome-wrap" style="max-width:1120px">
@@ -1517,17 +1569,19 @@
 </div><!-- end app-body -->
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="terminal-sources.js?v=20261008-sources1"></script>
-<script src="terminal-brief.js?v=20261009-dark-reader1"></script>
-<script src="terminal.js?v=20261020-drawer-resize"></script>
-<script src="terminal-market.js?v=20261012-equity"></script>
+<script src="terminal-data-log.js?v=20261105-datalog1"></script>
+<script src="terminal-sources.js?v=20261105-datalog1"></script>
+<script src="terminal-brief.js?v=20261106-clean1"></script>
+<script src="terminal.js?v=20261106-clean1"></script>
+<script src="terminal-market.js?v=20261106-clean1"></script>
+<script src="terminal-sector-research.js?v=20261105-sector1"></script>
 <script src="terminal-content.js?v=20261013-article-fallback"></script>
-<script src="terminal-flows.js?v=20261008-sources1"></script>
+<script src="terminal-flows.js?v=20261106-clean1"></script>
 <script src="terminal-hormuz.js?v=20261008-sources1"></script>
-<script src="terminal-gold-expectations.js?v=20261009-2"></script>
-<script src="terminal-metals.js?v=20261009-expectations1"></script>
-<script src="terminal-confluence.js?v=20261008-sources1"></script>
-<script src="terminal-seasonality.js?v=20261008-sources1"></script>
+<script src="terminal-gold-expectations.js?v=20261106-clean1"></script>
+<script src="terminal-metals.js?v=20261106-clean1"></script>
+<script src="terminal-confluence.js?v=20261106-clean1"></script>
+<script src="terminal-seasonality.js?v=20261106-clean1"></script>
 <script src="forward-consensus-ui.js?v=20261008-sources1"></script>
 <script src="fundamental-chart-model.js?v=20261012-research-followup"></script>
 <script src="terminal-chart-export.js?v=20261008-yoy-png"></script>
@@ -1542,23 +1596,23 @@ if (window.Chart) Chart.register({
   }
 });
 </script>
-<script src="terminal-price-history.js?v=20261014-report"></script>
-<script src="terminal-equities.js?v=20261014-persistent-statements"></script>
-<script src="terminal-research.js?v=20261014-persistent-statements"></script>
-<script src="terminal-research-markets.js?v=20261013-tape"></script>
+<script src="terminal-price-history.js?v=20261106-clean1"></script>
+<script src="terminal-equities.js?v=20261106-clean1"></script>
+<script src="terminal-research.js?v=20261106-clean1"></script>
+<script src="terminal-research-markets.js?v=20261106-clean1"></script>
 <script src="equity-workbook-model.js?v=20261014-modes"></script>
 <script src="terminal-valuation-report.js?v=20261014-report"></script>
-<script src="terminal-valuation.js?v=20261014-report"></script>
-<script src="terminal-risk.js?v=20261008-sources1"></script>
-<script src="terminal-crypto.js?v=20261008-sources1"></script>
-<script src="terminal-rates.js?v=20261008-sources1"></script>
-<script src="terminal-industries.js?v=20261008-sources1"></script>
+<script src="terminal-valuation.js?v=20261106-clean1"></script>
+<script src="terminal-risk.js?v=20261106-clean1"></script>
+<script src="terminal-crypto.js?v=20261106-clean1"></script>
+<script src="terminal-rates.js?v=20261106-clean1"></script>
+<script src="terminal-industries.js?v=20261106-clean1"></script>
 <link rel="stylesheet" href="terminal-macro-dashboard.css?v=20261025-calendar1">
 <dialog id="macroDialog" aria-labelledby="macroDialogTitle"><header><h2 id="macroDialogTitle"></h2><button id="macroDialogClose" type="button" aria-label="Close / סגירה">✕</button></header><div id="macroDetail"></div></dialog>
 <script src="terminal-macro.js?v=20261008-sources1"></script>
-<script src="terminal-macro-dashboard.js?v=20261025-calendar1"></script>
-<script src="terminal-earnings.js?v=20261008-sources1"></script>
-<script src="terminal-uber-tracker.js?v=20261105-1"></script>
+<script src="terminal-macro-dashboard.js?v=20261106-clean1"></script>
+<script src="terminal-earnings.js?v=20261106-clean1"></script>
+<script src="terminal-uber-tracker.js?v=20261106-nyc1"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1"></script>
 <script src="supabase-config.js"></script>
 <script src="platform.js"></script>

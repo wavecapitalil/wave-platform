@@ -66,7 +66,8 @@ async function loadConfluence(){
       +confEvidenceCard('Analysts',d.alignment&&d.alignment.analysts,(d.analysts&&d.analysts.upgrades||0)+' positive vs '+(d.analysts&&d.analysts.downgrades||0)+' negative',anBody)
       +'</div>';
 
-    if(status) status.textContent=d.symbol+' · '+_confWindow+'D · updated '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    if(status) status.textContent='';
+    if(window.WaveDataLog)WaveDataLog.record('confluence:'+d.symbol,{section:'Confluence',metric:d.symbol+' · '+_confWindow+'D',source:'13F filings, insider transactions, analyst revisions',pulledAt:new Date().toISOString(),coverage:(d.aligned_count||0)+' of 3 lenses aligned',skipSources:true});
   }catch(e){
     if(out) out.innerHTML='<div class="callout red">Confluence data unavailable: '+e.message+'</div>';
     if(status) status.textContent='Data unavailable';

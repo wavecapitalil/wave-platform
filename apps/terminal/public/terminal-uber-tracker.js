@@ -236,7 +236,7 @@
       'הקריאה הכוללת "' + data.inference.label_he + '" היא הסקה מפרוקסי הנפח הציבוריים, בפס שטוח של ' + data.inference.flat_band_pct + '% לכל רכיב. כשהרכיבים חלוקים, הקריאה יציבה. הדפסת ה-SEC אינה נכנסת לציון. סדרה ריקה אינה אפס.\n' +
       data.inference.components.map(function(row){return row.id + ': ' + row.change_pct + '% ' + row.read + ' (' + row.detail + ')';}).join('\n') + '\n' +
       data.inference.excluded.join('\n') + '\n' +
-      'ניו יורק: ממוצע יומי של נסיעות HVFHV, Uber מול Lyft, מ-' + nyc[0].month + ' עד ' + nyc[nyc.length-1].month + '. החודשים עד אוגוסט 2026 הם אגרגציית TLC Help שנמשכה ב-' + nyc[0].source_pulled + '. ספטמבר 2026 נספר מקובץ TLC החודשי. זה לא ציטוט מחיר ולא נפח ארצי.\n' +
+      'ניו יורק: הסכום החודשי הוא ספירת קובץ TLC. נסיעות ליום = הסכום ÷ ימי החודש, מ-' + nyc[0].month + ' עד ' + nyc[nyc.length-1].month + '. זה לא ציטוט מחיר ולא נפח ארצי.\n' +
       'LAX: נסיעות TNC חודשיות מדוחות LAWA. זה לא Uber בלבד ולא כל העיר. חודשים שאינם בקובץ לא הושלמו.\n' +
       'בונוס נהגים: מודעות פומביות מאתר הפניה עצמאי, אומתו ב-5 בנובמבר 2026. לא מספר נהגים ולא מספר נסיעות.\n' +
       'הדפסת Q3 2026: Exhibit 99.1, הוגש ב-4 בנובמבר 2026. מדד Q4 הוא תחזית החברה, לא קונצנזוס מכירות.\n' +
@@ -247,7 +247,7 @@
       'The overall read "' + data.inference.label_en + '" is an inference from the public volume proxies, using a flat band of ' + data.inference.flat_band_pct + '% per component. Disagreement is read as stable. The SEC print is not an input. An empty series is not zero.\n' +
       data.inference.components.map(function(row){return row.id + ': ' + row.change_pct + '% ' + row.read + ' (' + row.detail + ')';}).join('\n') + '\n' +
       data.inference.excluded.join('\n') + '\n' +
-      'New York: HVFHV daily averages, Uber versus Lyft, ' + nyc[0].month + ' through ' + nyc[nyc.length-1].month + '. Months through August 2026 are the TLC Help aggregation pulled ' + nyc[0].source_pulled + '. September 2026 was counted from the TLC monthly file. Not a fare quote and not national volume.\n' +
+      'New York: the monthly total is the TLC file count. Trips per day = that total ÷ days in the month, ' + nyc[0].month + ' through ' + nyc[nyc.length-1].month + '. Not a fare quote and not national volume.\n' +
       'LAX: monthly TNC trips from LAWA reports. Not Uber-only and not citywide. Missing months are not filled.\n' +
       'Driver guarantees: public ads on an independent referral site, verified 5 November 2026. Not driver counts and not trip counts.\n' +
       'Q3 2026 print: Exhibit 99.1, filed 4 November 2026. The Q4 range is the company outlook, not sell-side consensus.\n' +
@@ -261,6 +261,15 @@
     data.series.lax_tnc.observations.forEach(function(row){links.push({title:'LAX TNC ' + row.month, url:row.source_url});});
     data.series.driver_bonuses.observations.forEach(function(row){links.push({title:row.city + ' driver ad', url:row.source_url});});
     root.WaveSources.record('uber-tracker', L('UBER TRACKER · מקורות ומתודולוגיה', 'UBER TRACKER · sources and methodology'), text, links);
+    if(root.WaveDataLog){
+      (data.methodology||[]).forEach(function(item){
+        var parts=he()?item.calc_he:item.calc_en;
+        var freq=he()?item.freq_he:item.freq_en;
+        var note=(parts||[]).concat(freq||[]).map(function(part){return part.text||'';}).join('');
+        var itemLinks=(item.links||[]).filter(function(part){return part.url&&/^https?:/i.test(part.url);}).map(function(part){return {title:part.text||part.url,url:part.url};});
+        root.WaveDataLog.record('uber-tracker:'+item.id,{section:'UBER TRACKER',metric:L(item.title_he,item.title_en),source:itemLinks.length?itemLinks[0].title:'',pulledAt:(data.last_attempt&&data.last_attempt.at)||data.baseline_pull.collected_on,notes:note,links:itemLinks,skipSources:true});
+      });
+    }
   }
 
   function render(data){
@@ -367,7 +376,7 @@
     nycCard.appendChild(el('p', 'ut-gloss', L('כחול: Uber. כתום: Lyft. הציר ביחידות של אלף נסיעות ביום.', 'Blue: Uber. Orange: Lyft. The axis is in thousands of trips per day.')));
     nycCard.appendChild(table(
       [[L('חודש', 'Month'), true], ['Uber', true], ['Lyft', true], [L('נתח Uber', 'Uber share'), true], [L('מול שנה', 'YoY'), true]],
-      nyc.map(function(row){return [row.month, fmt(row.uber_trips_per_day, 0), fmt(row.lyft_trips_per_day, 0), fmt(row.uber_share_pct, 1) + '%', row.uber_yoy_pct == null ? '—' : signed(row.uber_yoy_pct, 1) + '%'];})
+      nyc.map(function(row){return [row.month, fmt(row.uber_trips_per_day, 1), fmt(row.lyft_trips_per_day, 1), fmt(row.uber_share_pct, 1) + '%', row.uber_yoy_pct == null ? '—' : signed(row.uber_yoy_pct, 1) + '%'];})
     ));
     captions(nycCard,
       L('ממוצע נסיעות ביום ברישומי TLC לרישיונות HV0003 ו-HV0005. שינוי שנתי הוא מול אותו חודש אשתקד.', 'Average daily trips in the TLC records for licenses HV0003 and HV0005. Year-over-year is versus the same month a year earlier.'),

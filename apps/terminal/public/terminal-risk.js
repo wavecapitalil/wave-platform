@@ -157,7 +157,8 @@ function renderRiskMeter(result,data){
   sn.textContent=composite;sn.style.color=color;
   var rl=document.getElementById('riskLabel');
   rl.textContent=riskScoreToLabel(composite);rl.style.color=color;
-  document.getElementById('riskSummary').textContent=generateRiskSummary(signals,composite);
+  document.getElementById('riskSummary').textContent='';
+  if(window.WaveDataLog)WaveDataLog.record('risk:summary',{section:'Risk Meter',metric:'Composite',source:'Cross-asset signals',notes:generateRiskSummary(signals,composite),skipSources:true});
   // Contributions (sorted best→worst)
   var arr=Object.entries(signals).sort(function(a,b){return b[1].score-a[1].score;});
   var cHtml='';
@@ -225,7 +226,8 @@ async function loadRiskMeter(){
       result.composite=Number(data.score.composite);
     }
     renderRiskMeter(result,data);
-    document.getElementById('riskLastUpdated').textContent='Updated '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('riskLastUpdated').textContent='';
+    if(window.WaveDataLog)WaveDataLog.record('risk:pull',{section:'Risk Meter',metric:'Composite risk score',source:'Cross-asset signals',pulledAt:new Date().toISOString(),skipSources:true});
   }catch(e){
     document.getElementById('riskLastUpdated').textContent='Failed — '+e.message;
     document.getElementById('riskGaugeSvgWrap').innerHTML='';
@@ -370,23 +372,9 @@ function pcrRenderExplainer(v){
        : v < 1.30 ? 'Balanced activity between puts and calls. No extreme signal. Markets are functioning with normal two-sided hedging activity.'
        : v < 1.60 ? 'Elevated put buying. Traders are paying up to hedge downside. This can indicate worry, but also a healthy wall of worry that markets often climb.'
        : 'Very high put activity. Fear is elevated. Historically, extreme PCR readings have preceded short-term bounces — though timing is imprecise.'},
-    {icon:'💡', title:'Important caveats',
-     text:'This ratio uses SPY (S&P 500 ETF) options — a mix of retail and institutional flow, making it a better sentiment gauge than pure index options (SPX). The zones are calibrated for SPY\'s natural range (higher than equity-only PCR). The 5-day and 20-day averages are better signals than any single day.'}
   ];
-
-  var html = '<div class="mini-section"><div class="ms-header"><div class="ms-title">💬 Understanding the Put/Call Ratio</div></div>';
-  html += '<div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">';
-  bullets.forEach(function(b){
-    html += '<div style="background:#0a0f1a;border:1px solid #1e293b;border-radius:8px;padding:14px 16px;display:flex;gap:14px">'
-      +'<div style="font-size:20px;flex-shrink:0;margin-top:1px">'+b.icon+'</div>'
-      +'<div>'
-      +  '<div style="font-size:12px;font-weight:700;color:#e2e8f0;margin-bottom:4px">'+b.title+'</div>'
-      +  '<div style="font-size:12px;color:#64748b;line-height:1.6">'+b.text+'</div>'
-      +'</div>'
-      +'</div>';
-  });
-  html += '</div></div>';
-  document.getElementById('pcrExplainer').innerHTML = html;
+  var host=document.getElementById('pcrExplainer'); if(host) host.innerHTML='';
+  if(window.WaveDataLog)WaveDataLog.record('put-call:explainer',{section:'Macro · Put/Call',metric:'SPY put/call ratio',source:'CBOE SPX options chain',notes:bullets.map(function(b){return b.title+' — '+b.text;}).join('\n'),skipSources:true});
 }
 
 function loadPcrSection(){
@@ -583,8 +571,9 @@ function renderHrgPortfolio(composite){
   var key = isRon ? 'ron' : isRof ? 'rof' : 'neu';
   var exKey = isRon ? 'rExpl' : isRof ? 'fExpl' : 'nExpl';
   var html = '<table class="hrg-alloc-table"><thead><tr>'
-    +'<th>Asset Class</th><th>Positioning</th><th>Rationale</th>'
+    +'<th>Asset Class</th><th>Positioning</th>'
     +'</tr></thead><tbody>';
+  if(window.WaveDataLog)WaveDataLog.record('housing:allocation',{section:'Housing Risk Gauge',metric:'Regime allocation',source:'Internal regime map',notes:ALLOC.map(function(row){return row.asset+': '+(row[exKey]||'');}).join('\n'),skipSources:true});
   ALLOC.forEach(function(row){
     var val = row[key], expl = row[exKey];
     var isOW = val==='OW'||val==='OW+', isUW = val==='UW'||val==='UW-';
@@ -594,7 +583,6 @@ function renderHrgPortfolio(composite){
     var stanceTxt = (isOW)?'▲ Overweight':(isUW)?'▼ Underweight':(isSh)?'▽ Short Vol':(isLong)?'△ Long Vol':'— Neutral';
     html+='<tr><td>'+row.asset+'</td>'
       +'<td><span class="hrg-pill '+pillCls+'">'+val+'</span></td>'
-      +'<td class="'+stanceCls+'">'+expl+'</td>'
       +'</tr>';
   });
   html+='</tbody></table>';
@@ -614,7 +602,8 @@ function renderHousingGauge(signals, composite){
   var bear = sArr.filter(function(s){return s.score<=40;}).length;
   var lead = sArr.sort(function(a,b){return Math.abs(b.score-50)-Math.abs(a.score-50);})[0];
   var mood = composite>=68?'Cross-asset signals firmly risk-on':composite>=55?'Markets leaning into risk':composite>=42?'Mixed regime — no clear directional edge':composite>=30?'Risk-off pressure building across asset classes':'Extreme risk-off — defensive posture warranted';
-  document.getElementById('hrg-summary').textContent = mood+'. '+bull+' of 8 signals bullish, '+bear+' defensive. Lead signal: '+lead.label+'.';
+  document.getElementById('hrg-summary').textContent = '';
+  if(window.WaveDataLog)WaveDataLog.record('housing:summary',{section:'Housing Risk Gauge',metric:'Regime',source:'8 cross-asset signals',coverage:bull+' bullish · '+bear+' defensive',notes:mood+'. Lead signal: '+lead.label+'.',skipSources:true});
 
   // Contribution bars (sorted high→low)
   var sorted = Object.entries(signals).sort(function(a,b){return b[1].score-a[1].score;});
@@ -747,7 +736,8 @@ async function loadHousingGauge(){
     renderHousingGauge(signals, composite);
     hrgDrawCharts(woodH, gldH, copxH, hyData, curveData);
 
-    if(updEl) updEl.textContent = 'Updated '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    if(updEl) updEl.textContent = '';
+    if(window.WaveDataLog)WaveDataLog.record('housing:pull',{section:'Housing Risk Gauge',metric:'Composite',source:'Cross-asset signals',pulledAt:new Date().toISOString(),skipSources:true});
   }catch(e){
     console.error('loadHousingGauge:',e);
     if(updEl) updEl.textContent = 'Error — '+e.message;

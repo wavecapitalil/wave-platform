@@ -357,52 +357,24 @@
           "ltr": true
         },
         {
-          "text": " (Lyft) בקובץ החודשי ÷ ימי החודש. נתח "
+          "text": " (Lyft) בקובץ החודשי ÷ ימי החודש. הסכום החודשי נשמר כפי שנספר, בלי עיגול חזרה. נתח "
         },
         {
           "text": "Uber",
           "ltr": true
         },
         {
-          "text": " = Uber ÷ (Uber+Lyft). שינוי שנתי = החודש מול אותו חודש אשתקד; בלי זוג להשוואה הערך נשאר ריק. לספטמבר 2026: "
+          "text": " = סך Uber ÷ (Uber+Lyft). שינוי שנתי = הממוצע היומי מול אותו חודש אשתקד; בלי זוג הערך נשאר ריק. ספטמבר 2026: "
         },
         {
           "text": "15,412,555",
           "ltr": true
         },
         {
-          "text": " ÷ "
-        },
-        {
-          "text": "30",
-          "ltr": true
-        },
-        {
-          "text": " מעוגל ל-"
-        },
-        {
-          "text": "513,752",
-          "ltr": true
-        },
-        {
-          "text": ", ו-"
+          "text": " ו-"
         },
         {
           "text": "5,575,126",
-          "ltr": true
-        },
-        {
-          "text": " ÷ "
-        },
-        {
-          "text": "30",
-          "ltr": true
-        },
-        {
-          "text": " מעוגל ל-"
-        },
-        {
-          "text": "185,838",
           "ltr": true
         },
         {
@@ -418,14 +390,102 @@
       ],
       "calc_en": [
         {
-          "text": "Trips per day = monthly HVFHV trips ÷ days in the month. Uber share = Uber ÷ (Uber+Lyft). Year-over-year = the month versus the same month a year earlier; with no pair the value stays empty. September 2026 raw counts 15,412,555 and 5,575,126 ÷ 30 round to the stored daily averages. Versus September 2025: +9.7%."
+          "text": "Trips per day = raw monthly HVFHV trips ÷ days in the month. The monthly total is the counted file total, not a rounded daily figure times the number of days. Uber share = Uber trips ÷ (Uber+Lyft). Year-over-year compares daily averages with the same month a year earlier; with no pair the value stays empty. September 2026 raw totals are 15,412,555 and 5,575,126. Versus September 2025: +9.7%."
         }
       ],
       "links": [
         {
-          "text": "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc",
+          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-09.parquet",
           "ltr": true,
-          "url": "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+          "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-09.parquet"
+        },
+        {
+          "text": " "
+        },
+        {
+          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-10.parquet",
+          "ltr": true,
+          "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-10.parquet"
+        },
+        {
+          "text": " "
+        },
+        {
+          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-11.parquet",
+          "ltr": true,
+          "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-11.parquet"
+        },
+        {
+          "text": " "
+        },
+        {
+          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-12.parquet",
+          "ltr": true,
+          "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-12.parquet"
+        },
+        {
+          "text": " "
+        },
+        {
+          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-01.parquet",
+          "ltr": true,
+          "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-01.parquet"
+        },
+        {
+          "text": " "
+        },
+        {
+          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-02.parquet",
+          "ltr": true,
+          "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-02.parquet"
+        },
+        {
+          "text": " "
+        },
+        {
+          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-03.parquet",
+          "ltr": true,
+          "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-03.parquet"
+        },
+        {
+          "text": " "
+        },
+        {
+          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-04.parquet",
+          "ltr": true,
+          "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-04.parquet"
+        },
+        {
+          "text": " "
+        },
+        {
+          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-05.parquet",
+          "ltr": true,
+          "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-05.parquet"
+        },
+        {
+          "text": " "
+        },
+        {
+          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-06.parquet",
+          "ltr": true,
+          "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-06.parquet"
+        },
+        {
+          "text": " "
+        },
+        {
+          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-07.parquet",
+          "ltr": true,
+          "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-07.parquet"
+        },
+        {
+          "text": " "
+        },
+        {
+          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-08.parquet",
+          "ltr": true,
+          "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-08.parquet"
         },
         {
           "text": " "
@@ -441,26 +501,26 @@
       ],
       "freq_he": [
         {
-          "text": "קובץ TLC חודשי, בדרך כלל בפיגור של כחודשיים עד שלושה. ספטמבר 2026 נספר ב-"
+          "text": "כל חודש בקובץ נספר מקובץ ה-parquet של "
         },
         {
-          "text": "2026-11-06T10:47:00+02:00",
+          "text": "TLC",
           "ltr": true
         },
         {
-          "text": ". החודשים הקודמים נמשכו ב-"
+          "text": " ב-"
         },
         {
-          "text": "2026-10-12",
+          "text": "2026-11-06T10:57:46+02:00",
           "ltr": true
         },
         {
-          "text": "."
+          "text": ". הפרסום החודשי מגיע בדרך כלל בפיגור של כחודשיים עד שלושה."
         }
       ],
       "freq_en": [
         {
-          "text": "TLC publishes a monthly file, usually with about a two to three month lag. September 2026 was counted at 2026-11-06T10:47:00+02:00. Earlier months were pulled 2026-10-12."
+          "text": "Every month in the file was counted from that month's TLC parquet at 2026-11-06T10:57:46+02:00. The monthly file usually arrives with about a two to three month lag."
         }
       ]
     },
@@ -1619,252 +1679,265 @@
       "observations": [
         {
           "month": "2025-09",
-          "uber_trips_per_day": 468235,
-          "lyft_trips_per_day": 179587,
+          "days": 30,
+          "uber_trips_per_day": 468234.6666666667,
+          "lyft_trips_per_day": 179586.7,
           "uber_share_pct": 72.3,
-          "uber_month_est": 14047050,
-          "lyft_month_est": 5387610,
-          "hv_total_per_day": 647822,
+          "uber_month_est": 14047040,
+          "lyft_month_est": 5387601,
+          "hv_total_per_day": 647821.3666666667,
           "kind": "fact",
           "proxy_for": null,
-          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
-          "source_pulled": "2026-10-12",
+          "source": "NYC TLC High Volume For-Hire Vehicle trip records counted from the monthly parquet (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-11-06",
           "source_urls": [
-            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+            "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-09.parquet"
           ],
           "timezone": "America/New_York",
-          "collected_at": null,
+          "collected_at": "2026-11-06T10:57:46+02:00",
           "uber_yoy_pct": null,
-          "collected_timezone": null
+          "collected_timezone": "Asia/Jerusalem"
         },
         {
           "month": "2025-10",
-          "uber_trips_per_day": 499038,
-          "lyft_trips_per_day": 188340,
+          "days": 31,
+          "uber_trips_per_day": 499037.8064516129,
+          "lyft_trips_per_day": 188339.64516129033,
           "uber_share_pct": 72.6,
-          "uber_month_est": 15470178,
-          "lyft_month_est": 5838540,
-          "hv_total_per_day": 687378,
+          "uber_month_est": 15470172,
+          "lyft_month_est": 5838529,
+          "hv_total_per_day": 687377.4516129033,
           "kind": "fact",
           "proxy_for": null,
-          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
-          "source_pulled": "2026-10-12",
+          "source": "NYC TLC High Volume For-Hire Vehicle trip records counted from the monthly parquet (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-11-06",
           "source_urls": [
-            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+            "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-10.parquet"
           ],
           "timezone": "America/New_York",
-          "collected_at": null,
+          "collected_at": "2026-11-06T10:57:46+02:00",
           "uber_yoy_pct": null,
-          "collected_timezone": null
+          "collected_timezone": "Asia/Jerusalem"
         },
         {
           "month": "2025-11",
-          "uber_trips_per_day": 496949,
-          "lyft_trips_per_day": 196993,
+          "days": 30,
+          "uber_trips_per_day": 496948.5333333333,
+          "lyft_trips_per_day": 196992.8,
           "uber_share_pct": 71.6,
-          "uber_month_est": 14908470,
-          "lyft_month_est": 5909790,
-          "hv_total_per_day": 693942,
+          "uber_month_est": 14908456,
+          "lyft_month_est": 5909784,
+          "hv_total_per_day": 693941.3333333334,
           "kind": "fact",
           "proxy_for": null,
-          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
-          "source_pulled": "2026-10-12",
+          "source": "NYC TLC High Volume For-Hire Vehicle trip records counted from the monthly parquet (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-11-06",
           "source_urls": [
-            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+            "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-11.parquet"
           ],
           "timezone": "America/New_York",
-          "collected_at": null,
+          "collected_at": "2026-11-06T10:57:46+02:00",
           "uber_yoy_pct": null,
-          "collected_timezone": null
+          "collected_timezone": "Asia/Jerusalem"
         },
         {
           "month": "2025-12",
-          "uber_trips_per_day": 515282,
-          "lyft_trips_per_day": 197894,
+          "days": 31,
+          "uber_trips_per_day": 515281.5483870968,
+          "lyft_trips_per_day": 197893.87096774194,
           "uber_share_pct": 72.3,
-          "uber_month_est": 15973742,
-          "lyft_month_est": 6134714,
-          "hv_total_per_day": 713176,
+          "uber_month_est": 15973728,
+          "lyft_month_est": 6134710,
+          "hv_total_per_day": 713175.4193548387,
           "kind": "fact",
           "proxy_for": null,
-          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
-          "source_pulled": "2026-10-12",
+          "source": "NYC TLC High Volume For-Hire Vehicle trip records counted from the monthly parquet (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-11-06",
           "source_urls": [
-            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+            "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-12.parquet"
           ],
           "timezone": "America/New_York",
-          "collected_at": null,
+          "collected_at": "2026-11-06T10:57:46+02:00",
           "uber_yoy_pct": null,
-          "collected_timezone": null
+          "collected_timezone": "Asia/Jerusalem"
         },
         {
           "month": "2026-01",
-          "uber_trips_per_day": 491795,
-          "lyft_trips_per_day": 183701,
+          "days": 31,
+          "uber_trips_per_day": 491794.5483870968,
+          "lyft_trips_per_day": 183701.35483870967,
           "uber_share_pct": 72.8,
-          "uber_month_est": 15245645,
-          "lyft_month_est": 5694731,
-          "hv_total_per_day": 675496,
+          "uber_month_est": 15245631,
+          "lyft_month_est": 5694742,
+          "hv_total_per_day": 675495.9032258064,
           "kind": "fact",
           "proxy_for": null,
-          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
-          "source_pulled": "2026-10-12",
+          "source": "NYC TLC High Volume For-Hire Vehicle trip records counted from the monthly parquet (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-11-06",
           "source_urls": [
-            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+            "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-01.parquet"
           ],
           "timezone": "America/New_York",
-          "collected_at": null,
+          "collected_at": "2026-11-06T10:57:46+02:00",
           "uber_yoy_pct": null,
-          "collected_timezone": null
+          "collected_timezone": "Asia/Jerusalem"
         },
         {
           "month": "2026-02",
-          "uber_trips_per_day": 505963,
-          "lyft_trips_per_day": 203883,
+          "days": 28,
+          "uber_trips_per_day": 505962.89285714284,
+          "lyft_trips_per_day": 203883.0357142857,
           "uber_share_pct": 71.3,
-          "uber_month_est": 14166964,
-          "lyft_month_est": 5708724,
-          "hv_total_per_day": 709846,
+          "uber_month_est": 14166961,
+          "lyft_month_est": 5708725,
+          "hv_total_per_day": 709845.9285714285,
           "kind": "fact",
           "proxy_for": null,
-          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
-          "source_pulled": "2026-10-12",
+          "source": "NYC TLC High Volume For-Hire Vehicle trip records counted from the monthly parquet (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-11-06",
           "source_urls": [
-            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+            "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-02.parquet"
           ],
           "timezone": "America/New_York",
-          "collected_at": null,
+          "collected_at": "2026-11-06T10:57:46+02:00",
           "uber_yoy_pct": null,
-          "collected_timezone": null
+          "collected_timezone": "Asia/Jerusalem"
         },
         {
           "month": "2026-03",
-          "uber_trips_per_day": 514715,
-          "lyft_trips_per_day": 196845,
+          "days": 31,
+          "uber_trips_per_day": 514715.32258064515,
+          "lyft_trips_per_day": 196844.61290322582,
           "uber_share_pct": 72.3,
-          "uber_month_est": 15956165,
-          "lyft_month_est": 6102195,
-          "hv_total_per_day": 711560,
+          "uber_month_est": 15956175,
+          "lyft_month_est": 6102183,
+          "hv_total_per_day": 711559.9354838709,
           "kind": "fact",
           "proxy_for": null,
-          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
-          "source_pulled": "2026-10-12",
+          "source": "NYC TLC High Volume For-Hire Vehicle trip records counted from the monthly parquet (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-11-06",
           "source_urls": [
-            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+            "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-03.parquet"
           ],
           "timezone": "America/New_York",
-          "collected_at": null,
+          "collected_at": "2026-11-06T10:57:46+02:00",
           "uber_yoy_pct": null,
-          "collected_timezone": null
+          "collected_timezone": "Asia/Jerusalem"
         },
         {
           "month": "2026-04",
-          "uber_trips_per_day": 512629,
-          "lyft_trips_per_day": 187236,
+          "days": 30,
+          "uber_trips_per_day": 512628.6,
+          "lyft_trips_per_day": 187236.5,
           "uber_share_pct": 73.2,
-          "uber_month_est": 15378870,
-          "lyft_month_est": 5617080,
-          "hv_total_per_day": 699865,
+          "uber_month_est": 15378858,
+          "lyft_month_est": 5617095,
+          "hv_total_per_day": 699865.1,
           "kind": "fact",
           "proxy_for": null,
-          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
-          "source_pulled": "2026-10-12",
+          "source": "NYC TLC High Volume For-Hire Vehicle trip records counted from the monthly parquet (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-11-06",
           "source_urls": [
-            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+            "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-04.parquet"
           ],
           "timezone": "America/New_York",
-          "collected_at": null,
+          "collected_at": "2026-11-06T10:57:46+02:00",
           "uber_yoy_pct": null,
-          "collected_timezone": null
+          "collected_timezone": "Asia/Jerusalem"
         },
         {
           "month": "2026-05",
-          "uber_trips_per_day": 495317,
-          "lyft_trips_per_day": 218417,
+          "days": 31,
+          "uber_trips_per_day": 495316.6451612903,
+          "lyft_trips_per_day": 218417.03225806452,
           "uber_share_pct": 69.4,
-          "uber_month_est": 15354827,
-          "lyft_month_est": 6770927,
-          "hv_total_per_day": 713734,
+          "uber_month_est": 15354816,
+          "lyft_month_est": 6770928,
+          "hv_total_per_day": 713733.6774193548,
           "kind": "fact",
           "proxy_for": null,
-          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
-          "source_pulled": "2026-10-12",
+          "source": "NYC TLC High Volume For-Hire Vehicle trip records counted from the monthly parquet (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-11-06",
           "source_urls": [
-            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+            "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-05.parquet"
           ],
           "timezone": "America/New_York",
-          "collected_at": null,
+          "collected_at": "2026-11-06T10:57:46+02:00",
           "uber_yoy_pct": null,
-          "collected_timezone": null
+          "collected_timezone": "Asia/Jerusalem"
         },
         {
           "month": "2026-06",
-          "uber_trips_per_day": 508591,
-          "lyft_trips_per_day": 183938,
+          "days": 30,
+          "uber_trips_per_day": 508591.3333333333,
+          "lyft_trips_per_day": 183937.6,
           "uber_share_pct": 73.4,
-          "uber_month_est": 15257730,
-          "lyft_month_est": 5518140,
-          "hv_total_per_day": 692529,
+          "uber_month_est": 15257740,
+          "lyft_month_est": 5518128,
+          "hv_total_per_day": 692528.9333333333,
           "kind": "fact",
           "proxy_for": null,
-          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
-          "source_pulled": "2026-10-12",
+          "source": "NYC TLC High Volume For-Hire Vehicle trip records counted from the monthly parquet (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-11-06",
           "source_urls": [
-            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+            "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-06.parquet"
           ],
           "timezone": "America/New_York",
-          "collected_at": null,
+          "collected_at": "2026-11-06T10:57:46+02:00",
           "uber_yoy_pct": null,
-          "collected_timezone": null
+          "collected_timezone": "Asia/Jerusalem"
         },
         {
           "month": "2026-07",
-          "uber_trips_per_day": 490819,
-          "lyft_trips_per_day": 184060,
+          "days": 31,
+          "uber_trips_per_day": 490818.51612903224,
+          "lyft_trips_per_day": 184060.48387096773,
           "uber_share_pct": 72.7,
-          "uber_month_est": 15215389,
-          "lyft_month_est": 5705860,
-          "hv_total_per_day": 674879,
+          "uber_month_est": 15215374,
+          "lyft_month_est": 5705875,
+          "hv_total_per_day": 674879.0,
           "kind": "fact",
           "proxy_for": null,
-          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
-          "source_pulled": "2026-10-12",
+          "source": "NYC TLC High Volume For-Hire Vehicle trip records counted from the monthly parquet (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-11-06",
           "source_urls": [
-            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+            "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-07.parquet"
           ],
           "timezone": "America/New_York",
-          "collected_at": null,
+          "collected_at": "2026-11-06T10:57:46+02:00",
           "uber_yoy_pct": null,
-          "collected_timezone": null
+          "collected_timezone": "Asia/Jerusalem"
         },
         {
           "month": "2026-08",
-          "uber_trips_per_day": 477421,
-          "lyft_trips_per_day": 183659,
+          "days": 31,
+          "uber_trips_per_day": 477421.22580645164,
+          "lyft_trips_per_day": 183658.7741935484,
           "uber_share_pct": 72.2,
-          "uber_month_est": 14800051,
-          "lyft_month_est": 5693429,
-          "hv_total_per_day": 661080,
+          "uber_month_est": 14800058,
+          "lyft_month_est": 5693422,
+          "hv_total_per_day": 661080.0,
           "kind": "fact",
           "proxy_for": null,
-          "source": "TLC Help aggregation of NYC TLC HVFHV trip records (hvfhs_license_num HV0003/HV0005)",
-          "source_pulled": "2026-10-12",
+          "source": "NYC TLC High Volume For-Hire Vehicle trip records counted from the monthly parquet (hvfhs_license_num HV0003/HV0005)",
+          "source_pulled": "2026-11-06",
           "source_urls": [
-            "https://tlchelp.io/stats/uber-vs-lyft-market-share-nyc"
+            "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-08.parquet"
           ],
           "timezone": "America/New_York",
-          "collected_at": null,
+          "collected_at": "2026-11-06T10:57:46+02:00",
           "uber_yoy_pct": null,
-          "collected_timezone": null
+          "collected_timezone": "Asia/Jerusalem"
         },
         {
           "month": "2026-09",
-          "uber_trips_per_day": 513752,
-          "lyft_trips_per_day": 185838,
+          "days": 30,
+          "uber_trips_per_day": 513751.8333333333,
+          "lyft_trips_per_day": 185837.53333333333,
           "uber_share_pct": 73.4,
-          "uber_month_est": 15412560,
-          "lyft_month_est": 5575140,
-          "hv_total_per_day": 699590,
+          "uber_month_est": 15412555,
+          "lyft_month_est": 5575126,
+          "hv_total_per_day": 699589.3666666667,
           "kind": "fact",
           "proxy_for": null,
           "source": "NYC TLC High Volume For-Hire Vehicle trip records counted from the monthly parquet (hvfhs_license_num HV0003/HV0005)",
@@ -1873,7 +1946,7 @@
             "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-09.parquet"
           ],
           "timezone": "America/New_York",
-          "collected_at": "2026-11-06T10:47:00+02:00",
+          "collected_at": "2026-11-06T10:57:46+02:00",
           "uber_yoy_pct": 9.7,
           "collected_timezone": "Asia/Jerusalem"
         }

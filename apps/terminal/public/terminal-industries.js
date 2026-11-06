@@ -128,7 +128,7 @@ function evRenderCompanies(companies){
   });
 
   html += '</tbody></table>';
-  html += '<div style="font-size:10px;color:#334155;margin-top:8px">Revenue &amp; market cap converted to USD · CNY and EUR tickers use live FX rates · Sorted by market cap · Click company name → Research page</div>';
+  if(window.WaveDataLog)WaveDataLog.record('industries:ev-fx',{section:'Industries · EV',metric:'Revenue and market cap',source:'Company filings and live FX',coverage:'USD presentation',notes:'Revenue and market cap are converted to USD. CNY and EUR tickers use live FX rates. The table is sorted by market cap.',skipSources:true});
   el.innerHTML = html;
 }
 

@@ -50,9 +50,8 @@ function ratesRenderSpread(s210, s3m10, curve){
     +'<div style="width:1px;height:48px;background:#1e293b"></div>'
     +'<div>'
     +  '<div style="font-size:13px;font-weight:700;color:'+statusColor+';margin-bottom:4px">'+statusText+'</div>'
-    +  '<div style="font-size:12px;color:#64748b;line-height:1.55;max-width:500px">'+verdict+'</div>'
-    +'</div>'
-    +'</div>';
+    +'</div></div>';
+  if(window.WaveDataLog)WaveDataLog.record('rates:curve',{section:'Rates & Yields',metric:label,source:'US Treasury yields',notes:verdict,skipSources:true});
   document.getElementById('ratesSpread').innerHTML = html;
 }
 
@@ -114,55 +113,9 @@ function ratesRenderCurve(curve){
 }
 
 function ratesRenderExplainer(spread, curve){
-  var y3m  = curve.find(function(c){ return c.label==='3M'; });
-  var y2   = curve.find(function(c){ return c.label==='2Y'; });
-  var y10  = curve.find(function(c){ return c.label==='10Y'; });
-  var y30  = curve.find(function(c){ return c.label==='30Y'; });
-
-  var inverted = spread !== null && spread < 0;
-
-  var bullets = [
-    {
-      icon: '🏦',
-      title: 'What are Treasury yields?',
-      text: 'When the US government borrows money it issues bonds. The yield is the annual interest rate investors earn for lending that money. Higher yield = investors want more compensation (usually because they expect inflation or risk).'
-    },
-    {
-      icon: '⚡',
-      title: 'Why does the curve shape matter?',
-      text: 'Normally long-term rates (10Y, 30Y) are higher than short-term (2Y, 3M) — investors demand more for tying up money longer. When that flips (short > long), it signals the market expects the economy to slow or the Fed to cut rates.'
-    },
-    {
-      icon: inverted ? '🚨' : '✅',
-      title: inverted ? 'Right now: Curve is INVERTED' : 'Right now: Curve looks ' + (spread < 0.5 ? 'FLAT' : 'NORMAL'),
-      text: inverted
-        ? 'The 2Y yield ('+(y2?y2.yield+'%':'?')+') is above the 10Y ('+(y10?y10.yield+'%':'?')+'). Every US recession since 1950 was preceded by an inverted curve — though the lag can be 6–24 months.'
-        : 'The 2Y ('+(y2?y2.yield+'%':'?')+') is below the 10Y ('+(y10?y10.yield+'%':'?')+'). A positive spread suggests markets are not pricing in an imminent recession.'
-    },
-    {
-      icon: '💡',
-      title: 'What affects yields day-to-day?',
-      text: 'Fed policy decisions, CPI inflation prints, jobs reports, and global risk appetite. When investors flee to safety they buy bonds → prices rise → yields fall. When growth is strong, yields rise.'
-    },
-    {
-      icon: '🏠',
-      title: 'How does it affect you?',
-      text: 'The 10Y Treasury drives mortgage rates, corporate borrowing costs, and stock valuations (higher yields = stocks worth less in theory). The 2Y tracks where the Fed is heading next.'
-    }
-  ];
-
-  var html = '<div class="mini-section"><div class="ms-header"><div class="ms-title">💬 What Does This Mean?</div></div>';
-  html += '<div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">';
-  bullets.forEach(function(b){
-    html += '<div style="background:#0a0f1a;border:1px solid #1e293b;border-radius:8px;padding:14px 16px;display:flex;gap:14px">'
-      +'<div style="font-size:20px;flex-shrink:0;margin-top:1px">'+b.icon+'</div>'
-      +'<div>'
-      +  '<div style="font-size:12px;font-weight:700;color:#e2e8f0;margin-bottom:4px">'+b.title+'</div>'
-      +  '<div style="font-size:12px;color:#64748b;line-height:1.6">'+b.text+'</div>'
-      +'</div>'
-      +'</div>';
-  });
-  html += '</div></div>';
-  document.getElementById('ratesExplainer').innerHTML = html;
+  var host=document.getElementById('ratesExplainer'); if(host) host.innerHTML='';
+  if(!window.WaveDataLog) return;
+  var y2=curve&&curve.find(function(c){return c.label==='2Y';});
+  var y10=curve&&curve.find(function(c){return c.label==='10Y';});
+  WaveDataLog.record('rates:explainer',{section:'Rates & Yields',metric:'Yield curve',source:'US Treasury',coverage:spread==null?'':((spread>=0?'+':'')+Number(spread).toFixed(2)+' pp'),notes:'2Y '+(y2&&y2.yield!=null?y2.yield+'%':'n/a')+' · 10Y '+(y10&&y10.yield!=null?y10.yield+'%':'n/a')+'. Long yields are normally above short yields. A negative 2Y–10Y spread has historically led recessions. Day-to-day moves follow policy, inflation, employment and risk appetite. The 10Y is a reference for mortgages and discount rates.',skipSources:true});
 }
-
