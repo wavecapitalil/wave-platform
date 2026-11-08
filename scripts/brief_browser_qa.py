@@ -151,6 +151,12 @@ async def check(browser, label, width, height):
     click_trace={'viewport':label,'before':await reader_geometry(page)}
     trace_path=OUT/f'{label}-next-chapter-geometry.json'
     trace_path.write_text(json.dumps(click_trace,ensure_ascii=False,indent=2))
+    if width > 1000:
+        geometry=click_trace['before']
+        assert geometry['rail']['height'] <= geometry['scroll']['client']-32+2, geometry
+        assert geometry['next']['top'] >= geometry['pane']['top'], geometry
+        assert geometry['next']['bottom'] <= geometry['pane']['bottom'], geometry
+        assert not geometry['nextDisabled'], geometry
     try:
         await page.locator('.brief-next-chapter').click()
     except Exception as error:

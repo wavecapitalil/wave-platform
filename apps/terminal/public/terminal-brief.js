@@ -220,6 +220,7 @@
     }
     function updateReader(){
       raf=0;if(!article.isConnected||!article.getClientRects().length)return;
+      rail.style.setProperty('--brief-reader-max-height',Math.max(0,scroller.clientHeight-32)+'px');
       var pane=scroller.getBoundingClientRect(),rect=article.getBoundingClientRect();
       var start=rect.top-pane.top+scroller.scrollTop-offset();
       var end=rect.bottom-pane.top+scroller.scrollTop-scroller.clientHeight;
@@ -231,7 +232,7 @@
     }
     function scheduleReader(){if(!raf)raf=requestAnimationFrame(updateReader);}
     scroller.addEventListener('scroll',scheduleReader,{passive:true});window.addEventListener('resize',scheduleReader);
-    var readerObserver=new ResizeObserver(scheduleReader);readerObserver.observe(article);readerObserver.observe(rail);
+    var readerObserver=new ResizeObserver(scheduleReader);readerObserver.observe(article);readerObserver.observe(rail);readerObserver.observe(scroller);
     article.addEventListener('load',scheduleReader,true);
     cleanupReader=function(){scroller.removeEventListener('scroll',scheduleReader);window.removeEventListener('resize',scheduleReader);article.removeEventListener('load',scheduleReader,true);readerObserver.disconnect();if(raf)cancelAnimationFrame(raf);};
     scheduleReader();
