@@ -20,7 +20,7 @@ test('request allowlist rejects invalid ranges, paths, queries and long symbols'
  assert.deepEqual(validatePriceRequest(' aapl ','1y'),{symbol:'AAPL',range:'1y'});
  for(const range of ['max','2y','',null,1])assert.throws(()=>validatePriceRequest('TEST',range));
  for(const symbol of ['',null,'../../x','TEST?x=1','A'.repeat(21),'A B','💸'])assert.throws(()=>validatePriceRequest(symbol,'1mo'));
- for(const range of ['1mo','3mo','6mo','1y','5y'])assert.equal(validatePriceRequest('BRK-B',range).range,range);
+ for(const range of ['1mo','3mo','6mo','1y','3y','5y'])assert.equal(validatePriceRequest('BRK-B',range).range,range);
 });
 test('strict finite values never coerce nulls, booleans or numeric strings',()=>{
  for(const value of [null,undefined,'',true,false,'42',NaN,Infinity,{raw:2}])assert.equal(strictNumber(value),null);
@@ -163,4 +163,26 @@ test('an after-close article before the range retains its true next-session alig
  const old=providerNews({providerPublishTime:Date.parse('2026-09-08T21:00:00Z')/1000});
  const r=await collectPriceHistory('TEST','1mo',{now:NOW,fetcher:mockFetch({stock:payload({ds,raw}),news:{news:[old]}}),reviewedEvents:[]});
  assert.equal(r.events.length,1);assert.equal(r.events[0].index,0);assert.equal(r.events[0].date,'2026-09-09');assert.equal(r.events[0].alignment_rule,'after_close_next_session');
+});
+
+
+test('three-year cutoff uses 36 calendar months and the exchange date',()=>{
+ assert.equal(rangeStartDate(Date.parse('2024-02-29T17:00:00Z'),'3y','America/New_York'),'2021-02-28');
+ assert.equal(rangeStartDate(Date.parse('2027-02-28T17:00:00Z'),'3y','America/New_York'),'2024-02-28');
+ assert.equal(rangeStartDate(Date.parse('2026-10-10T01:00:00Z'),'3y','America/New_York'),'2023-10-09');
+ assert.equal(rangeStartDate(Date.parse('2026-10-10T01:00:00Z'),'3y','Asia/Tokyo'),'2023-10-10');
+});
+test('three-year collector requests daily data and clips summary and events together',async()=>{
+ const calls=[],ds=['2023-09-29','2023-10-06','2023-10-09','2023-10-10','2025-10-09','2026-10-09'],raw=[80,100,110,90,120,121];
+ const stock=payload({ds,raw});
+ Object.assign(stock.chart.result[0].indicators.quote[0],{open:raw.map(v=>v-1),high:raw.map(v=>v+2),low:raw.map(v=>v-2)});
+ const old=providerNews({uuid:'old',link:'https://example.com/news/old',providerPublishTime:Date.parse('2023-10-06T12:00:00Z')/1000});
+ const after=providerNews({uuid:'after',link:'https://example.com/news/after',providerPublishTime:Date.parse('2023-10-06T21:00:00Z')/1000});
+ const r=await collectPriceHistory('TEST','3y',{now:NOW,fetcher:mockFetch({calls,stock,news:{news:[]}}),reviewedEvents:[],companyEvents:{events:[article({...old,published_at:'2023-10-06T12:00:00Z',url:old.link}),article({...after,published_at:'2023-10-06T21:00:00Z',url:after.link})],coverage:[]}});
+ assert.equal(r.range,'3y');assert.equal(r.summary.start_date,'2023-10-09');assert.equal(r.summary.end_date,'2026-10-09');
+ assert.deepEqual(r.points.map(p=>p.date),ds.slice(2));assert.ok(r.points.every(p=>p.open!=null&&p.high!=null&&p.low!=null));
+ assert.ok(Math.abs(r.summary.change_pct-10)<1e-9);assert.equal(r.summary.low.close,90);assert.equal(r.summary.high.close,121);
+ assert.equal(r.events.length,1);assert.equal(r.events[0].date,'2023-10-09');assert.equal(r.events[0].index,0);assert.equal(r.points[r.events[0].index].date,r.events[0].date);
+ assert.equal(r.meta.news_coverage.requested_from,'2023-10-09');
+ for(const call of calls.filter(u=>u.includes('/chart/'))){const u=new URL(call);assert.equal(u.searchParams.get('interval'),'1d');assert.equal(Number(u.searchParams.get('period1')),Date.parse('2023-09-27T00:00:00Z')/1000);}
 });

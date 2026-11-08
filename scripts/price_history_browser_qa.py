@@ -15,25 +15,27 @@ OUT = Path(os.environ.get("WAVE_PRICE_QA_OUT", "/tmp/wave-price-events-qa"))
 CHART = Path(os.environ.get("WAVE_CHART_JS", "/tmp/wave-chart-4.4.0.js"))
 
 
-def fixture(symbol="AAPL", selected_range="1y", no_events=False):
+def fixture(symbol="AAPL", selected_range="3y", no_events=False):
     points = []
-    day = date(2026, 5, 1)
-    for i in range(90):
+    day = date(2023, 10, 8)
+    for i in range((date(2026, 10, 8) - day).days):
         day += timedelta(days=1)
         if day.weekday() > 4:
             continue
         value = 150 + i * .3 + (i % 8 - 4) * 2
         points.append({"date": day.isoformat(), "close": value, "raw_close": value,
+                       "open": value - 1, "high": value + 2, "low": value - 2,
                        "change_pct": 1.2, "benchmark_change_pct": .2, "excess_change_pp": 1})
     events = [] if no_events else [{"id": "test-" + str(i), "date": points[i]["date"], "index": i,
         "price": points[i]["close"], "title": "Fixture earnings release <not HTML>",
         "summary": "A test-only company announcement near a large move, without causal attribution.",
+        "category": "corporate_action" if i == 700 else "earnings",
         "source": "Test fixture", "url": "https://example.com/release-" + str(i),
         "published_at": points[i]["date"], "relationship": "context", "reason": "large_move",
         "change_pct": 5.3, "benchmark_change_pct": .2, "excess_change_pp": 5.1,
-        "timing": "Date-only publication → next session"} for i in (10, 25, 42)]
+        "timing": "Date-only publication → next session"} for i in (100, 375, 700)]
     return {"symbol": symbol, "range": selected_range, "currency": "USD", "exchange_timezone": "America/New_York",
-        "price_basis": "dividend_and_split_adjusted_close", "points": points, "events": events,
+        "price_basis": "dividend_and_split_adjusted_close", "points": points, "weekly_candles": points[::5], "events": events,
         "summary": {"start_date": points[0]["date"], "end_date": points[-1]["date"],
                     "change_pct": 12.4, "high": max(points, key=lambda p:p["close"]), "low": min(points, key=lambda p:p["close"])},
         "meta": {"fetched_at": "2026-10-08T18:00:00Z", "news_status": "ok", "news_coverage": "Recent headlines only", "limitations": ["TEST FIXTURE"], "benchmark": "SPY"}}
@@ -45,14 +47,17 @@ async def check(browser, name, width, height, lang):
     page = await context.new_page()
     errors = []
     page.on("pageerror", lambda e: errors.append(str(e)))
+    price_requests = []
     settings = {"failure": False, "empty": False, "delay": False, "mismatch": False, "stock_failure": False, "currency": "USD"}
 
     async def api(route):
         u = urlparse(route.request.url)
         q = parse_qs(u.query)
         symbol = q.get("symbol", ["AAPL"])[0]
-        selected_range = q.get("range", ["1y"])[0]
+        selected_range = q.get("range", [None])[0]
         if u.path.endswith("/api/price-history"):
+            price_requests.append({"symbol": symbol, "range": selected_range})
+            assert selected_range == "3y", route.request.url
             if settings["delay"] and symbol == "AAPL":
                 await asyncio.sleep(.8)
             if settings["failure"]:
@@ -108,8 +113,20 @@ async def check(browser, name, width, height, lang):
     assert "Fixture earnings release" in tip["text"], tip
     assert tip["inChart"] is False, tip
     await page.screenshot(path=str(OUT / (name + "-event-detail.png")), full_page=True)
-    await page.locator('[data-ph-range="1mo"]').click()
-    await page.wait_for_function("Chart.getChart('ph-chart') && document.querySelector('[data-ph-range=\"1mo\"]').getAttribute('aria-pressed')==='true'")
+    assert await page.locator('#ph-ranges, .ph-interval, [data-ph-range], [data-ph-interval]').count() == 0
+    assert metrics["points"] == len(fixture()["points"])
+    candle_count = await page.evaluate("""() => {const c=Chart.getChart('ph-chart'),plugin=c.config.plugins.find(p=>p.id==='waveCandlesticks'),fill=c.ctx.fillRect;let count=0;c.ctx.fillRect=function(...args){count++;return fill.apply(this,args);};try{plugin.afterDatasetsDraw(c);}finally{c.ctx.fillRect=fill;}return count;}""")
+    assert candle_count == metrics["points"], candle_count
+    assert await page.evaluate("Chart.getChart('ph-chart').data.datasets[0].borderWidth") == 0
+    assert await page.locator('#ph-chart').get_attribute('aria-label') == 'AAPL daily price · 3 years'
+    assert await page.locator('#ph-category').count() == 1
+    await page.locator('#ph-category').select_option('earnings')
+    assert await page.evaluate("(Chart.getChart('ph-chart').$dotPositions||[]).length") == 2
+    await page.locator('#ph-category').select_option('all')
+    assert await page.evaluate("(Chart.getChart('ph-chart').$dotPositions||[]).length") == 3
+    assert await page.evaluate("Chart.getChart('ph-chart').data.datasets[0].data.length") == len(fixture()["points"])
+    await page.evaluate("WavePriceHistory.load('AAPL')")
+    await page.locator("#ph-body:not([hidden])").wait_for()
     # Late stock-info and chart responses cannot overwrite a newer stock.
     settings["delay"] = True
     await page.evaluate("researchTicker('AAPL'); researchTicker('MSFT')")
@@ -117,9 +134,13 @@ async def check(browser, name, width, height, lang):
     await page.wait_for_timeout(1100)
     assert "MSFT" in await page.locator("#ph-period").inner_text()
     assert "MSFT" in await page.locator("#resNameLine").inner_text()
+    assert await page.evaluate("WavePriceHistory.snapshot('MSFT')?.range") == '3y'
+    assert await page.evaluate("WavePriceHistory.snapshot('AAPL')") is None
+    assert await page.evaluate("Chart.getChart('ph-chart').data.datasets[0].label") == 'MSFT'
+    assert await page.evaluate("Chart.getChart('ph-chart').data.datasets[0].data.length") == len(fixture()["points"])
     settings["delay"] = False
     settings["failure"] = True
-    await page.locator('[data-ph-range="3mo"]').click()
+    await page.evaluate("WavePriceHistory.load('MSFT')")
     await page.locator("#ph-retry").wait_for()
     assert await page.locator("#ph-body").is_hidden()
     assert await page.evaluate("Chart.getChart('ph-chart')===undefined")
@@ -141,7 +162,7 @@ async def check(browser, name, width, height, lang):
     settings["currency"] = "USD"
     # Wrong-symbol responses fail closed.
     settings["mismatch"] = True
-    await page.locator('[data-ph-range="6mo"]').click()
+    await page.evaluate("WavePriceHistory.load('VOD.L')")
     await page.locator("#ph-retry").wait_for()
     assert await page.locator("#ph-body").is_hidden()
     settings["mismatch"] = False
@@ -152,6 +173,12 @@ async def check(browser, name, width, height, lang):
     assert "TEST FIXTURE" in await page.locator("#sourcesContent").inner_text()
     await page.evaluate("navigate('research')")
     assert await page.locator("#ph-chart").is_visible()
+    assert await page.locator('#ph-ranges, .ph-interval, [data-ph-range], [data-ph-interval]').count() == 0
+    await page.reload(wait_until="domcontentloaded")
+    await page.evaluate("navigate('research'); researchTicker('AAPL')")
+    await page.locator("#ph-body:not([hidden])").wait_for()
+    assert await page.locator('#ph-ranges, .ph-interval, [data-ph-range], [data-ph-interval]').count() == 0
+    assert all(r['range'] == '3y' for r in price_requests), price_requests
     assert errors == [], errors
     await context.close()
     return {"viewport": name, "passed": True, "layout": metrics, "errors": errors}
