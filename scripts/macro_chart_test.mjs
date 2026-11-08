@@ -16,7 +16,8 @@ test('past actual columns and distinct consensus dots; future consensus has no f
  const api=ui(),s={unit:'% YoY',sa:'SA',releases:[{...base,actual:3.4,released_at:past,consensus}],calendar:[{...base,id:'next',scheduled_at:future,consensus}]};
  const points=api.comparisonPoints(s);assert.equal(points[0].value,3.4);assert.equal(points[1].value,null);
  const html=api.comparison(s,true);assert.equal((html.match(/<rect /g)||[]).length,1);assert.equal((html.match(/<circle /g)||[]).length,2);
- assert.ok(html.includes('Difference: 0.2'));assert.ok(html.includes('2026-08-01'));assert.ok(!html.includes('Verified source'));assert.ok(html.includes('Release date'));
+ assert.equal(points[0].reference_period,period);assert.equal(points[0].period,past.slice(0,10));assert.equal(points[1].period,future.slice(0,10));
+ assert.ok(html.includes('Difference: 0.2'));assert.ok(html.includes(past.slice(0,10).replaceAll('-','/')));assert.ok(html.includes(future.slice(0,10).replaceAll('-','/')));assert.ok(!html.includes('Verified source'));assert.ok(html.includes('Release date'));
  for(const attr of html.matchAll(/\s(?:x|y|width|height|cx|cy)="([^"]+)"/g))assert.ok(Number.isFinite(Number(attr[1])),attr[0]);
 });
 test('missing consensus is never zero; revised history has no consensus dots',()=>{
