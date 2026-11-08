@@ -37,6 +37,25 @@ async def theme_details(page):
     }""")
 
 
+async def reader_geometry(page):
+    return await page.evaluate("""() => {
+      const rail = document.querySelector('.brief-reader-rail');
+      const next = document.querySelector('.brief-next-chapter');
+      const pane = document.querySelector('#briefArticle').closest('.main') || document.scrollingElement;
+      const rect = el => { const r = el.getBoundingClientRect(); return {
+        top:r.top,bottom:r.bottom,left:r.left,right:r.right,width:r.width,height:r.height}; };
+      const r = next.getBoundingClientRect();
+      const hit = document.elementFromPoint(r.left+r.width/2,r.top+r.height/2);
+      return {viewport:{width:innerWidth,height:innerHeight},rail:rect(rail),next:rect(next),pane:rect(pane),
+        scroll:{top:pane.scrollTop,height:pane.scrollHeight,client:pane.clientHeight},
+        railStyle:{position:getComputedStyle(rail).position,top:getComputedStyle(rail).top,
+          overflowY:getComputedStyle(rail).overflowY,maxHeight:getComputedStyle(rail).maxHeight},
+        selected:[...document.querySelectorAll('.brief-contents button')].findIndex(b=>b.hasAttribute('aria-current')),
+        nextDisabled:next.disabled,centerHit:hit ? {tag:hit.tagName,className:hit.className,text:hit.textContent.slice(0,100)} : null,
+        nextReceivesCenter:!!hit && (hit===next || next.contains(hit))};
+    }""")
+
+
 async def check(browser, label, width, height):
     context = await browser.new_context(viewport={'width': width, 'height': height}, has_touch=width <= 1024)
     await context.add_init_script("localStorage.setItem('wc_lang','en')")  # these checks assert the English UI
@@ -127,7 +146,25 @@ async def check(browser, label, width, height):
     await page.screenshot(path=str(OUT/f'{label}-reader-at-end.png'))
     await page.locator('.brief-contents button').first.click()
     await page.wait_for_function("document.querySelector('.brief-contents button:first-child').getAttribute('aria-current') === 'location'")
-    await page.locator('.brief-next-chapter').click()
+    # Capture geometry without forcing the click or disabling smooth scrolling.
+    # Keep the pre-click trace on disk even when Playwright times out.
+    click_trace={'viewport':label,'before':await reader_geometry(page)}
+    trace_path=OUT/f'{label}-next-chapter-geometry.json'
+    trace_path.write_text(json.dumps(click_trace,ensure_ascii=False,indent=2))
+    try:
+        await page.locator('.brief-next-chapter').click()
+    except Exception as error:
+        click_trace['error']=str(error)
+        click_trace['after_failure']=await reader_geometry(page)
+        click_trace['settling_samples']=[]
+        for _ in range(5):
+            await page.wait_for_timeout(100)
+            click_trace['settling_samples'].append(await reader_geometry(page))
+        trace_path.write_text(json.dumps(click_trace,ensure_ascii=False,indent=2))
+        await page.screenshot(path=str(OUT/f'{label}-next-chapter-failure.png'))
+        raise
+    click_trace['after_click']=await reader_geometry(page)
+    trace_path.write_text(json.dumps(click_trace,ensure_ascii=False,indent=2))
     await page.wait_for_function("document.querySelector('.brief-contents button:nth-child(2)').getAttribute('aria-current') === 'location'")
     await page.locator('.brief-story').last.scroll_into_view_if_needed()
     await page.screenshot(path=str(OUT/f'{label}-risk.png'))
