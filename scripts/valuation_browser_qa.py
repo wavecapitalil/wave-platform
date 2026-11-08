@@ -166,7 +166,13 @@ async def check(browser, name, width, height, lang="he"):
     # Source navigation and return do not expose private admin navigation.
     await page.locator("#vw-advanced-toggle").click()
     await page.locator("#vw-method").click()
-    assert await page.locator("#page-sources").is_visible()
+    assert await page.locator("#page-data-log").is_visible()
+    assert await page.evaluate("""() => {
+      const guide = JSON.parse(sessionStorage.getItem('wave.sources.v1') || '[]')
+        .find(([key]) => key === 'guide:equity-valuation')?.[1];
+      return guide && WaveDataLog.list().some(e => e.metric === guide.title && e.notes === guide.body)
+        && document.querySelector('#dataLogContent').textContent.includes(guide.title);
+    }""")
     await page.evaluate("navigate('valuation')")
     assert await page.locator("#er-panel-valuation").is_visible()
     assert await page.locator(".nav-panel a[href*='calculation']").count() == 0
