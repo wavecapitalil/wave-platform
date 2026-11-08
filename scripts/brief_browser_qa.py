@@ -133,8 +133,9 @@ async def check(browser, label, width, height):
     await page.screenshot(path=str(OUT/f'{label}-risk.png'))
     # Source details remain reachable from the article itself.
     await page.locator('.brief-source-link').click()
-    assert await page.locator('#page-sources').is_visible()
-    source_card=page.locator('.sources-card').filter(has_text='בריף הבוקר · '+date_text)
+    assert await page.locator('#page-data-log').is_visible()
+    source_card=page.locator('#dataLogContent tbody tr').filter(has_text='בריף הבוקר · '+date_text)
+    assert await source_card.count()==1
     assert await source_card.locator('a').count()==len(EDITION['sources'])
     assert EDITION['methodology'] in await source_card.text_content()
     await page.evaluate("navigate('brief'); navigate('brief'); navigate('home'); navigate('brief')")
