@@ -19,13 +19,16 @@
     'Wave Capital מחברת בין מחקר השקעות, פיתוח אסטרטגיות והשקעות ערך, כדי להפוך מידע לתהליך החלטה מדויק.':
       'Wave Capital brings together investment research, strategy development and value investing to turn information into a precise decision process.',
     'השקעות ערך': 'Value investing', 'מחקר השקעות': 'Investment research', 'מערכות מסחר': 'Trading systems',
-    'פגישה עם הצוות של Wave Capital: נכיר לכם את המערכת, את שיטת המחקר ואת הכלים שבנינו.':
-      'A meeting with the Wave Capital team: we show you the platform, our research method and the tools we built.',
+    'כל מה שלא רואים מבחוץ: שיטת המחקר, הנתונים והכלים, מפי האנשים שבנו אותם.':
+      'Everything you cannot see from outside: the research method, the data and the tools, from the people who built them.',
+    'המפגש אינו כולל המלצות השקעה אישיות.': 'The session does not include personal investment recommendations.', 'שליחת הודעה בוואטסאפ': 'Message us on WhatsApp',
     'תהליך עבודה': 'Workflow', 'סדר קבוע להחלטות': 'A set order for every decision',
     'מהשאלה ועד התשובה': 'From the question to the answer',
-    'ניהול סיכון': 'Risk management', 'העקרונות שלנו לשמירה על ההון': 'Our principles for protecting capital',
+    'ניהול סיכון': 'Risk management', 'הכללים שלא מתפשרים עליהם': 'The rules we never bend',
     'תשתית מסחר': 'Trading infrastructure', 'כלים שעובדים בשבילכם': 'Tools that work for you',
     'לקביעת שיחה': 'Book a call', 'שיחת היכרות קצרה, ומשם מתאימים את הפגישה.': 'A short intro call first, then we tailor the meeting.',
+    'דברו איתנו בוואטסאפ': 'Message us on WhatsApp', 'לקביעת שיחה בוואטסאפ': 'Book a call on WhatsApp', 'להדגמת המערכת בוואטסאפ': 'Get a platform demo on WhatsApp',
+    'היי, הגעתי מהאתר של Wave Capital ואשמח לשמוע עוד.': 'Hi, I came from the Wave Capital website and would like to hear more.', "היי, ראיתי באתר את 'מאחורי הקלעים' ואשמח לקבוע שיחה.": 'Hi, I saw Behind the Scenes on your website and would like to book a call.', 'היי, אשמח לראות הדגמה של סביבת העבודה של Wave Capital.': 'Hi, I would like to see a demo of the Wave Capital workspace.', 'היי, הגעתי מהאתר של Wave Capital ואשמח לדבר איתכם.': 'Hi, I came from the Wave Capital website and would like to talk.',
     'הערכת שווי, מעקב וחקירת מניות, במערכת אחת.': 'Valuation, watchlists and stock research in one platform.',
     'מחיר בשוק': 'Market price', 'שווי הוגן': 'Fair value', 'פער': 'Gap',
     'הערכת שווי': 'Valuation', 'כמה החברה שווה באמת, מול המחיר שבו היא נסחרת.': 'What the company is really worth, against the price it trades at.',
@@ -64,7 +67,7 @@
     '.h1': '<span class="hw">Research</span> <span class="hw">edge.</span><br><span class="hw"><em>Systematic</em></span> <span class="hw"><em>execution.</em></span>',
     '.lead__title': 'About <em>us</em>',
     '.mani': 'Wave Capital combines independent investment research, value investing and the development of systematic trading strategies. We turn complex information <em class="key">into clear decision processes,</em> with rigorous risk management.',
-    '#products .h2': 'A personal <em>intro</em> call',
+    '#products .h2': 'Behind <em>the scenes</em>',
     '#terminal .h2': 'The trader\'s <em>workspace</em>',
     '#about .h2': 'Decisions through <em>process</em>',
     '.phil__q': 'We don\'t chase<br><em>forecasts.</em>',
