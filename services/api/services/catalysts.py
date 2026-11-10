@@ -29,7 +29,7 @@ NY = ZoneInfo("America/New_York")
 DEADBAND = 0.01
 REACTION_SESSIONS = 3
 ALIGN_GAP_DAYS = 7
-LOOKBACK_DAYS = 730
+LOOKBACK_DAYS = 3 * 366
 FORWARD_DAYS = 180
 CACHE_TTL = 600
 _CACHE: dict[str, tuple[float, str, dict]] = {}
@@ -647,7 +647,8 @@ def load_catalysts(symbol: str, today: str | None = None) -> dict:
 def fetch_prices(symbol: str) -> tuple[list[dict], str | None]:
     import yfinance as yf
 
-    frame = yf.Ticker(symbol).history(period="2y", interval="1d", auto_adjust=True, actions=False)
+    start = (datetime.now(NY) - timedelta(days=LOOKBACK_DAYS + 10)).date().isoformat()
+    frame = yf.Ticker(symbol).history(start=start, interval="1d", auto_adjust=True, actions=False)
     if frame is None or getattr(frame, "empty", True) or "Close" not in getattr(frame, "columns", []):
         raise LookupError("price history unavailable")
     close = frame["Close"]

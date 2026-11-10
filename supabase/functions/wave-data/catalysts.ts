@@ -1,7 +1,7 @@
 // Catalyst calendar for the public edge API. Same reaction rule as services/api/services/catalysts.py.
 import {parsePriceChart} from './price-history.ts';
 
-const DAY=86400000, DEADBAND=0.01, SESSIONS=3, GAP=7, LOOKBACK=730, FORWARD=180;
+const DAY=86400000, DEADBAND=0.01, SESSIONS=3, GAP=7, LOOKBACK=3*366, FORWARD=180;
 const UA={'user-agent':'WaveCapital research@wavecapital.com','accept':'application/json'};
 const ITEMS:Record<string,[string,string]>={
  '2.02':['earnings','Quarterly results disclosure'],
@@ -119,7 +119,7 @@ async function readJson(url:string){const r=await fetch(url,{headers:UA,signal:A
 async function sourceJob(name:string,run:()=>Promise<any[]>){try{const rows=await run();return [rows,{name,status:rows.length?'available':'empty',rows:rows.length}] as const;}catch{return [[],{name,status:'unavailable',rows:0}] as const;}}
 export async function collectCatalysts(symbol:string,now=Date.now()){
  const today=iso(now);
- const start=Math.floor((now-800*DAY)/1000);
+ const start=Math.floor((now-(LOOKBACK+15)*DAY)/1000);
  const chart=await readJson(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?period1=${start}&period2=${Math.floor(now/1000)}&interval=1d&includeAdjustedClose=true&events=div%2Csplits&includePrePost=false`);
  const parsed=parsePriceChart(chart,symbol,now);
  const sessions=parsed.points.map(p=>({date:p.date,close:p.close}));
