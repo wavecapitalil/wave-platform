@@ -126,6 +126,7 @@ function navigate(page){
   if(page === 'confluence') loadConfluence();
   if(page === 'earnings'){ loadEarningsPage(); earnSetTab(_earnTab); }
   if(page === 'correlation' && !window._corrLoadedOnce){ window._corrLoadedOnce = true; runCorrelation(); }
+  if(page === 'japanica' && window.openJapanicaMap) window.openJapanicaMap();
 
   // Editorial editions have their own dated publishing path, separate from snapshots.
   if(window.WaveBrief){ if(page === 'brief') WaveBrief.open(); else WaveBrief.close(); }

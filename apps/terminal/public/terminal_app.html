@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wave Capital — Terminal</title>
 <link rel="stylesheet" href="terminal.css?v=20261013-article-fallback2">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css" integrity="sha256-V2sIX92Uh6ZaGSFTKMHghsB85b9toJtmazgG09AI2uk=" crossorigin="">
+<link rel="stylesheet" href="terminal-japanica.css?v=20261110-japanica5">
 
-<script src="i18n.js?v=20261013-he-default"></script>
+<script src="i18n.js?v=20261110-japanica1"></script>
   <link rel="stylesheet" href="wave-university-theme.css?v=20261008-depth1">
 <link rel="stylesheet" href="ai-tutor.css">
 <link rel="stylesheet" href="terminal-sources.css?v=20261105-datalog1">
@@ -205,6 +207,17 @@
         <div class="nav-item" data-page="ideas" onclick="navigate('ideas')">
           <span class="nav-item-icon">💡</span> <span data-i18n="sidebar.tradeIdeas">Trade Ideas</span>
           <span class="nav-item-badge soon" data-i18n="sidebar.soon">Soon</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title" onclick="toggleSection('places')">
+        <span data-i18n="sidebar.secPlaces">PLACES</span> <span class="nav-section-caret open" id="caret-places">▾</span>
+      </div>
+      <div class="nav-items" id="items-places">
+        <div class="nav-item" data-page="japanica" onclick="navigate('japanica')">
+          <span class="nav-item-icon">🗺️</span> <span data-i18n="sidebar.japanica">Japanica</span>
         </div>
       </div>
     </div>
@@ -1575,6 +1588,40 @@
 
     <div class="page" id="page-valuation"><div id="valuationRoot" class="val-wrap"></div></div>
 
+    <div class="page" id="page-japanica">
+      <div class="welcome-wrap">
+        <div class="page-header" style="margin-bottom:16px">
+          <div class="page-header-tag" data-i18n="japanica.tag">Places</div>
+          <div class="page-header-title" data-i18n="japanica.title">Japanica</div>
+          <div class="page-header-sub" data-i18n="japanica.sub">Asian restaurant · Karmiel</div>
+        </div>
+        <div class="japanica-layout">
+          <div id="japanicaMap" class="japanica-map" role="application" aria-label="Map of Japanica in Karmiel"></div>
+          <section class="japanica-card" aria-labelledby="japanicaName">
+            <div class="japanica-name" id="japanicaName" data-i18n="japanica.name">Japanica</div>
+            <div class="japanica-fields">
+              <div class="japanica-row">
+                <div class="japanica-label" data-i18n="japanica.streetLabel">Street</div>
+                <div class="japanica-value" data-i18n="japanica.street">Ma'ale Kamon 5</div>
+              </div>
+              <div class="japanica-row">
+                <div class="japanica-label" data-i18n="japanica.cityLabel">City</div>
+                <div class="japanica-value" data-i18n="japanica.city">Karmiel, Israel</div>
+              </div>
+              <div class="japanica-row">
+                <div class="japanica-label" data-i18n="japanica.coordsLabel">Coordinates (lat, lng)</div>
+                <div class="japanica-value japanica-coords" dir="ltr">32.9275303, 35.3260765</div>
+              </div>
+            </div>
+            <div class="japanica-links">
+              <a class="japanica-link" href="https://www.google.com/maps/search/?api=1&amp;query=32.9275303%2C35.3260765" target="_blank" rel="noopener noreferrer" data-i18n="japanica.google">Open in Google Maps</a>
+              <a class="japanica-link secondary" href="https://www.waze.com/ul?ll=32.9275303%2C35.3260765&amp;navigate=yes" target="_blank" rel="noopener noreferrer" data-i18n="japanica.waze">Waze</a>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
     <div class="page" id="page-data-log">
       <div class="welcome-wrap">
         <div class="page-header" style="margin-bottom:20px">
@@ -1600,7 +1647,9 @@
 <script src="terminal-data-log.js?v=20261105-datalog1"></script>
 <script src="terminal-sources.js?v=20261105-datalog1"></script>
 <script src="terminal-brief.js?v=20261106-clean1"></script>
-<script src="terminal.js?v=20261106-clean1"></script>
+<script src="terminal.js?v=20261110-japanica1"></script>
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js" integrity="sha256-vpYzxNhw4m+zfxz+XFp3GBZnEUAD6hYgeseFDY2ordE=" crossorigin=""></script>
+<script src="terminal-japanica.js?v=20261110-japanica3"></script>
 <script src="terminal-market.js?v=20261106-clean1"></script>
 <script src="terminal-sector-research.js?v=20261105-sector1"></script>
 <script src="terminal-content.js?v=20261013-article-fallback"></script>
@@ -1645,7 +1694,7 @@ if (window.Chart) Chart.register({
 <script src="supabase-config.js"></script>
 <script src="platform.js"></script>
 <script src="platform-cloud.js?v=20261021-redirect"></script>
-<script src="platform-search.js"></script>
+<script src="platform-search.js?v=20261110-japanica1"></script>
 <script src="ai-tutor.js"></script>
 <!-- ARTICLE READER OVERLAY -->
 <div id="articleOverlay">
