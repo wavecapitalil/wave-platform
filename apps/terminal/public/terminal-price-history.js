@@ -21,8 +21,9 @@
   function setup(){
     var host=el('resPriceHistory');if(!host)return false;
     if(el('ph-ranges'))return true;
-    host.innerHTML='<div class="ph-header"><div><h2>'+text('Price','מחיר')+'</h2><div id="ph-period" class="ph-period"></div></div><div id="ph-ranges" class="ph-ranges" role="group" aria-label="'+text('Price history timeframe','טווח גרף המחיר')+'">'+ranges.map(function(r){return '<button type="button" data-ph-range="'+r[0]+'" aria-pressed="'+(r[0]===state.range)+'">'+r[1]+'</button>';}).join('')+'</div><div class="ph-interval" role="group" aria-label="Candle interval"><button type="button" data-ph-interval="daily" aria-pressed="true">Daily</button><button type="button" data-ph-interval="weekly" aria-pressed="false">Weekly</button></div></div><div id="ph-status" class="ph-status" role="status" aria-live="polite"></div><div id="ph-body" hidden><div class="ph-summary"><div><span id="ph-latest"></span><span id="ph-change"></span></div><div id="ph-basis"></div></div><label class="ph-filter">'+text('Event category','סוג אירוע')+' <select id="ph-category"><option value="all">'+text('All','הכל')+'</option></select></label><div class="ph-chart-wrap"><canvas id="ph-chart" role="img" aria-label="'+text('Price chart','גרף מחיר')+'"></canvas></div></div>';
+    host.innerHTML='<div class="ph-header"><div><h2>'+text('Price','מחיר')+'</h2><div id="ph-period" class="ph-period"></div></div><div id="ph-ranges" class="ph-ranges" role="group" aria-label="'+text('Price history timeframe','טווח גרף המחיר')+'">'+ranges.map(function(r){return '<button type="button" data-ph-range="'+r[0]+'" aria-pressed="'+(r[0]===state.range)+'">'+r[1]+'</button>';}).join('')+'</div><div class="ph-interval" role="group" aria-label="Candle interval"><button type="button" data-ph-interval="daily" aria-pressed="true">Daily</button><button type="button" data-ph-interval="weekly" aria-pressed="false">Weekly</button></div></div><div id="ph-status" class="ph-status" role="status" aria-live="polite"></div><div id="ph-body" hidden><div class="ph-summary"><div><span id="ph-latest"></span><span id="ph-change"></span></div><div id="ph-basis"></div></div><label class="ph-filter">'+text('Event category','סוג אירוע')+' <select id="ph-category"><option value="all">'+text('All','הכל')+'</option></select></label><div class="ph-chart-wrap"><canvas id="ph-chart" role="img" aria-label="'+text('Price chart','גרף מחיר')+'"></canvas><div id="ph-plot-markers" class="ph-plot-markers"></div></div><div id="ph-detail" class="ph-detail" aria-live="polite"></div></div>';
     host.addEventListener('click',function(event){
+      var eventButton=event.target.closest('[data-ph-cluster]');if(eventButton){var entry=state.visibleEvents[Number(eventButton.dataset.phCluster)];if(entry){el('ph-detail').innerHTML='<h4>'+esc(entry.title)+'</h4><a class="ph-article" target="_blank" rel="noopener noreferrer" href="'+esc(url(entry.url))+'">'+text('Read source','קריאת המקור')+'</a>'; }return;}
       var interval=event.target.closest('[data-ph-interval]');if(interval){state.interval=interval.dataset.phInterval;if(state.data)render(state.data);return;}
       var r=event.target.closest('[data-ph-range]');if(r){if(r.dataset.phRange!==state.range){state.range=r.dataset.phRange;load(state.symbol);}return;}
       if(event.target.closest('#ph-retry')){load(state.symbol);return;}
@@ -88,11 +89,15 @@
     el('ph-category').value=state.category;
     var events=data.events.concat(pending).filter(function(e){return state.category==='all'||(e.category||e.reason)===state.category;});
     register(data, events);destroy();
+    state.visibleEvents=events;el('ph-detail').textContent='';
+    el('ph-plot-markers').innerHTML=events.map(function(event,i){return '<button type="button" class="ph-plot-marker" data-ph-cluster="'+i+'" aria-label="'+esc(date(event.date)+' · '+event.title)+'" aria-controls="ph-detail" style="visibility:hidden"></button>';}).join('');
+    el('ph-plot-markers').onpointermove=function(e){var c=el('ph-chart');if(c.onpointermove)c.onpointermove(e);};
+    el('ph-plot-markers').onpointerleave=function(){if(window.WaveCatalystChart)WaveCatalystChart.hideTip();};
     if(typeof Chart==='undefined'){el('ph-status').textContent=text('Chart library unavailable. Reload to try again.','ספריית הגרפים אינה זמינה. יש לטעון מחדש.');return;}
     var candles={id:'waveCandlesticks',afterDatasetsDraw:function(chart){if(!hasCandles)return;var ctx=chart.ctx,x=chart.scales.x,y=chart.scales.y,w=Math.max(1,Math.min(13,chart.chartArea.width/points.length*.65));ctx.save();ctx.beginPath();ctx.rect(chart.chartArea.left,chart.chartArea.top,chart.chartArea.width,chart.chartArea.height);ctx.clip();points.forEach(function(p,i){if(!finite(p.open)||!finite(p.high)||!finite(p.low))return;var px=x.getPixelForValue(i),oy=y.getPixelForValue(p.open),cy=y.getPixelForValue(p.close);ctx.strokeStyle=ctx.fillStyle=p.close>=p.open?'#60d5b0':'#ef8590';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(px,y.getPixelForValue(p.high));ctx.lineTo(px,y.getPixelForValue(p.low));ctx.stroke();ctx.fillRect(px-w/2,Math.min(oy,cy),w,Math.max(1,Math.abs(cy-oy)));});ctx.restore();}};
     var dots={id:'waveResearchDots',afterDatasetsDraw:function(chart){
       var area=chart.chartArea,stacks={},positions=[];
-      events.forEach(function(event){
+      events.forEach(function(event,eventIndex){
         var index=barIndex(points, event);if(index<0)return;
         var stack=stacks[index]||0;stacks[index]=stack+1;
         var close=finite(points[index].close)?points[index].close:(finite(event.price)?event.price:null);
@@ -101,6 +106,7 @@
         var px=chart.scales.x.getPixelForValue(index), py=chart.scales.y.getPixelForValue(close*(1+0.012*stack));
         var visible=Number.isFinite(px)&&Number.isFinite(py)&&px>=area.left-8&&px<=area.right+8&&py>=area.top-16&&py<=area.bottom+8;
         if(visible&&window.WaveCatalystChart)WaveCatalystChart.drawDot(chart.ctx,px,py,tone,{radius:5,ring:true});
+        var button=el('ph-plot-markers').querySelector('[data-ph-cluster="'+eventIndex+'"]');if(button){button.style.left=(px-22)+'px';button.style.top=(py-22)+'px';button.style.visibility=visible?'visible':'hidden';}
         positions.push({px:px,py:py,visible:visible,row:{line:event.title,outcome:tone}});
       });
       chart.$dotPositions=positions;
