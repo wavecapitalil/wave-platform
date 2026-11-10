@@ -124,7 +124,7 @@ function renderEditorialLesson(lesson,index){
 function compose(parts){const frag=document.createDocumentFragment();let current=null,sectionNumber=0,figureNumber=0;for(let part of parts){if(part.kind==='heading'){sectionNumber++;let section=node('section','section '+labelClass(part.text));let h=node('h3','');h.dir='rtl';const num=headingNumber(part.text);if(num){h.classList.add('numbered-heading');h.append(node('span','heading-number',num.number+'.'));addBilingualText(h,num.label)}else addBilingualText(h,part.text);section.append(h);frag.append(section);current=section;continue;}if(!current){sectionNumber++;current=node('section','section intro');current.append(node('h3','','מה נלמד בשיעור הזה?'));frag.append(current)}
 if(part.kind==='figure')addFigure(current,part.text,++figureNumber);else {let paragraph=part.text;
   // Make assessment independent of a PDF figure not yet available in the preview.
-  if(selected===0)paragraph=paragraph.replace(/בהסתמך על איור\s*[,.:־–-]*\s*4[^.?!]*[.?!]/g,'בדוגמה שבה Open=100, High=107, Low=94, Close=100, מה ידוע לנו על הנר ומה אי אפשר לדעת עדיין לגבי הנר הבא?');
+  if(selected===0)paragraph=paragraph.replace(/בהסתמך על איור\s*[,.:־–-]*\s*4\s*[,.:־–-]*\s*כתבו[^.?!]*[.?!]/g,'בדוגמה שבה Open=100, High=107, Low=94, Close=100, מה ידוע לנו על הנר ומה אי אפשר לדעת עדיין לגבי הנר הבא?');
   addContent(current,paragraph);
  }}return {fragment:frag,figureNumber,sectionNumber}}
 async function openLesson(index){if(index<0||index>=12)return;selected=index;let buttons=nav.querySelectorAll('button');buttons.forEach((button,i)=>button.classList.toggle('selected',i===index));host.replaceChildren(node('p','status','טוען את שיעור 4.'+(index+1)+'...'));let source=sources[index],raw;
