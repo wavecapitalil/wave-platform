@@ -21,6 +21,41 @@ BAR_CHARTS = [chart for chart in CHARTS if chart.get('type') == 'bars']
 TIME_CHARTS = [chart for chart in CHARTS if chart.get('type') in ('line', 'stacked')]
 
 
+async def theme_details(page):
+    return await page.evaluate(r"""() => {
+      const article = document.querySelector('.brief-paper');
+      const rgb = c => c.match(/[\d.]+/g).slice(0,3).map(Number);
+      const lum = values => values.reduce((sum,v,i) => {
+        v/=255; return sum+[.2126,.7152,.0722][i]*(v<=.04045?v/12.92:((v+.055)/1.055)**2.4);
+      },0);
+      const ratio = color => (lum(rgb(color))+.05)/(lum([10,10,15])+.05);
+      const selectors=['.brief-story h1','.brief-deck','.brief-edition-line','.brief-kicker','.brief-story-body','.brief-chart-period','.brief-chart-detail'];
+      return {background:getComputedStyle(article).backgroundColor,
+        text:selectors.filter(s=>article.querySelector(s)).map(s=>({selector:s,contrast:ratio(getComputedStyle(article.querySelector(s)).color)})),
+        marks:[...article.querySelectorAll('.brief-bar')].map(el=>ratio(getComputedStyle(el).backgroundColor)),
+        imageFilter:[...article.querySelectorAll('img')].map(el=>getComputedStyle(el).filter)};
+    }""")
+
+
+async def reader_geometry(page):
+    return await page.evaluate("""() => {
+      const rail = document.querySelector('.brief-reader-rail');
+      const next = document.querySelector('.brief-next-chapter');
+      const pane = document.querySelector('#briefArticle').closest('.main') || document.scrollingElement;
+      const rect = el => { const r = el.getBoundingClientRect(); return {
+        top:r.top,bottom:r.bottom,left:r.left,right:r.right,width:r.width,height:r.height}; };
+      const r = next.getBoundingClientRect();
+      const hit = document.elementFromPoint(r.left+r.width/2,r.top+r.height/2);
+      return {viewport:{width:innerWidth,height:innerHeight},rail:rect(rail),next:rect(next),pane:rect(pane),
+        scroll:{top:pane.scrollTop,height:pane.scrollHeight,client:pane.clientHeight},
+        railStyle:{position:getComputedStyle(rail).position,top:getComputedStyle(rail).top,
+          overflowY:getComputedStyle(rail).overflowY,maxHeight:getComputedStyle(rail).maxHeight},
+        selected:[...document.querySelectorAll('.brief-contents button')].findIndex(b=>b.hasAttribute('aria-current')),
+        nextDisabled:next.disabled,centerHit:hit ? {tag:hit.tagName,className:hit.className,text:hit.textContent.slice(0,100)} : null,
+        nextReceivesCenter:!!hit && (hit===next || next.contains(hit))};
+    }""")
+
+
 async def check(browser, label, width, height):
     context = await browser.new_context(viewport={'width': width, 'height': height}, has_touch=width <= 1024)
     await context.add_init_script("localStorage.setItem('wc_lang','en')")  # these checks assert the English UI
@@ -60,19 +95,11 @@ async def check(browser, label, width, height):
     first_text = next(p['text'] for section in SECTIONS for p in section['paragraphs'] if p['kind'] == 'text')
     assert selected == first_text
     await page.evaluate('getSelection().removeAllRanges()')
-    theme=await page.evaluate(r"""() => {
-      const article = document.querySelector('.brief-paper');
-      const rgb = c => c.match(/[\d.]+/g).slice(0,3).map(Number);
-      const lum = values => values.reduce((sum,v,i) => {
-        v/=255; return sum+[.2126,.7152,.0722][i]*(v<=.04045?v/12.92:((v+.055)/1.055)**2.4);
-      },0);
-      const ratio = color => (lum(rgb(color))+.05)/(lum([10,10,15])+.05);
-      const selectors=['.brief-story h1','.brief-deck','.brief-edition-line','.brief-kicker','.brief-story-body','.brief-chart-period','.brief-chart-detail'];
-      return {background:getComputedStyle(article).backgroundColor,
-        text:selectors.map(s=>({selector:s,contrast:ratio(getComputedStyle(article.querySelector(s)).color)})),
-        marks:[...article.querySelectorAll('.brief-bar')].map(el=>ratio(getComputedStyle(el).backgroundColor)),
-        imageFilter:[...article.querySelectorAll('img')].map(el=>getComputedStyle(el).filter)};
-    }""")
+    theme=await theme_details(page)
+    expected_text={'.brief-story h1','.brief-edition-line','.brief-kicker','.brief-story-body'}
+    if any(section.get('lead') for section in SECTIONS): expected_text.add('.brief-deck')
+    if BAR_CHARTS or TIME_CHARTS: expected_text.update({'.brief-chart-period','.brief-chart-detail'})
+    assert {item['selector'] for item in theme['text']} == expected_text, theme
     assert theme['background']=='rgba(0, 0, 0, 0)',theme
     assert all(item['contrast']>=4.5 for item in theme['text']),theme
     assert all(ratio>=4.5 for ratio in theme['marks']),theme
@@ -107,7 +134,8 @@ async def check(browser, label, width, height):
         assert TIME_CHARTS[0]['labels'][0] in await time_chart.locator('.brief-chart-detail').inner_text()
         await page.keyboard.press('End')
         assert TIME_CHARTS[0]['labels'][-1] in await time_chart.locator('.brief-chart-detail').inner_text()
-    await page.locator('.brief-interactive').first.scroll_into_view_if_needed()
+    if BAR_CHARTS or TIME_CHARTS:
+        await page.locator('.brief-interactive').first.scroll_into_view_if_needed()
     await page.screenshot(path=str(OUT/f'{label}-interactive.png'))
     await page.locator('.brief-contents button').last.click()
     await page.wait_for_function("document.querySelector('.brief-contents button:last-child').getAttribute('aria-current') === 'location'")
@@ -118,14 +146,39 @@ async def check(browser, label, width, height):
     await page.screenshot(path=str(OUT/f'{label}-reader-at-end.png'))
     await page.locator('.brief-contents button').first.click()
     await page.wait_for_function("document.querySelector('.brief-contents button:first-child').getAttribute('aria-current') === 'location'")
-    await page.locator('.brief-next-chapter').click()
+    # Capture geometry without forcing the click or disabling smooth scrolling.
+    # Keep the pre-click trace on disk even when Playwright times out.
+    click_trace={'viewport':label,'before':await reader_geometry(page)}
+    trace_path=OUT/f'{label}-next-chapter-geometry.json'
+    trace_path.write_text(json.dumps(click_trace,ensure_ascii=False,indent=2))
+    if width > 1000:
+        geometry=click_trace['before']
+        assert geometry['rail']['height'] <= geometry['scroll']['client']-32+2, geometry
+        assert geometry['next']['top'] >= geometry['pane']['top'], geometry
+        assert geometry['next']['bottom'] <= geometry['pane']['bottom'], geometry
+        assert not geometry['nextDisabled'], geometry
+    try:
+        await page.locator('.brief-next-chapter').click()
+    except Exception as error:
+        click_trace['error']=str(error)
+        click_trace['after_failure']=await reader_geometry(page)
+        click_trace['settling_samples']=[]
+        for _ in range(5):
+            await page.wait_for_timeout(100)
+            click_trace['settling_samples'].append(await reader_geometry(page))
+        trace_path.write_text(json.dumps(click_trace,ensure_ascii=False,indent=2))
+        await page.screenshot(path=str(OUT/f'{label}-next-chapter-failure.png'))
+        raise
+    click_trace['after_click']=await reader_geometry(page)
+    trace_path.write_text(json.dumps(click_trace,ensure_ascii=False,indent=2))
     await page.wait_for_function("document.querySelector('.brief-contents button:nth-child(2)').getAttribute('aria-current') === 'location'")
     await page.locator('.brief-story').last.scroll_into_view_if_needed()
     await page.screenshot(path=str(OUT/f'{label}-risk.png'))
     # Source details remain reachable from the article itself.
     await page.locator('.brief-source-link').click()
-    assert await page.locator('#page-sources').is_visible()
-    source_card=page.locator('.sources-card').filter(has_text='בריף הבוקר · '+date_text)
+    assert await page.locator('#page-data-log').is_visible()
+    source_card=page.locator('#dataLogContent tbody tr').filter(has_text='בריף הבוקר · '+date_text)
+    assert await source_card.count()==1
     assert await source_card.locator('a').count()==len(EDITION['sources'])
     assert EDITION['methodology'] in await source_card.text_content()
     await page.evaluate("navigate('brief'); navigate('brief'); navigate('home'); navigate('brief')")
@@ -153,6 +206,14 @@ async def check(browser, label, width, height):
         'revision':hashlib.sha256(archived_bytes).hexdigest()}))
     await page.evaluate('WaveBrief.reload()')
     await page.wait_for_function("document.querySelector('.brief-series-svg path') !== null")
+    # The fixed archive guarantees every optional text style, including lead/deck,
+    # is still contrast-tested even when today's edition omits that structure.
+    archived_theme=await theme_details(page)
+    assert {item['selector'] for item in archived_theme['text']} == {
+        '.brief-story h1','.brief-deck','.brief-edition-line','.brief-kicker',
+        '.brief-story-body','.brief-chart-period','.brief-chart-detail'}, archived_theme
+    assert all(item['contrast']>=4.5 for item in archived_theme['text']), archived_theme
+    assert all(ratio>=4.5 for ratio in archived_theme['marks']), archived_theme
     assert await page.locator('.brief-contents button').count()==9
     assert await page.locator('.brief-reader-rail').count()==1
     await page.locator('.brief-time-series').first.scroll_into_view_if_needed()
@@ -161,7 +222,7 @@ async def check(browser, label, width, height):
     await page.locator('.brief-chart-slider').first.focus()
     await page.keyboard.press('Home')
     assert '01.10.2026 05:00 UTC' in await page.locator('.brief-series-detail').first.inner_text()
-    report={'viewport':label,'theme':theme,'size':[width,height],'passed':True,'layout':layout,'isolated_external_errors':errors}
+    report={'viewport':label,'theme':theme,'archived_theme':archived_theme,'size':[width,height],'passed':True,'layout':layout,'isolated_external_errors':errors}
     await context.close()
     return report
 

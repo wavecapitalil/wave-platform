@@ -48,7 +48,7 @@ test('signed net share change edits forecast shares without acknowledgement bloc
  const a=app(),old=a.output('shares',4);a.input('shareGrowth',0,-9);assert.notEqual(a.output('shares',4),old);assert.doesNotMatch(a.output('price',0),/—/);
 });
 test('Microsoft actual CP missing stays blank, explicit forecast zero and lease debt populate',()=>{
- const a=app();a.click({'data-company':'MSFT'});assert.match(a.byId.get('vw-thead').html,/FY2022A/);assert.match(a.byId.get('vw-thead').html,/FY2026A/);assert.match(a.byId.get('vw-tbody').html,/331,839/);assert.equal(a.byId.get('vw-cell-shortDebt-0').value,'0');assert.equal(a.byId.get('vw-cell-leases-0').value,'66594');assert.match(a.byId.get('vw-summary-base').textContent,/\$/);assert.match(a.byId.get('vw-debt-note').textContent,/הנחת 0/);
+ const a=app();a.click({'data-company':'MSFT'});assert.match(a.byId.get('vw-thead').html,/FY2022A/);assert.match(a.byId.get('vw-thead').html,/FY2026A/);assert.match(a.byId.get('vw-tbody').html,/331,839/);assert.equal(a.byId.get('vw-cell-shortDebt-0').value,'0');assert.equal(a.byId.get('vw-cell-leases-0').value,'66594');assert.match(a.byId.get('vw-summary-base').textContent,/\$/);assert.equal(a.byId.get('vw-debt-note').textContent,'');assert.match(a.sourceRecords.get('guide:equity-valuation')[2],/נתון היסטורי חסר של ניירות מסחר נשאר ריק/);assert.match(a.sourceRecords.get('guide:equity-valuation')[2],/הנחת אפס מפורשת הניתנת לעריכה/);
 });
 test('zero/negative operating margin removes price but not revenue or share forecasts',()=>{
  const a=app();a.input('margin',0,-5);assert.match(a.output('price',0),/—/);assert.doesNotMatch(a.output('revenue',0),/—/);assert.doesNotMatch(a.output('shares',0),/—/);assert.doesNotMatch(a.output('price',1),/—/);
@@ -98,7 +98,7 @@ test('missing reference price/date never fabricates an upside',()=>{
 test('dated manual reference updates all comparisons, never modeled prices',()=>{
  const a=app(),before=['bull','base','bear'].map(id=>a.byId.get('vw-summary-'+id).textContent);a.reference(200,'2020-01-01');
  for(const [i,id] of ['bull','base','bear'].entries()){assert.equal(a.byId.get('vw-summary-'+id).textContent,before[i]);assert.match(a.byId.get('vw-upside-'+id).textContent,/%/);}
- assert.match(a.byId.get('vw-upside-base').textContent,/\+8.5%/);assert.match(a.byId.get('vw-reference-summary').textContent,/2020-01-01/);assert.match(a.byId.get('vw-reference-summary').textContent,/הזנה ידנית/);assert.match(a.byId.get('vw-change-sentence').textContent,/משנה רק את הפער/);
+ assert.match(a.byId.get('vw-upside-base').textContent,/\+8.5%/);assert.equal(a.byId.get('vw-reference-summary').textContent,'$200');assert.match(a.sourceRecords.get('valuation-reference:AAPL')[2],/2020-01-01/);assert.match(a.sourceRecords.get('valuation-reference:AAPL')[2],/הזנה ידנית/);assert.match(a.byId.get('vw-change-sentence').textContent,/משנה רק את הפער/);
 });
 test('invalid amounts, impossible dates and future dates suppress comparisons',()=>{
  for(const [amount,date] of [[0,'2020-01-01'],[-1,'2020-01-01'],['Infinity','2020-01-01'],[200,'2020-02-30'],[200,'2999-01-01']]){const a=app();a.reference(amount,date);assert.match(a.byId.get('vw-upside-base').textContent,/ללא מחיר/);}
@@ -111,11 +111,11 @@ test('company switch clears manual reference and date instead of leaking prior s
 });
 test('provider price uses its own timestamp, and clearing it never restores it silently',()=>{
  const data=JSON.parse(JSON.stringify(snapshots)),asof=new Date(Date.now()-60000).toISOString();data.snapshots.AAPL.fields.current_price={status:'ok',value:250,unit:'USD/share',as_of:asof,source:'Verified test provider',url:'https://example.com/quote'};
- const a=app({snapshots:data});assert.equal(a.byId.get('vw-reference-price').value,250);assert.ok(a.byId.get('vw-reference-source').textContent.includes(asof));assert.match(a.byId.get('vw-upside-base').textContent,/%/);a.byId.get('vw-reference-clear').handlers.click();assert.equal(a.byId.get('vw-reference-price').value,'');assert.match(a.byId.get('vw-upside-base').textContent,/ללא מחיר/);
+ const a=app({snapshots:data});assert.equal(a.byId.get('vw-reference-price').value,250);assert.equal(a.byId.get('vw-reference-source').textContent,'');const provenance=a.sourceRecords.get('valuation-reference:AAPL');assert.ok(provenance[2].includes(asof));assert.match(provenance[2],/Verified test provider/);assert.equal(provenance[3][0].url,'https://example.com/quote');assert.match(a.byId.get('vw-upside-base').textContent,/%/);a.byId.get('vw-reference-clear').handlers.click();assert.equal(a.byId.get('vw-reference-price').value,'');assert.match(a.byId.get('vw-upside-base').textContent,/ללא מחיר/);
 });
 test('provider override requires manual date and cannot reuse snapshot retrieval date',()=>{
  const data=JSON.parse(JSON.stringify(snapshots));data.snapshots.AAPL.fields.current_price={status:'ok',value:250,unit:'USD/share',as_of:new Date(Date.now()-60000).toISOString(),source:'Test'};
- const a=app({snapshots:data});a.reference(200);assert.equal(a.byId.get('vw-reference-date').value,'');assert.match(a.byId.get('vw-upside-base').textContent,/ללא מחיר/);assert.match(a.byId.get('vw-reference-source').textContent,/הזנה ידנית/);
+ const a=app({snapshots:data});a.reference(200);assert.equal(a.byId.get('vw-reference-date').value,'');assert.match(a.byId.get('vw-upside-base').textContent,/ללא מחיר/);assert.equal(a.byId.get('vw-reference-source').textContent,'');const provenance=a.sourceRecords.get('valuation-reference:AAPL');assert.match(provenance[2],/הזנה ידנית; לא אומת באופן עצמאי/);assert.match(provenance[2],/תאריך המחיר: לא ידוע/);assert.equal(provenance[3].length,0);
  data.snapshots.AAPL.fields.current_price.as_of=null;const b=app({snapshots:data});assert.equal(b.byId.get('vw-reference-price').value,'');
 });
 test('nonpositive terminal EBIT explanation does not invent missing inputs',()=>{

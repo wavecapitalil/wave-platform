@@ -40,19 +40,19 @@ async def check(browser, label, width, height):
     bounds=await panel.locator('svg').evaluate('e=>({w:e.viewBox.baseVal.width,labels:[...e.querySelectorAll("text")].map(t=>({text:t.textContent,x:t.getBBox().x,right:t.getBBox().x+t.getBBox().width}))})')
     assert all(t['x']>=0 and t['right']<=bounds['w'] for t in bounds['labels']),bounds
     assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
-    assert 'own institution' in await panel.inner_text()
-    assert '2023 · “Don’t know” removed' in await panel.inner_text()
+    assert 'Own-institution expectations' in await panel.locator('.gold-expectations-detail').inner_text()
+    assert 'Own-institution gold reserve expectations' in await panel.locator('svg').get_attribute('aria-label')
     await panel.locator('button').filter(has_text='2020').click()
     assert not await panel.locator('.gold-expectations-rounding').count()
-    assert not await panel.locator('.gold-expectations-metadata').get_attribute('open')
-    await panel.locator('summary').click()
-    assert 'Published total: 101%' in await panel.inner_text()
-    assert '20%' in await panel.inner_text()
+    assert not await panel.locator('.gold-expectations-metadata, summary').count()
+    shares=await panel.locator('.gold-expectations-response strong').all_text_contents()
+    assert shares==['20%','57%','4%','20%']
+    assert sum(float(value.rstrip('%')) for value in shares)==101
     await panel.locator('button').filter(has_text='2023').focus()
     await page.keyboard.press('Enter')
-    await panel.locator('summary').click()
-    assert 'Published total: 99%' in await panel.inner_text()
-    assert 'Not offered' in await panel.inner_text()
+    shares=await panel.locator('.gold-expectations-response strong').all_text_contents()
+    assert shares==['24%','72%','3%','Not offered']
+    assert sum(float(value.rstrip('%')) for value in shares[:3])==99
     await panel.locator('button').last.click()
     await panel.evaluate('e=>e.scrollIntoView({block:"start"})')
     await page.screenshot(path=str(OUT/f'{label}-chart-top.png'))
@@ -64,7 +64,24 @@ async def check(browser, label, width, height):
     await page.evaluate("navigate('sources')")
     source=page.locator('.sources-card').filter(has_text='Central-bank gold expectations')
     assert await source.locator('a').count()>=len(DATA['rows'])
-    assert 'OWN institution' in await source.inner_text()
+    source_text=await source.inner_text()
+    assert 'OWN institution' in source_text
+    assert 'next 12 months' in source_text
+    assert 'not tonnes or forecasts of aggregate demand' in source_text
+    assert 'not the separate question about expected global central-bank reserves' in source_text
+    assert DATA['comparabilityNote'] in source_text
+    assert '2020 sum 101%, 2023 sum 99%' in source_text
+    assert 'incomplete bars are not normalized' in source_text
+    source_urls=await source.locator('a').evaluate_all('(links)=>links.map(link=>link.href)')
+    assert all(row['sourceUrl'] in source_urls for row in DATA['rows'])
+    survey_log=await page.evaluate("WaveDataLog.list().find(e=>e.section==='Commodities · Gold expectations'&&e.metric==='2023 · Own-institution survey')")
+    assert survey_log['source']=='World Gold Council / YouGov'
+    assert survey_log['pulledAt']==DATA['asOf']
+    assert survey_log['coverage']=='Question n not verified · survey n=59'
+    assert 'Fieldwork 2023-02-07 to 2023-04-07' in survey_log['notes']
+    assert 'Not offered: dontKnow' in survey_log['notes']
+    assert 'The Don’t know answer option was removed in 2023.' in survey_log['notes']
+    assert survey_log['links'][0]['url']==next(row['sourceUrl'] for row in DATA['rows'] if row['year']==2023)
     await page.evaluate("navigate('commodities');navigate('welcome');navigate('commodities')")
     assert await panel.locator('svg').count()==1
     assert await page.locator('#page-commodities').is_visible()
@@ -78,8 +95,8 @@ async def check(browser, label, width, height):
         await button.tap()
     else:
         await button.click()
-    await panel.locator('summary').click()
-    assert 'סכום האחוזים שפורסם: 101%' in await panel.inner_text()
+    assert '2020 · ציפיות לגבי המוסד עצמו' in await panel.locator('.gold-expectations-detail').inner_text()
+    assert await panel.locator('.gold-expectations-response strong').all_text_contents()==['20%','57%','4%','20%']
     assert 'הגדלה' in await panel.inner_text()
     assert await panel.locator('svg').get_attribute('direction')=='ltr'
     he_bounds=await panel.locator('svg').evaluate('e=>({w:e.viewBox.baseVal.width,labels:[...e.querySelectorAll("text")].map(t=>({text:t.textContent,x:t.getBBox().x,right:t.getBBox().x+t.getBBox().width}))})')
@@ -92,11 +109,13 @@ async def check(browser, label, width, height):
     await page.evaluate("navigate('sources')")
     he_source=page.locator('.sources-card').filter(has_text='ציפיות הבנקים המרכזיים לזהב')
     assert await he_source.locator('a').count()>=len(DATA['rows'])
+    assert 'סכומים של 99% או 101% משקפים עיגול' in await he_source.inner_text()
+    assert 'האפשרות לא יודע הוסרה מהשאלה על המוסד עצמו ב־2023' in await he_source.inner_text()
     await page.evaluate("navigate('commodities');setLang('en')")
     assert await panel.get_attribute('dir')=='ltr'
     assert 'Central-bank gold expectations' in await panel.inner_text()
-    await panel.locator('summary').click()
-    assert 'Published total: 101%' in await panel.inner_text()
+    assert '2020 · Own-institution expectations' in await panel.locator('.gold-expectations-detail').inner_text()
+    assert await panel.locator('.gold-expectations-response strong').all_text_contents()==['20%','57%','4%','20%']
     # A failed initial load is recoverable by explicit Retry.
     await page.route('**/data/gold-expectations.json',lambda r:r.fulfill(status=503,body='unavailable'))
     await page.reload(wait_until='load')

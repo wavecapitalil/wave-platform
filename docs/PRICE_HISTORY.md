@@ -2,9 +2,9 @@
 
 ## Scope
 
-The Company Research view includes a daily-close price chart for the selected ticker with 1M, 3M, 6M, 1Y and 5Y windows. The existing company header is retained. Numbered chart markers and keyboard/touch-operable event cards link directly to the original publication.
+The Company Research price/event chart is fixed to a trailing three-calendar-year window and daily candles. Range and Daily/Weekly selectors are removed. Daily close lines remain the explicit fallback when verified OHLC components are incomplete; no candles are fabricated. The company header, event-category filter and touch/hover event dots remain available.
 
-`GET /api/price-history?symbol=AAPL&range=1y` is handled by the Supabase `wave-data` service. A Flask proxy preserves the local application route. No account, paid provider, additional secret, database table, or permission change is required.
+`GET /api/price-history?symbol=AAPL&range=3y` is handled by the Supabase `wave-data` service. A Flask proxy preserves the local application route. No account, paid provider, additional secret, database table, or permission change is required.
 
 ## Honest coverage
 
@@ -31,15 +31,15 @@ Arithmetic is declared in the read-only `PRICE_HISTORY_DEFINITIONS` registry in 
 - Symbol/range allowlists, bounded provider timeouts and response sizes, short bounded server cache
 - Exact-symbol checks, finite positive price checks and safe HTTPS article links
 - No source HTML is rendered; text is escaped
-- Abort plus generation guards for repeated ticker/range selection; stale research headers, ownership, peers, analyst and insider responses cannot overwrite a newer selection
+- Abort plus generation guards for repeated ticker selection; stale research headers, ownership, peers, analyst and insider responses cannot overwrite a newer selection
 - Retry and no-event paths retain explicit states; no last-ticker chart is silently substituted
 - Chart.js is already a pinned dependency in the Terminal shell; no additional runtime package
 
 ## Validation
 
-`node --test scripts/price_history_test.mjs` covers request validation, strict null behavior, split adjustment, incomplete sessions, timezone/DST/weekend/date-only/early-close alignment, direct links, duplicates, ticker filtering, stale/unavailable news, benchmark compatibility, marker selection/spacing/caps and range clipping.
+`node --test scripts/price_history_test.mjs` covers request validation, strict null behavior, split adjustment, incomplete sessions, timezone/DST/weekend/date-only/early-close alignment, direct links, duplicates, ticker filtering, stale/unavailable news, benchmark compatibility, event selection and range clipping, including 36-calendar-month leap-day and exchange-timezone boundaries. Summary, event indices and visible points use the same clipped window.
 
-`python scripts/price_history_browser_qa.py` is a deterministic full-shell Chromium suite using clearly isolated test fixtures. It covers desktop, iPad landscape/portrait and phone, marker/card selection, keyboard, range switching, repeated stock requests, late responses, failed prices/retry, empty events, mismatched ticker rejection and centralized Sources navigation. The GitHub workflow installs Chromium and publishes screenshots/report.
+`python scripts/price_history_browser_qa.py` is a deterministic full-shell Chromium suite using clearly isolated test fixtures. It covers desktop, iPad landscape/portrait and phone, event-dot tooltips, daily-only rendering, absent range/interval controls, fixed 3y requests, repeated stock requests, late responses, failed prices/retry, empty events, mismatched ticker rejection and centralized Sources navigation. The fixture spans three years and supplies test-only OHLC, so the suite verifies the daily-candle path rather than only a line fallback. The GitHub workflow installs Chromium and publishes screenshots/report.
 
 Local Chromium may be blocked by sandbox Unix-socket restrictions; this is a never-run browser stage rather than a pass. Complete CI before rollout. Live provider checks are separate from synthetic-fixture UI tests.
 

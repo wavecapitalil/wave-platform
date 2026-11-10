@@ -232,6 +232,21 @@ async def assert_layout(page):
     return layout
 
 
+async def chart_provenance(page):
+    # Explanations belong in the centralized Data Log, not chart cells.
+    return await page.evaluate("""() => {
+      const title = document.getElementById('fcChartTitle').textContent;
+      const entries = WaveDataLog.list().filter(e =>
+        e.section === 'Equity Research · Charts' && e.metric === title);
+      if (entries.length !== 1) throw new Error('Expected one current chart provenance record');
+      WaveDataLog.render();
+      const row = Array.from(document.querySelectorAll('#dataLogContent tbody tr'))
+        .find(r => r.cells[0].textContent === entries[0].section && r.cells[1].textContent === title);
+      if (!row) throw new Error('Chart provenance is not rendered in Data Log');
+      return row.textContent;
+    }""")
+
+
 async def range_from(page, lo):
     slider = page.locator("#fcRangeMin")
     await slider.focus()
@@ -332,20 +347,20 @@ async def exhaustive(page, router):
     equal_values(await values(page), [None, 20])
     result["52_53_week_date_shift"] = await values(page)
 
-    # Negative earnings bases and zero/missing bases carry visible N/A reasons.
+    # Negative/zero/missing bases stay N/A; explanations remain accessible in Data Log.
     await load(page, "EDGE", metrics=("net_income",), mode="growth")
     equal_values(await values(page), [None, None, None, None, -150, None, None])
     edge = await table_details(page)
-    detail = json.dumps(edge).lower()
+    detail = (await chart_provenance(page)).lower()
     for expected_reason in (r"loss|negative", r"zero", r"missing|unavailable|not available"):
         assert re.search(expected_reason, detail), edge
     assert "-150" in edge["text"], edge
-    assert not re.search(r"(?<![a-z])(?:nan|infinity)(?![a-z])", detail), edge
+    assert not re.search(r"(?<![a-z])(?:nan|infinity)(?![a-z])", detail + json.dumps(edge).lower()), edge
     result["negative_zero_missing"] = edge
     await load(page, "LOSS", metrics=("net_income",), mode="growth")
     equal_values(await values(page), [None, None])
     loss = await table_details(page)
-    assert re.search(r"loss.to.profit|turnaround|negative", json.dumps(loss), re.I), loss
+    assert re.search(r"loss.to.profit|turnaround|negative", await chart_provenance(page), re.I), loss
     result["loss_to_profit"] = loss
 
     # Mixed dollars, EPS and margins use distinguishable axes in Value mode;
@@ -510,15 +525,17 @@ async def check(browser, base, chart_bytes, name, width, height, touch):
         # explained full-year reporting status, not a false missing-data error.
         await load(page, "RPAPPLE", second="RPNVDA", mode="growth")
         details = await table_details(page)
-        assert "Full-year report pending" in details["text"], details
-        assert "FY2026 Q3" in details["text"] and "2026-06-27" in details["text"], details
-        assert "FY2026 · ended 2026-01-25" in details["text"], details
-        status = await page.locator("#fcDataStatus").inner_text()
+        provenance = await chart_provenance(page)
+        assert "N/A" in details["text"], details
+        assert "Full-year report pending" in provenance, provenance
+        assert "FY2026 Q3" in provenance and "2026-06-27" in provenance, details
+        assert "FY2026 · ended 2026-01-25" in provenance, provenance
+        status = provenance
         assert "full-year report is not yet available" in status and "different fiscal-year end dates" in status, status
         assert await values(page) == [None, (416161000000 / 391035000000 - 1) * 100, None]
         assert (await values(page, 1))[-1] > 65
         report["reporting_status"] = {"status": status, "table": details, "layout": await assert_layout(page)}
-        await page.locator("#fcDataStatus").scroll_into_view_if_needed()
+        await page.locator("#fcTable").scroll_into_view_if_needed()
         await page.screenshot(path=str(OUT / f"{name}-reporting-status.png"), full_page=True)
         assert not errors, errors
         report.update({"passed": True, "page_errors": errors, "financial_requests": router.requests,

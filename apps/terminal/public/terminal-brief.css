@@ -100,3 +100,11 @@
  .brief-reader-rail{grid-template-columns:minmax(0,1fr) auto}
  .brief-reader-rail .brief-contents{min-width:0}
 }
+
+/* Keep chapter navigation reachable when a long edition exceeds the pane. */
+@media(min-width:1001px){
+ .brief-reader-rail{max-height:var(--brief-reader-max-height);box-sizing:border-box;display:flex;flex-direction:column}
+ .brief-reader-rail .brief-contents{min-height:0;overflow-y:auto;flex:1 1 auto;flex-wrap:nowrap;justify-content:flex-start}
+ .brief-reader-rail .brief-contents button{flex-shrink:0}
+ .brief-reader-rail>.brief-progress-title,.brief-reader-rail>.brief-progress-label,.brief-reader-rail>.brief-progress,.brief-reader-rail>.brief-next-chapter{flex-shrink:0}
+}

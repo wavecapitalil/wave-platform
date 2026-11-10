@@ -1,8 +1,8 @@
 // Company Research price history. Provider matching/calculations stay server-side.
 (function(){
   'use strict';
-  var state={symbol:'',range:'1y',request:0,controller:null,chart:null,data:null,interval:'daily',category:'all'};
-  var ranges=[['1mo','1M'],['3mo','3M'],['6mo','6M'],['1y','1Y'],['5y','5Y']];
+  var PRICE_RANGE='3y';
+  var state={symbol:'',request:0,controller:null,chart:null,data:null,category:'all'};
   function el(id){return document.getElementById(id);}
   function text(en,he){return typeof getLang==='function'&&getLang()==='he'?he:en;}
   function esc(value){return String(value==null?'':value).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -20,11 +20,9 @@
   function destroy(){if(window.WaveCatalystChart)WaveCatalystChart.hideTip();if(state.chart){state.chart.destroy();state.chart=null;}}
   function setup(){
     var host=el('resPriceHistory');if(!host)return false;
-    if(el('ph-ranges'))return true;
-    host.innerHTML='<div class="ph-header"><div><h2>'+text('Price','מחיר')+'</h2><div id="ph-period" class="ph-period"></div></div><div id="ph-ranges" class="ph-ranges" role="group" aria-label="'+text('Price history timeframe','טווח גרף המחיר')+'">'+ranges.map(function(r){return '<button type="button" data-ph-range="'+r[0]+'" aria-pressed="'+(r[0]===state.range)+'">'+r[1]+'</button>';}).join('')+'</div><div class="ph-interval" role="group" aria-label="Candle interval"><button type="button" data-ph-interval="daily" aria-pressed="true">Daily</button><button type="button" data-ph-interval="weekly" aria-pressed="false">Weekly</button></div></div><div id="ph-status" class="ph-status" role="status" aria-live="polite"></div><div id="ph-body" hidden><div class="ph-summary"><div><span id="ph-latest"></span><span id="ph-change"></span></div><div id="ph-basis"></div></div><label class="ph-filter">'+text('Event category','סוג אירוע')+' <select id="ph-category"><option value="all">'+text('All','הכל')+'</option></select></label><div class="ph-chart-wrap"><canvas id="ph-chart" role="img" aria-label="'+text('Price chart','גרף מחיר')+'"></canvas></div></div>';
+    if(host.querySelector('#ph-chart'))return true;
+    host.innerHTML='<div class="ph-header"><div><h2>'+text('Price','מחיר')+'</h2><div id="ph-period" class="ph-period"></div></div></div><div id="ph-status" class="ph-status" role="status" aria-live="polite"></div><div id="ph-body" hidden><div class="ph-summary"><div><span id="ph-latest"></span><span id="ph-change"></span></div><div id="ph-basis"></div></div><label class="ph-filter">'+text('Event category','סוג אירוע')+' <select id="ph-category"><option value="all">'+text('All','הכל')+'</option></select></label><div class="ph-chart-wrap"><canvas id="ph-chart" role="img" aria-label="'+text('Price chart','גרף מחיר')+'"></canvas></div></div>';
     host.addEventListener('click',function(event){
-      var interval=event.target.closest('[data-ph-interval]');if(interval){state.interval=interval.dataset.phInterval;if(state.data)render(state.data);return;}
-      var r=event.target.closest('[data-ph-range]');if(r){if(r.dataset.phRange!==state.range){state.range=r.dataset.phRange;load(state.symbol);}return;}
       if(event.target.closest('#ph-retry')){load(state.symbol);return;}
     });
     host.addEventListener('change',function(e){if(e.target.id==='ph-category'){state.category=e.target.value;render(state.data);}});return true;
@@ -33,7 +31,7 @@
     state.symbol=String(symbol||'').trim().toUpperCase();state.request++;if(state.controller)state.controller.abort();state.controller=null;state.data=null;destroy();
     if(!setup())return;
     el('resPriceHistory').hidden=!state.symbol;
-    el('ph-body').hidden=true;el('ph-period').textContent=state.symbol;el('ph-status').textContent=text('Loading daily prices…','טוען מחירים יומיים…');
+    el('ph-body').hidden=true;el('ph-period').textContent=state.symbol+' · '+text('3 years · Daily','3 שנים · יומי');el('ph-status').textContent=text('Loading daily prices…','טוען מחירים יומיים…');
   }
   function toneFor(event, daily){
     if(!event.date||!Number.isInteger(event.index)||!daily)return 'neutral';
@@ -72,13 +70,12 @@
     var daily=data.points||[];
     data.events=(data.events||[]).filter(function(e){return url(e.url)&&e.title&&Number.isInteger(e.index)&&daily[e.index]&&finite(e.price);});
     var pending=(data.pending_events||[]).filter(function(e){return url(e.url)&&e.title;});
-    var points=state.interval==='weekly'?(data.weekly_candles||[]):daily,s=data.summary||{},last=daily[daily.length-1];
-    document.querySelectorAll('[data-ph-interval]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.phInterval===state.interval));});
-    if(!points.length){el('ph-status').textContent='Weekly candles unavailable from this backend. Select Daily.';return;}
+    var points=daily,s=data.summary||{},last=daily[daily.length-1];
+    if(!points.length){el('ph-status').textContent=text('Daily prices unavailable.','מחירים יומיים אינם זמינים.');return;}
     var hasCandles=points.every(function(p){return finite(p.open)&&finite(p.high)&&finite(p.low);});
     el('ph-status').textContent='';el('ph-body').hidden=false;
-    el('ph-chart').setAttribute('aria-label',data.symbol+' '+state.interval+' price');
-    el('ph-period').textContent=data.symbol;
+    el('ph-chart').setAttribute('aria-label',data.symbol+' daily price · 3 years');
+    el('ph-period').textContent=data.symbol+' · '+text('3 years · Daily','3 שנים · יומי');
     el('ph-latest').textContent=money(last.close);
     el('ph-change').textContent=pct(s.change_pct)+' '+text('in period','בתקופה');el('ph-change').className=finite(s.change_pct)?s.change_pct>=0?'ph-positive':'ph-negative':'';
     el('ph-basis').textContent=data.currency||'';
@@ -112,8 +109,7 @@
   }
   async function load(symbol){
     reset(symbol);if(!state.symbol||!el('resPriceHistory'))return;
-    var id=state.request,selected=state.symbol,range=state.range;
-    document.querySelectorAll('[data-ph-range]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.phRange===range));});
+    var id=state.request,selected=state.symbol,range=PRICE_RANGE;
     state.controller=new AbortController();var controller=state.controller,timer=setTimeout(function(){controller.abort();},30000);
     try{
       var response=await fetch(API+'/api/price-history?symbol='+encodeURIComponent(selected)+'&range='+encodeURIComponent(range),{signal:controller.signal});
