@@ -53,6 +53,7 @@ async def check(browser, name, width, height, lang):
         symbol = q.get("symbol", ["AAPL"])[0]
         selected_range = q.get("range", ["1y"])[0]
         if u.path.endswith("/api/price-history"):
+            settings["last_range"] = selected_range
             if settings["delay"] and symbol == "AAPL":
                 await asyncio.sleep(.8)
             if settings["failure"]:
@@ -84,6 +85,10 @@ async def check(browser, name, width, height, lang):
     assert await page.locator("#ph-events").count() == 0
     assert await page.locator("#ph-sources").count() == 0
     assert await page.locator("#ph-detail").count() == 0
+    assert await page.locator("[data-ph-range]").count() == 0
+    assert await page.locator("[data-ph-interval]").count() == 0
+    assert "1M" not in await page.locator("#resPriceHistory").inner_text()
+    assert "Weekly" not in await page.locator("#resPriceHistory").inner_text()
     assert "Company events" not in await page.locator("#resPriceHistory").inner_text()
     assert "Sources & methodology" not in await page.locator("#resPriceHistory").inner_text()
     metrics = await page.evaluate("""() => {const c=Chart.getChart('ph-chart'); const b=document.querySelector('#resPriceHistory').getBoundingClientRect(); return {scroll:document.documentElement.scrollWidth,viewport:innerWidth,width:b.width,canvas:c.width,points:c.data.datasets[0].data.length,events:(c.$dotPositions||[]).filter(d=>d.visible).length};}""")
@@ -108,8 +113,7 @@ async def check(browser, name, width, height, lang):
     assert "Fixture earnings release" in tip["text"], tip
     assert tip["inChart"] is False, tip
     await page.screenshot(path=str(OUT / (name + "-event-detail.png")), full_page=True)
-    await page.locator('[data-ph-range="1mo"]').click()
-    await page.wait_for_function("Chart.getChart('ph-chart') && document.querySelector('[data-ph-range=\"1mo\"]').getAttribute('aria-pressed')==='true'")
+    assert settings["last_range"] == "3y"
     # Late stock-info and chart responses cannot overwrite a newer stock.
     settings["delay"] = True
     await page.evaluate("researchTicker('AAPL'); researchTicker('MSFT')")
@@ -119,7 +123,7 @@ async def check(browser, name, width, height, lang):
     assert "MSFT" in await page.locator("#resNameLine").inner_text()
     settings["delay"] = False
     settings["failure"] = True
-    await page.locator('[data-ph-range="3mo"]').click()
+    await page.evaluate("WavePriceHistory.load('MSFT')")
     await page.locator("#ph-retry").wait_for()
     assert await page.locator("#ph-body").is_hidden()
     assert await page.evaluate("Chart.getChart('ph-chart')===undefined")
@@ -141,7 +145,7 @@ async def check(browser, name, width, height, lang):
     settings["currency"] = "USD"
     # Wrong-symbol responses fail closed.
     settings["mismatch"] = True
-    await page.locator('[data-ph-range="6mo"]').click()
+    await page.evaluate("WavePriceHistory.load('VOD.L')")
     await page.locator("#ph-retry").wait_for()
     assert await page.locator("#ph-body").is_hidden()
     settings["mismatch"] = False

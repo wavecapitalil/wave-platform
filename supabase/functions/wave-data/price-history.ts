@@ -2,7 +2,7 @@ import { calculatePriceHistory } from './calculations.ts';
 import { materialCategory, eventSentiment } from './company-events.ts';
 import { REVIEWED_PRICE_EVENTS } from './reviewed-price-events.ts';
 
-export const PRICE_RANGES = ['1mo','3mo','6mo','1y','5y'] as const;
+export const PRICE_RANGES = ['1mo','3mo','6mo','1y','3y','5y'] as const;
 export type PriceRange = typeof PRICE_RANGES[number];
 type Fetcher = typeof fetch;
 export type ReviewedEvent = {id:string;symbols:string[];published_at:string;timing:'exact'|'date_only';title:string;summary:string;url:string;source:string;relationship:'reported_driver'|'context';reviewed_at:string;category?:string;effective_date?:string};
@@ -18,7 +18,7 @@ export function validatePriceRequest(symbol:unknown,range:unknown):{symbol:strin
  if(typeof symbol!=='string'||typeof range!=='string')throw new PriceHistoryError('A valid symbol and range are required',400);
  const clean=symbol.trim().toUpperCase();
  if(!/^[A-Z0-9^][A-Z0-9.^=-]{0,19}$/.test(clean))throw new PriceHistoryError('Invalid symbol',400);
- if(!PRICE_RANGES.includes(range as PriceRange))throw new PriceHistoryError('Range must be 1mo, 3mo, 6mo, 1y or 5y',400);
+ if(!PRICE_RANGES.includes(range as PriceRange))throw new PriceHistoryError('Range must be 1mo, 3mo, 6mo, 1y, 3y or 5y',400);
  return {symbol:clean,range:range as PriceRange};
 }
 function validTimezone(value:unknown):value is string{if(typeof value!=='string')return false;try{new Intl.DateTimeFormat('en',{timeZone:value}).format();return true;}catch{return false;}}
@@ -29,7 +29,7 @@ export function exchangeDate(epoch:number,timezone:string):string{
 function localMinutes(epoch:number,timezone:string):number{const p=new Intl.DateTimeFormat('en-GB',{timeZone:timezone,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(epoch));return Number(p.find(x=>x.type==='hour')?.value)*60+Number(p.find(x=>x.type==='minute')?.value);}
 export function rangeStartDate(now:number,range:PriceRange,timezone:string):string{
  const d=new Date(exchangeDate(now,timezone)+'T12:00:00Z'),day=d.getUTCDate();
- const months=({ '1mo':1,'3mo':3,'6mo':6,'1y':12,'5y':60 })[range];
+ const months=({ '1mo':1,'3mo':3,'6mo':6,'1y':12,'3y':36,'5y':60 })[range];
  d.setUTCDate(1);d.setUTCMonth(d.getUTCMonth()-months);const end=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,0)).getUTCDate();d.setUTCDate(Math.min(day,end));return d.toISOString().slice(0,10);
 }
 function usEarlyClose(date:string):boolean{

@@ -749,7 +749,7 @@ Deno.serve(async(req:Request)=>{
       const symbol=String(u.searchParams.get("symbol")||"").trim().toUpperCase();
       const range=u.searchParams.get("range")||"1y";
       if(!/^[A-Z0-9^][A-Z0-9.^=-]{0,19}$/.test(symbol))return json({error:"valid symbol required"},400);
-      if(!["1mo","3mo","6mo","1y","5y"].includes(range))return json({error:"unsupported range"},400);
+      if(!["1mo","3mo","6mo","1y","3y","5y"].includes(range))return json({error:"unsupported range"},400);
       let issuer=null;try{issuer=await secTickerRecord(symbol);}catch{/* Price remains available with explicit event coverage gaps. */}
       const companyEvents=collectCompanyEvents(symbol,issuer?.cik||null).catch(()=>({events:[],coverage:[{source:'Company event collector',status:'unavailable',gap:'Event sources unavailable; prices remain independently available.'}]}));
       return json(await collectPriceHistory(symbol,range,{companyEvents}),200,{"cache-control":"public, max-age=300","x-wave-source":"price-history"});
