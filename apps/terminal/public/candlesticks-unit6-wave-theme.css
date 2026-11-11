@@ -1,4 +1,4 @@
-/* Unit 6 WAVE approved design parity: navy canvas + left rail, restrained white reading area. */
+/* Unit 6 WAVE approved design parity: navy canvas + left rail, dark reading surface matching unit 5. */
 :root{color-scheme:dark}
 body{background:radial-gradient(circle at 77% 0%,#123451 0,#071d36 35%,#041224 75%,#030e1d 100%);color:#e8f3ff;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
 .course-top{background:#06192d;border-color:#244967;color:#edf7ff;box-shadow:0 3px 22px #0002}
@@ -9,23 +9,36 @@ body{background:radial-gradient(circle at 77% 0%,#123451 0,#071d36 35%,#041224 7
 .rail .lesson-link strong{font-size:13px;overflow-wrap:anywhere;line-height:1.55}
 .rail .lesson-link[aria-current=true]{background:#075ac5;border-color:#458fd7}
 .rail .lesson-link .num{font-variant-numeric:tabular-nums}
-.reading{background:#fbfdff;border:1px solid #bed6ec;color:#112d4e;border-radius:20px;box-shadow:0 20px 55px #020c1b44;padding:33px clamp(23px,4vw,52px) 50px}
-.reading h1{color:#09264a;line-height:1.4}
-.toolbar{border-color:#dceaf7;padding-bottom:17px}
-.toolbar button,.toolbar a{background:#eef6ff;border-color:#bed8ef;color:#124d85}
-.eyebrow{color:#1268b2}
-.intro{background:linear-gradient(120deg,#e9f5ff,#f5faff);border-color:#c6e0f8;border-right:4px solid #157fce;box-shadow:0 6px 22px #0a6cb009}
-.intro strong{color:#105d9d}
+.reading{background:linear-gradient(145deg,#102e50,#0c203a);border:1px solid #355779;color:#e9f3ff;border-radius:20px;box-shadow:0 20px 55px #020c1b44;padding:33px clamp(23px,4vw,52px) 50px}
+.reading h1{color:#f5f9ff;line-height:1.4}
+.toolbar{border-color:#2e5478;padding-bottom:17px}
+.toolbar button,.toolbar a{background:#103657;border-color:#356e97;color:#dcedff}
+.eyebrow{color:#84c7ff}
+.intro{background:linear-gradient(125deg,#12385e,#102b4a);border-color:#396c92;border-right:4px solid #81caff;box-shadow:0 6px 22px #0002}
+.intro strong{color:#96d6ff}
 .lesson-section{max-width:78ch;margin:36px 0 43px}
-.lesson-section h2{font-size:clamp(21px,2.1vw,25px);line-height:1.55;color:#0c345b;border-color:#dce9f4;padding-bottom:11px}
-.lesson-section p{color:#253f5d;font-size:17px;line-height:2.08;letter-spacing:0;word-spacing:normal;overflow-wrap:break-word}
+.lesson-section h2{font-size:clamp(21px,2.1vw,25px);line-height:1.55;color:#f3f8ff;border-color:#355779;padding-bottom:11px}
+.lesson-section p{color:#dceafa;font-size:17px;line-height:2.08;letter-spacing:0;word-spacing:normal;overflow-wrap:break-word}
 .lesson-section bdi{unicode-bidi:isolate;direction:ltr;display:inline;white-space:normal}
 .illustration{border:1px solid #245179;box-shadow:0 8px 30px #081b2c25;margin:26px 0 32px}
 .illustration figcaption{font-size:13px;line-height:1.65}
-.answer{background:#ecf6ff;border-color:#c4dff4}
+.answer{background:#112d4b;border-color:#35668a}
 .bottom-nav button,.complete button{transition:background .18s ease}
-.study-note{color:#5c7692}
+.study-note{color:#b5cde4}
 .focus{background:#07182e}
 .focus .reading{max-width:950px;margin:0 auto}
 @media(max-width:870px){.wrap{padding:13px 12px 60px;display:flex;flex-direction:column}.rail{width:100%}.reading{padding:24px 18px}.lesson-section p{font-size:16px;line-height:2}.course-top{background:#06192d}}
 @media(max-width:470px){.wrap{padding:10px 8px 40px}.rail{padding:16px}.reading{padding:22px 16px}.lesson-section{margin:29px 0 32px}.lesson-section h2{font-size:21px}}
+
+/* Complete dark-surface cascade: override inline light lesson defaults. */
+.reading .subtitle{color:#acc9e5}
+.reading .intro p{color:#d9e9f9}
+.reading .answer summary{color:#94d0ff}
+.reading .answer p{color:#dceafa}
+.reading .completion-status{color:#9ad9ff}
+.reading .bottom-nav button{background:#123b5d;border-color:#39759b;color:#e4f3ff}
+.reading .bottom-nav button:hover,.reading .toolbar button:hover,.reading .toolbar a:hover{background:#1a527e;color:#fff}
+.reading .complete{border-color:#355779}
+.reading .complete button{background:#1266b6;color:#fff}
+.reading .study-note{color:#b5cde4}
+.reading .lesson-section bdi{color:inherit}
