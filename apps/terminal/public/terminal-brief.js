@@ -13,7 +13,7 @@
     var el = node('button', cls, label); el.type = 'button';
     el.addEventListener('click', action); return el;
   }
-  function sources() { if (typeof navigate === 'function') navigate('data-log'); }
+  function sources() { if (typeof navigate === 'function') navigate('sources'); }
   function dateText(date) {
     return new Date(date + 'T12:00:00Z').toLocaleDateString('he-IL', {day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Jerusalem'});
   }

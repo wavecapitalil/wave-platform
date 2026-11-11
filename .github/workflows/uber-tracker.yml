@@ -1,0 +1,46 @@
+name: Uber tracker public refresh
+
+on:
+  schedule:
+    # 08:00, 12:00, 17:30, 23:00 Asia/Jerusalem in standard time (UTC+2).
+    # During Israel summer time (UTC+3) these run one hour earlier locally.
+    - cron: "0 6 * * *"
+    - cron: "0 10 * * *"
+    - cron: "30 15 * * *"
+    - cron: "0 21 * * *"
+    # Eats address basket window: Monday 09:00 Asia/Jerusalem standard time.
+    # The job records the window and still does not log into Eats.
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: uber-tracker-public-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check public sources and rebuild the bundle
+        run: python scripts/uber_tracker_collect.py
+      - name: Check tracker invariants
+        run: python scripts/uber_tracker_test.py
+      - name: Publish a changed public snapshot
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/terminal/public/data/uber-tracker/fetch_log.jsonl apps/terminal/public/data/uber-tracker/bundle.json
+          if ! git diff --staged --quiet; then
+            git commit -m "data(uber-tracker): record public source check"
+            git push origin HEAD:main
+          fi

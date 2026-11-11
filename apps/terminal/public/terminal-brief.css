@@ -76,7 +76,11 @@
 .brief-reader-rail .brief-contents{display:flex;flex-direction:column;align-items:stretch;border:0;padding:0;margin:0;gap:3px}
 .brief-reader-rail .brief-contents button{border:0;border-inline-start:2px solid #3a485a;text-align:right;padding:10px;min-height:44px;font-size:11px;letter-spacing:.2px;color:#c7d1d9}
 .brief-reader-rail .brief-contents button[aria-current]{color:#e5f5eb;border-color:#cbe8d4;background:#22382c}
-.brief-next-chapter{margin-top:12px;background:none;color:#d3ebdc;border:1px solid #4a5869;border-radius:4px;padding:10px;width:100%;min-height:44px;cursor:pointer;font:inherit}
+.brief-next-chapter{margin-top:12px;background:none;color:#d3ebdc;border:1px solid #4a5869;border-radius:4px;padding:10px;width:100%;min-height:44px;cursor:pointer;font:inherit;flex:none}
+@media(min-width:1001px){
+  .brief-reader-rail{max-height:calc(100vh - 310px);display:flex;flex-direction:column;overflow:hidden}
+  .brief-reader-rail .brief-contents{overflow-y:auto;min-height:0;flex:1 1 auto}
+}
 .brief-next-chapter:disabled{opacity:.45;cursor:default}
 .brief-reader-rail :is(button,progress):focus-visible{outline:2px solid #d3ebdc;outline-offset:2px}
 @media(max-width:1100px){#briefArticle{grid-template-columns:minmax(0,1fr) 120px;gap:18px}.brief-story-body{column-count:1}}

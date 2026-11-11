@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UBER TRACKER | Wave Capital</title>
+<meta name="description" content="מעקב Uber Drive ו-Uber Eats: עובדות ציבוריות, וסדרות ציטוט שעדיין ריקות.">
+<link rel="canonical" href="https://wavecapitalil.github.io/wave-platform/research/uber-tracker.html">
+<link rel="stylesheet" href="../terminal-uber-tracker.css?v=20261106-he1">
+<link rel="stylesheet" href="../terminal-sources.css?v=20261008-1">
+<style>
+  body{margin:0;background:#0a0a0f;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
+  .nav{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:center;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .nav a,.nav button{color:#9bcaff;background:none;border:0;font:inherit;cursor:pointer;text-decoration:none}
+  main{padding:20px 16px 48px}
+  #page-sources{max-width:900px;margin:0 auto;padding:20px 16px 48px}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="ניווט">
+  <a href="../index.html">בית</a>
+  <a href="../terminal_app.html#page=uber-tracker">טרמינל</a>
+  <a href="../blog.html">מחקרים</a>
+  <a href="?view=sources">מקורות ומתודולוגיה</a>
+</nav>
+<main id="editorial">
+  <div id="uberTracker"></div>
+</main>
+<section id="page-sources" hidden>
+  <h1>מקורות ומתודולוגיה</h1>
+  <p><a href="uber-tracker.html">חזרה ל-UBER TRACKER</a></p>
+  <div id="sourcesContent"></div>
+</section>
+<script src="../terminal-sources.js"></script>
+<script src="../terminal-uber-tracker.js?v=20261106-he1"></script>
+<script>
+  document.documentElement.lang = 'he';
+  document.documentElement.dir = 'rtl';
+  var sourceView = new URLSearchParams(location.search).get('view') === 'sources';
+  document.getElementById('editorial').hidden = sourceView;
+  document.getElementById('page-sources').hidden = !sourceView;
+  WaveUberTracker.mount(document.getElementById('uberTracker'));
+</script>
+</body>
+</html>

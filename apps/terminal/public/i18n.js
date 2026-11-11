@@ -126,6 +126,8 @@
     'sidebar.secEquities':{en:'EQUITIES',       he:'מניות'},
     'sidebar.secCrypto':  {en:'CRYPTO',         he:'קריפטו'},
     'sidebar.secTools':   {en:'TOOLS',          he:'כלים'},
+    'sidebar.secResearchDesk': {en:'RESEARCH', he:'מחקרים'},
+    'sidebar.uberTracker': {en:'UBER TRACKER', he:'UBER TRACKER'},
     'sidebar.secPlaces':  {en:'PLACES',         he:'מקומות'},
     'sidebar.japanica':   {en:'Japanica',       he:'ג׳פניקה'},
 

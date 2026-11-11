@@ -1,0 +1,47 @@
+city,route_id,type,origin,destination,why
+NYC,NYC-1,everyday,Penn Station (33rd St & 7th Ave),Grand Central Terminal,Core Midtown short-hop density
+NYC,NYC-2,airport,JFK Terminal 4 Arrivals,Times Square (42nd & Broadway),Primary airport long-haul GB proxy
+NYC,NYC-3,nightlife,East Village (1st Ave & E 1st St),Williamsburg (Bedford Ave L),Weekend nightlife cross-borough
+NYC,NYC-4,airport,LGA Terminal B,Midtown East (Lexington & 51st),Secondary airport / corporate
+SF,SF-1,everyday,Financial District (Market & Montgomery),Mission Dolores Park,Commute + neighborhood mix
+SF,SF-2,airport,SFO Domestic Terminal 2 Arrivals,Union Square (Powell & Geary),Airport GB / tourism
+SF,SF-3,nightlife,Mission (16th & Valencia),Marina (Chestnut & Fillmore),Weekend nightlife
+LA,LA-1,everyday,DTLA (7th & Figueroa),Santa Monica Pier,Cross-basin everyday long
+LA,LA-2,airport,LAX-it Rideshare Lot,Hollywood & Highland,Airport + tourism
+LA,LA-3,nightlife,West Hollywood (Sunset & San Vicente),DTLA Arts District,Nightlife corridor
+Chicago,CHI-1,everyday,Loop (State & Madison),Wicker Park (North & Damen),Core city everyday
+Chicago,CHI-2,airport,ORD Terminal 5 Arrivals,Magnificent Mile (Michigan & Chicago),ORD long-haul
+Chicago,CHI-3,nightlife,River North (State & Illinois),Wrigleyville (Clark & Addison),Nightlife / events
+Miami,MIA-1,everyday,Brickell City Centre,Wynwood Walls,Core triangle everyday
+Miami,MIA-2,airport,MIA Terminal Arrivals,South Beach (Ocean Dr & 10th),Airport + tourism
+Miami,MIA-3,nightlife,South Beach (Collins & 15th),Brickell (Brickell Ave & 8th),Late-night bar corridor
+Austin,AUS-1,everyday,UT Tower / Guadalupe,South Congress (SoCo),Campus + retail everyday
+Austin,AUS-2,airport,AUS Arrivals,Downtown 6th Street (Trinity pickup zone),Airport short frequent
+Austin,AUS-3,nightlife,6th Street entertainment district,The Domain,Nightlife + north growth
+DC,DC-1,everyday,Capitol Hill (Independence & 1st SE),Dupont Circle,Government everyday
+DC,DC-2,airport,DCA Arrivals,Georgetown (M St & Wisconsin),Close-in airport
+DC,DC-3,nightlife,U Street Corridor,Adams Morgan (18th & Columbia),Weekend nightlife
+Boston,BOS-1,everyday,Back Bay Station,Harvard Square,City-Cambridge everyday
+Boston,BOS-2,airport,BOS Terminal B Arrivals,Seaport District,Airport + growth district
+Boston,BOS-3,nightlife,Fenway (Lansdowne St),Seaport,Events + nightlife
+Seattle,SEA-1,everyday,South Lake Union (Amazon spheres),Capitol Hill (Broadway & Pike),Tech commute + nightlife
+Seattle,SEA-2,airport,SEA-TAC Arrivals,Pike Place Market,Airport tourism
+Seattle,SEA-3,nightlife,Capitol Hill,Ballard Avenue,Weekend nightlife
+Atlanta,ATL-1,everyday,Midtown (Peachtree & 10th),Buckhead (Lenox Square),Core corridor
+Atlanta,ATL-2,airport,ATL Domestic Arrivals,Downtown (Mercedes-Benz Stadium),World busiest airport proxy
+Atlanta,ATL-3,nightlife,Buckhead (Peachtree Rd bar strip),Ponce City Market,Nightlife + Beltline
+London,LON-1,everyday,King's Cross St Pancras,Canary Wharf,Commute / finance
+London,LON-2,airport,Heathrow T5 Arrivals,Covent Garden,Primary airport
+London,LON-3,nightlife,Soho (Old Compton St),Shoreditch (Boxpark),Nightlife
+Paris,PAR-1,everyday,Gare du Nord,La Défense,Commute
+Paris,PAR-2,airport,CDG Terminal 2E Arrivals,Châtelet–Les Halles,Airport
+Paris,PAR-3,nightlife,Le Marais,Pigalle,Nightlife
+Mexico City,MEX-1,everyday,Reforma / Ángel de la Independencia,Polanco (Masaryk),Core everyday
+Mexico City,MEX-2,airport,MEX Terminal 1 Arrivals,Roma Norte (Álvaro Obregón),Airport + growth neighborhood
+Mexico City,MEX-3,nightlife,Condesa,Roma Norte,Nightlife density
+Sao Paulo,SAO-1,everyday,Av. Paulista (Consolação),Faria Lima,Finance commute
+Sao Paulo,SAO-2,airport,GRU Terminal 3 Arrivals,Pinheiros,Primary airport
+Sao Paulo,SAO-3,nightlife,Vila Madalena,Jardins,Nightlife
+Sydney,SYD-1,everyday,Circular Quay,Surry Hills,Core everyday
+Sydney,SYD-2,airport,SYD Domestic Arrivals,CBD (Town Hall),Airport
+Sydney,SYD-3,nightlife,Darlinghurst,Newtown,Nightlife
