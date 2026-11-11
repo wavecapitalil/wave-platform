@@ -5,7 +5,7 @@ from flask import Blueprint, jsonify, request
 
 bp = Blueprint("price_history", __name__)
 GATEWAY = "https://nqmtayofbhletydmiujz.supabase.co/functions/v1/wave-data"
-RANGES = {"1mo", "3mo", "6mo", "1y", "5y"}
+RANGES = {"1mo", "3mo", "6mo", "1y", "3y", "5y"}
 
 
 @bp.get("/api/price-history")

@@ -1,8 +1,8 @@
 // Company Research price history. Provider matching/calculations stay server-side.
 (function(){
   'use strict';
-  var state={symbol:'',range:'1y',request:0,controller:null,chart:null,data:null,interval:'daily',category:'all'};
-  var ranges=[['1mo','1M'],['3mo','3M'],['6mo','6M'],['1y','1Y'],['5y','5Y']];
+  var state={symbol:'',request:0,controller:null,chart:null,data:null,category:'all'};
+  var RANGE='3y';
   function el(id){return document.getElementById(id);}
   function text(en,he){return typeof getLang==='function'&&getLang()==='he'?he:en;}
   function esc(value){return String(value==null?'':value).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -20,12 +20,10 @@
   function destroy(){if(window.WaveCatalystChart)WaveCatalystChart.hideTip();if(state.chart){state.chart.destroy();state.chart=null;}}
   function setup(){
     var host=el('resPriceHistory');if(!host)return false;
-    if(el('ph-ranges'))return true;
-    host.innerHTML='<div class="ph-header"><div><h2>'+text('Price','מחיר')+'</h2><div id="ph-period" class="ph-period"></div></div><div id="ph-ranges" class="ph-ranges" role="group" aria-label="'+text('Price history timeframe','טווח גרף המחיר')+'">'+ranges.map(function(r){return '<button type="button" data-ph-range="'+r[0]+'" aria-pressed="'+(r[0]===state.range)+'">'+r[1]+'</button>';}).join('')+'</div><div class="ph-interval" role="group" aria-label="Candle interval"><button type="button" data-ph-interval="daily" aria-pressed="true">Daily</button><button type="button" data-ph-interval="weekly" aria-pressed="false">Weekly</button></div></div><div id="ph-status" class="ph-status" role="status" aria-live="polite"></div><div id="ph-body" hidden><div class="ph-summary"><div><span id="ph-latest"></span><span id="ph-change"></span></div><div id="ph-basis"></div></div><label class="ph-filter">'+text('Event category','סוג אירוע')+' <select id="ph-category"><option value="all">'+text('All','הכל')+'</option></select></label><div class="ph-chart-wrap"><canvas id="ph-chart" role="img" aria-label="'+text('Price chart','גרף מחיר')+'"></canvas><div id="ph-plot-markers" class="ph-plot-markers"></div></div></div>';
+    if(el('ph-chart'))return true;
+    host.innerHTML='<div class="ph-header"><div><h2>'+text('Price','מחיר')+'</h2><div id="ph-period" class="ph-period"></div></div></div><div id="ph-status" class="ph-status" role="status" aria-live="polite"></div><div id="ph-body" hidden><div class="ph-summary"><div><span id="ph-latest"></span><span id="ph-change"></span></div><div id="ph-basis"></div></div><label class="ph-filter">'+text('Event category','סוג אירוע')+' <select id="ph-category"><option value="all">'+text('All','הכל')+'</option></select></label><div class="ph-chart-wrap"><canvas id="ph-chart" role="img" aria-label="'+text('Price chart','גרף מחיר')+'"></canvas><div id="ph-plot-markers" class="ph-plot-markers"></div></div></div>';
     host.addEventListener('click',function(event){
       var eventButton=event.target.closest('[data-ph-cluster]');if(eventButton){var entry=state.visibleEvents[Number(eventButton.dataset.phCluster)];if(entry){if(!el('ph-detail')){var detail=document.createElement('div');detail.id='ph-detail';detail.className='ph-detail';detail.setAttribute('aria-live','polite');el('ph-body').appendChild(detail);}el('ph-detail').innerHTML='<h4>'+esc(entry.title)+'</h4><a class="ph-article" target="_blank" rel="noopener noreferrer" href="'+esc(url(entry.url))+'">'+text('Read source','קריאת המקור')+'</a>'; }return;}
-      var interval=event.target.closest('[data-ph-interval]');if(interval){state.interval=interval.dataset.phInterval;if(state.data)render(state.data);return;}
-      var r=event.target.closest('[data-ph-range]');if(r){if(r.dataset.phRange!==state.range){state.range=r.dataset.phRange;load(state.symbol);}return;}
       if(event.target.closest('#ph-retry')){load(state.symbol);return;}
     });
     host.addEventListener('change',function(e){if(e.target.id==='ph-category'){state.category=e.target.value;render(state.data);}});return true;
@@ -73,12 +71,11 @@
     var daily=data.points||[];
     data.events=(data.events||[]).filter(function(e){return url(e.url)&&e.title&&Number.isInteger(e.index)&&daily[e.index]&&finite(e.price);});
     var pending=(data.pending_events||[]).filter(function(e){return url(e.url)&&e.title;});
-    var points=state.interval==='weekly'?(data.weekly_candles||[]):daily,s=data.summary||{},last=daily[daily.length-1];
-    document.querySelectorAll('[data-ph-interval]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.phInterval===state.interval));});
-    if(!points.length){el('ph-status').textContent='Weekly candles unavailable from this backend. Select Daily.';return;}
+    var points=daily,s=data.summary||{},last=daily[daily.length-1];
+    if(!points.length){el('ph-status').textContent=text('Price history unavailable.','היסטוריית המחיר אינה זמינה.');return;}
     var hasCandles=points.every(function(p){return finite(p.open)&&finite(p.high)&&finite(p.low);});
     el('ph-status').textContent='';el('ph-body').hidden=false;
-    el('ph-chart').setAttribute('aria-label',data.symbol+' '+state.interval+' price');
+    el('ph-chart').setAttribute('aria-label',data.symbol+' daily price');
     el('ph-period').textContent=data.symbol;
     el('ph-latest').textContent=money(last.close);
     el('ph-change').textContent=pct(s.change_pct)+' '+text('in period','בתקופה');el('ph-change').className=finite(s.change_pct)?s.change_pct>=0?'ph-positive':'ph-negative':'';
@@ -116,16 +113,38 @@
     state.chart=new Chart(canvas,{type:'line',data:{labels:points.map(function(p){return p.date;}),datasets:[{label:data.symbol,data:points.map(function(p){return p.close;}),borderColor:'#63b3ff',borderWidth:hasCandles?0:2,pointRadius:0,pointHitRadius:0,fill:false,tension:0}]},plugins:[candles,dots],options:{layout:{padding:{top:18}},responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{type:'category',grid:{display:false},ticks:{color:'#9cacc2',maxTicksLimit:6,maxRotation:0,autoSkipPadding:18,callback:function(value){var label=this.getLabelForValue(value);return /^\d{4}-\d{2}-\d{2}$/.test(String(label||''))?new Date(label+'T12:00:00Z').toLocaleDateString('en-US',{month:'short',year:'2-digit',timeZone:'UTC'}):label;}}},y:{suggestedMin:lows.length?Math.min.apply(null,lows):undefined,suggestedMax:highs.length?Math.max.apply(null,highs):undefined,grid:{color:'rgba(148,163,184,.09)'},ticks:{color:'#9cacc2',maxTicksLimit:6,callback:function(value){return money(value);}}}}}});
     if(window.WaveCatalystChart)WaveCatalystChart.bindPointer(canvas, state.chart);
   }
+  function clipToThreeYears(data){
+    var points=data.points||[];
+    if(points.length<2)return data;
+    var end=Date.parse(points[points.length-1].date+'T12:00:00Z');
+    var cutoff=new Date(end);cutoff.setUTCFullYear(cutoff.getUTCFullYear()-3);
+    var cutoffDate=cutoff.toISOString().slice(0,10);
+    var start=points.findIndex(function(p){return p.date>=cutoffDate;});
+    if(start<=0)return Object.assign({},data,{range:RANGE});
+    var sliced=points.slice(start);
+    var first=sliced[0],last=sliced[sliced.length-1];
+    var events=(data.events||[]).filter(function(e){return e.index>=start;}).map(function(e){var copy=Object.assign({},e);copy.index=e.index-start;return copy;});
+    var summary=Object.assign({},data.summary||{},{start_date:first.date,end_date:last.date,change_pct:first.close>0?(last.close/first.close-1)*100:null});
+    return Object.assign({},data,{points:sliced,events:events,summary:summary,range:RANGE});
+  }
+  async function readHistory(symbol,range,signal){
+    var response=await fetch(API+'/api/price-history?symbol='+encodeURIComponent(symbol)+'&range='+encodeURIComponent(range),{signal:signal});
+    var data={};try{data=await response.json();}catch(e){data={error:'Price history unavailable'};}
+    return {ok:response.ok,status:response.status,data:data};
+  }
   async function load(symbol){
     reset(symbol);if(!state.symbol||!el('resPriceHistory'))return;
-    var id=state.request,selected=state.symbol,range=state.range;
-    document.querySelectorAll('[data-ph-range]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.phRange===range));});
+    var id=state.request,selected=state.symbol;
     state.controller=new AbortController();var controller=state.controller,timer=setTimeout(function(){controller.abort();},30000);
     try{
-      var response=await fetch(API+'/api/price-history?symbol='+encodeURIComponent(selected)+'&range='+encodeURIComponent(range),{signal:controller.signal});
-      var data=await response.json();if(id!==state.request)return;
-      if(!response.ok||data.error)throw new Error(data.error||'Price history unavailable');
-      if(data.symbol!==selected||data.range!==range||!Array.isArray(data.points)||data.points.length<2||data.points.some(function(p){return !p||!finite(p.close)||p.close<=0||!/^\d{4}-\d{2}-\d{2}$/.test(p.date);}))throw new Error('Price history is incomplete');
+      var result=await readHistory(selected,RANGE,controller.signal);
+      if(id!==state.request)return;
+      if(!result.ok&&result.status===400)result=await readHistory(selected,'5y',controller.signal);
+      if(id!==state.request)return;
+      var data=result.data||{};
+      if(!result.ok||data.error)throw new Error(data.error||'Price history unavailable');
+      if(data.range!==RANGE)data=clipToThreeYears(data);
+      if(data.symbol!==selected||!Array.isArray(data.points)||data.points.length<2||data.points.some(function(p){return !p||!finite(p.close)||p.close<=0||!/^\d{4}-\d{2}-\d{2}$/.test(p.date);}))throw new Error('Price history is incomplete');
       render(data);
     }catch(error){if(id!==state.request)return;destroy();el('ph-body').hidden=true;el('ph-status').innerHTML=esc(text('Price history unavailable.','היסטוריית המחיר אינה זמינה.'))+' <button type="button" id="ph-retry">'+text('Retry','ניסיון נוסף')+'</button>';
       if(window.WaveSources)WaveSources.record('price-history:'+selected,'Price history & events · '+selected,'Request failed: '+String(error.message||error)+'. No cached or synthetic prices were substituted.');
