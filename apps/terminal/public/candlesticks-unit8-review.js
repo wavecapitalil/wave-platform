@@ -61,7 +61,7 @@ function render(i){if(!data)return;active=Math.max(0,Math.min(data.lessons.lengt
  history.replaceState(null,'','?lesson='+(active+1));window.scrollTo(0,0);
 }
 $('#prev').addEventListener('click',()=>render(active-1));$('#next').addEventListener('click',()=>render(active+1));
-fetch('assets/candlesticks-unit8/unit8-learning-content-review.json?v=1').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(json=>{if(json.status!=='review_only_not_approved_for_students'||json.lessons.length!==5)throw Error('invalid lesson package');data=json;
+fetch('assets/candlesticks-unit8/unit8-learning-content-review.json?v=2').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(json=>{if(json.status!=='review_only_not_approved_for_students'||json.lessons.length!==5)throw Error('invalid lesson package');data=json;
  json.lessons.forEach((lesson,i)=>{let button=el('button'),number=el('span','num','8.'+(i+1)),name=el('span',null,lesson.title);button.type='button';button.append(number,name);button.addEventListener('click',()=>render(i));nav.append(button)});
  const param=Number(new URLSearchParams(location.search).get('lesson'));render(param>=1&&param<=5?param-1:0);
 }).catch(err=>{$('#lesson-title').textContent='לא ניתן לטעון את יחידה 8';$('#lesson-intro').textContent='הקובץ אינו זמין כעת: '+err.message});
