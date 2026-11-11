@@ -7,7 +7,7 @@ assert.equal((catalog.match(/class="lesson-card"/g)||[]).length,56,'All 56 lesso
 assert.equal((catalog.match(/class="unit-quiz-link"/g)||[]).length,9,'Nine unit assessments must be linked');
 const QA=JSON.parse(fs.readFileSync('docs/course-workspace/reviews/COURSE_56_LESSON_QA_MATRIX_2026-11-11.json','utf8'));
 assert.equal(QA.lessons.length,56,'QA matrix must cover all 56 lessons');
-for(const lesson of QA.lessons){assert(fs.existsSync(lesson.source_path),'Missing source '+lesson.source_id);assert.equal(lesson.status,'qa_pending','No unreviewed lesson may be marked approved');}
+for(const lesson of QA.lessons){assert(fs.existsSync(lesson.source_path),'Missing source '+lesson.source_id);assert(['qa_pending','qa_in_progress'].includes(lesson.status),'No unreviewed lesson may be marked approved');}
 assert(!load('candlesticks-glossary.js').includes('["EMA"'),'SMA-only glossary must not reintroduce deleted indicator');
 const bankRaw=load('candlesticks-assessment-bank.js').trim();const bank=JSON.parse(bankRaw.replace(/^window\.WAVE_COURSE_ASSESSMENTS=/,'').replace(/;$/,''));
 assert.equal(bank.units.length,9);assert.equal(bank.policy.minScorePercent,80);

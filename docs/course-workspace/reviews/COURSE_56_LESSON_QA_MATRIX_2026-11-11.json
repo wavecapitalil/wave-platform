@@ -9,65 +9,65 @@
       "display_id": "1.1",
       "source_id": "01-01",
       "source_path": "docs/course-workspace/lessons/01-01.md",
-      "status": "qa_pending",
+      "status": "qa_in_progress",
       "checks": {
-        "source_comparison": "pending",
-        "pedagogy": "pending",
-        "hebrew_english_rtl": "pending",
-        "formulas_and_answers": "pending",
+        "source_comparison": "pdf_core_topics_reviewed_pages_7_9",
+        "pedagogy": "core_learning_flow_reviewed_final_signoff_pending",
+        "hebrew_english_rtl": "targeted_editorial_navigation_fixes_static_check_visual_pending",
+        "formulas_and_answers": "example_spotcheck_done_all_figures_pending",
         "illustrations": "pending",
-        "desktop_mobile": "pending",
+        "desktop_mobile": "pending_real_browser",
         "assessment_bank": "drafted_unreviewed"
       },
-      "notes": ""
+      "notes": "Core concepts checked: transaction price vs quote/value, bid/ask, market participants, OTC. Navigation punctuation corrected. No text change to already-isolated market names."
     },
     {
       "display_id": "1.2",
       "source_id": "01-02",
       "source_path": "docs/course-workspace/lessons/01-02.md",
-      "status": "qa_pending",
+      "status": "qa_in_progress",
       "checks": {
-        "source_comparison": "pending",
-        "pedagogy": "pending",
-        "hebrew_english_rtl": "pending",
-        "formulas_and_answers": "pending",
+        "source_comparison": "pdf_core_topics_reviewed_pages_10_11",
+        "pedagogy": "core_learning_flow_reviewed_final_signoff_pending",
+        "hebrew_english_rtl": "targeted_editorial_navigation_fixes_static_check_visual_pending",
+        "formulas_and_answers": "example_spotcheck_done_all_figures_pending",
         "illustrations": "pending",
-        "desktop_mobile": "pending",
+        "desktop_mobile": "pending_real_browser",
         "assessment_bank": "drafted_unreviewed"
       },
-      "notes": ""
+      "notes": "Price series 100,102,99,103,101 verified and displayed as accessible table matching price-line demonstration; broken navigation and exercise punctuation fixed."
     },
     {
       "display_id": "1.3",
       "source_id": "01-03",
       "source_path": "docs/course-workspace/lessons/01-03.md",
-      "status": "qa_pending",
+      "status": "qa_in_progress",
       "checks": {
-        "source_comparison": "pending",
-        "pedagogy": "pending",
-        "hebrew_english_rtl": "pending",
-        "formulas_and_answers": "pending",
+        "source_comparison": "pdf_core_topics_reviewed_pages_12_14",
+        "pedagogy": "core_learning_flow_reviewed_final_signoff_pending",
+        "hebrew_english_rtl": "targeted_editorial_navigation_fixes_static_check_visual_pending",
+        "formulas_and_answers": "example_spotcheck_done_all_figures_pending",
         "illustrations": "pending",
-        "desktop_mobile": "pending",
+        "desktop_mobile": "pending_real_browser",
         "assessment_bank": "drafted_unreviewed"
       },
-      "notes": ""
+      "notes": "Historical uncertainty preserved (Homma vs modern candlesticks); Steve Nison 1991 edition confirmed by book bibliographic record. Incorrect 1991 punctuation fixed; hidden editorial note removed."
     },
     {
       "display_id": "1.4",
       "source_id": "01-04",
       "source_path": "docs/course-workspace/lessons/01-04.md",
-      "status": "qa_pending",
+      "status": "qa_in_progress",
       "checks": {
-        "source_comparison": "pending",
-        "pedagogy": "pending",
-        "hebrew_english_rtl": "pending",
-        "formulas_and_answers": "pending",
+        "source_comparison": "pdf_core_topics_reviewed_pages_15_19",
+        "pedagogy": "core_learning_flow_reviewed_final_signoff_pending",
+        "hebrew_english_rtl": "targeted_editorial_navigation_fixes_static_check_visual_pending",
+        "formulas_and_answers": "example_spotcheck_done_all_figures_pending",
         "illustrations": "pending",
-        "desktop_mobile": "pending",
+        "desktop_mobile": "pending_real_browser",
         "assessment_bank": "drafted_unreviewed"
       },
-      "notes": ""
+      "notes": "Core distinction observation/interpretation/scenario preserved; 55/100 illustrative probability caveat and 101st case punctuation repaired; navigation punctuation cleaned."
     },
     {
       "display_id": "2.1",
