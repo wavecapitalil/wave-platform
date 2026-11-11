@@ -16,16 +16,15 @@ function textBlock(host,value){
 }
 function drawCaption(host,label,lesson,index){
  const figure=elem('figure','internal-figure');
- const isFirst=index===1 || (lesson===1&&index===2);
- const img=elem('img');img.loading='lazy';img.decoding='async';
- img.src=isFirst?root+'internal/fig-4-'+String(lesson).padStart(2,'0')+'-approved.webp':'';
- if(lesson===1&&index===1)img.src=root+'fig-4-1-01.svg';
- img.alt='איור לימודי לשיעור 4.'+lesson;
- const fallback=elem('div','figure-pending',isFirst&&(lesson!==1||index===2)?'האיור אושר ונמצא בחבילת הנכסים; ממתין להעלאת הקובץ ל־GitHub.':'נדרשת השלמת איור פנימי נוסף מתוך חומר המקור.');
- if(!img.src)img.style.display='none';
- else {img.onerror=()=>{img.style.display='none';fallback.hidden=false};img.onload=()=>{fallback.hidden=true};}
- figure.append(img,fallback);
- const cap=elem('figcaption','');bilingual(cap,label);figure.append(cap);host.append(figure);
+ const wrap=elem('div','reconstructed-figure');
+ const reconstructed=window.WAVE_UNIT4_RECONSTRUCTION;
+ if(lesson===1&&index===1){
+  const img=elem('img');img.loading='lazy';img.decoding='async';img.src=root+'fig-4-1-01.svg';img.alt='איור מבנה דוג׳י';wrap.append(img);
+ }else if(reconstructed){wrap.innerHTML=reconstructed.makeDiagram(lesson,true)}
+ figure.append(wrap);
+ const cap=elem('figcaption','');bilingual(cap,label);figure.append(cap);
+ const note=elem('p','figure-origin','המחשה סכמטית מחודשת לצורכי לימוד; אינה קובץ האיור המקורי שהופק ליחידה.');
+ figure.append(note);host.append(figure);
 }
 function panel(lesson,section,index,figureCounter){
  const isPractice=section.type==='exercise',isSolution=section.type==='solution';
@@ -58,6 +57,14 @@ function select(i){
  const hero=elem('section','lesson-hero');const cover=elem('img','cover');cover.src=root+'lesson-4-'+String(i+1).padStart(2,'0')+'.webp';cover.alt='איור שער לשיעור '+lesson.id;cover.loading='lazy';hero.append(cover);
  const heading=elem('div','hero-body');heading.append(elem('span','eyebrow','יחידה 4 · '+(i<5?'חלק א׳ — תבניות נר בודד':'חלק ב׳ — תבניות שני נרות')));const h=elem('h1','',lesson.id+' — '+lesson.title);heading.append(h);heading.append(elem('p','hero-meta','גרסת תוכן לעריכה · לא אושרה לפרסום'));hero.append(heading);host.append(hero);
  const figureCounter={value:0};lesson.sections.forEach((section,j)=>host.append(panel(i+1,section,j,figureCounter)));
+ if(i===4&&window.WAVE_UNIT4_RECONSTRUCTION)host.append(window.WAVE_UNIT4_RECONSTRUCTION.makeCards());
+ const sourceUnit=i<5?4:5,sourceLesson=i<5?i+1:i-4;
+ const storageKey='wave.candles.v1.lesson.'+String(sourceUnit).padStart(2,'0')+'-'+String(sourceLesson).padStart(2,'0');
+ const status=elem('div','lesson-review-completion');
+ const check=elem('button','','');
+ function paint(){const done=localStorage.getItem(storageKey)==='done';check.textContent=done?'✓ הושלמה צפייה ותרגול — בטל':'סמן צפייה ותרגול כהושלמו';check.setAttribute('aria-pressed',String(done))}
+ check.onclick=()=>{localStorage.setItem(storageKey,localStorage.getItem(storageKey)==='done'?'':'done');paint()};paint();
+ status.append(check,elem('p','','סימון התקדמות אישי בדפדפן. אינו מעיד על אישור פדגוגי של חומר הלימוד.'));host.append(status);
  const controls=elem('div','lesson-controls');const prev=elem('button','','השיעור הקודם'),next=elem('button','','השיעור הבא');prev.disabled=i===0;next.disabled=i===11;prev.onclick=()=>select(i-1);next.onclick=()=>select(i+1);controls.append(prev,next);host.append(controls);
  const audit=elem('details','audit-details');audit.append(elem('summary','','פרטי מקור ובקרת איכות'));audit.append(elem('p','', 'קובץ מקור: '+lesson.source_path+' · מזהה מקור: '+lesson.source_id));audit.append(elem('p','', 'גרסת הביקורת שומרת על כל ההסברים והדוגמאות; נוסחאות וערכים שיובאו מ־PDF מחייבים בדיקה לפני פרסום.'));host.append(audit);
  if(history.replaceState){const u=new URL(location.href);u.searchParams.set('lesson',String(i+1));history.replaceState({},'',u.pathname+u.search)}
