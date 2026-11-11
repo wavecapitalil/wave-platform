@@ -20,10 +20,11 @@ function drawCaption(host,label,lesson,index){
  const reconstructed=window.WAVE_UNIT4_RECONSTRUCTION;
  if(lesson===1&&index===1){
   const img=elem('img');img.loading='lazy';img.decoding='async';img.src=root+'fig-4-1-01.svg';img.alt='איור מבנה דוג׳י';wrap.append(img);
+ }else if(lesson>=6&&index===1){const img=elem('img');img.src=root+'fig-4-'+String(lesson).padStart(2,'0')+'-main.svg';img.loading='lazy';img.decoding='async';img.alt='איור ייעודי לשיעור '+(lesson+0);wrap.append(img)
  }else if(reconstructed){wrap.innerHTML=reconstructed.makeDiagram(lesson,true)}
  figure.append(wrap);
  const cap=elem('figcaption','');bilingual(cap,label);figure.append(cap);
- const note=elem('p','figure-origin','המחשה סכמטית מחודשת לצורכי לימוד; אינה קובץ האיור המקורי שהופק ליחידה.');
+ const note=elem('p','figure-origin','המחשה לימודית בקובץ SVG מתוך נכסי היחידה, או שחזור סכמטי של נרות. אין להניח שזהו צילום איור המקור.');
  figure.append(note);host.append(figure);
 }
 function panel(lesson,section,index,figureCounter){
