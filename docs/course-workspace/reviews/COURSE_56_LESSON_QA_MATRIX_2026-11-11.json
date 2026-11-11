@@ -79,11 +79,11 @@
         "pedagogy": "exercise_solution_reviewed_final_signoff_pending",
         "hebrew_english_rtl": "targeted_punctuation_editorial_fix_browser_pending",
         "formulas_and_answers": "ohlc_validity_examples_spotchecked",
-        "illustrations": "two_png_and_three_inline_svg_present_asset_math_browser_review_pending",
+        "illustrations": "all_three_png_source_files_visually_inspected_math_consistent_style_and_browser_pending",
         "desktop_mobile": "pending_real_browser",
         "assessment_bank": "drafted_unreviewed"
       },
-      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified."
+      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified. All 3 source PNG files were visually inspected; artwork still needs WAVE dark-theme and live responsive QA."
     },
     {
       "display_id": "2.2",
@@ -95,11 +95,11 @@
         "pedagogy": "exercise_solution_reviewed_final_signoff_pending",
         "hebrew_english_rtl": "targeted_punctuation_editorial_fix_browser_pending",
         "formulas_and_answers": "body_wicks_range_and_close_position_verified",
-        "illustrations": "verified_dark_svg_ohlc_100_112_96_108_anatomy_labels_fixed_other_png_visual_qa_pending",
+        "illustrations": "all_three_png_source_files_visually_inspected_one_overlapping_figure_replaced_dark_svg_browser_pending",
         "desktop_mobile": "pending_real_browser",
         "assessment_bank": "drafted_unreviewed"
       },
-      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified. Replaced overlapping white anatomy PNG in lesson 2.2 with dark SVG; values O100 H112 L96 C108 -> body8 upper4 lower4 range16, clear labels, right-only price axis."
+      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified. Replaced overlapping white anatomy PNG in lesson 2.2 with dark SVG; values O100 H112 L96 C108 -> body8 upper4 lower4 range16, clear labels, right-only price axis. All 3 source PNG files were visually inspected; artwork still needs WAVE dark-theme and live responsive QA."
     },
     {
       "display_id": "2.3",
@@ -111,11 +111,11 @@
         "pedagogy": "exercise_solution_reviewed_final_signoff_pending",
         "hebrew_english_rtl": "targeted_punctuation_editorial_fix_browser_pending",
         "formulas_and_answers": "four_15m_to_1h_ohlc_aggregation_verified",
-        "illustrations": "three_png_assets_present_source_comparison_visual_pending",
+        "illustrations": "all_three_png_source_files_visually_inspected_math_consistent_style_and_browser_pending",
         "desktop_mobile": "pending_real_browser",
         "assessment_bank": "drafted_unreviewed"
       },
-      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified."
+      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified. All 3 source PNG files were visually inspected; artwork still needs WAVE dark-theme and live responsive QA."
     },
     {
       "display_id": "2.4",
@@ -127,11 +127,11 @@
         "pedagogy": "exercise_solution_reviewed_final_signoff_pending",
         "hebrew_english_rtl": "targeted_punctuation_editorial_fix_browser_pending",
         "formulas_and_answers": "open_candle_ohlc_path_nonidentifiability_verified",
-        "illustrations": "three_png_assets_present_source_comparison_visual_pending",
+        "illustrations": "all_three_png_source_files_visually_inspected_math_consistent_style_and_browser_pending",
         "desktop_mobile": "pending_real_browser",
         "assessment_bank": "drafted_unreviewed"
       },
-      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified."
+      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified. All 3 source PNG files were visually inspected; artwork still needs WAVE dark-theme and live responsive QA."
     },
     {
       "display_id": "2.5",
@@ -143,11 +143,11 @@
         "pedagogy": "exercise_solution_reviewed_final_signoff_pending",
         "hebrew_english_rtl": "targeted_punctuation_editorial_fix_browser_pending",
         "formulas_and_answers": "gap_vs_full_range_gap_reviewed",
-        "illustrations": "three_png_assets_present_source_comparison_visual_pending",
+        "illustrations": "all_three_png_source_files_visually_inspected_math_consistent_style_and_browser_pending",
         "desktop_mobile": "pending_real_browser",
         "assessment_bank": "drafted_unreviewed"
       },
-      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified."
+      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified. All 3 source PNG files were visually inspected; artwork still needs WAVE dark-theme and live responsive QA."
     },
     {
       "display_id": "3.1",
