@@ -83,7 +83,7 @@ function render(i){if(!data)return;active=Math.max(0,Math.min(data.lessons.lengt
  lesson.sections.forEach(section=>body.append(renderSection(section)));
  [...nav.querySelectorAll('button')].forEach((b,k)=>{b.classList.toggle('active',k===active);if(k===active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
  $('#prev').disabled=active===0;$('#next').disabled=active===data.lessons.length-1;
- $('#progress-text').textContent='שיעור 8.'+(active+1)+' מתוך 5 · סביבת ביקורת — ללא סימון השלמה';
+ $('#progress-text').textContent='שיעור 9.'+(active+1)+' מתוך 5 · סביבת ביקורת — ללא סימון השלמה';
  history.replaceState(null,'','?lesson='+(active+1));window.scrollTo(0,0);
 }
 $('#prev').addEventListener('click',()=>render(active-1));$('#next').addEventListener('click',()=>render(active+1));
