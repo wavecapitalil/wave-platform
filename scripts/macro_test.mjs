@@ -135,3 +135,17 @@ test('bounded CPI archive preserves separate annual headline/core vintages and e
  }
  assert.equal(catalogue(Date.parse('2026-10-20')).series.find(s=>s.id==='cpi').releases.length,0);
 });
+
+test('official October CPI missing annual base is not overdue and never changes historical knowledge',async()=>{
+ const {calendarFreshness}=await import('../supabase/functions/wave-data/macro-calendar.ts');
+ const before=Date.parse('2026-11-10T14:31:00Z'),after=Date.parse('2026-11-10T14:33:00Z');
+ for(const id of ['cpi','core_cpi']){
+  assert.equal(calendarFreshness(id,'2026-09-01',before).freshness,'release_overdue');
+  const current=calendarFreshness(id,'2026-09-01',after);
+  assert.equal(current.freshness,'publication_unavailable');assert.equal(current.overdue_release,null);
+  assert.equal(current.unavailable_periods[0].period,'2026-10-01');
+  assert.match(current.unavailable_periods[0].source,/cpi_11102026/);
+  assert.deepEqual(calendarFreshness(id,'2026-10-01',after).unavailable_periods,[]);
+ }
+ assert.deepEqual(calendarFreshness('pce','2026-09-01',after).unavailable_periods,[]);
+});

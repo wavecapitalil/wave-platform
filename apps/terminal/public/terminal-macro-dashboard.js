@@ -6,7 +6,7 @@
   function t(en,heb){return he()?heb:en;}
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
   function num(n){return typeof n==='number'&&Number.isFinite(n)?n.toLocaleString(he()?'he-IL':'en-US',{maximumFractionDigits:3}):'—';}
-  function status(s){return ({latest_available:t('Latest available observation','התצפית האחרונה הזמינה'),release_overdue:t('Expected release overdue','מועד הפרסום הצפוי חלף'),schedule_unavailable:t('Release schedule unavailable','לוח פרסומים לא זמין'),fetch_failed:t('Fetch failed · retained data if available','המשיכה נכשלה · נתונים קודמים אם זמינים'),loading:t('Loading','טוען'),unavailable:t('Unavailable','לא זמין'),license_unverified:t('License unverified','רישיון לא אומת'),stale:t('Stale','לא מעודכן'),partial:t('Incomplete components','רכיבים חסרים'),unreconciled:t('Components do not reconcile','הרכיבים אינם מתיישבים'),current_vintage:t('Revised history','היסטוריה מעודכנת')})[s]||s;}
+  function status(s){return ({publication_unavailable:t('Official period not published','הנתון לתקופה לא פורסם רשמית'),latest_available:t('Latest available observation','התצפית האחרונה הזמינה'),release_overdue:t('Expected release overdue','מועד הפרסום הצפוי חלף'),schedule_unavailable:t('Release schedule unavailable','לוח פרסומים לא זמין'),fetch_failed:t('Fetch failed · retained data if available','המשיכה נכשלה · נתונים קודמים אם זמינים'),loading:t('Loading','טוען'),unavailable:t('Unavailable','לא זמין'),license_unverified:t('License unverified','רישיון לא אומת'),stale:t('Stale','לא מעודכן'),partial:t('Incomplete components','רכיבים חסרים'),unreconciled:t('Components do not reconcile','הרכיבים אינם מתיישבים'),current_vintage:t('Revised history','היסטוריה מעודכנת')})[s]||s;}
   function latest(s){return s.releases.length?s.releases[s.releases.length-1]:null;}
   var chartId=0;
   function precise(n){return typeof n==='number'&&Number.isFinite(n)?String(n):'—';}
@@ -123,6 +123,7 @@
       'Chart controls: hover or tap for values; focus and use arrow keys, Home or End. Escape dismisses the readout.',
       'Next release: '+(next?releaseTime(next.scheduled_at):'Schedule unavailable')];
     if(h.error)notes.push('History retrieval error: '+(typeof h.error==='string'?h.error:h.error.message));
+    (h.unavailable_periods||[]).forEach(function(r){notes.push('Official unavailable period '+r.period+': '+r.reason+' | '+r.source+' | verified '+r.verified_at);});
     if(h.fetched_at)notes.push('History retrieved: '+h.fetched_at);
     s.releases.forEach(function(r){notes.push('Release '+r.id+' | reference '+r.period+' | '+(verifiedConsensus(r,s)?'Verified pre-release consensus available':'Consensus unavailable: no verified pre-release capture.')+' | '+(r.components&&r.components.length?'Verified decomposition available':'Verified decomposition unavailable for this release.'));});
     if(!s.releases.length)notes.push('Release snapshots unavailable.');
