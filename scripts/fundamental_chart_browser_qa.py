@@ -511,9 +511,13 @@ async def check(browser, base, chart_bytes, name, width, height, touch):
         await load(page, "RPAPPLE", second="RPNVDA", mode="growth")
         details = await table_details(page)
         assert "Full-year report pending" in details["text"], details
-        assert "FY2026 Q3" in details["text"] and "2026-06-27" in details["text"], details
-        assert "FY2026 · ended 2026-01-25" in details["text"], details
-        status = await page.locator("#fcDataStatus").inner_text()
+        # Reporting methodology lives in Data Log; retain exact fiscal/date checks
+        # there rather than require an explanatory panel on the chart page.
+        status = await page.evaluate("""() => JSON.parse(sessionStorage.getItem('wave.datalog.v1')).find(
+            pair => pair[0] === 'fundamental-chart:RPAPPLE,RPNVDA')[1].notes""")
+        assert "FY2026 Q3" in status and "2026-06-27" in status, status
+        assert "FY2026 · ended 2026-01-25" in status, status
+        assert await page.locator("#fcDataStatus").inner_text() == ""
         assert "full-year report is not yet available" in status and "different fiscal-year end dates" in status, status
         assert await values(page) == [None, (416161000000 / 391035000000 - 1) * 100, None]
         assert (await values(page, 1))[-1] > 65
