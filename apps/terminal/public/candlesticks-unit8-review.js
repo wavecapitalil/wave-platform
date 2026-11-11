@@ -3,10 +3,19 @@ const $=s=>document.querySelector(s),nav=$('#lesson-nav'),body=$('#lesson-body')
 const titles=['סיכון לעסקה וגודל פוזיציה','סטופ, יעד ויחס סיכוי–סיכון','אחוז הצלחה ותוחלת','רצפי הפסד, Drawdown והטיית הישרדות','מינוף, החלקה, עמלות וסיכון לילה'];
 let data=null,active=0;
 const el=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e};
+// Keep financial notation intact as a single LTR token inside Hebrew paragraphs.
+// Numeric groups include thousands separators, decimal points, signs, currency,
+// percentages, R-multiples and leverage multipliers. Preserve original source text.
+const FINANCIAL_TOKEN_RX=/(?:[+−-]?[$€₪]?\\d{1,3}(?:,\\d{3})+(?:\\.\\d+)?|[+−-]?[$€₪]?\\d+(?:\\.\\d+)?)(?:%|R|×|x)?|[A-Za-z][A-Za-z0-9]*(?:[ /-][A-Za-z][A-Za-z0-9]*)*/g;
 function bilingual(node,value){
- const str=String(value),rx=/\b(?:[A-Za-z][A-Za-z0-9]*)(?:[\s/-][A-Za-z][A-Za-z0-9]*)*\b|\b\d+(?:\.\d+)?\b/g;let i=0,m;
- while((m=rx.exec(str))){if(m.index>i)node.append(document.createTextNode(str.slice(i,m.index)));let b=el('bdi',null,m[0]);b.dir='ltr';node.append(b);i=rx.lastIndex}
- if(i<str.length)node.append(document.createTextNode(str.slice(i)));
+ const str=String(value);let last=0,match;
+ FINANCIAL_TOKEN_RX.lastIndex=0;
+ while((match=FINANCIAL_TOKEN_RX.exec(str))!==null){
+  if(match.index>last)node.append(document.createTextNode(str.slice(last,match.index)));
+  const token=el('bdi','wave-ltr-token',match[0]);token.dir='ltr';
+  node.append(token);last=FINANCIAL_TOKEN_RX.lastIndex;
+ }
+ if(last<str.length)node.append(document.createTextNode(str.slice(last)));
 }
 function boxLine(x,y,x2,y2,color='#456a85',dash=''){return '<line x1="'+x+'" y1="'+y+'" x2="'+x2+'" y2="'+y2+'" stroke="'+color+'" stroke-width="1.3"'+(dash?' stroke-dasharray="'+dash+'"':'')+'/>'}
 const priceY=n=>304-(n-94)/16*223;
