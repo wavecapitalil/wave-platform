@@ -16,7 +16,8 @@ test('past actual columns and distinct consensus dots; future consensus has no f
  const api=ui(),s={unit:'% YoY',sa:'SA',releases:[{...base,actual:3.4,released_at:past,consensus}],calendar:[{...base,id:'next',scheduled_at:future,consensus}]};
  const points=api.comparisonPoints(s);assert.equal(points[0].value,3.4);assert.equal(points[1].value,null);
  const html=api.comparison(s,true);assert.equal((html.match(/<rect /g)||[]).length,1);assert.equal((html.match(/<circle /g)||[]).length,2);
- assert.ok(html.includes('Difference: 0.2'));assert.ok(html.includes('2026-08-01'));assert.ok(!html.includes('Verified source'));assert.ok(html.includes('Release date'));
+ assert.ok(html.includes('Difference: 0.2'));assert.ok(!html.includes('2026-08-01')); // Reference-period provenance lives in Sources.
+ assert.ok(!html.includes('Verified source'));assert.ok(html.includes('Release date')); // Axis label remains; source captions do not.
  for(const attr of html.matchAll(/\s(?:x|y|width|height|cx|cy)="([^"]+)"/g))assert.ok(Number.isFinite(Number(attr[1])),attr[0]);
 });
 test('missing consensus is never zero; revised history has no consensus dots',()=>{
@@ -77,4 +78,10 @@ test('chart explanations move to indicator-associated Sources without losing ava
  const [key,title,body]=api.records[0];assert.equal(key,'macro-notes:core_cpi');assert.ok(title.includes('Core CPI'));
  for(const note of ['test retrieval error','no verified pre-release capture','decomposition unavailable','Schedule unavailable','0 revised observations','never zero',past])assert.ok(body.includes(note),note);
  assert.equal(api.nextRelease(s),'');assert.ok(!api.comparison(s,true).includes('Missing verified consensus'));
+});
+
+test('official unpublished period remains explained in Sources, not substituted as a quote',()=>{
+ const api=ui();
+ api.registerNotes({id:'cpi',name:'CPI',he:'CPI',releases:[]},{status:'publication_unavailable',points:[],unavailable_periods:[{period:'2026-10-01',reason:'Missing October 2025 base',source:'https://www.bls.gov/news.release/archives/cpi_11102026.htm',verified_at:'2026-11-10T14:32:00Z'}]});
+ assert.ok(api.records.some(r=>r[2].includes('Official unavailable period 2026-10-01: Missing October 2025 base')));
 });
