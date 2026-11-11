@@ -1,6 +1,6 @@
 {
   "unit": 8,
-  "status": "review_only_not_approved_for_students",
+  "status": "public_preview_pending_final_qa",
   "source_mapping": [
     "09-01.md",
     "09-02.md",
@@ -423,5 +423,6 @@
         }
       ]
     }
-  ]
+  ],
+  "approval_note": "זמין לעיון ולתרגול בשלב הפיתוח; טרם הושלמה בקרת איכות פדגוגית והאישור במנוע הפרסום המרכזי."
 }

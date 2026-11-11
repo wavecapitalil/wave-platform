@@ -1,6 +1,6 @@
 {
   "unit": 9,
-  "status": "review_only_not_approved_for_students",
+  "status": "public_preview_pending_final_qa",
   "source_mapping": [
     "10-01.md",
     "10-02.md",
@@ -443,5 +443,6 @@
       "url": "https://www.tradingview.com/support/solutions/43000712747-bar-replay-how-and-why-to-test-a-strategy-in-the-past/",
       "purpose": "תרגול ללא מידע עתידי"
     }
-  ]
+  ],
+  "approval_note": "זמין לעיון ולתרגול בשלב הפיתוח; טרם הושלמה בקרת איכות פדגוגית והאישור במנוע הפרסום המרכזי."
 }

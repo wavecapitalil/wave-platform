@@ -6,7 +6,7 @@
     "08-03.md",
     "08-04.md"
   ],
-  "status": "review_only_not_approved_for_students",
+  "status": "public_preview_pending_final_qa",
   "lessons": [
     {
       "title": "מתי תבנית היא רק תצפית",
@@ -332,5 +332,6 @@
         }
       ]
     }
-  ]
+  ],
+  "approval_note": "זמין לעיון ולתרגול בשלב הפיתוח; טרם הושלמה בקרת איכות פדגוגית והאישור במנוע הפרסום המרכזי."
 }

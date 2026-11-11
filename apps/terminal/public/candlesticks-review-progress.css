@@ -1,0 +1,8 @@
+/* WAVE: unified personal-progress UI for review-stage lessons. Does not change editorial approval. */
+.review-completion,.lesson-review-completion{margin:24px 0 14px;border:1px solid #47759c;border-radius:15px;background:linear-gradient(145deg,#113456,#09213c);padding:17px 21px;color:#e6f2ff}
+.review-completion p,.lesson-review-completion p{margin:0 0 12px;color:#c5e0f5;font-size:14px;line-height:1.8}
+.review-complete-button,.lesson-review-completion button{border:1px solid #73b9ec;background:#0b5ba4;color:white;border-radius:10px;padding:10px 17px;cursor:pointer;font-weight:700}
+.review-complete-button[aria-pressed=true],.lesson-review-completion button[aria-pressed=true]{border-color:#62cda8;background:#13634f}
+.review-complete-button:focus-visible,.lesson-review-completion button:focus-visible{outline:3px solid #99ddff;outline-offset:3px}
+.figure-origin{font-size:12px;color:#b9d5e9;margin:6px 0 0}
+.ohlc-values,.wave-ltr-token{unicode-bidi:isolate;direction:ltr}

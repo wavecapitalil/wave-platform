@@ -51,6 +51,19 @@ function renderSection(s){
  else (s.p||[]).forEach(par=>{let p=el('p');bilingual(p,par);block.append(p)});
  if(s.figure)block.append(diagram(s.figure));return block;
 }
+const SOURCE_UNIT=8,DISPLAY_UNIT=7;
+function progressKey(i){return 'wave.candles.v1.lesson.'+String(SOURCE_UNIT).padStart(2,'0')+'-'+String(i+1).padStart(2,'0')}
+function completed(i){try{return localStorage.getItem(progressKey(i))==='done'}catch(_){return false}}
+function progressText(){const count=data.lessons.filter((_,i)=>completed(i)).length;return 'הושלמו '+count+' מתוך '+data.lessons.length+' שיעורים · שיעור '+DISPLAY_UNIT+'.'+(active+1)}
+function completionUI(){
+ const previous=document.getElementById('review-completion');if(previous)previous.remove();
+ const panel=el('section','review-completion');panel.id='review-completion';panel.setAttribute('aria-label','התקדמות לימודית אישית');
+ const hint=el('p',null,'תנאי סימון: קראתי את ההסבר, בחנתי את ההמחשה ופתרתי את התרגול הזמין. סימון אישי אינו אישור גמר פדגוגי.');
+ const button=el('button','review-complete-button');button.type='button';
+ function paint(){const done=completed(active);button.textContent=done?'✓ בוצע — ביטול סימון השלמה':'סמן שיעור כהושלם';button.setAttribute('aria-pressed',String(done));$('#progress-text').textContent=progressText()}
+ button.addEventListener('click',()=>{try{localStorage.setItem(progressKey(active),completed(active)?'':'done')}catch(_){}paint()});
+ panel.append(hint,button);document.querySelector('#main').insertBefore(panel,document.querySelector('#main .actions'));paint();
+}
 function render(i){if(!data)return;active=Math.max(0,Math.min(data.lessons.length-1,i));const lesson=data.lessons[active];
  $('#lesson-title').textContent='7.'+(active+1)+' — '+lesson.title;$('#lesson-intro').textContent=lesson.intro;
  body.replaceChildren();
@@ -59,11 +72,11 @@ function render(i){if(!data)return;active=Math.max(0,Math.min(data.lessons.lengt
  lesson.sections.forEach(section=>body.append(renderSection(section)));
  [...nav.querySelectorAll('button')].forEach((b,k)=>{b.classList.toggle('active',k===active);if(k===active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
  $('#prev').disabled=active===0;$('#next').disabled=active===data.lessons.length-1;
- $('#progress-text').textContent='שיעור 7.'+(active+1)+' מתוך 4 · סביבת ביקורת — ללא סימון השלמה';
+ completionUI();
  history.replaceState(null,'','?lesson='+(active+1));window.scrollTo(0,0);
 }
 $('#prev').addEventListener('click',()=>render(active-1));$('#next').addEventListener('click',()=>render(active+1));
-fetch('assets/candlesticks-unit7/unit7-learning-content-review.json?v=1').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(json=>{if(json.status!=='review_only_not_approved_for_students'||json.lessons.length!==4)throw Error('invalid lesson package');data=json;
+fetch('assets/candlesticks-unit7/unit7-learning-content-review.json?v=1').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(json=>{if(json.status!=='public_preview_pending_final_qa'||json.lessons.length!==4)throw Error('invalid lesson package');data=json;
  json.lessons.forEach((lesson,i)=>{let button=el('button'),number=el('span','num','7.'+(i+1)),name=el('span',null,lesson.title);button.type='button';button.append(number,name);button.addEventListener('click',()=>render(i));nav.append(button)});
  const param=Number(new URLSearchParams(location.search).get('lesson'));render(param>=1&&param<=4?param-1:0);
 }).catch(err=>{$('#lesson-title').textContent='לא ניתן לטעון את יחידה 7';$('#lesson-intro').textContent='הקובץ אינו זמין כעת: '+err.message});
