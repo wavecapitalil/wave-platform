@@ -95,11 +95,11 @@
         "pedagogy": "exercise_solution_reviewed_final_signoff_pending",
         "hebrew_english_rtl": "targeted_punctuation_editorial_fix_browser_pending",
         "formulas_and_answers": "body_wicks_range_and_close_position_verified",
-        "illustrations": "three_png_assets_present_source_comparison_visual_pending",
+        "illustrations": "verified_dark_svg_ohlc_100_112_96_108_anatomy_labels_fixed_other_png_visual_qa_pending",
         "desktop_mobile": "pending_real_browser",
         "assessment_bank": "drafted_unreviewed"
       },
-      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified."
+      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified. Replaced overlapping white anatomy PNG in lesson 2.2 with dark SVG; values O100 H112 L96 C108 -> body8 upper4 lower4 range16, clear labels, right-only price axis."
     },
     {
       "display_id": "2.3",
