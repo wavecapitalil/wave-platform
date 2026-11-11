@@ -82,6 +82,8 @@ PUBLIC_FILES = HOME_PUBLIC_FILES | {
     "terminal-brief.css",
     "terminal-sources.js",
     "terminal-price-history.js",
+    "terminal-catalysts.js",
+    "terminal-catalysts.css",
     "terminal-research.js",
     "terminal-research-markets.js",
     "terminal-research.css",

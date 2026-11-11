@@ -5,7 +5,7 @@
   var bundle = null;
   var host = null;
 
-  function he(){return typeof root.getLang !== 'function' || root.getLang() === 'he';}
+  function he(){return true;}
   function L(h, e){return he() ? h : e;}
   function bdi(value){
     var node = document.createElement('bdi');
@@ -129,7 +129,7 @@
       var yy = y(value);
       plot.appendChild(svg('line', {x1:left, y1:yy, x2:680 - right, y2:yy, stroke:'#243044'}));
       var label = svg('text', {x:left - 8, y:yy + 4, 'text-anchor':'end', fill:'#94a3b8', 'font-size':11});
-      label.textContent = fmt(value / 1000, 0) + 'k';
+      label.textContent = fmt(value / 1000, 0);
       plot.appendChild(label);
     }
     series.forEach(function(s){
@@ -322,7 +322,7 @@
 
     var facts = card(host, true);
     badge(facts, 'ut-fact', L('עובדה', 'Fact'));
-    heading(facts, L('הדפסת Q3 2026', 'Q3 2026 print'), 'Exhibit 99.1 · 4 Nov 2026 · UBER');
+    heading(facts, L('הדפסת Q3 2026', 'Q3 2026 print'), 'מתוך Exhibit 99.1 · 4 בנובמבר 2026 · UBER');
     var grid = el('div', 'ut-facts');
     data.sec_print.forEach(function(row){
       var metric = el('div', 'ut-metric');
@@ -358,7 +358,7 @@
     );
     host.appendChild(facts);
 
-    host.appendChild(el('h2', null, L('Uber Drive · נסיעות', 'Uber Drive')));
+    host.appendChild(el('h2', null, 'נסיעות · Uber Drive'));
     host.appendChild(el('p', 'ut-note', L(
       'מחיר גבוה יכול לשקף ביקוש חזק או מעט נהגים. בלי המתנה ובלי סימון שאין רכבים אי אפשר להפריד. סל של 15 ערים ו-46 מסלולים מוגדר, ועדיין אין ציטוט אחד.',
       'A high price can be strong demand or thin driver supply. Wait time and a no-cars flag are required to separate them. The 15-city, 46-route basket is defined, and there is still not one quote.'
@@ -368,7 +368,7 @@
     var nycCard = card(observed, true);
     badge(nycCard, 'ut-fact', L('עובדה', 'Fact'));
     var nyc = data.series.nyc_hvfhv.observations;
-    heading(nycCard, L('נסיעות HVFHV ביום, ניו יורק', 'NYC HVFHV trips per day'), 'Uber vs Lyft · ' + nyc[0].month + '–' + nyc[nyc.length-1].month);
+    heading(nycCard, L('נסיעות HVFHV ביום, ניו יורק', 'NYC HVFHV trips per day'), 'Uber מול Lyft · ' + nyc[0].month + '–' + nyc[nyc.length-1].month);
     nycCard.appendChild(linePlot([
       {name:'Uber', color:'#4a9eff', points:nyc.map(function(row){return row.uber_trips_per_day;})},
       {name:'Lyft', color:'#fb923c', points:nyc.map(function(row){return row.lyft_trips_per_day;})}
@@ -385,7 +385,7 @@
 
     var laxCard = card(observed);
     badge(laxCard, 'ut-fact', L('עובדה', 'Fact'));
-    heading(laxCard, L('נסיעות TNC ב-LAX', 'LAX TNC trips'), 'LAWA · three published months');
+    heading(laxCard, L('נסיעות TNC ב-LAX', 'LAX TNC trips'), 'LAWA · שלושת החודשים שפורסמו');
     var lax = data.series.lax_tnc.observations;
     laxCard.appendChild(barPlot(lax.map(function(row){return {label:row.month, value:row.tnc_monthly};})));
     laxCard.appendChild(table(
@@ -418,9 +418,9 @@
     });
     var mobility = card(quoteGrid, true);
     badge(mobility, 'ut-un', L('לא דורג', 'Unscored'));
-    heading(mobility, L('פאנל מול קונצנזוס Mobility', 'Panel versus Mobility consensus'), 'hot / in-line / cold');
+    heading(mobility, L('פאנל מול קונצנזוס Mobility', 'Panel versus Mobility consensus'), 'חם / בקו / קר');
     var slots = el('div', 'ut-facts');
-    [['Panel', '—'], ['Consensus', '—'], [L('הדפסה', 'Print'), signed(data.sec_print.filter(function(row){return row.metric === 'Mobility_GB_USD_m';})[0].yoy_pct, 0) + '% / ' + signed(data.sec_print.filter(function(row){return row.metric === 'Mobility_GB_USD_m';})[0].cc_yoy_pct, 0) + '% CC']].forEach(function(pair){
+    [['פאנל', '—'], ['קונצנזוס', '—'], ['הדפסה', signed(data.sec_print.filter(function(row){return row.metric === 'Mobility_GB_USD_m';})[0].yoy_pct, 0) + '% / ' + signed(data.sec_print.filter(function(row){return row.metric === 'Mobility_GB_USD_m';})[0].cc_yoy_pct, 0) + '% מט"ק']].forEach(function(pair){
       var slot = el('div', 'ut-metric');
       slot.appendChild(el('div', 'ut-gloss', pair[0]));
       var value = el('b');
@@ -436,7 +436,7 @@
     );
     host.appendChild(quoteGrid);
 
-    host.appendChild(el('h2', null, 'Uber Eats'));
+    host.appendChild(el('h2', null, 'Uber Eats · משלוחים'));
     var eatsIntro = el('div', 'ut-split');
     var customer = card(eatsIntro);
     heading(customer, L('לקוח', 'Customer'), L('אותה כתובת בית ומשרד בכל עיר', 'The same home and office address in each city'));
@@ -459,10 +459,10 @@
     chartArticle(eatsGrid, data.charts.eats_coverage_vs_eta, quadrant(), true);
     var delivery = card(eatsGrid, true);
     badge(delivery, 'ut-un', L('לא דורג', 'Unscored'));
-    heading(delivery, L('פאנל מול קונצנזוס Delivery', 'Panel versus Delivery consensus'), 'hot / in-line / cold');
+    heading(delivery, L('פאנל מול קונצנזוס Delivery', 'Panel versus Delivery consensus'), 'חם / בקו / קר');
     var deliverySlots = el('div', 'ut-facts');
     var deliveryPrint = data.sec_print.filter(function(row){return row.metric === 'Delivery_GB_USD_m';})[0];
-    [['Panel', '—'], ['Consensus', '—'], [L('הדפסה', 'Print'), signed(deliveryPrint.yoy_pct, 0) + '% / ' + signed(deliveryPrint.cc_yoy_pct, 0) + '% CC']].forEach(function(pair){
+    [['פאנל', '—'], ['קונצנזוס', '—'], ['הדפסה', signed(deliveryPrint.yoy_pct, 0) + '% / ' + signed(deliveryPrint.cc_yoy_pct, 0) + '% מט"ק']].forEach(function(pair){
       var slot = el('div', 'ut-metric');
       slot.appendChild(el('div', 'ut-gloss', pair[0]));
       var value = el('b');

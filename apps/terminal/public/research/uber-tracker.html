@@ -6,7 +6,7 @@
 <title>UBER TRACKER | Wave Capital</title>
 <meta name="description" content="מעקב Uber Drive ו-Uber Eats: עובדות ציבוריות, וסדרות ציטוט שעדיין ריקות.">
 <link rel="canonical" href="https://wavecapitalil.github.io/wave-platform/research/uber-tracker.html">
-<link rel="stylesheet" href="../terminal-uber-tracker.css?v=20261105-1">
+<link rel="stylesheet" href="../terminal-uber-tracker.css?v=20261106-he1">
 <link rel="stylesheet" href="../terminal-sources.css?v=20261008-1">
 <style>
   body{margin:0;background:#0a0a0f;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
@@ -23,7 +23,6 @@
   <a href="../terminal_app.html#page=uber-tracker">טרמינל</a>
   <a href="../blog.html">מחקרים</a>
   <a href="?view=sources">מקורות ומתודולוגיה</a>
-  <button type="button" onclick="cycleLang()">EN</button>
 </nav>
 <main id="editorial">
   <div id="uberTracker"></div>
@@ -34,9 +33,10 @@
   <div id="sourcesContent"></div>
 </section>
 <script src="../terminal-sources.js"></script>
-<script src="../i18n.js?v=20261013-he-default"></script>
-<script src="../terminal-uber-tracker.js?v=20261105-1"></script>
+<script src="../terminal-uber-tracker.js?v=20261106-he1"></script>
 <script>
+  document.documentElement.lang = 'he';
+  document.documentElement.dir = 'rtl';
   var sourceView = new URLSearchParams(location.search).get('view') === 'sources';
   document.getElementById('editorial').hidden = sourceView;
   document.getElementById('page-sources').hidden = !sourceView;

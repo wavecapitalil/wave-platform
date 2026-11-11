@@ -77,6 +77,7 @@ function navigate(page){
   }
 
   if(page === 'sector-research' && window.SectorResearch) SectorResearch.open();
+  if(page === 'catalysts' && window.WaveCatalysts) WaveCatalysts.open();
 
   if(page === 'institutions'){
     setTimeout(loadInstitutionsList, 50);
@@ -126,6 +127,7 @@ function navigate(page){
   if(page === 'confluence') loadConfluence();
   if(page === 'earnings'){ loadEarningsPage(); earnSetTab(_earnTab); }
   if(page === 'correlation' && !window._corrLoadedOnce){ window._corrLoadedOnce = true; runCorrelation(); }
+  if(page === 'japanica' && window.openJapanicaMap) window.openJapanicaMap();
 
   // Editorial editions have their own dated publishing path, separate from snapshots.
   if(window.WaveBrief){ if(page === 'brief') WaveBrief.open(); else WaveBrief.close(); }
@@ -421,9 +423,13 @@ function _newsTimeAgo(pubStr){
 window.addEventListener('load', function(){
   var deep = new URLSearchParams((location.hash||'').replace(/^#/, ''));
   var deepPage = deep.get('page');
+  var deepSymbol = deep.get('symbol');
   if(deepPage && document.getElementById('page-' + deepPage)){
+    if(deepSymbol && deepPage === 'catalysts'){
+      var catalystInput = document.getElementById('ccTicker');
+      if(catalystInput) catalystInput.value = deepSymbol;
+    }
     navigate(deepPage);
-    var deepSymbol = deep.get('symbol');
     if(deepSymbol && deepPage === 'mover'){
       var deepInput = document.getElementById('moverInput');
       if(deepInput){

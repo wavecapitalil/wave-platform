@@ -26,7 +26,7 @@ window.WAVE_CO = {
   var digits = function (v) { return v.replace(/[^0-9]/g, ''); };
   var reach = { wa: co.whatsapp && 'https://wa.me/' + digits(co.whatsapp).replace(/^0/, '972') + '?text=' + encodeURIComponent(T('היי, הגעתי מהאתר של Wave Capital')),
                 tel: co.phone && 'tel:' + co.phone.replace(/[^0-9+]/g, ''), mail: co.email && 'mailto:' + co.email };
-  [].forEach.call(document.querySelectorAll('[data-reach]'), function (a) { var h = reach[a.getAttribute('data-reach')]; if (h) a.setAttribute('href', h); if (a.getAttribute('data-reach') !== 'wa') a.removeAttribute('target'); });
+  [].forEach.call(document.querySelectorAll('[data-reach]'), function (a) { var h = reach[a.getAttribute('data-reach')]; var m = a.getAttribute('data-wa-msg'); if (h && m) h = h.split('?')[0] + '?text=' + encodeURIComponent(T(m)); if (h) a.setAttribute('href', h); if (a.getAttribute('data-reach') !== 'wa') a.removeAttribute('target'); });
   // "כניסה למערכת" and the system's own pages (data-sys) open in the same tab, like walking from the lobby into the platform.
   var base = co.app.replace(/[^\/]*$/, '');
   [].forEach.call(document.querySelectorAll('[data-app]'), function (a) { a.removeAttribute('target'); a.removeAttribute('rel'); if (co.app) a.setAttribute('href', co.app); });

@@ -67,7 +67,11 @@ async def check(browser, label, width, height):
         v/=255; return sum+[.2126,.7152,.0722][i]*(v<=.04045?v/12.92:((v+.055)/1.055)**2.4);
       },0);
       const ratio = color => (lum(rgb(color))+.05)/(lum([10,10,15])+.05);
-      const selectors=['.brief-story h1','.brief-deck','.brief-edition-line','.brief-kicker','.brief-story-body','.brief-chart-period','.brief-chart-detail'];
+      const required=['.brief-story h1','.brief-edition-line','.brief-kicker','.brief-story-body','.brief-chart-period','.brief-chart-detail'];
+      const optional=['.brief-deck'];
+      const missing=required.filter(s=>!article.querySelector(s));
+      if(missing.length) throw new Error('Missing brief text: '+missing.join(', '));
+      const selectors=required.concat(optional).filter(s=>article.querySelector(s));
       return {background:getComputedStyle(article).backgroundColor,
         text:selectors.map(s=>({selector:s,contrast:ratio(getComputedStyle(article.querySelector(s)).color)})),
         marks:[...article.querySelectorAll('.brief-bar')].map(el=>ratio(getComputedStyle(el).backgroundColor)),

@@ -15,6 +15,7 @@
     ['sectors','Sector Strength','Equity sectors'],
     ['breadth','Market Breadth','SPY vs RSP breadth'],
     ['research','Equity Research','Company research workspace'],
+    ['catalysts','Catalyst Calendar','Price chart and catalyst dates'],
     ['institutions','Institutions','Institutional activity'],
     ['comm-flows','Cross-Asset Flows','Futures, options and crypto flows'],
     ['confluence','Confluence Monitor','Multi-factor evidence'],
@@ -22,7 +23,8 @@
     ['correlation','Correlation','Cross-asset relationships'],
     ['btcgold','BTC / Gold','Risk appetite ratio'],
     ['housing','Housing Risk','Housing regime gauge'],
-    ['seasonality','Seasonality','Historical path context']
+    ['seasonality','Seasonality','Historical path context'],
+    ['japanica','Japanica · Karmiel',"Restaurant map, Ma'ale Kamon 5"]
   ];
   var courses=[
     ['Macro & Market Regimes','Rates, liquidity, inflation, growth and credit'],

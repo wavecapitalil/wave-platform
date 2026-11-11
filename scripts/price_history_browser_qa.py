@@ -53,6 +53,7 @@ async def check(browser, name, width, height, lang):
         symbol = q.get("symbol", ["AAPL"])[0]
         selected_range = q.get("range", ["1y"])[0]
         if u.path.endswith("/api/price-history"):
+            settings["last_range"] = selected_range
             if settings["delay"] and symbol == "AAPL":
                 await asyncio.sleep(.8)
             if settings["failure"]:
@@ -81,31 +82,38 @@ async def check(browser, name, width, height, lang):
     await page.evaluate("navigate('research'); researchTicker('AAPL')")
     await page.locator("#ph-body:not([hidden])").wait_for()
     await page.wait_for_function("Chart.getChart('ph-chart')?.width > 0")
-    assert await page.locator("#ph-events button").count() == 3
-    assert await page.locator("#ph-detail h4").inner_text() == "Fixture earnings release <not HTML>"
-    assert await page.locator("#ph-detail a").get_attribute("rel") == "noopener noreferrer"
-    metrics = await page.evaluate("""() => {const c=Chart.getChart('ph-chart'); const b=document.querySelector('#resPriceHistory').getBoundingClientRect(); return {scroll:document.documentElement.scrollWidth,viewport:innerWidth,width:b.width,canvas:c.width,points:c.data.datasets[0].data.length,events:document.querySelectorAll('#ph-plot-markers [data-ph-cluster]').length};}""")
+    assert await page.locator("#ph-events").count() == 0
+    assert await page.locator("#ph-sources").count() == 0
+    assert await page.locator("#ph-detail").count() == 0
+    assert await page.locator("[data-ph-range]").count() == 0
+    assert await page.locator("[data-ph-interval]").count() == 0
+    assert "1M" not in await page.locator("#resPriceHistory").inner_text()
+    assert "Weekly" not in await page.locator("#resPriceHistory").inner_text()
+    assert "Company events" not in await page.locator("#resPriceHistory").inner_text()
+    assert "Sources & methodology" not in await page.locator("#resPriceHistory").inner_text()
+    metrics = await page.evaluate("""() => {const c=Chart.getChart('ph-chart'); const b=document.querySelector('#resPriceHistory').getBoundingClientRect(); return {scroll:document.documentElement.scrollWidth,viewport:innerWidth,width:b.width,canvas:c.width,points:c.data.datasets[0].data.length,events:(c.$dotPositions||[]).filter(d=>d.visible).length};}""")
     assert metrics["scroll"] <= width + 2, metrics
     assert metrics["canvas"] > 150, metrics
-    assert 1 <= metrics["events"] <= 3, metrics
+    assert metrics["events"] == 3, metrics
     assert await page.locator("[data-ph-extremum]").count() == 0
     assert not await page.locator("#researchResult").is_visible()
-    # Clustered chart bubbles retain keyboard-accessible event details; extrema controls are absent.
-    assert await page.locator('#ph-plot-markers [data-ph-cluster="1"]').count() == 1
-    assert 1 <= await page.locator("#ph-plot-markers [data-ph-cluster]").count() <= 3
     await page.locator("#resPriceHistory").scroll_into_view_if_needed()
     await page.screenshot(path=str(OUT / (name + ".png")), full_page=True)
-    await page.locator('[data-ph-event="test-42"]').focus()
-    await page.keyboard.press("Enter")
-    assert await page.locator('[data-ph-event="test-42"]').get_attribute("aria-pressed") == "true"
-    assert "release-42" in await page.locator("#ph-detail a").get_attribute("href")
-    await page.locator("#ph-detail").scroll_into_view_if_needed()
+    tip = await page.evaluate("""() => {
+      const canvas=document.getElementById('ph-chart');
+      const chart=Chart.getChart(canvas);
+      const dot=(chart.$dotPositions||[]).find(d=>d.visible&&d.row&&d.row.line.includes('release'));
+      const rect=canvas.getBoundingClientRect();
+      const event=new PointerEvent('pointerup',{clientX:rect.left+dot.px,clientY:rect.top+dot.py,bubbles:true});
+      canvas.dispatchEvent(event);
+      const node=document.getElementById('wave-catalyst-tip');
+      return {hidden:!node||node.hidden, text:node?node.textContent:'', inChart:document.getElementById('resPriceHistory').innerText.includes(node?node.textContent:'__missing__')};
+    }""")
+    assert tip["hidden"] is False, tip
+    assert "Fixture earnings release" in tip["text"], tip
+    assert tip["inChart"] is False, tip
     await page.screenshot(path=str(OUT / (name + "-event-detail.png")), full_page=True)
-    # Touch/click a dated marker and verify its corresponding article selection.
-    await page.locator('#ph-plot-markers [data-ph-cluster="1"]').click()
-    await page.wait_for_function("document.querySelector('[data-ph-event=\"test-25\"]').getAttribute('aria-pressed')==='true'")
-    await page.locator('[data-ph-range="1mo"]').click()
-    await page.wait_for_function("Chart.getChart('ph-chart') && document.querySelector('[data-ph-range=\"1mo\"]').getAttribute('aria-pressed')==='true'")
+    assert settings["last_range"] == "3y"
     # Late stock-info and chart responses cannot overwrite a newer stock.
     settings["delay"] = True
     await page.evaluate("researchTicker('AAPL'); researchTicker('MSFT')")
@@ -115,17 +123,15 @@ async def check(browser, name, width, height, lang):
     assert "MSFT" in await page.locator("#resNameLine").inner_text()
     settings["delay"] = False
     settings["failure"] = True
-    await page.locator('[data-ph-range="3mo"]').click()
+    await page.evaluate("WavePriceHistory.load('MSFT')")
     await page.locator("#ph-retry").wait_for()
     assert await page.locator("#ph-body").is_hidden()
     assert await page.evaluate("Chart.getChart('ph-chart')===undefined")
     settings["failure"] = False
     settings["empty"] = True
     await page.locator("#ph-retry").click()
-    await page.locator(".ph-empty").wait_for()
-    assert await page.locator("#ph-chart").is_visible()
-    assert await page.locator("#ph-detail").is_hidden()
-    assert await page.locator("#ph-events button").count() == 0
+    await page.locator("#ph-chart").wait_for()
+    assert await page.evaluate("(Chart.getChart('ph-chart').$dotPositions||[]).length===0")
     # Fundamentals failure cannot hide independent available price history.
     settings["stock_failure"] = True
     settings["currency"] = "GBp"
@@ -139,13 +145,13 @@ async def check(browser, name, width, height, lang):
     settings["currency"] = "USD"
     # Wrong-symbol responses fail closed.
     settings["mismatch"] = True
-    await page.locator('[data-ph-range="6mo"]').click()
+    await page.evaluate("WavePriceHistory.load('VOD.L')")
     await page.locator("#ph-retry").wait_for()
     assert await page.locator("#ph-body").is_hidden()
     settings["mismatch"] = False
     await page.locator("#ph-retry").click()
-    await page.locator(".ph-empty").wait_for()
-    await page.locator("#ph-sources").click()
+    await page.locator("#ph-chart").wait_for()
+    await page.evaluate("navigate('sources')")
     assert await page.locator("#page-sources").is_visible()
     assert "TEST FIXTURE" in await page.locator("#sourcesContent").inner_text()
     await page.evaluate("navigate('research')")

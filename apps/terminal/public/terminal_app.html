@@ -5,15 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wave Capital — Terminal</title>
 <link rel="stylesheet" href="terminal.css?v=20261013-article-fallback2">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css" integrity="sha256-V2sIX92Uh6ZaGSFTKMHghsB85b9toJtmazgG09AI2uk=" crossorigin="">
+<link rel="stylesheet" href="terminal-japanica.css?v=20261110-japanica5">
 
-<script src="i18n.js?v=20261013-he-default"></script>
+<script src="i18n.js?v=20261110-japanica1"></script>
   <link rel="stylesheet" href="wave-university-theme.css?v=20261008-depth1">
 <link rel="stylesheet" href="ai-tutor.css">
 <link rel="stylesheet" href="terminal-sources.css?v=20261105-datalog1">
 <link rel="stylesheet" href="terminal-gold-expectations.css?v=20261009-2">
-<link rel="stylesheet" href="terminal-uber-tracker.css?v=20261105-1">
+<link rel="stylesheet" href="terminal-uber-tracker.css?v=20261106-he1">
 <link rel="stylesheet" href="terminal-valuation.css?v=20261014-report">
-<link rel="stylesheet" href="terminal-price-history.css?v=20261013-material-events">
+<link rel="stylesheet" href="terminal-price-history.css?v=20261110-3y">
+<link rel="stylesheet" href="terminal-catalysts.css?v=20261106-dots">
 <link rel="stylesheet" href="terminal-research.css?v=20261014-persistent-statements">
 <link rel="stylesheet" href="terminal-sector-research.css?v=20261105-sector1">
 <link rel="stylesheet" href="terminal-brief.css?v=20261009-brighter-reader1">
@@ -147,6 +150,9 @@
         <div class="nav-item" data-page="sector-research" onclick="navigate('sector-research')">
           <span class="nav-item-icon">🥧</span> <span data-i18n="sidebar.sectorResearch">Sector Research</span>
         </div>
+        <div class="nav-item" data-page="catalysts" onclick="navigate('catalysts')">
+          <span class="nav-item-icon">📍</span> <span data-i18n="sidebar.catalysts">Catalyst Calendar</span>
+        </div>
 
         <div class="nav-item" data-page="mover" onclick="navigate('mover')">
           <span class="nav-item-icon">⚡</span> <span data-i18n="sidebar.whatsMoving">What's Moving</span>
@@ -213,6 +219,17 @@
       <div class="nav-items" id="items-research-desk">
         <div class="nav-item" data-page="uber-tracker" onclick="navigate('uber-tracker')">
           <span class="nav-item-icon">🚗</span> <span data-i18n="sidebar.uberTracker">UBER TRACKER</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title" onclick="toggleSection('places')">
+        <span data-i18n="sidebar.secPlaces">PLACES</span> <span class="nav-section-caret open" id="caret-places">▾</span>
+      </div>
+      <div class="nav-items" id="items-places">
+        <div class="nav-item" data-page="japanica" onclick="navigate('japanica')">
+          <span class="nav-item-icon">🗺️</span> <span data-i18n="sidebar.japanica">Japanica</span>
         </div>
       </div>
     </div>
@@ -965,6 +982,48 @@
       </div>
     </div>
 
+    <div class="page" id="page-catalysts">
+      <div class="welcome-wrap cc-wrap">
+        <div class="page-header" style="margin-bottom:20px">
+          <div class="page-header-tag" data-i18n="catalysts.tag">Equities</div>
+          <div class="page-header-title" data-i18n="sidebar.catalysts">Catalyst Calendar</div>
+        </div>
+        <form id="ccForm" class="mini-section" style="margin-bottom:16px" autocomplete="off">
+          <div class="cc-controls">
+            <input id="ccTicker" type="text" maxlength="15" value="AAPL" spellcheck="false" aria-label="Ticker" data-i18n-placeholder="catalysts.tickerPlaceholder" placeholder="Ticker">
+            <button type="submit" data-i18n="catalysts.show">Show</button>
+          </div>
+          <div class="cc-quick">
+            <button type="button" data-cc-symbol="AAPL">AAPL</button>
+            <button type="button" data-cc-symbol="MSFT">MSFT</button>
+            <button type="button" data-cc-symbol="NVDA">NVDA</button>
+            <button type="button" data-cc-symbol="META">META</button>
+            <button type="button" data-cc-symbol="GOOGL">GOOGL</button>
+            <button type="button" data-cc-symbol="AMZN">AMZN</button>
+            <button type="button" data-cc-symbol="JPM">JPM</button>
+            <button type="button" data-cc-symbol="PFE">PFE</button>
+          </div>
+        </form>
+        <div class="cc-layout" id="ccBody">
+          <section class="cc-card" aria-label="Price">
+            <div class="cc-legend">
+              <span><i class="cc-pip positive"></i> <span id="ccLegendRally" data-i18n="catalysts.rally">Rally</span></span>
+              <span><i class="cc-pip negative"></i> <span id="ccLegendDrop" data-i18n="catalysts.drop">Drop</span></span>
+              <span><i class="cc-pip"></i> <span id="ccLegendOpen" data-i18n="catalysts.open">Open</span></span>
+            </div>
+            <div class="cc-chart-wrap"><canvas id="ccChart" role="img" aria-label="Price chart"></canvas></div>
+          </section>
+          <section class="cc-card">
+            <div id="ccFilters" class="cc-filters"></div>
+            <div class="cc-table-scroll">
+              <table class="cc-table" id="ccTable"></table>
+            </div>
+          </section>
+        </div>
+        <div id="ccStatus" class="cc-status" role="status"></div>
+      </div>
+    </div>
+
     <!-- ─── INSTITUTIONAL HOLDINGS PAGE ─── -->
     <div class="page" id="page-institutions">
       <div class="welcome-wrap" style="max-width:960px">
@@ -1541,6 +1600,40 @@
 
     <div class="page" id="page-valuation"><div id="valuationRoot" class="val-wrap"></div></div>
 
+    <div class="page" id="page-japanica">
+      <div class="welcome-wrap">
+        <div class="page-header" style="margin-bottom:16px">
+          <div class="page-header-tag" data-i18n="japanica.tag">Places</div>
+          <div class="page-header-title" data-i18n="japanica.title">Japanica</div>
+          <div class="page-header-sub" data-i18n="japanica.sub">Asian restaurant · Karmiel</div>
+        </div>
+        <div class="japanica-layout">
+          <div id="japanicaMap" class="japanica-map" role="application" aria-label="Map of Japanica in Karmiel"></div>
+          <section class="japanica-card" aria-labelledby="japanicaName">
+            <div class="japanica-name" id="japanicaName" data-i18n="japanica.name">Japanica</div>
+            <div class="japanica-fields">
+              <div class="japanica-row">
+                <div class="japanica-label" data-i18n="japanica.streetLabel">Street</div>
+                <div class="japanica-value" data-i18n="japanica.street">Ma'ale Kamon 5</div>
+              </div>
+              <div class="japanica-row">
+                <div class="japanica-label" data-i18n="japanica.cityLabel">City</div>
+                <div class="japanica-value" data-i18n="japanica.city">Karmiel, Israel</div>
+              </div>
+              <div class="japanica-row">
+                <div class="japanica-label" data-i18n="japanica.coordsLabel">Coordinates (lat, lng)</div>
+                <div class="japanica-value japanica-coords" dir="ltr">32.9275303, 35.3260765</div>
+              </div>
+            </div>
+            <div class="japanica-links">
+              <a class="japanica-link" href="https://www.google.com/maps/search/?api=1&amp;query=32.9275303%2C35.3260765" target="_blank" rel="noopener noreferrer" data-i18n="japanica.google">Open in Google Maps</a>
+              <a class="japanica-link secondary" href="https://www.waze.com/ul?ll=32.9275303%2C35.3260765&amp;navigate=yes" target="_blank" rel="noopener noreferrer" data-i18n="japanica.waze">Waze</a>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
     <div class="page" id="page-data-log">
       <div class="welcome-wrap">
         <div class="page-header" style="margin-bottom:20px">
@@ -1572,7 +1665,9 @@
 <script src="terminal-data-log.js?v=20261105-datalog1"></script>
 <script src="terminal-sources.js?v=20261105-datalog1"></script>
 <script src="terminal-brief.js?v=20261106-clean1"></script>
-<script src="terminal.js?v=20261106-clean1"></script>
+<script src="terminal.js?v=20261110-japanica1"></script>
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js" integrity="sha256-vpYzxNhw4m+zfxz+XFp3GBZnEUAD6hYgeseFDY2ordE=" crossorigin=""></script>
+<script src="terminal-japanica.js?v=20261110-japanica3"></script>
 <script src="terminal-market.js?v=20261106-clean1"></script>
 <script src="terminal-sector-research.js?v=20261105-sector1"></script>
 <script src="terminal-content.js?v=20261013-article-fallback"></script>
@@ -1596,7 +1691,8 @@ if (window.Chart) Chart.register({
   }
 });
 </script>
-<script src="terminal-price-history.js?v=20261106-clean1"></script>
+<script src="terminal-catalysts.js?v=20261106-dots"></script>
+<script src="terminal-price-history.js?v=20261110-3y"></script>
 <script src="terminal-equities.js?v=20261106-clean1"></script>
 <script src="terminal-research.js?v=20261106-clean1"></script>
 <script src="terminal-research-markets.js?v=20261106-clean1"></script>
@@ -1612,12 +1708,12 @@ if (window.Chart) Chart.register({
 <script src="terminal-macro.js?v=20261008-sources1"></script>
 <script src="terminal-macro-dashboard.js?v=20261106-clean1"></script>
 <script src="terminal-earnings.js?v=20261106-clean1"></script>
-<script src="terminal-uber-tracker.js?v=20261106-nyc1"></script>
+<script src="terminal-uber-tracker.js?v=20261106-he1"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1"></script>
 <script src="supabase-config.js"></script>
 <script src="platform.js"></script>
 <script src="platform-cloud.js?v=20261021-redirect"></script>
-<script src="platform-search.js"></script>
+<script src="platform-search.js?v=20261110-japanica1"></script>
 <script src="ai-tutor.js"></script>
 <!-- ARTICLE READER OVERLAY -->
 <div id="articleOverlay">
