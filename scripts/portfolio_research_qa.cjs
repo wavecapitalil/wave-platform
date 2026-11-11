@@ -8,12 +8,19 @@ const server=http.createServer((req,res)=>{const name=decodeURIComponent(req.url
 try{for(const [width,height]of [[1440,1000],[390,844]]){
  const ctx=await browser.newContext({viewport:{width,height},reducedMotion:'reduce'}),page=await ctx.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.route('**/*',async route=>{let u=route.request().url();if(u.includes('/api/blog/articles'))return route.fulfill({json:{articles:[],total:0}});if(u.startsWith(base)||u.startsWith('data:')||u.startsWith('blob:'))return route.continue();return route.abort();});
- await page.goto(base+'/blog.html',{waitUntil:'networkidle'});await page.locator('.research-feature').waitFor();
- assert.equal(await page.locator('.page-title').innerText(),'מחקרים');assert.equal(await page.locator('.research-feature img').evaluate(e=>e.complete&&e.naturalWidth>0),true);assert.equal(await page.locator('.research-feature').getAttribute('href'),'research/three-portfolios.html');
- assert(await page.locator('.research-feature__allocations').innerText().then(s=>s.includes('100%')&&s.includes('30%')));
+ await page.goto(base+'/blog.html',{waitUntil:'networkidle'});await page.locator('.research-index-card[href="research/three-portfolios.html"]').waitFor();
+ assert.equal(await page.locator('.page-title').innerText(),'מחקרים');assert.equal(await page.locator('.research-index-card[href="research/three-portfolios.html"] img').evaluate(e=>e.complete&&e.naturalWidth>0),true);assert.equal(await page.locator('.research-index-card[href="research/three-portfolios.html"]').getAttribute('href'),'research/three-portfolios.html');
+ assert(await page.locator('.research-index-card[href="research/three-portfolios.html"] .card-title').innerText().then(s=>s.includes('שבע הקצאות')));
  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2));await page.screenshot({path:path.join(out,'listing-'+width+'.png'),fullPage:true});
- await page.locator('.research-feature').click();await page.waitForFunction(()=>window.__ABC_REPORT_READY__===true);
- assert.equal(await page.locator('main section').count(),15);assert.equal(await page.locator('td[data-metric]').count(),24);assert.equal(await page.locator('#overview .card').count(),3);
+ await page.locator('.research-index-card[href="research/three-portfolios.html"]').click();await page.waitForFunction(()=>window.__ABC_REPORT_READY__===true);
+ await page.waitForFunction(()=>window.__SEVEN_PORTFOLIOS_READY__===true);
+ assert.equal(await page.locator('#seven-chart path').count(),7);
+ await page.locator('#seven-scale').click();assert.equal(await page.locator('#seven-scale').getAttribute('aria-pressed'),'true');
+ await page.locator('#seven-controls input').first().uncheck();assert.equal(await page.locator('#seven-chart path').count(),6);await page.locator('#seven-controls input').first().check();
+ assert.equal(await page.locator('#seven-portfolios table').first().locator('tbody tr').count(),7);assert.equal(await page.locator('#extended-gold tbody tr').count(),7);
+ const [expandedDownload]=await Promise.all([page.waitForEvent('download'),page.locator('#seven-download').click()]);assert.equal(expandedDownload.suggestedFilename(),'seven_portfolios_daily_equity_USD.csv');
+ await page.locator('#seven-chart').scrollIntoViewIfNeeded();await page.screenshot({path:path.join(out,'seven-'+width+'.png')});
+ assert.equal(await page.locator('main section').count(),18);assert.equal(await page.locator('td[data-metric]').count(),24);assert.equal(await page.locator('#overview .card').count(),3);
  assert(await page.locator('#overview').innerText().then(s=>s.includes('100% S&P 500')&&s.includes('50% Nasdaq-100')&&s.includes('30% זהב')));
  const canonical=JSON.parse(fs.readFileSync(process.env.ABC_RESULTS||path.join(root,'research/data/three-portfolios-results.json'),'utf8'));const cells=await page.locator('td[data-metric]').evaluateAll(es=>es.map(e=>({key:e.dataset.metric,k:e.dataset.portfolio,v:Number(e.dataset.value)})));for(const x of cells)assert(Math.abs(x.v-canonical.metrics[x.k][x.key])<1e-8*Math.max(1,Math.abs(x.v)));
  await page.locator('[data-scale="log"]').click();assert.equal(await page.locator('[data-scale="log"]').getAttribute('aria-pressed'),'true');assert.equal(await page.locator('#wealth-chart path').count(),3);await page.locator('[data-scale="linear"]').click();
@@ -26,6 +33,6 @@ try{for(const [width,height]of [[1440,1000],[390,844]]){
  const broken=await page.locator('main img').evaluateAll(es=>es.filter(e=>e.complete&&e.naturalWidth===0).length);assert.equal(broken,0);
  // Only report errors are decisive here; unrelated legacy app integrations are outside this static change.
  const reportErrors=errors.filter(x=>!x.includes('supabase'));assert.deepEqual(reportErrors,[]);
- results.push({width,status:'PASS',headlineParity:24,sections:15,portfolioLegend:'PASS',banner:'PASS',logToggle:'PASS',rollingSelector:'PASS',monthlySelector:'PASS',csvDownload:'PASS',overflow:'PASS',errors});await ctx.close();}
+ results.push({width,status:'PASS',headlineParity:24,sections:18,portfolioLegend:'PASS',banner:'PASS',logToggle:'PASS',rollingSelector:'PASS',monthlySelector:'PASS',csvDownload:'PASS',overflow:'PASS',errors});await ctx.close();}
  fs.writeFileSync(path.join(out,'qa.json'),JSON.stringify(results,null,2));console.log(JSON.stringify(results));
 }finally{await browser.close();server.close();}})().catch(e=>{console.error(e.stack);server.close();process.exitCode=1;});

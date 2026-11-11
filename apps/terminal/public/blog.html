@@ -130,7 +130,7 @@
 <script src="ai-tutor.js"></script>
 <script>
 var API = (location.hostname==='localhost'||location.hostname==='127.0.0.1') ? 'http://localhost:5001' : 'https://nqmtayofbhletydmiujz.supabase.co/functions/v1/wave-data';
-var FEATURED_RESEARCH_CARD = '<a class="card research-index-card" data-tags="stocks commodities" href="research/three-portfolios.html"><img class="card-img" src="assets/research/three-portfolios-vs-banner.jpg" alt="S&amp;P 500, Nasdaq-100 וזהב"><div class="card-body"><h2 class="card-title">שלושה תיקים, שלוש דרכים להשקיע</h2><span class="research-card-cta">למאמר המלא</span></div></a>';
+var FEATURED_RESEARCH_CARD = '<a class="card research-index-card" data-tags="stocks commodities" href="research/three-portfolios.html"><img class="card-img" src="assets/research/three-portfolios-vs-banner.jpg" alt="S&amp;P 500, Nasdaq-100 וזהב"><div class="card-body"><h2 class="card-title">ניהול תיק לטווח ארוך: שבע הקצאות</h2><span class="research-card-cta">למאמר המלא</span></div></a>';
 var researchFilter = new URLSearchParams(location.search).get('category') || 'all';
 var articleTags = {'hood-2026-10-28':['stocks']};
 function tagsFor(a){return articleTags[String(a.id)] || (Array.isArray(a.tags)?a.tags:({MACRO:['macro'],CRYPTO:['crypto'],EQUITY:['stocks'],'EQUITY RESEARCH':['stocks'],EARNINGS:['stocks'],ENERGY:['commodities'],COMMODITIES:['commodities']}[String(a.category||'').toUpperCase()]||[]));}
