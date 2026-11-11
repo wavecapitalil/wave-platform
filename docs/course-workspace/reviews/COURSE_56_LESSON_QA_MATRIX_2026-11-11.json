@@ -1,0 +1,905 @@
+{
+  "schema_version": 1,
+  "updated_on": "2026-11-11",
+  "qa_policy": "No final curriculum approval without comparing source PDF, visible copy, figures, math, mobile, and learning assessment.",
+  "status": "active_review",
+  "source_pdf": "Candlesticks_Course_Assembly_Working_v03.pdf",
+  "lessons": [
+    {
+      "display_id": "1.1",
+      "source_id": "01-01",
+      "source_path": "docs/course-workspace/lessons/01-01.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "1.2",
+      "source_id": "01-02",
+      "source_path": "docs/course-workspace/lessons/01-02.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "1.3",
+      "source_id": "01-03",
+      "source_path": "docs/course-workspace/lessons/01-03.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "1.4",
+      "source_id": "01-04",
+      "source_path": "docs/course-workspace/lessons/01-04.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "2.1",
+      "source_id": "02-01",
+      "source_path": "docs/course-workspace/lessons/02-01.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "2.2",
+      "source_id": "02-02",
+      "source_path": "docs/course-workspace/lessons/02-02.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "2.3",
+      "source_id": "02-03",
+      "source_path": "docs/course-workspace/lessons/02-03.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "2.4",
+      "source_id": "02-04",
+      "source_path": "docs/course-workspace/lessons/02-04.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "2.5",
+      "source_id": "02-05",
+      "source_path": "docs/course-workspace/lessons/02-05.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "3.1",
+      "source_id": "03-01",
+      "source_path": "docs/course-workspace/lessons/03-01.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "3.2",
+      "source_id": "03-02",
+      "source_path": "docs/course-workspace/lessons/03-02.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "3.3",
+      "source_id": "03-03",
+      "source_path": "docs/course-workspace/lessons/03-03.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "3.4",
+      "source_id": "03-04",
+      "source_path": "docs/course-workspace/lessons/03-04.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "3.5",
+      "source_id": "03-05",
+      "source_path": "docs/course-workspace/lessons/03-05.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "4.1",
+      "source_id": "04-01",
+      "source_path": "docs/course-workspace/lessons/04-01.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "4.2",
+      "source_id": "04-02",
+      "source_path": "docs/course-workspace/lessons/04-02.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "4.3",
+      "source_id": "04-03",
+      "source_path": "docs/course-workspace/lessons/04-03.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "4.4",
+      "source_id": "04-04",
+      "source_path": "docs/course-workspace/lessons/04-04.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "4.5",
+      "source_id": "04-05",
+      "source_path": "docs/course-workspace/lessons/04-05.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "source_exercise_cards_18_verified",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "18_ohlc_values_verified",
+        "illustrations": "reconstructed_svg_verified_values_not_original_art",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": "Original PDF pages 65-67 inspected; 18 card OHLC values copied verbatim. Original approved WebP assets still missing."
+    },
+    {
+      "display_id": "4.6",
+      "source_id": "05-01",
+      "source_path": "docs/course-workspace/lessons/05-01.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "4.7",
+      "source_id": "05-02",
+      "source_path": "docs/course-workspace/lessons/05-02.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "4.8",
+      "source_id": "05-03",
+      "source_path": "docs/course-workspace/lessons/05-03.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "4.9",
+      "source_id": "05-04",
+      "source_path": "docs/course-workspace/lessons/05-04.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "4.10",
+      "source_id": "05-05",
+      "source_path": "docs/course-workspace/lessons/05-05.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "4.11",
+      "source_id": "05-06",
+      "source_path": "docs/course-workspace/lessons/05-06.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "4.12",
+      "source_id": "05-07",
+      "source_path": "docs/course-workspace/lessons/05-07.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "5.1",
+      "source_id": "06-01",
+      "source_path": "docs/course-workspace/lessons/06-01.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "5.2",
+      "source_id": "06-02",
+      "source_path": "docs/course-workspace/lessons/06-02.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "5.3",
+      "source_id": "06-03",
+      "source_path": "docs/course-workspace/lessons/06-03.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "5.4",
+      "source_id": "06-04",
+      "source_path": "docs/course-workspace/lessons/06-04.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "5.5",
+      "source_id": "06-05",
+      "source_path": "docs/course-workspace/lessons/06-05.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "5.6",
+      "source_id": "06-06",
+      "source_path": "docs/course-workspace/lessons/06-06.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "5.7",
+      "source_id": "06-07",
+      "source_path": "docs/course-workspace/lessons/06-07.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "5.8",
+      "source_id": "06-08",
+      "source_path": "docs/course-workspace/lessons/06-08.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "6.1",
+      "source_id": "07-01",
+      "source_path": "docs/course-workspace/lessons/07-01.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "6.2",
+      "source_id": "07-02",
+      "source_path": "docs/course-workspace/lessons/07-02.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "6.3",
+      "source_id": "07-03",
+      "source_path": "docs/course-workspace/lessons/07-03.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "6.4",
+      "source_id": "07-04",
+      "source_path": "docs/course-workspace/lessons/07-04.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "6.5",
+      "source_id": "07-05",
+      "source_path": "docs/course-workspace/lessons/07-05.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "6.6",
+      "source_id": "07-06",
+      "source_path": "docs/course-workspace/lessons/07-06.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "6.7",
+      "source_id": "07-07",
+      "source_path": "docs/course-workspace/lessons/07-07.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "6.8",
+      "source_id": "07-08",
+      "source_path": "docs/course-workspace/lessons/07-08.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "7.1",
+      "source_id": "08-01",
+      "source_path": "docs/course-workspace/lessons/08-01.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "7.2",
+      "source_id": "08-02",
+      "source_path": "docs/course-workspace/lessons/08-02.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "7.3",
+      "source_id": "08-03",
+      "source_path": "docs/course-workspace/lessons/08-03.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "7.4",
+      "source_id": "08-04",
+      "source_path": "docs/course-workspace/lessons/08-04.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "8.1",
+      "source_id": "09-01",
+      "source_path": "docs/course-workspace/lessons/09-01.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "8.2",
+      "source_id": "09-02",
+      "source_path": "docs/course-workspace/lessons/09-02.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "8.3",
+      "source_id": "09-03",
+      "source_path": "docs/course-workspace/lessons/09-03.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "8.4",
+      "source_id": "09-04",
+      "source_path": "docs/course-workspace/lessons/09-04.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "8.5",
+      "source_id": "09-05",
+      "source_path": "docs/course-workspace/lessons/09-05.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "9.1",
+      "source_id": "10-01",
+      "source_path": "docs/course-workspace/lessons/10-01.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "9.2",
+      "source_id": "10-02",
+      "source_path": "docs/course-workspace/lessons/10-02.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "9.3",
+      "source_id": "10-03",
+      "source_path": "docs/course-workspace/lessons/10-03.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "9.4",
+      "source_id": "10-04",
+      "source_path": "docs/course-workspace/lessons/10-04.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    },
+    {
+      "display_id": "9.5",
+      "source_id": "10-05",
+      "source_path": "docs/course-workspace/lessons/10-05.md",
+      "status": "qa_pending",
+      "checks": {
+        "source_comparison": "pending",
+        "pedagogy": "pending",
+        "hebrew_english_rtl": "pending",
+        "formulas_and_answers": "pending",
+        "illustrations": "pending",
+        "desktop_mobile": "pending",
+        "assessment_bank": "drafted_unreviewed"
+      },
+      "notes": ""
+    }
+  ]
+}
