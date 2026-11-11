@@ -501,7 +501,7 @@
       ],
       "freq_he": [
         {
-          "text": "כל חודש בקובץ נספר מקובץ ה-parquet של "
+          "text": "כל חודש בקובץ נספר מקובץ הנסיעות של "
         },
         {
           "text": "TLC",
@@ -814,14 +814,7 @@
       "title_en": "Overall read",
       "calc_he": [
         {
-          "text": "הסקה, לא ספירת נסיעות ולא הזמנות. הרכיבים: "
-        },
-        {
-          "text": "nyc_uber_daily_full_window +9.7% improving nyc_uber_daily_since_may +3.7% improving lax_tnc_latest_month_yoy +2.5% stable lax_tnc_ytd_yoy -5.7% deteriorating lax_tnc_june_yoy -4.9% deteriorating",
-          "ltr": true
-        },
-        {
-          "text": ". פס שטוח של "
+          "text": "הסקה, לא ספירת נסיעות ולא הזמנות. הרכיבים: ניו יורק, החלון המלא +9.7% משתפר · ניו יורק ממאי +3.7% משתפר · LAX, החודש האחרון +2.5% יציב · LAX, מתחילת השנה -5.7% נחלש · LAX, יוני -4.9% נחלש. פס שטוח של "
         },
         {
           "text": "3.0%",
@@ -906,10 +899,10 @@
           "ltr": true
         },
         {
-          "text": " ב-"
+          "text": " ביום שני "
         },
         {
-          "text": "Monday 09:00",
+          "text": "09:00",
           "ltr": true
         },
         {
@@ -1064,7 +1057,7 @@
     "band_pp": 2.0,
     "mobility_score": "unscored",
     "delivery_score": "unscored",
-    "note_he": "אין קונצנזוס מכירות שנצפה, ואין מדד פאנל. לא ניתן ציון hot / in-line / cold. הדפסת ה-SEC אינה מחליפה אף אחד מהם.",
+    "note_he": "אין קונצנזוס מכירות שנצפה, ואין מדד פאנל. לא ניתן ציון חם / בקו / קר. הדפסת ה-SEC אינה מחליפה אף אחד מהם.",
     "note_en": "No observed sell-side consensus and no panel index. hot / in-line / cold is not scored. The SEC print stands in for neither."
   },
   "route_basket": [

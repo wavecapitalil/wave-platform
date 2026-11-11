@@ -17,13 +17,25 @@
     var node = document.createElement(tag);
     if(cls) node.className = cls;
     if(text != null){
-      node.textContent = text;
-      // A full English line inside the Hebrew page keeps left-to-right word order.
-      // A Hebrew line stays right-to-left, and the browser isolates the Latin runs inside it.
-      if(/[A-Za-z]/.test(text) && !/[\u0590-\u05FF]/.test(text)) node.dir = 'ltr';
-      else if(/[\u0590-\u05FF]/.test(text)) node.dir = 'rtl';
+      if(/[\u0590-\u05FF]/.test(text)){
+        node.dir = 'rtl';
+        fillHebrew(node, text);
+      }else{
+        node.textContent = text;
+        if(/[A-Za-z]/.test(text)) node.dir = 'ltr';
+      }
     }
     return node;
+  }
+  function fillHebrew(node, text){
+    var re = /(https?:\/\/\S+|\$[\d,.]+(?:[–-][\d,.]+)?%?|(?<![A-Za-z])\d{1,2}:\d{2}(?!\d)|(?<![A-Za-z])\d{4}-\d{2}(?:-\d{2})?(?!\d)|(?<![A-Za-z])[+-]?\d[\d,]*(?:\.\d+)?%?(?![A-Za-z]))/g;
+    var last = 0, match;
+    while((match = re.exec(text))){
+      if(match.index > last) node.appendChild(document.createTextNode(text.slice(last, match.index)));
+      node.appendChild(bdi(match[1]));
+      last = match.index + match[1].length;
+    }
+    if(last < text.length) node.appendChild(document.createTextNode(text.slice(last)));
   }
   function fmt(value, digits){
     if(value == null || value === '') return '—';
@@ -43,10 +55,23 @@
   function svg(name, attrs){
     var node = document.createElementNS(SVG, name);
     Object.keys(attrs || {}).forEach(function(key){node.setAttribute(key, attrs[key]);});
+    if(name === 'svg'){
+      node.setAttribute('direction', 'ltr');
+      node.style.direction = 'ltr';
+      node.style.unicodeBidi = 'isolate';
+    }
+    return node;
+  }
+  function svgText(attrs, text){
+    var node = svg('text', attrs);
+    if(text && /[\u0590-\u05FF]/.test(text)){
+      node.setAttribute('direction', 'rtl');
+      node.setAttribute('unicode-bidi', 'plaintext');
+    }
+    node.textContent = text;
     return node;
   }
   function titleOf(chart){return L(chart.title_he, chart.title_en);}
-  function glossOf(chart){return L(chart.title_en, chart.title_he);}
 
   function card(parent, wide){
     var node = el('article', 'ut-card' + (wide ? ' ut-wide' : ''));
@@ -55,7 +80,8 @@
   }
   function heading(parent, title, gloss){
     parent.appendChild(el('h3', null, title));
-    parent.appendChild(el('p', 'ut-gloss', gloss));
+    if(gloss == null || gloss === '') return;
+    parent.appendChild(gloss.nodeType ? gloss : el('p', 'ut-gloss', gloss));
   }
   function captions(parent, shows, doesNot){
     parent.appendChild(el('p', 'ut-cap', L('מה רואים: ', 'Shows: ') + shows));
@@ -104,12 +130,8 @@
     [40, 80, 120, 160].forEach(function(y){
       plot.appendChild(svg('line', {x1:48, y1:y, x2:608, y2:y, stroke:'#334155', 'stroke-width':1}));
     });
-    var text = svg('text', {x:328, y:104, 'text-anchor':'middle', fill:'#cbd5e1', 'font-size':16});
-    text.textContent = L('אין תצפיות', 'No observations');
-    plot.appendChild(text);
-    var sub = svg('text', {x:328, y:128, 'text-anchor':'middle', fill:'#94a3b8', 'font-size':12});
-    sub.textContent = L('תא ריק אינו אפס', 'An empty cell is not zero');
-    plot.appendChild(sub);
+    plot.appendChild(svgText({x:328, y:104, 'text-anchor':'middle', fill:'#cbd5e1', 'font-size':16}, L('אין תצפיות', 'No observations')));
+    plot.appendChild(svgText({x:328, y:128, 'text-anchor':'middle', fill:'#94a3b8', 'font-size':12}, L('תא ריק אינו אפס', 'An empty cell is not zero')));
     return plot;
   }
 
@@ -204,9 +226,7 @@
     plot.appendChild(svg('line', {x1:320, y1:16, x2:320, y2:204, stroke:'#334155'}));
     plot.appendChild(svg('line', {x1:40, y1:110, x2:600, y2:110, stroke:'#334155'}));
     function label(x, y, text){
-      var node = svg('text', {x:x, y:y, 'text-anchor':'middle', fill:'#cbd5e1', 'font-size':12});
-      node.textContent = text;
-      plot.appendChild(node);
+      plot.appendChild(svgText({x:x, y:y, 'text-anchor':'middle', fill:'#cbd5e1', 'font-size':12}, text));
     }
     label(180, 70, L('כיסוי עולה, ETA עולה', 'Coverage up, ETA up'));
     label(180, 90, L('צמיחה שבירה', 'Fragile growth'));
@@ -222,7 +242,7 @@
   function chartArticle(parent, chart, plot, wide){
     var node = card(parent, wide);
     badge(node, 'ut-un', L('לא נצפה', 'Unobserved'));
-    heading(node, titleOf(chart), glossOf(chart));
+    heading(node, titleOf(chart), null);
     node.appendChild(plot || emptyPlot(titleOf(chart)));
     captions(node, L(chart.shows_he, chart.shows_en), L(chart.does_not_show_he, chart.does_not_show_en));
     return node;
@@ -231,11 +251,16 @@
   function registerSources(data){
     if(!root.WaveSources) return;
     var nyc = data.series.nyc_hvfhv.observations;
+    var readHe = {improving:'משתפר', stable:'יציב', deteriorating:'נחלש'};
+    var nameHe = {nyc_uber_daily_full_window:'ניו יורק, החלון המלא', nyc_uber_daily_since_may:'ניו יורק ממאי', lax_tnc_latest_month_yoy:'LAX, החודש האחרון', lax_tnc_ytd_yoy:'LAX, מתחילת השנה', lax_tnc_june_yoy:'LAX, יוני'};
+    var compHe = data.inference.components.map(function(row){return (nameHe[row.id] || row.id) + ' ' + row.change_pct + '% ' + (readHe[row.read] || row.read);}).join(' · ');
     var text = L(
       'UBER TRACKER הוא קלט מחקר. הוא מפריד עובדה מהסקה ואינו המלצת מסחר.\n' +
       'הקריאה הכוללת "' + data.inference.label_he + '" היא הסקה מפרוקסי הנפח הציבוריים, בפס שטוח של ' + data.inference.flat_band_pct + '% לכל רכיב. כשהרכיבים חלוקים, הקריאה יציבה. הדפסת ה-SEC אינה נכנסת לציון. סדרה ריקה אינה אפס.\n' +
-      data.inference.components.map(function(row){return row.id + ': ' + row.change_pct + '% ' + row.read + ' (' + row.detail + ')';}).join('\n') + '\n' +
-      data.inference.excluded.join('\n') + '\n' +
+      compHe + '\n' +
+      'שיעורי הצמיחה של SEC הם עובדות על ההדפסה, לא קלט לקריאה הזו.\n' +
+      'מודעות הערובה לנהגים הן תאריך אחד, ולכן אין להן כיוון.\n' +
+      'סדרות ריקות של מחיר, ETA, סא\'רג\', Eats וקונצנזוס לא נצפו, והן אינן אפס.\n' +
       'ניו יורק: הסכום החודשי הוא ספירת קובץ TLC. נסיעות ליום = הסכום ÷ ימי החודש, מ-' + nyc[0].month + ' עד ' + nyc[nyc.length-1].month + '. זה לא ציטוט מחיר ולא נפח ארצי.\n' +
       'LAX: נסיעות TNC חודשיות מדוחות LAWA. זה לא Uber בלבד ולא כל העיר. חודשים שאינם בקובץ לא הושלמו.\n' +
       'בונוס נהגים: מודעות פומביות מאתר הפניה עצמאי, אומתו ב-5 בנובמבר 2026. לא מספר נהגים ולא מספר נסיעות.\n' +
@@ -312,10 +337,6 @@
     badge(read, 'ut-inf', L('הסקה מהפרוקסי', 'Inference from proxies'));
     var strong = el('strong');
     strong.appendChild(document.createTextNode(L(data.inference.label_he, data.inference.label_en)));
-    if(he()){
-      strong.appendChild(document.createTextNode(' · '));
-      strong.appendChild(bdi(data.inference.label_en));
-    }
     read.appendChild(strong);
     read.appendChild(el('p', null, L(data.inference.line_he, data.inference.line_en)));
     host.appendChild(read);
@@ -354,7 +375,7 @@
     facts.appendChild(guide);
     captions(facts,
       L('המספרים שפורסמו לרבעון שהסתיים ב-30 בספטמבר 2026, והטווח שהחברה נתנה לרבעון הבא.', 'Figures published for the quarter ended 30 September 2026, and the range the company gave for the next quarter.'),
-      L('זה לא פאנל הערים, לא קונצנזוס מכירות, ולא ציון hot / in-line / cold.', 'This is not the city panel, not a sell-side consensus, and not a hot / in-line / cold score.')
+      L('זה לא פאנל הערים, לא קונצנזוס מכירות, ולא ציון חם / בקו / קר.', 'This is not the city panel, not a sell-side consensus, and not a hot / in-line / cold score.')
     );
     host.appendChild(facts);
 
@@ -432,7 +453,7 @@
     mobility.appendChild(el('p', null, L(data.consensus.note_he, data.consensus.note_en)));
     captions(mobility,
       L('המקום שבו יופיע ציון הפאנל מול קונצנזוס, כששניהם יימצאו.', 'Where the panel-versus-consensus score will appear once both exist.'),
-      L('אחוז ה-SEC שמוצג ליד הריקים הוא עובדה נפרדת. הוא לא הופך את הריבוע ל-hot.', 'The SEC percent beside the blanks is a separate fact. It does not turn the box hot.')
+      L('אחוז ה-SEC שמוצג ליד הריקים הוא עובדה נפרדת. הוא לא הופך את הריבוע לחם.', 'The SEC percent beside the blanks is a separate fact. It does not turn the box hot.')
     );
     host.appendChild(quoteGrid);
 
@@ -474,7 +495,7 @@
     delivery.appendChild(el('p', null, L(data.consensus.note_he, data.consensus.note_en)));
     captions(delivery,
       L('השוואת הפאנל לקונצנזוס הרבעון, כששני המספרים קיימים.', 'The quarter comparison of the panel with consensus, once both numbers exist.'),
-      L('צמיחת Delivery בהדפסה אינה ציון cold או hot של הפאנל.', 'Delivery growth in the print is not a cold or hot score for the panel.')
+      L('צמיחת Delivery בהדפסה אינה ציון קר או חם של הפאנל.', 'Delivery growth in the print is not a cold or hot score for the panel.')
     );
     host.appendChild(eatsGrid);
     renderMethodology(host, data);
@@ -515,7 +536,10 @@
       return link;
     }
     if(part.ltr) return bdi(part.text);
-    return document.createTextNode(part.text || '');
+    var span = document.createElement('span');
+    if(part.text && /[\u0590-\u05FF]/.test(part.text)) fillHebrew(span, part.text);
+    else span.textContent = part.text || '';
+    return span;
   }
   function fillParts(node, parts){
     (parts || []).forEach(function(part){node.appendChild(partNode(part));});

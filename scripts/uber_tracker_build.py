@@ -202,7 +202,18 @@ def methodology_notes(nyc, lax, bonuses, guide, routes, cadence, proxy):
         ad_links.append(seg(row["city"] + " ", ltr=True))
         ad_links.append(seg(row["source_url"], url=row["source_url"]))
         ad_links.append(seg(" "))
-    component_he = " ".join(
+    read_he = {"improving": "משתפר", "stable": "יציב", "deteriorating": "נחלש"}
+    name_he = {
+        "nyc_uber_daily_full_window": "ניו יורק, החלון המלא",
+        "nyc_uber_daily_since_may": "ניו יורק ממאי",
+        "lax_tnc_latest_month_yoy": "LAX, החודש האחרון",
+        "lax_tnc_ytd_yoy": "LAX, מתחילת השנה",
+        "lax_tnc_june_yoy": "LAX, יוני",
+    }
+    component_he = " · ".join(
+        f"{name_he[row['id']]} {row['change_pct']:+.1f}% {read_he[row['read']]}" for row in proxy["components"]
+    )
+    component_en = " ".join(
         f"{row['id']} {row['change_pct']:+.1f}% {row['read']}" for row in proxy["components"]
     )
     return [
@@ -268,7 +279,7 @@ def methodology_notes(nyc, lax, bonuses, guide, routes, cadence, proxy):
             ],
             "links": nyc_links,
             "freq_he": [
-                seg("כל חודש בקובץ נספר מקובץ ה-parquet של "),
+                seg("כל חודש בקובץ נספר מקובץ הנסיעות של "),
                 seg("TLC", ltr=True),
                 seg(" ב-"),
                 seg(str(latest.get("collected_at") or latest["source_pulled"]), ltr=True),
@@ -337,9 +348,7 @@ def methodology_notes(nyc, lax, bonuses, guide, routes, cadence, proxy):
             "title_he": "הקריאה הכוללת",
             "title_en": "Overall read",
             "calc_he": [
-                seg("הסקה, לא ספירת נסיעות ולא הזמנות. הרכיבים: "),
-                seg(component_he, ltr=True),
-                seg(". פס שטוח של "),
+                seg("הסקה, לא ספירת נסיעות ולא הזמנות. הרכיבים: " + component_he + ". פס שטוח של "),
                 seg(str(proxy["flat_band_pct"]) + "%", ltr=True),
                 seg(" לכל רכיב. כשהרכיבים חלוקים הקריאה "),
                 seg(proxy["label_he"]),
@@ -348,7 +357,7 @@ def methodology_notes(nyc, lax, bonuses, guide, routes, cadence, proxy):
                 seg(" ומודעות הנהגים לא נכנסות לציון."),
             ],
             "calc_en": [
-                seg("An inference, not a trip count and not an order count. Components: " + component_he + f". Flat band of {proxy['flat_band_pct']}% per component. Disagreement is read as {proxy['label_en']}. The SEC print and the driver ads are not inputs."),
+                seg("An inference, not a trip count and not an order count. Components: " + component_en + f". Flat band of {proxy['flat_band_pct']}% per component. Disagreement is read as {proxy['label_en']}. The SEC print and the driver ads are not inputs."),
             ],
             "links": [],
             "freq_he": [seg("מתעדכן כשנוספת שורת נפח ציבורית. הסריקה עצמה לא ממציאה נקודה.")],
@@ -374,8 +383,8 @@ def methodology_notes(nyc, lax, bonuses, guide, routes, cadence, proxy):
                 seg("UTC+2", ltr=True),
                 seg(", וחלון "),
                 seg("Eats", ltr=True),
-                seg(" ב-"),
-                seg(cadence["eats_basket_local"], ltr=True),
+                seg(" ביום שני "),
+                seg("09:00", ltr=True),
                 seg(". בשעון קיץ הריצה מוקדמת בשעה. זו סריקה, לא זרם מחירים."),
             ],
             "freq_en": [
@@ -530,7 +539,7 @@ def build() -> dict:
             "band_pp": CONSENSUS_BAND_PP,
             "mobility_score": consensus_score(None, None),
             "delivery_score": consensus_score(None, None),
-            "note_he": "אין קונצנזוס מכירות שנצפה, ואין מדד פאנל. לא ניתן ציון hot / in-line / cold. הדפסת ה-SEC אינה מחליפה אף אחד מהם.",
+            "note_he": "אין קונצנזוס מכירות שנצפה, ואין מדד פאנל. לא ניתן ציון חם / בקו / קר. הדפסת ה-SEC אינה מחליפה אף אחד מהם.",
             "note_en": "No observed sell-side consensus and no panel index. hot / in-line / cold is not scored. The SEC print stands in for neither.",
         },
         "route_basket": routes,
