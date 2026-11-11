@@ -1,7 +1,7 @@
 // Company Research price history. Provider matching/calculations stay server-side.
 (function(){
   'use strict';
-  var state={symbol:'',request:0,controller:null,chart:null,data:null,category:'all',interval:'daily',clusters:[],selected:null};
+  var state={symbol:'',request:0,controller:null,chart:null,data:null,category:'all'};
   var RANGE='3y';
   function el(id){return document.getElementById(id);}
   function text(en,he){return typeof getLang==='function'&&getLang()==='he'?he:en;}
@@ -21,20 +21,9 @@
   function setup(){
     var host=el('resPriceHistory');if(!host)return false;
     if(el('ph-chart'))return true;
-    host.innerHTML='<div class="ph-header"><div><h2>'+text('Price','מחיר')+'</h2><div id="ph-period" class="ph-period"></div></div><div class="ph-interval" role="group" aria-label="Candle interval"><button type="button" data-ph-interval="daily" aria-pressed="true">Daily</button><button type="button" data-ph-interval="weekly" aria-pressed="false">Weekly</button></div></div><div id="ph-status" class="ph-status" role="status" aria-live="polite"></div><div id="ph-body" hidden><div class="ph-summary"><div><span id="ph-latest"></span><span id="ph-change"></span></div><div id="ph-basis"></div></div><label class="ph-filter">'+text('Event category','סוג אירוע')+' <select id="ph-category"><option value="all">'+text('All','הכל')+'</option></select></label><div class="ph-chart-wrap"><div id="ph-plot-markers" class="ph-plot-markers"></div><canvas id="ph-chart" role="img" aria-label="'+text('Price chart','גרף מחיר')+'"></canvas></div><div id="ph-events" class="ph-events"></div><div id="ph-detail" class="ph-detail"></div></div>';
+    host.innerHTML='<div class="ph-header"><div><h2>'+text('Price','מחיר')+'</h2><div id="ph-period" class="ph-period"></div></div></div><div id="ph-status" class="ph-status" role="status" aria-live="polite"></div><div id="ph-body" hidden><div class="ph-summary"><div><span id="ph-latest"></span><span id="ph-change"></span></div><div id="ph-basis"></div></div><label class="ph-filter">'+text('Event category','סוג אירוע')+' <select id="ph-category"><option value="all">'+text('All','הכל')+'</option></select></label><div class="ph-chart-wrap"><canvas id="ph-chart" role="img" aria-label="'+text('Price chart','גרף מחיר')+'"></canvas></div></div>';
     host.addEventListener('click',function(event){
       if(event.target.closest('#ph-retry')){load(state.symbol);return;}
-      var interval=event.target.closest('[data-ph-interval]');
-      if(interval){state.interval=interval.dataset.phInterval;render(state.data);return;}
-      var cluster=event.target.closest('[data-ph-cluster]');
-      if(cluster){openCluster(Number(cluster.dataset.phCluster));return;}
-      var item=event.target.closest('[data-ph-event]');
-      if(item){showEvent(item.dataset.phEvent);return;}
-    });
-    host.addEventListener('keydown',function(event){
-      if(event.key!=='Enter')return;
-      var cluster=event.target.closest('[data-ph-cluster]');
-      if(cluster){event.preventDefault();openCluster(Number(cluster.dataset.phCluster));}
     });
     host.addEventListener('change',function(e){if(e.target.id==='ph-category'){state.category=e.target.value;render(state.data);}});return true;
   }
@@ -81,8 +70,7 @@
     var daily=data.points||[];
     data.events=(data.events||[]).filter(function(e){return url(e.url)&&e.title&&Number.isInteger(e.index)&&daily[e.index]&&finite(e.price);});
     var pending=(data.pending_events||[]).filter(function(e){return url(e.url)&&e.title;});
-    var points=state.interval==='weekly'&&(data.weekly_candles||[]).length?data.weekly_candles:daily,s=data.summary||{},last=daily[daily.length-1];
-    document.querySelectorAll('[data-ph-interval]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.phInterval===state.interval));});
+    var points=daily,s=data.summary||{},last=daily[daily.length-1];
     if(!points.length){el('ph-status').textContent=text('Price history unavailable.','היסטוריית המחיר אינה זמינה.');return;}
     var hasCandles=points.every(function(p){return finite(p.open)&&finite(p.high)&&finite(p.low);});
     el('ph-status').textContent='';el('ph-body').hidden=false;
@@ -118,38 +106,6 @@
     var canvas=el('ph-chart');
     state.chart=new Chart(canvas,{type:'line',data:{labels:points.map(function(p){return p.date;}),datasets:[{label:data.symbol,data:points.map(function(p){return p.close;}),borderColor:'#63b3ff',borderWidth:hasCandles?0:2,pointRadius:0,pointHitRadius:0,fill:false,tension:0}]},plugins:[candles,dots],options:{layout:{padding:{top:18}},responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{type:'category',grid:{display:false},ticks:{color:'#9cacc2',maxTicksLimit:6,maxRotation:0,autoSkipPadding:18,callback:function(value){var label=this.getLabelForValue(value);return /^\d{4}-\d{2}-\d{2}$/.test(String(label||''))?new Date(label+'T12:00:00Z').toLocaleDateString('en-US',{month:'short',year:'2-digit',timeZone:'UTC'}):label;}}},y:{suggestedMin:lows.length?Math.min.apply(null,lows):undefined,suggestedMax:highs.length?Math.max.apply(null,highs):undefined,grid:{color:'rgba(148,163,184,.09)'},ticks:{color:'#9cacc2',maxTicksLimit:6,callback:function(value){return money(value);}}}}}});
     if(window.WaveCatalystChart)WaveCatalystChart.bindPointer(canvas, state.chart);
-    paintMarkers(events, points);
-  }
-  function showEvent(id){
-    var event=(state.data.events||[]).concat(state.data.pending_events||[]).find(function(item){return item.id===id;});
-    if(!event)return;
-    state.selected=id;
-    var detail=el('ph-detail');
-    detail.innerHTML='<h4>'+esc(event.title)+'</h4><p>'+esc(event.summary||'')+'</p>'+(url(event.url)?'<a href="'+esc(url(event.url))+'" target="_blank" rel="noopener noreferrer">'+esc(event.source||event.url)+'</a>':'');
-  }
-  function openCluster(index){
-    var cluster=state.clusters[index];
-    if(!cluster)return;
-    showEvent(cluster.events[0].id);
-  }
-  function paintMarkers(events, points){
-    var host=el('ph-plot-markers');
-    if(!host)return;
-    var slots=Math.max(events.length,3),groups=new Map();
-    events.forEach(function(event){
-      var index=barIndex(points, event);
-      if(index<0)return;
-      var slot=Math.min(slots-1,Math.floor(index/Math.max(1,points.length)*slots));
-      if(!groups.has(slot))groups.set(slot,[]);
-      groups.get(slot).push(event);
-    });
-    state.clusters=Array.from(groups.entries()).map(function(pair){return {slot:pair[0],events:pair[1],sentiment:'neutral'};});
-    host.innerHTML=state.clusters.map(function(cluster,i){
-      var first=cluster.events[0],last=cluster.events[cluster.events.length-1];
-      return '<button type="button" class="ph-plot-marker ph-neutral" data-ph-cluster="'+i+'" aria-controls="ph-detail" aria-label="'+esc(cluster.events.length+' event(s), '+first.date+' to '+last.date+'. '+first.title)+'"><span>'+(cluster.events.length>1?cluster.events.length:'•')+'</span></button>';
-    }).join('');
-    var list=el('ph-events');
-    if(list)list.innerHTML=events.map(function(event){return '<button type="button" data-ph-event="'+esc(event.id)+'"><span>'+esc(event.date)+'</span><span>'+esc(event.title)+'</span></button>';}).join('');
   }
   function clipToThreeYears(data){
     var points=data.points||[];
