@@ -1,6 +1,6 @@
 {
   "schema": "wave.uber-tracker.bundle.v1",
-  "generated_at": "2026-11-12T04:04:07+02:00",
+  "generated_at": "2026-11-12T16:56:18+02:00",
   "timezone": "Asia/Jerusalem",
   "utc_offset_standard": "+02:00",
   "baseline_pull": {
@@ -12,7 +12,7 @@
     "note_en": "Baseline pull is dated 5 November 2026, Asia/Jerusalem (UTC+2). The collection log has no clock time."
   },
   "last_attempt": {
-    "at": "2026-11-12T04:04:07+02:00",
+    "at": "2026-11-12T16:56:18+02:00",
     "timezone": "Asia/Jerusalem",
     "utc_offset": "+02:00",
     "clock_time_logged": true,
