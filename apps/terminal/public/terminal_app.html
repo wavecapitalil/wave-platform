@@ -6,7 +6,7 @@
 <title>Wave Capital — Terminal</title>
 <link rel="stylesheet" href="terminal.css?v=20261013-article-fallback2">
 
-<script src="i18n.js?v=20261116-rm-places"></script>
+<script src="i18n.js?v=20261116-monitor1"></script>
   <link rel="stylesheet" href="wave-university-theme.css?v=20261008-depth1">
 <link rel="stylesheet" href="ai-tutor.css">
 <link rel="stylesheet" href="terminal-sources.css?v=20261105-datalog1">
@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="terminal-research.css?v=20261014-persistent-statements">
 <link rel="stylesheet" href="terminal-sector-research.css?v=20261105-sector1">
 <link rel="stylesheet" href="terminal-btc-bb.css?v=20261116-banner1">
+<link rel="stylesheet" href="terminal-research-monitor.css?v=1">
 <link rel="stylesheet" href="terminal-brief.css?v=20261009-brighter-reader1">
 <link rel="stylesheet" href="wave-header.css?v=20261101-1"><script src="wave-header.js?v=20261101-1"></script><style>
 .ratio-comparisons{margin-top:20px;color:#dbe5f1;direction:ltr;text-align:left}.ratio-comparisons h3{font-size:18px;margin:0 0 16px}.ratio-head,.ratio-row{display:grid;grid-template-columns:minmax(100px,.8fr) minmax(110px,1fr) minmax(155px,1.2fr) minmax(180px,1.5fr);gap:16px;padding:16px 8px;border-bottom:1px solid #26364b}.ratio-head{color:#b9c9dc;font-size:12px;background:#101d2d}.ratio-row h4{font-size:13px;margin:0}.ratio-row strong{display:block;font-size:18px;font-variant-numeric:tabular-nums}.ratio-row small{display:block;font-size:11px;line-height:1.6;color:#a8b8cd;overflow-wrap:anywhere}.ratio-row .ratio-mobile{display:none}.ratio-label{display:block;margin-top:10px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#7f93ab}.ratio-earnings{padding:18px 8px;font-size:12px;color:#b9c9dc}
@@ -225,6 +226,9 @@
       </div>
     </div>
 
+    <div class="nav-item rm-nav" data-page="research-monitor" onclick="navigate('research-monitor')">
+      <span class="nav-item-icon" aria-hidden="true">◈</span><span>Research Monitor</span>
+    </div>
     <div class="nav-item" data-page="sources" onclick="navigate('sources')">
       <span class="nav-item-icon">ⓘ</span><span>מקורות ומתודולוגיה</span>
     </div>
@@ -2232,6 +2236,16 @@
       </div>
     </div>
 
+    <section class="page" id="page-research-monitor" aria-labelledby="rm-heading">
+      <div class="rm-shell">
+        <header class="rm-header">
+          <div><div class="rm-eyebrow" dir="ltr">WAVE CAPITAL / PRIVATE WORKSPACE</div><h1 id="rm-heading">Research Monitor</h1>
+          <p data-i18n="rm.subtitle">Follow the studies you save and see what changed since your last check.</p></div>
+          <span class="rm-private" data-i18n="rm.private">Private to your account</span>
+        </header>
+        <div id="rm-content" aria-busy="true"></div>
+      </div>
+    </section>
     <div class="page" id="page-uber-tracker">
       <div class="welcome-wrap" style="max-width:1120px">
         <div id="uberTracker"></div>
@@ -2253,7 +2267,7 @@
 <script src="terminal-data-log.js?v=20261105-datalog1"></script>
 <script src="terminal-sources.js?v=20261105-datalog1"></script>
 <script src="terminal-brief.js?v=20261106-clean1"></script>
-<script src="terminal.js?v=20261116-rm-places"></script>
+<script src="terminal.js?v=20261116-monitor1"></script>
 <script src="terminal-market.js?v=20261106-clean1"></script>
 <script src="terminal-sector-research.js?v=20261105-sector1"></script>
 <script src="terminal-content.js?v=20261013-article-fallback"></script>
@@ -2298,7 +2312,9 @@ if (window.Chart) Chart.register({
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1"></script>
 <script src="supabase-config.js"></script>
 <script src="platform.js"></script>
-<script src="platform-cloud.js?v=20261021-redirect"></script>
+<script src="platform-cloud.js?v=20261116-monitor1"></script>
+<script src="terminal-research-metrics.js?v=1"></script>
+<script src="terminal-research-monitor.js?v=1"></script>
 <script src="platform-search.js?v=20261116-rm-places"></script>
 <script src="ai-tutor.js"></script>
 <!-- ARTICLE READER OVERLAY -->

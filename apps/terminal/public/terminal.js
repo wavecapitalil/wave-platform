@@ -66,6 +66,7 @@ function navigate(page){
 
   if(page === 'sources') WaveSources.render();
   if(page === 'data-log' && window.WaveDataLog) WaveDataLog.render();
+  if(window.WaveResearchMonitor){ if(page==='research-monitor') WaveResearchMonitor.open(); else WaveResearchMonitor.close(); }
   if(page === 'uber-tracker' && window.WaveUberTracker) WaveUberTracker.open();
   var mainPane = document.querySelector('.main');
   if(mainPane) mainPane.classList.toggle('valuation-active', page === 'valuation');
@@ -136,8 +137,8 @@ function navigate(page){
   // Keep the valuation deep link truthful without adding a new history/router model.
   // Other Terminal pages retain their existing in-app navigation behavior.
   if(page==='valuation'&&location.hash!=='#valuation')history.replaceState(null,'','#valuation');
-  else if(page==='btc-bb-research'&&location.hash!=='#page=btc-bb-research')history.replaceState(null,'','#page=btc-bb-research');
-  else if(page!=='valuation'&&page!=='btc-bb-research'&&(location.hash==='#valuation'||location.hash==='#page=btc-bb-research'))history.replaceState(null,'',location.pathname+location.search);
+  else if((page==='btc-bb-research'||page==='research-monitor')&&location.hash!=='#page='+page)history.replaceState(null,'','#page='+page);
+  else if(page!=='valuation'&&page!=='btc-bb-research'&&page!=='research-monitor'&&(location.hash==='#valuation'||location.hash==='#page=btc-bb-research'||location.hash==='#page=research-monitor'))history.replaceState(null,'',location.pathname+location.search);
 
   // On phones the menu is an overlay drawer; close it after choosing a page.
   if(window.matchMedia && window.matchMedia('(max-width:800px)').matches){
