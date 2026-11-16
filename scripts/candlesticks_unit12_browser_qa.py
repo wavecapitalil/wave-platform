@@ -65,6 +65,23 @@ def main():
                             )
                             broken = page.locator("figure.visual img").evaluate_all("(xs) => xs.filter(x => x.naturalWidth === 0).map(x => x.src)")
                             assert not broken, f"broken image files: {broken}"
+                            # An image may report naturalWidth > 0 before lazy/async decoding
+                            # is actually painted in a full-page screenshot.
+                            for image_index, image in enumerate(page.locator("figure.visual img").all(), start=1):
+                                image.scroll_into_view_if_needed()
+                                image.evaluate("(x) => x.decode()")
+                                page.wait_for_timeout(80)
+                                assert image.is_visible(), f"figure {image_index} not visible"
+                            # Desktop: save individual visual evidence for all three figures,
+                            # including the lesson's SVG figure when applicable.
+                            if viewport_name == "desktop":
+                                (OUT / "figures").mkdir(parents=True, exist_ok=True)
+                                for figure_index, figure in enumerate(page.locator("figure.visual").all(), start=1):
+                                    figure.scroll_into_view_if_needed()
+                                    figure.screenshot(
+                                        path=str(OUT / "figures" / f"{file.replace('.html','')}-fig-{figure_index}.png"),
+                                        animations="disabled"
+                                    )
                             record["figure_images_loaded"] = len(fig_src)
                         if file == "candlesticks-lesson-02.html":
                             page.locator("circle[data-day='1']").click()
