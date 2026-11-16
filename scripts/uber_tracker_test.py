@@ -109,6 +109,11 @@ def main():
     joined = json.dumps(nyc_note, ensure_ascii=False)
     if "fhvhv_tripdata_2026-09.parquet" not in joined or "fhvhv_tripdata_2025-09.parquet" not in joined:
         fail("NYC methodology lost a parquet source that is in the data file")
+    visible = " ".join(part.get("text", "") for item in bundle["methodology"] for part in item["calc_he"] + item["freq_he"])
+    if "2026-11-06" in visible or "08:00" in visible or "route_basket.csv" in visible:
+        fail("methodology copy still includes a collection stamp, a poll clock or a file name")
+    if "משיכת בסיס" in page or "בדיקה ציבורית אחרונה" in page or "תא ריק אינו אפס" in page or "קבצי ההיסטוריה" in page:
+        fail("tracker page still shows a collection note")
     if "ut-method" not in page:
         fail("tracker page does not render the methodology section")
     if "bdi" not in page or "rtl" not in page:

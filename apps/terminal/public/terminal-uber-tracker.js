@@ -83,10 +83,6 @@
     if(gloss == null || gloss === '') return;
     parent.appendChild(gloss.nodeType ? gloss : el('p', 'ut-gloss', gloss));
   }
-  function captions(parent, shows, doesNot){
-    parent.appendChild(el('p', 'ut-cap', L('מה רואים: ', 'Shows: ') + shows));
-    parent.appendChild(el('p', 'ut-cap', L('מה לא רואים: ', 'Does not show: ') + doesNot));
-  }
   function badge(parent, cls, text){
     parent.appendChild(el('span', 'ut-badge ' + cls, text));
   }
@@ -130,8 +126,7 @@
     [40, 80, 120, 160].forEach(function(y){
       plot.appendChild(svg('line', {x1:48, y1:y, x2:608, y2:y, stroke:'#334155', 'stroke-width':1}));
     });
-    plot.appendChild(svgText({x:328, y:104, 'text-anchor':'middle', fill:'#cbd5e1', 'font-size':16}, L('אין תצפיות', 'No observations')));
-    plot.appendChild(svgText({x:328, y:128, 'text-anchor':'middle', fill:'#94a3b8', 'font-size':12}, L('תא ריק אינו אפס', 'An empty cell is not zero')));
+    plot.appendChild(svgText({x:328, y:110, 'text-anchor':'middle', fill:'#cbd5e1', 'font-size':16}, L('אין עדיין נתונים', 'No figures yet')));
     return plot;
   }
 
@@ -215,26 +210,7 @@
       plot.appendChild(value);
     });
     var title = svg('title');
-    title.textContent = L('בונוס מובטח לנהג לפי עיר, תאריך אחד', 'Driver guarantee by city, one date');
-    plot.appendChild(title);
-    return plot;
-  }
-
-  function quadrant(){
-    var plot = svg('svg', {viewBox:'0 0 640 220', role:'img'});
-    plot.appendChild(svg('rect', {x:40, y:16, width:560, height:188, fill:'none', stroke:'#334155'}));
-    plot.appendChild(svg('line', {x1:320, y1:16, x2:320, y2:204, stroke:'#334155'}));
-    plot.appendChild(svg('line', {x1:40, y1:110, x2:600, y2:110, stroke:'#334155'}));
-    function label(x, y, text){
-      plot.appendChild(svgText({x:x, y:y, 'text-anchor':'middle', fill:'#cbd5e1', 'font-size':12}, text));
-    }
-    label(180, 70, L('כיסוי עולה, ETA עולה', 'Coverage up, ETA up'));
-    label(180, 90, L('צמיחה שבירה', 'Fragile growth'));
-    label(460, 150, L('כיסוי עולה, ETA יציב', 'Coverage up, ETA stable'));
-    label(460, 170, L('אימוץ בריא', 'Healthy adoption'));
-    label(320, 118, L('אין עיר', 'No city plotted'));
-    var title = svg('title');
-    title.textContent = L('מיפוי כיסוי מול ETA, בלי נקודות', 'Coverage versus ETA map, no points');
+    title.textContent = L('בונוס מובטח לנהג לפי עיר', 'Driver guarantee by city');
     plot.appendChild(title);
     return plot;
   }
@@ -244,55 +220,29 @@
     badge(node, 'ut-un', L('לא נצפה', 'Unobserved'));
     heading(node, titleOf(chart), null);
     node.appendChild(plot || emptyPlot(titleOf(chart)));
-    captions(node, L(chart.shows_he, chart.shows_en), L(chart.does_not_show_he, chart.does_not_show_en));
     return node;
   }
 
   function registerSources(data){
-    if(!root.WaveSources) return;
-    var nyc = data.series.nyc_hvfhv.observations;
-    var readHe = {improving:'משתפר', stable:'יציב', deteriorating:'נחלש'};
-    var nameHe = {nyc_uber_daily_full_window:'ניו יורק, החלון המלא', nyc_uber_daily_since_may:'ניו יורק ממאי', lax_tnc_latest_month_yoy:'LAX, החודש האחרון', lax_tnc_ytd_yoy:'LAX, מתחילת השנה', lax_tnc_june_yoy:'LAX, יוני'};
-    var compHe = data.inference.components.map(function(row){return (nameHe[row.id] || row.id) + ' ' + row.change_pct + '% ' + (readHe[row.read] || row.read);}).join(' · ');
-    var text = L(
-      'UBER TRACKER הוא קלט מחקר. הוא מפריד עובדה מהסקה ואינו המלצת מסחר.\n' +
-      'הקריאה הכוללת "' + data.inference.label_he + '" היא הסקה מפרוקסי הנפח הציבוריים, בפס שטוח של ' + data.inference.flat_band_pct + '% לכל רכיב. כשהרכיבים חלוקים, הקריאה יציבה. הדפסת ה-SEC אינה נכנסת לציון. סדרה ריקה אינה אפס.\n' +
-      compHe + '\n' +
-      'שיעורי הצמיחה של SEC הם עובדות על ההדפסה, לא קלט לקריאה הזו.\n' +
-      'מודעות הערובה לנהגים הן תאריך אחד, ולכן אין להן כיוון.\n' +
-      'סדרות ריקות של מחיר, ETA, סא\'רג\', Eats וקונצנזוס לא נצפו, והן אינן אפס.\n' +
-      'ניו יורק: הסכום החודשי הוא ספירת קובץ TLC. נסיעות ליום = הסכום ÷ ימי החודש, מ-' + nyc[0].month + ' עד ' + nyc[nyc.length-1].month + '. זה לא ציטוט מחיר ולא נפח ארצי.\n' +
-      'LAX: נסיעות TNC חודשיות מדוחות LAWA. זה לא Uber בלבד ולא כל העיר. חודשים שאינם בקובץ לא הושלמו.\n' +
-      'בונוס נהגים: מודעות פומביות מאתר הפניה עצמאי, אומתו ב-5 בנובמבר 2026. לא מספר נהגים ולא מספר נסיעות.\n' +
-      'הדפסת Q3 2026: Exhibit 99.1, הוגש ב-4 בנובמבר 2026. מדד Q4 הוא תחזית החברה, לא קונצנזוס מכירות.\n' +
-      'ציטוטי Drive ו-Eats, כיסוי מסעדות, מבצעים וסל מנות: אין שורות. איסוף בתוך האפליקציה דורש סשן מחובר, והמשימה אינה נכנסת לחשבון.\n' +
-      'קצב: בדיקת מקורות ציבוריים ב-08:00, 12:00, 17:30 ו-23:00 לפי UTC+2, וחלון סל Eats בימי שני 09:00. בשעון הקיץ בישראל הריצות מוקדמות בשעה. זו סריקה, לא זרם מחירים.\n' +
-      data.baseline_pull.note_he,
-      'UBER TRACKER is research input. It separates fact from inference and is not a trade recommendation.\n' +
-      'The overall read "' + data.inference.label_en + '" is an inference from the public volume proxies, using a flat band of ' + data.inference.flat_band_pct + '% per component. Disagreement is read as stable. The SEC print is not an input. An empty series is not zero.\n' +
-      data.inference.components.map(function(row){return row.id + ': ' + row.change_pct + '% ' + row.read + ' (' + row.detail + ')';}).join('\n') + '\n' +
-      data.inference.excluded.join('\n') + '\n' +
-      'New York: the monthly total is the TLC file count. Trips per day = that total ÷ days in the month, ' + nyc[0].month + ' through ' + nyc[nyc.length-1].month + '. Not a fare quote and not national volume.\n' +
-      'LAX: monthly TNC trips from LAWA reports. Not Uber-only and not citywide. Missing months are not filled.\n' +
-      'Driver guarantees: public ads on an independent referral site, verified 5 November 2026. Not driver counts and not trip counts.\n' +
-      'Q3 2026 print: Exhibit 99.1, filed 4 November 2026. The Q4 range is the company outlook, not sell-side consensus.\n' +
-      'Drive and Eats quotes, restaurant coverage, promos, and the dish basket have no rows. In-app collection needs an authenticated session, and this job does not log in.\n' +
-      'Cadence: public-source checks at 08:00, 12:00, 17:30, and 23:00 on a UTC+2 clock, plus an Eats basket window on Monday at 09:00. During Israel summer time the jobs run one hour earlier. This is a poll, not a price tick.\n' +
-      data.baseline_pull.note_en
-    );
-    var links = [{title:'Exhibit 99.1 Q3 2026', url:data.sec_print[0].source_url}];
-    var seenNyc = {};
-    nyc.forEach(function(row){(row.source_urls||[]).forEach(function(url){if(!seenNyc[url]){seenNyc[url]=1; links.push({title:'NYC HVFHV', url:url});}});});
-    data.series.lax_tnc.observations.forEach(function(row){links.push({title:'LAX TNC ' + row.month, url:row.source_url});});
-    data.series.driver_bonuses.observations.forEach(function(row){links.push({title:row.city + ' driver ad', url:row.source_url});});
-    root.WaveSources.record('uber-tracker', L('UBER TRACKER · מקורות ומתודולוגיה', 'UBER TRACKER · sources and methodology'), text, links);
+    if(!root.WaveSources && !root.WaveDataLog) return;
+    var text = (data.methodology || []).map(function(item){
+      var parts = (he() ? item.calc_he : item.calc_en).concat(he() ? item.freq_he : item.freq_en);
+      return L(item.title_he, item.title_en) + '\n' + parts.map(function(part){return part.text || '';}).join('');
+    }).join('\n\n');
+    var links = [];
+    (data.methodology || []).forEach(function(item){
+      (item.links || []).forEach(function(part){
+        if(part.url && /^https?:/i.test(part.url)) links.push({title: part.text || part.url, url: part.url});
+      });
+    });
+    if(root.WaveSources) root.WaveSources.record('uber-tracker', L('UBER TRACKER · מקורות ומתודולוגיה', 'UBER TRACKER · sources and methodology'), text, links);
     if(root.WaveDataLog){
-      (data.methodology||[]).forEach(function(item){
-        var parts=he()?item.calc_he:item.calc_en;
-        var freq=he()?item.freq_he:item.freq_en;
-        var note=(parts||[]).concat(freq||[]).map(function(part){return part.text||'';}).join('');
-        var itemLinks=(item.links||[]).filter(function(part){return part.url&&/^https?:/i.test(part.url);}).map(function(part){return {title:part.text||part.url,url:part.url};});
-        root.WaveDataLog.record('uber-tracker:'+item.id,{section:'UBER TRACKER',metric:L(item.title_he,item.title_en),source:itemLinks.length?itemLinks[0].title:'',pulledAt:(data.last_attempt&&data.last_attempt.at)||data.baseline_pull.collected_on,notes:note,links:itemLinks,skipSources:true});
+      (data.methodology || []).forEach(function(item){
+        var parts = he() ? item.calc_he : item.calc_en;
+        var freq = he() ? item.freq_he : item.freq_en;
+        var note = (parts || []).concat(freq || []).map(function(part){return part.text || '';}).join('');
+        var itemLinks = (item.links || []).filter(function(part){return part.url && /^https?:/i.test(part.url);}).map(function(part){return {title: part.text || part.url, url: part.url};});
+        root.WaveDataLog.record('uber-tracker:' + item.id, {section:'UBER TRACKER', metric:L(item.title_he, item.title_en), source:itemLinks.length ? itemLinks[0].title : '', pulledAt:'', notes:note, links:itemLinks, skipSources:true});
       });
     }
   }
@@ -309,28 +259,7 @@
     var h1 = el('h1');
     h1.appendChild(bdi('UBER TRACKER'));
     head.appendChild(h1);
-    head.appendChild(el('p', 'ut-gloss', L('מבט אחד על Uber Drive ועל Uber Eats. עובדה לחוד, הסקה לחוד.', 'One view of Uber Drive and Uber Eats. Facts and inferences stay apart.')));
-    var pull = el('p');
-    pull.appendChild(document.createTextNode(L('משיכת בסיס: ', 'Baseline pull: ')));
-    pull.appendChild(bdi(data.baseline_pull.collected_on + ' Asia/Jerusalem (UTC+2)'));
-    pull.appendChild(document.createTextNode(L('. שעת השעון לא נרשמה.', '. Clock time was not logged.')));
-    head.appendChild(pull);
-    if(data.last_attempt && data.last_attempt.at){
-      var attempt = el('p');
-      attempt.appendChild(document.createTextNode(L('בדיקה ציבורית אחרונה: ', 'Latest public check: ')));
-      attempt.appendChild(bdi(data.last_attempt.at));
-      attempt.appendChild(document.createTextNode(' '));
-      attempt.appendChild(bdi(data.last_attempt.timezone + ' ' + (data.last_attempt.utc_offset || '')));
-      attempt.appendChild(document.createTextNode(L('. תצפיות חדשות: ', '. New observations: ')));
-      attempt.appendChild(bdi(String(data.last_attempt.new_observations)));
-      attempt.appendChild(document.createTextNode(L('. מקורות שענו: ', '. Sources reached: ')));
-      attempt.appendChild(bdi(data.last_attempt.reachable + '/' + data.last_attempt.checked));
-      head.appendChild(attempt);
-    }
-    head.appendChild(el('p', 'ut-note', L(
-      'הדף נסרק ב-08:00, 12:00, 17:30 ו-23:00 לפי UTC+2, וחלון סל Eats הוא יום שני ב-09:00. בשעון הקיץ הריצות מוקדמות בשעה. זו סריקה מתוזמנת, לא זרם מחירים.',
-      'The page is checked at 08:00, 12:00, 17:30, and 23:00 on a UTC+2 clock, with the Eats basket window on Monday at 09:00. In summer those runs are an hour earlier in Jerusalem. This is a scheduled poll, not a price tick.'
-    )));
+    head.appendChild(el('p', 'ut-gloss', L('מבט אחד על Uber Drive ועל Uber Eats.', 'One view of Uber Drive and Uber Eats.')));
     host.appendChild(head);
 
     var read = el('section', 'ut-read');
@@ -343,7 +272,7 @@
 
     var facts = card(host, true);
     badge(facts, 'ut-fact', L('עובדה', 'Fact'));
-    heading(facts, L('הדפסת Q3 2026', 'Q3 2026 print'), 'מתוך Exhibit 99.1 · 4 בנובמבר 2026 · UBER');
+    heading(facts, L('הדפסת Q3 2026', 'Q3 2026 print'), 'Exhibit 99.1 · UBER');
     var grid = el('div', 'ut-facts');
     data.sec_print.forEach(function(row){
       var metric = el('div', 'ut-metric');
@@ -361,7 +290,6 @@
         change.appendChild(bdi(signed(row.cc_yoy_pct, 0) + '%'));
       }
       metric.appendChild(change);
-      if(row.headline_note_he || row.headline_note_en) metric.appendChild(el('div', 'ut-gloss', L(row.headline_note_he, row.headline_note_en)));
       grid.appendChild(metric);
     });
     facts.appendChild(grid);
@@ -371,19 +299,11 @@
     guide.appendChild(bdi('$' + data.q4_guide.low_usd_b + '–' + data.q4_guide.high_usd_b + 'B'));
     guide.appendChild(document.createTextNode(L(', צמיחה במטבע קבוע ', ', constant-currency growth ')));
     guide.appendChild(bdi(data.q4_guide.cc_yoy_low_pct + '–' + data.q4_guide.cc_yoy_high_pct + '%'));
-    guide.appendChild(document.createTextNode(L('. הדוח מניח רוח נגדית של כנקודת אחוז לצמיחה המדווחת.', '. The filing assumes about a 1 percentage-point headwind to reported growth.')));
+    guide.appendChild(document.createTextNode('.'));
     facts.appendChild(guide);
-    captions(facts,
-      L('המספרים שפורסמו לרבעון שהסתיים ב-30 בספטמבר 2026, והטווח שהחברה נתנה לרבעון הבא.', 'Figures published for the quarter ended 30 September 2026, and the range the company gave for the next quarter.'),
-      L('זה לא פאנל הערים, לא קונצנזוס מכירות, ולא ציון חם / בקו / קר.', 'This is not the city panel, not a sell-side consensus, and not a hot / in-line / cold score.')
-    );
     host.appendChild(facts);
 
     host.appendChild(el('h2', null, 'נסיעות · Uber Drive'));
-    host.appendChild(el('p', 'ut-note', L(
-      'מחיר גבוה יכול לשקף ביקוש חזק או מעט נהגים. בלי המתנה ובלי סימון שאין רכבים אי אפשר להפריד. סל של 15 ערים ו-46 מסלולים מוגדר, ועדיין אין ציטוט אחד.',
-      'A high price can be strong demand or thin driver supply. Wait time and a no-cars flag are required to separate them. The 15-city, 46-route basket is defined, and there is still not one quote.'
-    )));
 
     var observed = el('div', 'ut-grid');
     var nycCard = card(observed, true);
@@ -399,38 +319,26 @@
       [[L('חודש', 'Month'), true], ['Uber', true], ['Lyft', true], [L('נתח Uber', 'Uber share'), true], [L('מול שנה', 'YoY'), true]],
       nyc.map(function(row){return [row.month, fmt(row.uber_trips_per_day, 1), fmt(row.lyft_trips_per_day, 1), fmt(row.uber_share_pct, 1) + '%', row.uber_yoy_pct == null ? '—' : signed(row.uber_yoy_pct, 1) + '%'];})
     ));
-    captions(nycCard,
-      L('ממוצע נסיעות ביום ברישומי TLC לרישיונות HV0003 ו-HV0005. שינוי שנתי הוא מול אותו חודש אשתקד.', 'Average daily trips in the TLC records for licenses HV0003 and HV0005. Year-over-year is versus the same month a year earlier.'),
-      L('זה לא מחיר ולא זמן המתנה. חודש בלי זוג להשוואה נשאר ריק, לא אפס.', 'Not a fare and not a wait time. A month with no comparison pair stays empty, not zero.')
-    );
 
     var laxCard = card(observed);
     badge(laxCard, 'ut-fact', L('עובדה', 'Fact'));
-    heading(laxCard, L('נסיעות TNC ב-LAX', 'LAX TNC trips'), 'LAWA · שלושת החודשים שפורסמו');
     var lax = data.series.lax_tnc.observations;
+    heading(laxCard, L('נסיעות TNC ב-LAX', 'LAX TNC trips'), 'LAWA · ' + lax.map(function(row){return row.month;}).join(' · '));
     laxCard.appendChild(barPlot(lax.map(function(row){return {label:row.month, value:row.tnc_monthly};})));
     laxCard.appendChild(table(
       [[L('חודש', 'Month'), true], [L('נסיעות', 'Trips'), true], [L('מול שנה', 'YoY'), true], [L('מצטבר מול שנה', 'YTD YoY'), true]],
       lax.map(function(row){return [row.month, fmt(row.tnc_monthly, 0), row.yoy_pct == null ? '—' : signed(row.yoy_pct, 1) + '%', row.ytd_yoy_pct == null ? '—' : signed(row.ytd_yoy_pct, 1) + '%'];})
     ));
-    captions(laxCard,
-      L('נסיעות שירותי הזמנה בשדה, בחודשים שהדוח הרשמי כולל.', 'Ride-hail trips at the airport, for the months the official report includes.'),
-      L('זה לא Uber בלבד ולא כל לוס אנג׳לס. חודשים חסרים לא שורטטו כאפס.', 'Not Uber-only and not all of Los Angeles. Missing months are not drawn as zero.')
-    );
 
     var bonusCard = card(observed);
     badge(bonusCard, 'ut-fact', L('עובדה', 'Fact'));
-    heading(bonusCard, L('מודעות בונוס לנהגים', 'Driver guarantee ads'), L('תאריך אחד · 5 בנובמבר 2026', 'One date · 5 November 2026'));
+    heading(bonusCard, L('מודעות בונוס לנהגים', 'Driver guarantee ads'), L('5 בנובמבר 2026', '5 November 2026'));
     var bonuses = data.series.driver_bonuses.observations;
     bonusCard.appendChild(bonusPlot(bonuses));
     bonusCard.appendChild(table(
       [[L('עיר', 'City'), false], [L('ערובה $', 'Guarantee $'), true], [L('נסיעות נדרשות', 'Trips required'), true], [L('חלון, ימים', 'Window, days'), true]],
       bonuses.map(function(row){return [row.city, fmt(row.guarantee_usd, 0), fmt(row.trips_required, 0), fmt(row.window_days, 0)];})
     ));
-    captions(bonusCard,
-      L('סכום הערובה שפורסם בעמוד הפניה פומבי, עם מספר הנסיעות והחלון שפורסמו לידו.', 'The guarantee published on a public referral page, with the trip count and window printed beside it.'),
-      L('זה לא מספר נהגים, לא שכר, ולא דירוג הצפיפות. אין תקופה קודמת להשוות אליה.', 'Not a driver count, not earnings, and not the tightness rank. There is no prior period to compare.')
-    );
     host.appendChild(observed);
 
     var quoteGrid = el('div', 'ut-grid');
@@ -450,34 +358,21 @@
       slots.appendChild(slot);
     });
     mobility.appendChild(slots);
-    mobility.appendChild(el('p', null, L(data.consensus.note_he, data.consensus.note_en)));
-    captions(mobility,
-      L('המקום שבו יופיע ציון הפאנל מול קונצנזוס, כששניהם יימצאו.', 'Where the panel-versus-consensus score will appear once both exist.'),
-      L('אחוז ה-SEC שמוצג ליד הריקים הוא עובדה נפרדת. הוא לא הופך את הריבוע לחם.', 'The SEC percent beside the blanks is a separate fact. It does not turn the box hot.')
-    );
     host.appendChild(quoteGrid);
 
     host.appendChild(el('h2', null, 'Uber Eats · משלוחים'));
     var eatsIntro = el('div', 'ut-split');
     var customer = card(eatsIntro);
     heading(customer, L('לקוח', 'Customer'), L('אותה כתובת בית ומשרד בכל עיר', 'The same home and office address in each city'));
-    customer.appendChild(el('p', 'ut-note', L(
-      'דמי משלוח, ETA, מינימום, מבצעים ומספר מסעדות. החזרה השבועית היא באותו יום ושעה מקומיים. הכתובות עדיין לא נקבעו, ולכן אין קריאה.',
-      'Delivery fee, ETA, minimum, promos, and restaurant count. The weekly repeat is the same local weekday and hour. Addresses are not set, so there is no reading.'
-    )));
     var merchant = card(eatsIntro);
     heading(merchant, L('סוחר והיצע', 'Merchant and supply'), L('אותן ערים ואותם חלונות', 'The same cities and time windows'));
-    merchant.appendChild(el('p', 'ut-note', L(
-      'מסעדות, נוחות וסופר באותה כתובת, חדש מול תקופה קודמת, רשתות מול DoorDash בארה״ב או Glovo ו-Deliveroo באירופה, ומודעות בונוס לשליחים. אין שורות.',
-      'Restaurants, convenience, and grocery at the same address, new versus the prior period, chains versus DoorDash in the US or Glovo and Deliveroo in Europe, and courier bonus ads. There are no rows.'
-    )));
     host.appendChild(eatsIntro);
 
     var eatsGrid = el('div', 'ut-grid');
     ['eats_coverage', 'eats_eta', 'eats_cost', 'eats_promo', 'eats_expansion'].forEach(function(id){
       chartArticle(eatsGrid, data.charts[id], emptyPlot(titleOf(data.charts[id])), false);
     });
-    chartArticle(eatsGrid, data.charts.eats_coverage_vs_eta, quadrant(), true);
+    chartArticle(eatsGrid, data.charts.eats_coverage_vs_eta, emptyPlot(titleOf(data.charts.eats_coverage_vs_eta)), true);
     var delivery = card(eatsGrid, true);
     badge(delivery, 'ut-un', L('לא דורג', 'Unscored'));
     heading(delivery, L('פאנל מול קונצנזוס Delivery', 'Panel versus Delivery consensus'), 'חם / בקו / קר');
@@ -492,25 +387,8 @@
       deliverySlots.appendChild(slot);
     });
     delivery.appendChild(deliverySlots);
-    delivery.appendChild(el('p', null, L(data.consensus.note_he, data.consensus.note_en)));
-    captions(delivery,
-      L('השוואת הפאנל לקונצנזוס הרבעון, כששני המספרים קיימים.', 'The quarter comparison of the panel with consensus, once both numbers exist.'),
-      L('צמיחת Delivery בהדפסה אינה ציון קר או חם של הפאנל.', 'Delivery growth in the print is not a cold or hot score for the panel.')
-    );
     host.appendChild(eatsGrid);
     renderMethodology(host, data);
-
-    var files = card(host, true);
-    heading(files, L('קבצי ההיסטוריה', 'History files'), L('השורות נשמרות כאן כדי שהסדרה תצטבר.', 'Rows stay here so the series can compound.'));
-    var links = el('div', 'ut-links');
-    ['bundle.json', 'route_basket.csv', 'nyc_hvfhv_monthly.csv', 'lax_tnc_monthly.csv', 'driver_signup_bonuses.csv', 'sec_q3_2026.csv', 'drive_quotes.csv', 'eats_customer.csv', 'eats_basket.csv', 'eats_merchant.csv', 'schema.json', 'fetch_log.jsonl'].forEach(function(file){
-      var link = el('a', null, file);
-      link.href = asset(file);
-      link.dir = 'ltr';
-      links.appendChild(link);
-    });
-    files.appendChild(links);
-    host.appendChild(files);
 
     var foot = el('p', 'ut-sources');
     var sourceLink = el('a', null, L('מקורות ומתודולוגיה', 'Sources and methodology'));
@@ -521,7 +399,7 @@
       sourceLink.href = '?view=sources';
     }
     foot.appendChild(sourceLink);
-    foot.appendChild(document.createTextNode(L(' · קלט מחקר, לא המלצת מסחר. תא ריק הוא ערך שלא נצפה.', ' · Research input, not a trade recommendation. An empty cell was not observed.')));
+    foot.appendChild(document.createTextNode(L(' · קלט מחקר, לא המלצת מסחר.', ' · Research input, not a trade recommendation.')));
     host.appendChild(foot);
   }
 
