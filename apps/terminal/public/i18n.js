@@ -63,6 +63,7 @@
     'sidebar.marketBreadth':  {en:'Market Breadth', he:'רוחב שוק'},
     'sidebar.companyResearch':{en:'Equity Research', he:'מחקר חברות'},
     'sidebar.sectorResearch': {en:'Sector Research', he:'מחקר סקטורים'},
+    'sidebar.btcBbResearch': {en:'BTC Bollinger Research', he:'מחקר Bollinger · BTC'},
     'sector.show':        {en:'Show',            he:'הצג'},
     'sector.placeholder': {en:'Ticker',          he:'סימול'},
     'sector.holdings':    {en:'Holdings',        he:'אחזקות'},

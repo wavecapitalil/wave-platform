@@ -1,0 +1,340 @@
+/* BTC BB lower-touch research. Scoped to the page so the terminal shell stays intact. */
+#page-btc-bb-research{
+  --bb-bg:#050c15;
+  --bb-panel:#091827;
+  --bb-panel-2:#0c2035;
+  --bb-line:#173752;
+  --bb-line-2:#244e73;
+  --bb-text:#edf6ff;
+  --bb-muted:#90a8c2;
+  --bb-blue:#55aaff;
+  --bb-blue-2:#9bd1ff;
+  --bb-green:#48d18a;
+  --bb-amber:#ffc857;
+  --bb-red:#ff6f82;
+  --bb-cyan:#58d7e8;
+  color:var(--bb-text);
+  background:
+    radial-gradient(1200px 480px at 100% -10%, rgba(85,170,255,.16), transparent 55%),
+    radial-gradient(900px 420px at 0% 0%, rgba(88,215,232,.08), transparent 50%),
+    var(--bb-bg);
+}
+#page-btc-bb-research .bb-wrap{
+  max-width:1180px;
+  margin:0 auto;
+  padding:28px 28px 88px;
+}
+#page-btc-bb-research .bb-kicker{
+  color:var(--bb-blue-2);
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.08em;
+}
+#page-btc-bb-research h1{
+  margin:8px 0 0;
+  font-size:32px;
+  line-height:1.25;
+  font-weight:800;
+  letter-spacing:-.03em;
+}
+#page-btc-bb-research h2{
+  margin:0 0 14px;
+  font-size:22px;
+  line-height:1.3;
+  font-weight:800;
+}
+#page-btc-bb-research h3{
+  margin:18px 0 10px;
+  font-size:16px;
+  font-weight:700;
+}
+#page-btc-bb-research .bb-en{unicode-bidi:isolate}
+#page-btc-bb-research .bb-section{
+  margin-top:22px;
+  background:var(--bb-panel);
+  border:1px solid var(--bb-line);
+  border-radius:18px;
+  padding:20px 20px 18px;
+}
+#page-btc-bb-research .bb-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
+#page-btc-bb-research .bb-head h2{margin:0}
+#page-btc-bb-research .bb-lede{
+  font-size:16px;
+  line-height:1.65;
+  color:var(--bb-text);
+  margin:14px 0 0;
+}
+#page-btc-bb-research .bb-decision{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  margin-top:18px;
+}
+#page-btc-bb-research .bb-decision article{
+  background:var(--bb-panel-2);
+  border:1px solid var(--bb-line-2);
+  border-radius:16px;
+  padding:14px 16px;
+}
+#page-btc-bb-research .bb-decision span{
+  display:block;
+  color:var(--bb-muted);
+  font-size:13px;
+  margin-bottom:6px;
+}
+#page-btc-bb-research .bb-decision strong{
+  display:block;
+  font-size:26px;
+  letter-spacing:.02em;
+  color:var(--bb-red);
+}
+#page-btc-bb-research .bb-decision article:last-child strong{color:var(--bb-amber)}
+#page-btc-bb-research .bb-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+#page-btc-bb-research .bb-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  border-radius:999px;
+  padding:6px 12px;
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.02em;
+  background:rgba(85,170,255,.12);
+  color:var(--bb-blue-2);
+  border:1px solid rgba(85,170,255,.28);
+}
+#page-btc-bb-research .bb-badge.pass{color:var(--bb-green);background:rgba(72,209,138,.12);border-color:rgba(72,209,138,.3)}
+#page-btc-bb-research .bb-badge.warning{color:var(--bb-amber);background:rgba(255,200,87,.12);border-color:rgba(255,200,87,.32)}
+#page-btc-bb-research .bb-badge.blocker{color:var(--bb-red);background:rgba(255,111,130,.12);border-color:rgba(255,111,130,.34)}
+#page-btc-bb-research .bb-badge.na{color:var(--bb-muted);background:rgba(144,168,194,.1);border-color:rgba(144,168,194,.28)}
+#page-btc-bb-research .bb-kpis{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+  margin-top:16px;
+}
+#page-btc-bb-research .bb-kpi{
+  background:var(--bb-panel-2);
+  border:1px solid var(--bb-line);
+  border-radius:16px;
+  padding:14px 14px 12px;
+}
+#page-btc-bb-research .bb-kpi .lbl{color:var(--bb-muted);font-size:13px;line-height:1.4}
+#page-btc-bb-research .bb-kpi .val{
+  margin-top:6px;
+  font-size:24px;
+  font-weight:800;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.03em;
+}
+#page-btc-bb-research .bb-kpi .sub{margin-top:4px;color:var(--bb-blue-2);font-size:13px;font-variant-numeric:tabular-nums}
+#page-btc-bb-research .up{color:var(--bb-green)}
+#page-btc-bb-research .dn{color:var(--bb-red)}
+#page-btc-bb-research .bb-scroll{overflow:auto;border:1px solid var(--bb-line);border-radius:16px;background:#071421}
+#page-btc-bb-research table.bb-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+  font-variant-numeric:tabular-nums;
+}
+#page-btc-bb-research table.bb-table th,
+#page-btc-bb-research table.bb-table td{
+  padding:10px 12px;
+  border-bottom:1px solid var(--bb-line);
+  text-align:start;
+  white-space:nowrap;
+  vertical-align:middle;
+}
+#page-btc-bb-research table.bb-table th{
+  color:var(--bb-blue-2);
+  font-weight:700;
+  background:#0c2035;
+}
+#page-btc-bb-research table.bb-table tr:last-child td{border-bottom:0}
+#page-btc-bb-research table.bb-table td.wrap{white-space:normal;min-width:220px;line-height:1.5}
+#page-btc-bb-research .bb-blue{
+  background:linear-gradient(180deg,#10283f,#0c2035);
+  border:1px solid var(--bb-line-2);
+  border-radius:18px;
+  overflow:auto;
+}
+#page-btc-bb-research .bb-blue table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+#page-btc-bb-research .bb-blue th{
+  background:#14385a;
+  color:#d7ecff;
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.02em;
+  padding:12px 14px;
+  text-align:start;
+  border-bottom:1px solid var(--bb-line-2);
+}
+#page-btc-bb-research .bb-blue td{
+  padding:14px;
+  border-bottom:1px solid rgba(36,78,115,.55);
+  font-size:18px;
+  font-weight:700;
+  color:var(--bb-text);
+}
+#page-btc-bb-research .bb-blue tr:last-child td{border-bottom:0}
+#page-btc-bb-research .bb-blue td.lbl{
+  font-size:15px;
+  font-weight:700;
+  color:var(--bb-blue-2);
+}
+#page-btc-bb-research .bb-blue tbody tr:hover td{background:rgba(85,170,255,.08)}
+#page-btc-bb-research .bb-defs{
+  display:grid;
+  grid-template-columns:minmax(180px,.7fr) 1.6fr;
+  gap:0;
+  border:1px solid var(--bb-line);
+  border-radius:16px;
+  overflow:hidden;
+}
+#page-btc-bb-research .bb-defs div{
+  padding:12px 14px;
+  border-bottom:1px solid var(--bb-line);
+  line-height:1.5;
+}
+#page-btc-bb-research .bb-defs div:nth-child(odd){
+  background:#0c2035;
+  color:var(--bb-blue-2);
+  font-weight:700;
+}
+#page-btc-bb-research .bb-defs div:nth-child(even){background:#071421}
+#page-btc-bb-research .bb-figs{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+  margin-top:14px;
+}
+#page-btc-bb-research .bb-figs img{
+  width:100%;
+  height:auto;
+  display:block;
+  background:#f4f7fb;
+  border-radius:14px;
+  border:1px solid var(--bb-line-2);
+}
+#page-btc-bb-research .bb-cards{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+#page-btc-bb-research .bb-card{
+  background:var(--bb-panel-2);
+  border:1px solid var(--bb-line);
+  border-radius:16px;
+  padding:14px 16px;
+}
+#page-btc-bb-research .bb-card h3{margin:0 0 8px}
+#page-btc-bb-research .bb-card p{margin:0;line-height:1.6;color:var(--bb-text)}
+#page-btc-bb-research .bb-list{margin:8px 0 0;padding:0 18px 0 0;line-height:1.6}
+#page-btc-bb-research .bb-list li{margin:6px 0}
+#page-btc-bb-research .bb-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+#page-btc-bb-research .bb-chip{
+  appearance:none;
+  border:1px solid var(--bb-line-2);
+  background:#0c2035;
+  color:var(--bb-text);
+  border-radius:999px;
+  padding:8px 14px;
+  font:inherit;
+  font-weight:700;
+  cursor:pointer;
+}
+#page-btc-bb-research .bb-chip[aria-pressed="true"]{
+  background:rgba(85,170,255,.18);
+  color:#fff;
+  border-color:var(--bb-blue);
+}
+#page-btc-bb-research .bb-trade-layout{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+  align-items:start;
+}
+#page-btc-bb-research .bb-chart-box{
+  height:340px;
+  background:#071421;
+  border:1px solid var(--bb-line);
+  border-radius:16px;
+  padding:10px 8px 6px;
+}
+#page-btc-bb-research .bb-chart-box canvas{width:100%!important;height:100%!important}
+#page-btc-bb-research .bb-trade-scroll{
+  max-height:520px;
+  overflow:auto;
+  border:1px solid var(--bb-line);
+  border-radius:16px;
+  background:#071421;
+}
+#page-btc-bb-research .bb-trade-scroll table{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%}
+#page-btc-bb-research .bb-trade-scroll th{
+  position:sticky;
+  top:0;
+  z-index:2;
+  background:#10283f;
+  color:var(--bb-blue-2);
+  box-shadow:0 1px 0 var(--bb-line-2);
+}
+#page-btc-bb-research .bb-trade-scroll td,
+#page-btc-bb-research .bb-trade-scroll th{
+  padding:9px 11px;
+  text-align:start;
+  white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+  font-size:13.5px;
+  border-bottom:1px solid rgba(23,55,82,.85);
+}
+#page-btc-bb-research .bb-trade-scroll tbody tr{cursor:pointer}
+#page-btc-bb-research .bb-trade-scroll tbody tr:hover td{background:rgba(85,170,255,.08)}
+#page-btc-bb-research .bb-trade-scroll tbody tr.is-on td{background:rgba(85,170,255,.32)}
+#page-btc-bb-research .bb-pill{
+  display:inline-flex;
+  align-items:center;
+  border-radius:999px;
+  padding:3px 9px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.04em;
+}
+#page-btc-bb-research .bb-pill.pending{color:#071421;background:var(--bb-amber)}
+#page-btc-bb-research .bb-pill.ep{color:var(--bb-cyan);background:rgba(88,215,232,.12);border:1px solid rgba(88,215,232,.35)}
+#page-btc-bb-research .bb-one{
+  display:grid;
+  grid-template-columns:160px 1fr;
+  border:1px solid var(--bb-line-2);
+  border-radius:16px;
+  overflow:hidden;
+}
+#page-btc-bb-research .bb-one div{padding:12px 14px;border-bottom:1px solid var(--bb-line);line-height:1.55}
+#page-btc-bb-research .bb-one div:nth-child(odd){background:#14385a;font-weight:800;color:#d7ecff}
+#page-btc-bb-research .bb-one div:nth-child(even){background:#071421}
+#page-btc-bb-research .bb-one div:nth-last-child(-n+2){border-bottom:0}
+#page-btc-bb-research .bb-ft-grid{
+  display:grid;
+  grid-template-columns:minmax(240px,.8fr) 1.2fr;
+  gap:14px;
+  align-items:center;
+}
+#page-btc-bb-research .bb-ft-chart{height:280px;background:#071421;border:1px solid var(--bb-line);border-radius:16px;padding:8px}
+@media (max-width:980px){
+  #page-btc-bb-research .bb-decision,
+  #page-btc-bb-research .bb-kpis,
+  #page-btc-bb-research .bb-cards,
+  #page-btc-bb-research .bb-trade-layout,
+  #page-btc-bb-research .bb-ft-grid,
+  #page-btc-bb-research .bb-defs,
+  #page-btc-bb-research .bb-one{grid-template-columns:1fr}
+  #page-btc-bb-research .bb-chart-box{position:static;height:320px}
+  #page-btc-bb-research h1{font-size:26px}
+  #page-btc-bb-research .bb-wrap{padding:18px 14px 72px}
+}
