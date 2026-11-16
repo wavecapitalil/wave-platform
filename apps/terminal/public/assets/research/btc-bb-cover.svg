@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+  <defs>
+    <radialGradient id="g" cx="70%" cy="30%">
+      <stop stop-color="#1a4d78"/>
+      <stop offset="1" stop-color="#07111c"/>
+    </radialGradient>
+  </defs>
+  <rect width="600" height="600" fill="url(#g)"/>
+  <g fill="none" stroke="#8bc4ef" stroke-width="2" opacity=".18">
+    <path d="M40 150H560M40 250H560M40 350H560M40 450H560"/>
+  </g>
+  <path d="M50 210C110 170 160 190 210 230C270 280 320 300 380 250C430 210 480 180 550 200" fill="none" stroke="#9bd1ff" stroke-width="3"/>
+  <path d="M50 300C110 280 160 290 210 320C270 360 320 390 380 340C430 300 480 270 550 290" fill="none" stroke="#55aaff" stroke-width="4"/>
+  <path d="M50 400C110 390 160 400 210 420C270 450 320 490 380 440C430 400 480 370 550 390" fill="none" stroke="#58d7e8" stroke-width="3"/>
+  <circle cx="250" cy="430" r="8" fill="#ff6f82"/>
+  <circle cx="318" cy="478" r="8" fill="#ffc857"/>
+  <text x="48" y="96" fill="#edf6ff" font-family="Arial,sans-serif" font-size="64" font-weight="700">BTC</text>
+  <text x="48" y="132" fill="#9bd1ff" font-family="Arial,sans-serif" font-size="16" letter-spacing="3">BB(20, 2) · 7D</text>
+  <text x="552" y="540" text-anchor="end" direction="rtl" fill="#edf6ff" font-family="Arial,sans-serif" font-size="28" font-weight="700">נגיעה ברצועה התחתונה</text>
+</svg>
