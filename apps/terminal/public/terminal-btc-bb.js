@@ -74,30 +74,122 @@
       'Displayed at the same precision as the request (2 decimal percent, percentile as printed). Primary frozen horizon remains 7 days. 10 days is descriptive only.',
       []);
     WaveSources.record('btc-bb:trades10','BTC BB research · 10-day trades window',
-      'Files: trades_10d_view.csv (419 touches, 2017-09-05 → 2026-11-02, 88 episodes) and daily_series_with_bands.csv (3366 daily rows, 2017-08-17 → 2026-11-03, no calendar gaps) for the close and lower-band lines.\n'+
+      'Files: trades_10d_view.csv (419 touches, 2017-09-05 → 2026-11-02, 88 episodes) and daily_series_with_bands.csv (3366 daily OHLC rows, 2017-08-17 → 2026-11-03, no calendar gaps). The chart draws those open/high/low/close values. Full range uses weekly candles built from each 7-day block of that daily OHLC; a selected trade shows the daily candles. The lower band is the file value, not a new calculation.\n'+
       'Seven rows have an empty t+10 exit in the frozen file and are shown with a pending pill: 2026-10-25, 2026-10-26, 2026-10-27, 2026-10-29, 2026-10-30, 2026-10-31, 2026-11-02.\n'+
       'Prices and ret_10d are the CSV cells. Percents on screen are ret_10d × 100 at 2 decimals. The chart does not recompute bands or returns.',
       []);
   }
 
   function palette(){
-    return {text:'#90a8c2', grid:'rgba(23,55,82,.9)', blue:'#55aaff', cyan:'#58d7e8', amber:'#ffc857', red:'#ff6f82', green:'#48d18a'};
+    return {text:'#90a8c2', grid:'rgba(23,55,82,.9)', blue:'#55aaff', cyan:'#58d7e8', amber:'#ffc857', red:'#ff6f82', green:'#48d18a', up:'#60d5b0', dn:'#ef8590'};
+  }
+
+  function buildSeries(daily){
+    var n = daily.c.length;
+    var ohlc = new Array(n);
+    for(var i=0;i<n;i++){
+      ohlc[i] = {
+        o:Number(daily.o[i]),
+        h:Number(daily.h[i]),
+        l:Number(daily.l[i]),
+        c:Number(daily.c[i]),
+        b:daily.b[i]==null||daily.b[i]===''?null:Number(daily.b[i])
+      };
+    }
+    var weeks = [];
+    for(var s=0;s<n;s+=7){
+      var e = Math.min(n-1, s+6);
+      var hi = -Infinity, lo = Infinity;
+      for(var j=s;j<=e;j++){
+        if(ohlc[j].h>hi) hi = ohlc[j].h;
+        if(ohlc[j].l<lo) lo = ohlc[j].l;
+      }
+      weeks.push({i0:s, i1:e, o:ohlc[s].o, h:hi, l:lo, c:ohlc[e].c});
+    }
+    state.ohlc = ohlc;
+    state.weeks = weeks;
+    state.n = n;
+  }
+
+  function paintCandle(ctx, xScale, yScale, bar, px, width){
+    var up = bar.c>=bar.o;
+    ctx.strokeStyle = ctx.fillStyle = up?'#60d5b0':'#ef8590';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(px, yScale.getPixelForValue(bar.h));
+    ctx.lineTo(px, yScale.getPixelForValue(bar.l));
+    ctx.stroke();
+    var oy = yScale.getPixelForValue(bar.o);
+    var cy = yScale.getPixelForValue(bar.c);
+    ctx.fillRect(px-width/2, Math.min(oy,cy), width, Math.max(1, Math.abs(cy-oy)));
+  }
+
+  var candlePlugin = {
+    id:'bbCandles',
+    beforeDatasetsDraw:function(chart){
+      if(chart.canvas.id!=='bbPriceChart' || !state.ohlc) return;
+      var area = chart.chartArea;
+      if(!area) return;
+      var x = chart.scales.x, y = chart.scales.y;
+      var min = x.min, max = x.max, span = Math.max(1, max-min);
+      var weekly = span>120;
+      var ctx = chart.ctx;
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(area.left, area.top, area.width, area.height);
+      ctx.clip();
+      var pxPer = area.width/span;
+      if(weekly){
+        var ww = Math.max(2, Math.min(11, pxPer*5));
+        state.weeks.forEach(function(bar){
+          if(bar.i1<min || bar.i0>max) return;
+          paintCandle(ctx, x, y, bar, x.getPixelForValue((bar.i0+bar.i1)/2), ww);
+        });
+      } else {
+        var dw = Math.max(3, Math.min(16, pxPer*0.62));
+        var i0 = Math.max(0, Math.floor(min));
+        var i1 = Math.min(state.ohlc.length-1, Math.ceil(max));
+        for(var i=i0;i<=i1;i++) paintCandle(ctx, x, y, state.ohlc[i], x.getPixelForValue(i), dw);
+      }
+      ctx.restore();
+    }
+  };
+
+  function fitY(min, max){
+    var i0 = Math.max(0, Math.floor(min));
+    var i1 = Math.min(state.ohlc.length-1, Math.ceil(max));
+    var lo = Infinity, hi = -Infinity;
+    for(var i=i0;i<=i1;i++){
+      var p = state.ohlc[i];
+      if(p.h>hi) hi = p.h;
+      if(p.l<lo) lo = p.l;
+      if(p.b!=null){
+        if(p.b>hi) hi = p.b;
+        if(p.b<lo) lo = p.b;
+      }
+    }
+    if(!isFinite(lo)||!isFinite(hi)) return;
+    var pad = (hi-lo)*0.08 || hi*0.04;
+    var yMin = lo-pad;
+    if(lo>=0 && yMin<0) yMin = 0;
+    state.chart.options.scales.y.min = yMin;
+    state.chart.options.scales.y.max = hi+pad;
   }
 
   function drawPrice(){
     var canvas = document.getElementById('bbPriceChart');
     if(!canvas || !window.Chart || !state.daily) return;
     var c = palette();
-    var close = state.daily.close.map(Number);
-    var lower = state.daily.lower.map(function(v){return v==null?null:Number(v);});
-    state.n = close.length;
+    buildSeries(state.daily);
+    var lower = state.ohlc.map(function(p,i){return {x:i,y:p.b};});
     if(state.chart) state.chart.destroy();
     state.chart = new Chart(canvas, {
       type:'line',
+      plugins:[candlePlugin],
       data:{
         datasets:[
-          {label:'Close', data:close.map(function(y,i){return {x:i,y:y};}), borderColor:c.blue, borderWidth:1.4, pointRadius:0, tension:0},
-          {label:'Lower band', data:lower.map(function(y,i){return {x:i,y:y};}), borderColor:c.cyan, borderWidth:1, pointRadius:0, borderDash:[4,3], spanGaps:false},
+          {label:'Candles', data:[{x:0,y:state.ohlc[0].c}], borderColor:c.up, backgroundColor:c.dn, pointRadius:0, borderWidth:2},
+          {label:'Lower band', data:lower, borderColor:c.cyan, borderWidth:1.25, pointRadius:0, borderDash:[4,3], spanGaps:false},
           {type:'scatter', label:'Trade', data:[], showLine:true, borderColor:c.amber, borderWidth:1.5, pointRadius:7, pointHoverRadius:8, pointBackgroundColor:[]}
         ]
       },
@@ -125,6 +217,8 @@
         }
       }
     });
+    fitY(0, state.n-1);
+    state.chart.update('none');
   }
 
   function focusTrade(index, scroll){
@@ -149,6 +243,7 @@
     ds.pointBackgroundColor = colors;
     state.chart.options.scales.x.min = min;
     state.chart.options.scales.x.max = max;
+    fitY(min, max);
     state.chart.update('none');
     if(scroll){
       var box = document.getElementById('bbPriceChart');
@@ -164,6 +259,7 @@
     state.chart.data.datasets[2].data = [];
     state.chart.options.scales.x.min = 0;
     state.chart.options.scales.x.max = state.n-1;
+    fitY(0, state.n-1);
     state.chart.update('none');
   }
 
