@@ -24,6 +24,16 @@
   margin:0 auto;
   padding:28px 28px 88px;
 }
+#page-btc-bb-research .bb-banner{
+  display:block;
+  width:100%;
+  max-height:340px;
+  object-fit:cover;
+  object-position:center 42%;
+  border-radius:14px;
+  margin:0 0 22px;
+  background:#0c2035;
+}
 #page-btc-bb-research .bb-kicker{
   color:var(--bb-blue-2);
   font-size:13px;
