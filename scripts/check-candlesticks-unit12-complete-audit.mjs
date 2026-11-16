@@ -32,7 +32,7 @@ for(const page of [...first,...second]){
 const one=read(first[0]);for(let n=1;n<=4;n++)assert(one.includes('<strong>שאלה '+n+':</strong>'),'missing explanatory answer to Unit 1.1 question '+n);
 const line=read(first[1]).match(/<svg viewBox="0 0 640 300"[\s\S]*?<\/svg>/)?.[0];assert(line,'Unit 1.2 line chart missing');
 assert.deepEqual([...line.matchAll(/data-value="(\d+)"/g)].map(m=>Number(m[1])),[100,102,99,103,101],'Unit 1.2 line chart values incorrect');
-const two=read(second[1]);assert(two.includes('fig-2-2-02-verified.svg?v=1'),'reviewed 2.2 SVG missing');
+const two=read(second[1]);assert(two.includes('fig-2-2-02-verified.svg?v=2'),'reviewed 2.2 SVG missing');
 const svg=read('assets/candlesticks-unit2/fig-2-2-02-verified.svg');for(const token of ['O=100','H=112','L=96','C=108','Body: 108 − 100 = 8','Full range: 112 − 96 = 16'])assert(svg.includes(token),'incorrect 2.2 SVG figure: '+token);
 assert(read(second[4]).includes('תבנית בולען (Engulfing)'),'Unit 2.5 original source question missing');
 const matrix=JSON.parse(fs.readFileSync('docs/course-workspace/reviews/COURSE_56_LESSON_QA_MATRIX_2026-11-11.json','utf8'));
