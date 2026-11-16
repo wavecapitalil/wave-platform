@@ -336,12 +336,19 @@
   align-items:center;
 }
 #page-btc-bb-research .bb-ft-chart{height:280px;background:#071421;border:1px solid var(--bb-line);border-radius:16px;padding:8px}
+#page-btc-bb-research .bb-chart-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin-top:14px;
+}
 @media (max-width:980px){
   #page-btc-bb-research .bb-decision,
   #page-btc-bb-research .bb-kpis,
   #page-btc-bb-research .bb-cards,
   #page-btc-bb-research .bb-trade-layout,
   #page-btc-bb-research .bb-ft-grid,
+  #page-btc-bb-research .bb-chart-grid,
   #page-btc-bb-research .bb-defs,
   #page-btc-bb-research .bb-one{grid-template-columns:1fr}
   #page-btc-bb-research .bb-chart-box{position:static;height:320px}
