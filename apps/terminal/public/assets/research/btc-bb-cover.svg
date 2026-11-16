@@ -1,20 +1,45 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="600" viewBox="0 0 1600 600">
   <defs>
-    <radialGradient id="g" cx="70%" cy="30%">
-      <stop stop-color="#1a4d78"/>
-      <stop offset="1" stop-color="#07111c"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#07111c"/>
+      <stop offset="0.5" stop-color="#0c2035"/>
+      <stop offset="1" stop-color="#143656"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="0.68" cy="0.45" r="0.42">
+      <stop stop-color="#55aaff" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#55aaff" stop-opacity="0"/>
     </radialGradient>
   </defs>
-  <rect width="600" height="600" fill="url(#g)"/>
-  <g fill="none" stroke="#8bc4ef" stroke-width="2" opacity=".18">
-    <path d="M40 150H560M40 250H560M40 350H560M40 450H560"/>
+  <rect width="1600" height="600" fill="url(#bg)"/>
+  <rect width="1600" height="600" fill="url(#halo)"/>
+  <g fill="none" stroke="#8bc4ef" stroke-width="1.5" opacity="0.14">
+    <path d="M48 130H1552M48 230H1552M48 330H1552M48 430H1552M48 530H1552"/>
+    <path d="M220 80V530M520 80V530M820 80V530M1120 80V530M1420 80V530"/>
   </g>
-  <path d="M50 210C110 170 160 190 210 230C270 280 320 300 380 250C430 210 480 180 550 200" fill="none" stroke="#9bd1ff" stroke-width="3"/>
-  <path d="M50 300C110 280 160 290 210 320C270 360 320 390 380 340C430 300 480 270 550 290" fill="none" stroke="#55aaff" stroke-width="4"/>
-  <path d="M50 400C110 390 160 400 210 420C270 450 320 490 380 440C430 400 480 370 550 390" fill="none" stroke="#58d7e8" stroke-width="3"/>
-  <circle cx="250" cy="430" r="8" fill="#ff6f82"/>
-  <circle cx="318" cy="478" r="8" fill="#ffc857"/>
-  <text x="48" y="96" fill="#edf6ff" font-family="Arial,sans-serif" font-size="64" font-weight="700">BTC</text>
-  <text x="48" y="132" fill="#9bd1ff" font-family="Arial,sans-serif" font-size="16" letter-spacing="3">BB(20, 2) · 7D</text>
-  <text x="552" y="540" text-anchor="end" direction="rtl" fill="#edf6ff" font-family="Arial,sans-serif" font-size="28" font-weight="700">נגיעה ברצועה התחתונה</text>
+  <g fill="none" stroke-linecap="round">
+    <path d="M60 200H1540" stroke="#9bd1ff" stroke-width="2"/>
+    <path d="M60 320H1540" stroke="#55aaff" stroke-width="2.5"/>
+    <path d="M60 450H1540" stroke="#58d7e8" stroke-width="2.5"/>
+  </g>
+  <text x="540" y="250" fill="#edf6ff" font-family="Arial,sans-serif" font-size="96" font-weight="700">BTC</text>
+  <g stroke-linecap="round">
+    <g stroke="#48d18a">
+      <path d="M800 250V340" stroke-width="2"/>
+      <rect x="790" y="262" width="20" height="52" fill="#48d18a" stroke="none"/>
+    </g>
+    <g stroke="#ff6f82">
+      <path d="M870 268V390" stroke-width="2"/>
+      <rect x="860" y="286" width="20" height="70" fill="#ff6f82" stroke="none"/>
+    </g>
+    <g stroke="#ff6f82">
+      <path d="M940 300V450" stroke-width="2"/>
+      <rect x="930" y="324" width="20" height="86" fill="#ff6f82" stroke="none"/>
+    </g>
+    <g stroke="#48d18a">
+      <path d="M1010 336V430" stroke-width="2"/>
+      <rect x="1000" y="348" width="20" height="50" fill="#48d18a" stroke="none"/>
+    </g>
+  </g>
+  <circle cx="940" cy="450" r="7" fill="#ffc857"/>
+  <circle cx="940" cy="450" r="16" fill="none" stroke="#ffc857" stroke-width="1.5" opacity="0.75"/>
 </svg>
