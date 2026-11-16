@@ -10,7 +10,7 @@ for(const [i,p] of lessons.entries()){
 const graph=get('candlesticks-lesson-02.html');
 const svg=graph.match(/<svg viewBox="0 0 640 300"[\s\S]*?<\/svg>/)?.[0];assert(svg,'missing interactive price chart');
 assert.deepEqual([...svg.matchAll(/data-value="(\d+)"/g)].map(m=>Number(m[1])),[100,102,99,103,101],'line chart values inconsistent with source');
-const anatomy=get('candlesticks-lesson-2-2.html');assert(anatomy.includes('fig-2-2-02-verified.svg?v=1'),'broken anatomy replacement link');
+const anatomy=get('candlesticks-lesson-2-2.html');assert(anatomy.includes('fig-2-2-02-verified.svg?v=2'),'broken anatomy replacement link');
 const ill=get('assets/candlesticks-unit2/fig-2-2-02-verified.svg');for(const v of ['O=100','H=112','L=96','C=108','Body: 108 − 100 = 8','Full range: 112 − 96 = 16'])assert(ill.includes(v),'missing anatomy value '+v);
 const two=get('candlesticks-lesson-2-5.html');assert(two.includes('תבנית בולען (Engulfing)'),'original 2.5 source question lost');
 for(let n=3;n<=5;n++){const h=get('candlesticks-lesson-2-'+n+'.html');assert(h.includes('<details class="wave-reveal-solutions">'),'inline answers still shown in 2.'+n)}
