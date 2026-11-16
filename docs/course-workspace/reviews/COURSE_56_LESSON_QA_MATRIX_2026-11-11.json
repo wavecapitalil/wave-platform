@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_on": "2026-11-11",
+  "updated_on": "2026-11-16",
   "qa_policy": "No final curriculum approval without comparing source PDF, visible copy, figures, math, mobile, and learning assessment.",
   "status": "active_review",
   "source_pdf": "Candlesticks_Course_Assembly_Working_v03.pdf",
@@ -11,15 +11,15 @@
       "source_path": "docs/course-workspace/lessons/01-01.md",
       "status": "qa_in_progress",
       "checks": {
-        "source_comparison": "pdf_core_topics_reviewed_pages_7_9",
-        "pedagogy": "exercise_and_explanation_spotcheck_done_final_signoff_pending",
-        "hebrew_english_rtl": "targeted_fixes_and_reveal_reviewed_real_browser_pending",
-        "formulas_and_answers": "reviewed_sample_problem_and_answer_logic",
-        "illustrations": "three_decorative_market_svg_icons_reviewed_no_source_figure_required",
-        "desktop_mobile": "pending_real_browser",
+        "source_comparison": "original_pdf_pages_reviewed_core_examples_and_figures_not_full_word_by_word",
+        "pedagogy": "illustration_to_caption_and_answer_to_question_checked",
+        "hebrew_english_rtl": "source_copy_templates_removed_captions_proofread_browser_pending",
+        "formulas_and_answers": "guided_3_of_3_correct_and_four_review_answers_explicit",
+        "illustrations": "3_educational_icons_no_numeric_source_figures",
+        "desktop_mobile": "automated_chromium_ci_configured_pending_run",
         "assessment_bank": "drafted_unreviewed"
       },
-      "notes": "Core concepts checked: transaction price vs quote/value, bid/ask, market participants, OTC. Navigation punctuation corrected. No text change to already-isolated market names. Unit 1 practice answer reveal now learner-controlled; original 1.2 line chart 100,102,99,103,101 corresponds to learning table."
+      "notes": "Core concepts checked: transaction price vs quote/value, bid/ask, market participants, OTC. Navigation punctuation corrected. No text change to already-isolated market names. Unit 1 practice answer reveal now learner-controlled; original 1.2 line chart 100,102,99,103,101 corresponds to learning table. 2026-11-16 audit: Three market icons serve as schematic illustrations; full four-question review explanations added, with learner disclosure and statement that Q1–Q3 are pedagogical extension. Full cross-device browser evidence is pending CI; dark-theme refresh for legacy white PNGs remains open."
     },
     {
       "display_id": "1.2",
@@ -27,15 +27,15 @@
       "source_path": "docs/course-workspace/lessons/01-02.md",
       "status": "qa_in_progress",
       "checks": {
-        "source_comparison": "pdf_core_topics_reviewed_pages_10_11",
-        "pedagogy": "exercise_and_explanation_spotcheck_done_final_signoff_pending",
-        "hebrew_english_rtl": "targeted_fixes_and_reveal_reviewed_real_browser_pending",
-        "formulas_and_answers": "reviewed_sample_problem_and_answer_logic",
-        "illustrations": "two_instructional_svg_values_compared_to_examples_browser_review_pending",
-        "desktop_mobile": "pending_real_browser",
+        "source_comparison": "original_pdf_pages_reviewed_core_examples_and_figures_not_full_word_by_word",
+        "pedagogy": "illustration_to_caption_and_answer_to_question_checked",
+        "hebrew_english_rtl": "source_copy_templates_removed_captions_proofread_browser_pending",
+        "formulas_and_answers": "four_exercise_questions_and_four_answers_match_source",
+        "illustrations": "2_inline_svg_chart_values_100_102_99_103_101_and_ohlc_100_108_96_101_verified",
+        "desktop_mobile": "automated_chromium_ci_configured_pending_run",
         "assessment_bank": "drafted_unreviewed"
       },
-      "notes": "Price series 100,102,99,103,101 verified and displayed as accessible table matching price-line demonstration; broken navigation and exercise punctuation fixed. Unit 1 practice answer reveal now learner-controlled; original 1.2 line chart 100,102,99,103,101 corresponds to learning table."
+      "notes": "Price series 100,102,99,103,101 verified and displayed as accessible table matching price-line demonstration; broken navigation and exercise punctuation fixed. Unit 1 practice answer reveal now learner-controlled; original 1.2 line chart 100,102,99,103,101 corresponds to learning table. 2026-11-16 audit: Price line chart and candle OHLC checked against original PDF pp.10–11, circle click interaction requires browser CI. Full cross-device browser evidence is pending CI; dark-theme refresh for legacy white PNGs remains open."
     },
     {
       "display_id": "1.3",
@@ -43,15 +43,15 @@
       "source_path": "docs/course-workspace/lessons/01-03.md",
       "status": "qa_in_progress",
       "checks": {
-        "source_comparison": "pdf_core_topics_reviewed_pages_12_14",
-        "pedagogy": "exercise_and_explanation_spotcheck_done_final_signoff_pending",
-        "hebrew_english_rtl": "targeted_fixes_and_reveal_reviewed_real_browser_pending",
-        "formulas_and_answers": "reviewed_sample_problem_and_answer_logic",
-        "illustrations": "no_independent_source_illustration_required_recheck_in_browser",
-        "desktop_mobile": "pending_real_browser",
+        "source_comparison": "original_pdf_pages_reviewed_core_examples_and_figures_not_full_word_by_word",
+        "pedagogy": "illustration_to_caption_and_answer_to_question_checked",
+        "hebrew_english_rtl": "source_copy_templates_removed_captions_proofread_browser_pending",
+        "formulas_and_answers": "three_history_questions_and_answers_match_source",
+        "illustrations": "historical_text_only_no_mandatory_figure_in_source",
+        "desktop_mobile": "automated_chromium_ci_configured_pending_run",
         "assessment_bank": "drafted_unreviewed"
       },
-      "notes": "Historical uncertainty preserved (Homma vs modern candlesticks); Steve Nison 1991 edition confirmed by book bibliographic record. Incorrect 1991 punctuation fixed; hidden editorial note removed. Unit 1 practice answer reveal now learner-controlled; original 1.2 line chart 100,102,99,103,101 corresponds to learning table."
+      "notes": "Historical uncertainty preserved (Homma vs modern candlesticks); Steve Nison 1991 edition confirmed by book bibliographic record. Incorrect 1991 punctuation fixed; hidden editorial note removed. Unit 1 practice answer reveal now learner-controlled; original 1.2 line chart 100,102,99,103,101 corresponds to learning table. 2026-11-16 audit: Historical origin does not claim Homma definitively invented modern candles; no numerical figures in source pp.12–14. Full cross-device browser evidence is pending CI; dark-theme refresh for legacy white PNGs remains open."
     },
     {
       "display_id": "1.4",
@@ -59,15 +59,15 @@
       "source_path": "docs/course-workspace/lessons/01-04.md",
       "status": "qa_in_progress",
       "checks": {
-        "source_comparison": "pdf_core_topics_reviewed_pages_15_19",
-        "pedagogy": "exercise_and_explanation_spotcheck_done_final_signoff_pending",
-        "hebrew_english_rtl": "targeted_fixes_and_reveal_reviewed_real_browser_pending",
-        "formulas_and_answers": "reviewed_sample_problem_and_answer_logic",
-        "illustrations": "no_independent_source_illustration_required_recheck_in_browser",
-        "desktop_mobile": "pending_real_browser",
+        "source_comparison": "original_pdf_pages_reviewed_core_examples_and_figures_not_full_word_by_word",
+        "pedagogy": "illustration_to_caption_and_answer_to_question_checked",
+        "hebrew_english_rtl": "source_copy_templates_removed_captions_proofread_browser_pending",
+        "formulas_and_answers": "four_observation_interpretation_scenario_questions_with_answers",
+        "illustrations": "terminology_text_only_no_mandatory_figure_in_source",
+        "desktop_mobile": "automated_chromium_ci_configured_pending_run",
         "assessment_bank": "drafted_unreviewed"
       },
-      "notes": "Core distinction observation/interpretation/scenario preserved; 55/100 illustrative probability caveat and 101st case punctuation repaired; navigation punctuation cleaned. Unit 1 practice answer reveal now learner-controlled; original 1.2 line chart 100,102,99,103,101 corresponds to learning table."
+      "notes": "Core distinction observation/interpretation/scenario preserved; 55/100 illustrative probability caveat and 101st case punctuation repaired; navigation punctuation cleaned. Unit 1 practice answer reveal now learner-controlled; original 1.2 line chart 100,102,99,103,101 corresponds to learning table. 2026-11-16 audit: Four conceptual practice questions and answers matched to original source; examples distinguish observation, interpretation and conditional scenario. Full cross-device browser evidence is pending CI; dark-theme refresh for legacy white PNGs remains open."
     },
     {
       "display_id": "2.1",
@@ -75,15 +75,15 @@
       "source_path": "docs/course-workspace/lessons/02-01.md",
       "status": "qa_in_progress",
       "checks": {
-        "source_comparison": "pdf_core_exercises_reviewed_pages_20_24",
-        "pedagogy": "exercise_solution_reviewed_final_signoff_pending",
-        "hebrew_english_rtl": "targeted_punctuation_editorial_fix_browser_pending",
-        "formulas_and_answers": "ohlc_validity_examples_spotchecked",
-        "illustrations": "all_three_png_source_files_visually_inspected_math_consistent_style_and_browser_pending",
-        "desktop_mobile": "pending_real_browser",
+        "source_comparison": "original_pdf_pages_reviewed_core_examples_and_figures_not_full_word_by_word",
+        "pedagogy": "illustration_to_caption_and_answer_to_question_checked",
+        "hebrew_english_rtl": "source_copy_templates_removed_captions_proofread_browser_pending",
+        "formulas_and_answers": "five_ohlc_questions_and_answers_valid_open_high_low_close",
+        "illustrations": "3_visual_positions_verified_actual_fig2_1_03_anatomy_fig2_1_02_bullbear_third_dynamic_paths",
+        "desktop_mobile": "automated_chromium_ci_configured_pending_run",
         "assessment_bank": "drafted_unreviewed"
       },
-      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified. All 3 source PNG files were visually inspected; artwork still needs WAVE dark-theme and live responsive QA."
+      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified. All 3 source PNG files were visually inspected; artwork still needs WAVE dark-theme and live responsive QA. 2026-11-16 audit: Original figure filename 01 depicted alternative paths rather than anatomy; corrected first slot to asset 03, kept interactive paths in third slot. Full cross-device browser evidence is pending CI; dark-theme refresh for legacy white PNGs remains open."
     },
     {
       "display_id": "2.2",
@@ -91,15 +91,15 @@
       "source_path": "docs/course-workspace/lessons/02-02.md",
       "status": "qa_in_progress",
       "checks": {
-        "source_comparison": "pdf_core_exercises_reviewed_pages_25_29",
-        "pedagogy": "exercise_solution_reviewed_final_signoff_pending",
-        "hebrew_english_rtl": "targeted_punctuation_editorial_fix_browser_pending",
-        "formulas_and_answers": "body_wicks_range_and_close_position_verified",
-        "illustrations": "all_three_png_source_files_visually_inspected_one_overlapping_figure_replaced_dark_svg_browser_pending",
-        "desktop_mobile": "pending_real_browser",
+        "source_comparison": "original_pdf_pages_reviewed_core_examples_and_figures_not_full_word_by_word",
+        "pedagogy": "illustration_to_caption_and_answer_to_question_checked",
+        "hebrew_english_rtl": "source_copy_templates_removed_captions_proofread_browser_pending",
+        "formulas_and_answers": "five_questions_answers_body_wicks_range_0_75_correct",
+        "illustrations": "3_visual_positions_corrected_fig03_range_svg_anatomy_fig01_close_positions",
+        "desktop_mobile": "automated_chromium_ci_configured_pending_run",
         "assessment_bank": "drafted_unreviewed"
       },
-      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified. Replaced overlapping white anatomy PNG in lesson 2.2 with dark SVG; values O100 H112 L96 C108 -> body8 upper4 lower4 range16, clear labels, right-only price axis. All 3 source PNG files were visually inspected; artwork still needs WAVE dark-theme and live responsive QA."
+      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified. Replaced overlapping white anatomy PNG in lesson 2.2 with dark SVG; values O100 H112 L96 C108 -> body8 upper4 lower4 range16, clear labels, right-only price axis. All 3 source PNG files were visually inspected; artwork still needs WAVE dark-theme and live responsive QA. 2026-11-16 audit: Swapped mismatched figure 01 and 03 positions; SVG anatomy math O100/H112/L96/C108 => body8/wicks4,4/range16; caption provenance clarified. Full cross-device browser evidence is pending CI; dark-theme refresh for legacy white PNGs remains open."
     },
     {
       "display_id": "2.3",
@@ -107,15 +107,15 @@
       "source_path": "docs/course-workspace/lessons/02-03.md",
       "status": "qa_in_progress",
       "checks": {
-        "source_comparison": "pdf_core_exercises_reviewed_pages_30_32",
-        "pedagogy": "exercise_solution_reviewed_final_signoff_pending",
-        "hebrew_english_rtl": "targeted_punctuation_editorial_fix_browser_pending",
-        "formulas_and_answers": "four_15m_to_1h_ohlc_aggregation_verified",
-        "illustrations": "all_three_png_source_files_visually_inspected_math_consistent_style_and_browser_pending",
-        "desktop_mobile": "pending_real_browser",
+        "source_comparison": "original_pdf_pages_reviewed_core_examples_and_figures_not_full_word_by_word",
+        "pedagogy": "illustration_to_caption_and_answer_to_question_checked",
+        "hebrew_english_rtl": "source_copy_templates_removed_captions_proofread_browser_pending",
+        "formulas_and_answers": "three_questions_four_15m_ohlc40_47_38_43_answers_correct",
+        "illustrations": "3_figures_checked_timeframe_aggregation_and_temporary_close",
+        "desktop_mobile": "automated_chromium_ci_configured_pending_run",
         "assessment_bank": "drafted_unreviewed"
       },
-      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified. All 3 source PNG files were visually inspected; artwork still needs WAVE dark-theme and live responsive QA."
+      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified. All 3 source PNG files were visually inspected; artwork still needs WAVE dark-theme and live responsive QA. 2026-11-16 audit: Figure titles, timelines and didactic annotations aligned to PDF pp.30–32. Full cross-device browser evidence is pending CI; dark-theme refresh for legacy white PNGs remains open."
     },
     {
       "display_id": "2.4",
@@ -123,15 +123,15 @@
       "source_path": "docs/course-workspace/lessons/02-04.md",
       "status": "qa_in_progress",
       "checks": {
-        "source_comparison": "pdf_core_exercises_reviewed_pages_33_34",
-        "pedagogy": "exercise_solution_reviewed_final_signoff_pending",
-        "hebrew_english_rtl": "targeted_punctuation_editorial_fix_browser_pending",
-        "formulas_and_answers": "open_candle_ohlc_path_nonidentifiability_verified",
-        "illustrations": "all_three_png_source_files_visually_inspected_math_consistent_style_and_browser_pending",
-        "desktop_mobile": "pending_real_browser",
+        "source_comparison": "original_pdf_pages_reviewed_core_examples_and_figures_not_full_word_by_word",
+        "pedagogy": "illustration_to_caption_and_answer_to_question_checked",
+        "hebrew_english_rtl": "source_copy_templates_removed_captions_proofread_browser_pending",
+        "formulas_and_answers": "three_questions_open_candle50_56_48_52_correct",
+        "illustrations": "3_visual_positions_corrected_fig01_developing_fig03_ohlc_paths_fig02_before_after_close",
+        "desktop_mobile": "automated_chromium_ci_configured_pending_run",
         "assessment_bank": "drafted_unreviewed"
       },
-      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified. All 3 source PNG files were visually inspected; artwork still needs WAVE dark-theme and live responsive QA."
+      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified. All 3 source PNG files were visually inspected; artwork still needs WAVE dark-theme and live responsive QA. 2026-11-16 audit: Swapped mismatch between figs 02 and 03 to align alternative price paths and candle-before/after-close. Full cross-device browser evidence is pending CI; dark-theme refresh for legacy white PNGs remains open."
     },
     {
       "display_id": "2.5",
@@ -139,15 +139,15 @@
       "source_path": "docs/course-workspace/lessons/02-05.md",
       "status": "qa_in_progress",
       "checks": {
-        "source_comparison": "pdf_core_exercises_reviewed_pages_35_37",
-        "pedagogy": "exercise_solution_reviewed_final_signoff_pending",
-        "hebrew_english_rtl": "targeted_punctuation_editorial_fix_browser_pending",
-        "formulas_and_answers": "gap_vs_full_range_gap_reviewed",
-        "illustrations": "all_three_png_source_files_visually_inspected_math_consistent_style_and_browser_pending",
-        "desktop_mobile": "pending_real_browser",
+        "source_comparison": "original_pdf_pages_reviewed_core_examples_and_figures_not_full_word_by_word",
+        "pedagogy": "illustration_to_caption_and_answer_to_question_checked",
+        "hebrew_english_rtl": "source_copy_templates_removed_captions_proofread_browser_pending",
+        "formulas_and_answers": "three_questions_closing100_open103_engulfing_and_continuous_crypto_correct",
+        "illustrations": "3_figures_verified_gap_session_boundary_feed_difference",
+        "desktop_mobile": "automated_chromium_ci_configured_pending_run",
         "assessment_bank": "drafted_unreviewed"
       },
-      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified. All 3 source PNG files were visually inspected; artwork still needs WAVE dark-theme and live responsive QA."
+      "notes": "Worked examples and solutions checked against source. Answers are expandable for independent exercise. PNG assets exist in repository but visual pixel-by-pixel source parity has not been certified. All 3 source PNG files were visually inspected; artwork still needs WAVE dark-theme and live responsive QA. 2026-11-16 audit: Engulfing source question preserved; gap between closing and opening distinguished from full non-overlap between ranges. Full cross-device browser evidence is pending CI; dark-theme refresh for legacy white PNGs remains open."
     },
     {
       "display_id": "3.1",

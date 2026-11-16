@@ -36,6 +36,18 @@ jobs:
           WAVE_BROWSER_BASE: https://wavecapitalil.github.io/wave-platform
         run: python scripts/browser_qa.py
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Unit 1–2 static figure and exercise validation
+        run: |
+          node scripts/check-candlesticks-unit12-complete-audit.mjs
+          node scripts/check-candlesticks-unit12-qa.mjs
+
+      - name: Unit 1–2 desktop and mobile browser validation
+        run: python scripts/candlesticks_unit12_browser_qa.py
+
       - name: Upload production QA evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -44,4 +56,5 @@ jobs:
           path: |
             end_user_qa_report.json
             browser_qa/
+            browser_qa/unit12/
           retention-days: 14
