@@ -121,6 +121,7 @@ PUBLIC_FILES = HOME_PUBLIC_FILES | {
     "data/uber-tracker/eats_basket.csv",
     "data/uber-tracker/eats_merchant.csv",
     "data/uber-tracker/collection_log_2026-11-05.md",
+    "data/uber-tracker/README.md",
     "terminal-confluence.js",
     "terminal-seasonality.js",    "terminal-equities.js",
     "fundamental-chart-model.js",

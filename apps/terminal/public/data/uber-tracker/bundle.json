@@ -189,7 +189,7 @@
     "label_en": "stable",
     "kind": "inference",
     "flat_band_pct": 3.0,
-    "line_he": "יציב — נפח יומי של Uber בניו יורק +9.7% מ-2025-09 ל-2026-09 (מ-2026-05 עד 2026-09 +3.7%, בלי התאמה עונתית), נתח Uber מול Lyft 73.4% אחרי 72.3%. ב-LAX נפח TNC מתחילת השנה -5.7% והחודש האחרון +2.5%. סל המחירים, ההמתנה והסא'רג' לא נצפו.",
+    "line_he": "יציב — נפח יומי של Uber בניו יורק +9.7% מספטמבר 2025 עד ספטמבר 2026 (ממאי 2026 עד ספטמבר 2026 +3.7%, בלי התאמה עונתית), נתח Uber מול Lyft 73.4% אחרי 72.3%. ב-LAX נפח TNC מתחילת השנה -5.7% והחודש האחרון +2.5%.",
     "line_en": "Stable — NYC Uber daily volume +9.7% from 2025-09 to 2026-09 (May 2026 to 2026-09 +3.7%, not seasonally adjusted), Uber share versus Lyft 73.4% after 72.3%. LAX TNC year-to-date -5.7% and the latest month +2.5%. The fare, wait, and surge basket is unobserved.",
     "components": [
       {
@@ -251,43 +251,29 @@
           "ltr": true
         },
         {
-          "text": ". צמיחה במטבע קבוע היא העמודה שהחברה הדפיסה, לא חישוב מחדש. "
-        },
-        {
-          "text": "UBER",
-          "ltr": true
-        },
-        {
-          "text": " נשאר הטיקר."
+          "text": ". צמיחה במטבע קבוע היא העמודה שהחברה הדפיסה."
         }
       ],
       "calc_en": [
         {
-          "text": "Figures are the published table columns, Q3 2026 versus Q3 2025. Constant-currency growth is the column the company printed, not a recalculation."
+          "text": "Figures are the published table columns, Q3 2026 versus Q3 2025. Constant-currency growth is the column the company printed."
         }
       ],
       "links": [
         {
-          "text": "https://www.sec.gov/Archives/edgar/data/1543151/000154315126000039/uberq326earningspressrelea.htm",
+          "text": "Exhibit 99.1",
           "ltr": true,
           "url": "https://www.sec.gov/Archives/edgar/data/1543151/000154315126000039/uberq326earningspressrelea.htm"
         }
       ],
       "freq_he": [
         {
-          "text": "רבעוני, עם הגשת הדוח. "
-        },
-        {
-          "text": "Q3 2026",
-          "ltr": true
-        },
-        {
-          "text": " הוגש ב-4 בנובמבר 2026."
+          "text": "רבעוני, עם פרסום הדוח."
         }
       ],
       "freq_en": [
         {
-          "text": "Quarterly, with the filing. Q3 2026 was filed on 4 November 2026."
+          "text": "Quarterly, when the company publishes the report."
         }
       ]
     },
@@ -321,19 +307,19 @@
       ],
       "links": [
         {
-          "text": "https://www.sec.gov/Archives/edgar/data/1543151/000154315126000039/uberq326earningspressrelea.htm",
+          "text": "Exhibit 99.1",
           "ltr": true,
           "url": "https://www.sec.gov/Archives/edgar/data/1543151/000154315126000039/uberq326earningspressrelea.htm"
         }
       ],
       "freq_he": [
         {
-          "text": "מתפרסם עם אותו דוח רבעוני. אין עדכון עד הדוח הבא."
+          "text": "מתפרסם עם הדוח הרבעוני. מתעדכן בדוח הבא."
         }
       ],
       "freq_en": [
         {
-          "text": "Published with the same quarterly filing. No update until the next report."
+          "text": "Published with the quarterly report. It updates with the next report."
         }
       ]
     },
@@ -357,45 +343,24 @@
           "ltr": true
         },
         {
-          "text": " (Lyft) בקובץ החודשי ÷ ימי החודש. הסכום החודשי נשמר כפי שנספר, בלי עיגול חזרה. נתח "
+          "text": " (Lyft) באותו חודש, לחלק למספר הימים בחודש. נתח "
         },
         {
           "text": "Uber",
           "ltr": true
         },
         {
-          "text": " = סך Uber ÷ (Uber+Lyft). שינוי שנתי = הממוצע היומי מול אותו חודש אשתקד; בלי זוג הערך נשאר ריק. ספטמבר 2026: "
-        },
-        {
-          "text": "15,412,555",
-          "ltr": true
-        },
-        {
-          "text": " ו-"
-        },
-        {
-          "text": "5,575,126",
-          "ltr": true
-        },
-        {
-          "text": ". מול ספטמבר 2025: "
-        },
-        {
-          "text": "+9.7%",
-          "ltr": true
-        },
-        {
-          "text": "."
+          "text": " הוא החלק של Uber מתוך Uber ו-Lyft יחד. השינוי השנתי משווה את הממוצע היומי לאותו חודש בשנה הקודמת."
         }
       ],
       "calc_en": [
         {
-          "text": "Trips per day = raw monthly HVFHV trips ÷ days in the month. The monthly total is the counted file total, not a rounded daily figure times the number of days. Uber share = Uber trips ÷ (Uber+Lyft). Year-over-year compares daily averages with the same month a year earlier; with no pair the value stays empty. September 2026 raw totals are 15,412,555 and 5,575,126. Versus September 2025: +9.7%."
+          "text": "Trips per day = that month's HV0003 (Uber) or HV0005 (Lyft) trips divided by the days in the month. Uber share is Uber divided by Uber plus Lyft. Year-over-year compares the daily average with the same month a year earlier."
         }
       ],
       "links": [
         {
-          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-09.parquet",
+          "text": "NYC TLC · ספטמבר 2025",
           "ltr": true,
           "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-09.parquet"
         },
@@ -403,7 +368,7 @@
           "text": " "
         },
         {
-          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-10.parquet",
+          "text": "NYC TLC · אוקטובר 2025",
           "ltr": true,
           "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-10.parquet"
         },
@@ -411,7 +376,7 @@
           "text": " "
         },
         {
-          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-11.parquet",
+          "text": "NYC TLC · נובמבר 2025",
           "ltr": true,
           "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-11.parquet"
         },
@@ -419,7 +384,7 @@
           "text": " "
         },
         {
-          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-12.parquet",
+          "text": "NYC TLC · דצמבר 2025",
           "ltr": true,
           "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2025-12.parquet"
         },
@@ -427,7 +392,7 @@
           "text": " "
         },
         {
-          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-01.parquet",
+          "text": "NYC TLC · ינואר 2026",
           "ltr": true,
           "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-01.parquet"
         },
@@ -435,7 +400,7 @@
           "text": " "
         },
         {
-          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-02.parquet",
+          "text": "NYC TLC · פברואר 2026",
           "ltr": true,
           "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-02.parquet"
         },
@@ -443,7 +408,7 @@
           "text": " "
         },
         {
-          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-03.parquet",
+          "text": "NYC TLC · מרץ 2026",
           "ltr": true,
           "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-03.parquet"
         },
@@ -451,7 +416,7 @@
           "text": " "
         },
         {
-          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-04.parquet",
+          "text": "NYC TLC · אפריל 2026",
           "ltr": true,
           "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-04.parquet"
         },
@@ -459,7 +424,7 @@
           "text": " "
         },
         {
-          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-05.parquet",
+          "text": "NYC TLC · מאי 2026",
           "ltr": true,
           "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-05.parquet"
         },
@@ -467,7 +432,7 @@
           "text": " "
         },
         {
-          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-06.parquet",
+          "text": "NYC TLC · יוני 2026",
           "ltr": true,
           "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-06.parquet"
         },
@@ -475,7 +440,7 @@
           "text": " "
         },
         {
-          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-07.parquet",
+          "text": "NYC TLC · יולי 2026",
           "ltr": true,
           "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-07.parquet"
         },
@@ -483,7 +448,7 @@
           "text": " "
         },
         {
-          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-08.parquet",
+          "text": "NYC TLC · אוגוסט 2026",
           "ltr": true,
           "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-08.parquet"
         },
@@ -491,7 +456,7 @@
           "text": " "
         },
         {
-          "text": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-09.parquet",
+          "text": "NYC TLC · ספטמבר 2026",
           "ltr": true,
           "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-09.parquet"
         },
@@ -501,26 +466,12 @@
       ],
       "freq_he": [
         {
-          "text": "כל חודש בקובץ נספר מקובץ הנסיעות של "
-        },
-        {
-          "text": "TLC",
-          "ltr": true
-        },
-        {
-          "text": " ב-"
-        },
-        {
-          "text": "2026-11-06T10:57:46+02:00",
-          "ltr": true
-        },
-        {
-          "text": ". הפרסום החודשי מגיע בדרך כלל בפיגור של כחודשיים עד שלושה."
+          "text": "חודשי. הדוח מתפרסם בדרך כלל חודשיים עד שלושה אחרי סוף החודש."
         }
       ],
       "freq_en": [
         {
-          "text": "Every month in the file was counted from that month's TLC parquet at 2026-11-06T10:57:46+02:00. The monthly file usually arrives with about a two to three month lag."
+          "text": "Monthly. The report usually appears two to three months after the month ends."
         }
       ]
     },
@@ -530,14 +481,21 @@
       "title_en": "LAX TNC trips",
       "calc_he": [
         {
-          "text": "הנסיעות החודשיות, הממוצע היומי, השינוי השנתי והמצטבר הם העמודות המודפסות בדוח "
+          "text": "הנסיעות החודשיות, הממוצע היומי, השינוי השנתי והמצטבר הם העמודות בדוח "
         },
         {
           "text": "LAWA",
           "ltr": true
         },
         {
-          "text": ". תא ריק נשאר ריק ולא מתמלא באפס. זה לא "
+          "text": ". אלה נסיעות הזמנה ב-"
+        },
+        {
+          "text": "LAX",
+          "ltr": true
+        },
+        {
+          "text": ", לא "
         },
         {
           "text": "Uber",
@@ -556,16 +514,12 @@
       ],
       "calc_en": [
         {
-          "text": "Monthly trips, the daily average, year-over-year and year-to-date are the columns printed in the LAWA report. An empty cell stays empty. This is not Uber-only and not all of Los Angeles."
+          "text": "Monthly trips, the daily average, year-over-year and year-to-date are the columns in the LAWA report. These are ride-hail trips at LAX, not Uber alone and not all of Los Angeles."
         }
       ],
       "links": [
         {
-          "text": "2025-06 ",
-          "ltr": true
-        },
-        {
-          "text": "https://www.lawa.org/sites/lawa/files/2025-07/Ground%20Transportation%20Stats%2006%20Jun%202025.pdf",
+          "text": "LAWA · יוני 2025",
           "ltr": true,
           "url": "https://www.lawa.org/sites/lawa/files/2025-07/Ground%20Transportation%20Stats%2006%20Jun%202025.pdf"
         },
@@ -573,11 +527,7 @@
           "text": " "
         },
         {
-          "text": "2026-06 ",
-          "ltr": true
-        },
-        {
-          "text": "https://www.lawa.org/sites/lawa/files/2026-07/06%20Jun%202026.pdf",
+          "text": "LAWA · יוני 2026",
           "ltr": true,
           "url": "https://www.lawa.org/sites/lawa/files/2026-07/06%20Jun%202026.pdf"
         },
@@ -585,11 +535,7 @@
           "text": " "
         },
         {
-          "text": "2026-09 ",
-          "ltr": true
-        },
-        {
-          "text": "https://www.lawa.org/sites/lawa/files/2026-10/09%20Sep%202026.pdf",
+          "text": "LAWA · ספטמבר 2026",
           "ltr": true,
           "url": "https://www.lawa.org/sites/lawa/files/2026-10/09%20Sep%202026.pdf"
         },
@@ -599,12 +545,12 @@
       ],
       "freq_he": [
         {
-          "text": "חודשי. בקובץ נמצאים רק החודשים שנאספו ב-5 בנובמבר 2026."
+          "text": "חודשי, עם פרסום הדוח."
         }
       ],
       "freq_en": [
         {
-          "text": "Monthly. The file contains only the months collected on 5 November 2026."
+          "text": "Monthly, when the report is published."
         }
       ]
     },
@@ -614,21 +560,17 @@
       "title_en": "Driver signup bonus ads",
       "calc_he": [
         {
-          "text": "הסכום, מספר הנסיעות הנדרש והחלון בימים הם כפי שמופיעים במודעה. אין חלוקה לשכר לנסיעה, ואין ספירת נהגים."
+          "text": "הסכום, מספר הנסיעות והחלון בימים הם כפי שמופיעים במודעה."
         }
       ],
       "calc_en": [
         {
-          "text": "The guarantee, required trips and window in days are printed on the ad. There is no earnings-per-trip figure and no driver count."
+          "text": "The amount, the required trips and the window in days are the figures printed on the ad."
         }
       ],
       "links": [
         {
-          "text": "New York City ",
-          "ltr": true
-        },
-        {
-          "text": "https://uberreferralcode.com/uber-driver-referral/new-york",
+          "text": "New York City",
           "ltr": true,
           "url": "https://uberreferralcode.com/uber-driver-referral/new-york"
         },
@@ -636,11 +578,7 @@
           "text": " "
         },
         {
-          "text": "San Francisco ",
-          "ltr": true
-        },
-        {
-          "text": "https://uberreferralcode.com/uber-driver-referral/san-francisco",
+          "text": "San Francisco",
           "ltr": true,
           "url": "https://uberreferralcode.com/uber-driver-referral/san-francisco"
         },
@@ -648,11 +586,7 @@
           "text": " "
         },
         {
-          "text": "Los Angeles ",
-          "ltr": true
-        },
-        {
-          "text": "https://uberreferralcode.com/uber-driver-referral/los-angeles",
+          "text": "Los Angeles",
           "ltr": true,
           "url": "https://uberreferralcode.com/uber-driver-referral/los-angeles"
         },
@@ -660,11 +594,7 @@
           "text": " "
         },
         {
-          "text": "Chicago ",
-          "ltr": true
-        },
-        {
-          "text": "https://uberreferralcode.com/uber-driver-referral/chicago",
+          "text": "Chicago",
           "ltr": true,
           "url": "https://uberreferralcode.com/uber-driver-referral/chicago"
         },
@@ -672,11 +602,7 @@
           "text": " "
         },
         {
-          "text": "Miami ",
-          "ltr": true
-        },
-        {
-          "text": "https://uberreferralcode.com/uber-driver-referral/miami",
+          "text": "Miami",
           "ltr": true,
           "url": "https://uberreferralcode.com/uber-driver-referral/miami"
         },
@@ -684,11 +610,7 @@
           "text": " "
         },
         {
-          "text": "Austin ",
-          "ltr": true
-        },
-        {
-          "text": "https://uberreferralcode.com/uber-driver-referral/austin",
+          "text": "Austin",
           "ltr": true,
           "url": "https://uberreferralcode.com/uber-driver-referral/austin"
         },
@@ -696,11 +618,7 @@
           "text": " "
         },
         {
-          "text": "Boston ",
-          "ltr": true
-        },
-        {
-          "text": "https://uberreferralcode.com/uber-driver-referral/boston",
+          "text": "Boston",
           "ltr": true,
           "url": "https://uberreferralcode.com/uber-driver-referral/boston"
         },
@@ -708,11 +626,7 @@
           "text": " "
         },
         {
-          "text": "Seattle ",
-          "ltr": true
-        },
-        {
-          "text": "https://uberreferralcode.com/uber-driver-referral/seattle",
+          "text": "Seattle",
           "ltr": true,
           "url": "https://uberreferralcode.com/uber-driver-referral/seattle"
         },
@@ -720,11 +634,7 @@
           "text": " "
         },
         {
-          "text": "Washington DC ",
-          "ltr": true
-        },
-        {
-          "text": "https://uberreferralcode.com/uber-driver-referral/washington-dc",
+          "text": "Washington DC",
           "ltr": true,
           "url": "https://uberreferralcode.com/uber-driver-referral/washington-dc"
         },
@@ -732,11 +642,7 @@
           "text": " "
         },
         {
-          "text": "Atlanta ",
-          "ltr": true
-        },
-        {
-          "text": "https://uberreferralcode.com/uber-driver-referral/atlanta",
+          "text": "Atlanta",
           "ltr": true,
           "url": "https://uberreferralcode.com/uber-driver-referral/atlanta"
         },
@@ -746,12 +652,12 @@
       ],
       "freq_he": [
         {
-          "text": "צילום חד-פעמי שאומת ב-5 בנובמבר 2026. אין תקופה קודמת."
+          "text": "מתעדכן כשמתפרסמת מודעה חדשה."
         }
       ],
       "freq_en": [
         {
-          "text": "One-off snapshot verified on 5 November 2026. No prior period."
+          "text": "Updates when a new ad is published."
         }
       ]
     },
@@ -761,7 +667,7 @@
       "title_en": "Route basket",
       "calc_he": [
         {
-          "text": "רשימה קבועה של "
+          "text": "סל קבוע של "
         },
         {
           "text": "46",
@@ -775,36 +681,23 @@
           "ltr": true
         },
         {
-          "text": " ערים. אין בה מחיר, "
-        },
-        {
-          "text": "ETA",
-          "ltr": true
-        },
-        {
-          "text": " או סא'רג'."
+          "text": " ערים. מחיר, זמן המתנה וסא'רג' יחושבו מאותו מסלול."
         }
       ],
       "calc_en": [
         {
-          "text": "A fixed list of 46 routes in 15 cities. It holds no price, ETA or surge."
+          "text": "A fixed basket of 46 routes in 15 cities. Price, wait and surge are read on that same route."
         }
       ],
-      "links": [
-        {
-          "text": "route_basket.csv",
-          "ltr": true,
-          "url": "route_basket.csv"
-        }
-      ],
+      "links": [],
       "freq_he": [
         {
-          "text": "ההגדרה קבועה. ציטוט חי יתווסף רק כשתהיה קריאה."
+          "text": "הסל קבוע. ההצעה מתעדכנת כשהיא זמינה."
         }
       ],
       "freq_en": [
         {
-          "text": "The definition is fixed. A live quote is added only when a reading exists."
+          "text": "The basket is fixed. A quote updates when one is available."
         }
       ]
     },
@@ -814,104 +707,62 @@
       "title_en": "Overall read",
       "calc_he": [
         {
-          "text": "הסקה, לא ספירת נסיעות ולא הזמנות. הרכיבים: ניו יורק, החלון המלא +9.7% משתפר · ניו יורק ממאי +3.7% משתפר · LAX, החודש האחרון +2.5% יציב · LAX, מתחילת השנה -5.7% נחלש · LAX, יוני -4.9% נחלש. פס שטוח של "
+          "text": "הקריאה משווה שינויים בנפח הציבורי. שינוי גדול מ-"
         },
         {
           "text": "3.0%",
           "ltr": true
         },
         {
-          "text": " לכל רכיב. כשהרכיבים חלוקים הקריאה "
+          "text": " נקרא משתפר או נחלש, ושינוי קטן מזה נקרא יציב. כשהמדדים חלוקים, הקריאה "
         },
         {
           "text": "יציב"
         },
         {
-          "text": ". הדפסת "
-        },
-        {
-          "text": "SEC",
-          "ltr": true
-        },
-        {
-          "text": " ומודעות הנהגים לא נכנסות לציון."
+          "text": "."
         }
       ],
       "calc_en": [
         {
-          "text": "An inference, not a trip count and not an order count. Components: nyc_uber_daily_full_window +9.7% improving nyc_uber_daily_since_may +3.7% improving lax_tnc_latest_month_yoy +2.5% stable lax_tnc_ytd_yoy -5.7% deteriorating lax_tnc_june_yoy -4.9% deteriorating. Flat band of 3.0% per component. Disagreement is read as stable. The SEC print and the driver ads are not inputs."
+          "text": "The read compares changes in the public volume figures. A change larger than 3.0% is improving or deteriorating, and a smaller change is stable. When the figures disagree, the read is stable."
         }
       ],
       "links": [],
       "freq_he": [
         {
-          "text": "מתעדכן כשנוספת שורת נפח ציבורית. הסריקה עצמה לא ממציאה נקודה."
+          "text": "מתעדכנת כשמתפרסם נפח חודשי חדש."
         }
       ],
       "freq_en": [
         {
-          "text": "Updates when a new public volume row is added. The poll does not invent a point."
+          "text": "Updates when a new monthly volume figure is published."
         }
       ]
     },
     {
       "id": "empty",
-      "title_he": "סדרות ריקות: ציטוטים ו-Eats",
-      "title_en": "Empty series: quotes and Eats",
+      "title_he": "מחיר, המתנה ומשלוחים",
+      "title_en": "Fares, wait and delivery",
       "calc_he": [
         {
-          "text": "אין שורות, ולכן אין נקודות. ציטוט מחיר, "
-        },
-        {
-          "text": "ETA",
-          "ltr": true
-        },
-        {
-          "text": ", סא'רג', כיסוי מסעדות, מבצע וסל מנות דורשים סשן מחובר באפליקציה. האיסוף לא נכנס לחשבון, ולא הומצא ערך."
+          "text": "אין עדיין נתונים למחיר הנסיעה, לזמן ההמתנה, לסא'רג', לכיסוי המסעדות, למבצעים ולעלות ההזמנה."
         }
       ],
       "calc_en": [
         {
-          "text": "There are no rows, so there are no points. A fare, ETA, surge, restaurant coverage, promo or dish basket needs a signed-in app session. The collector does not log in, and no value was fabricated."
+          "text": "There are no figures yet for the fare, the wait, surge, restaurant coverage, promos or the order cost."
         }
       ],
       "links": [],
       "freq_he": [
         {
-          "text": "הסריקה רצה ב-"
-        },
-        {
-          "text": "08:00, 12:00, 17:30, 23:00",
-          "ltr": true
-        },
-        {
-          "text": " לפי "
-        },
-        {
-          "text": "UTC+2",
-          "ltr": true
-        },
-        {
-          "text": ", וחלון "
-        },
-        {
-          "text": "Eats",
-          "ltr": true
-        },
-        {
-          "text": " ביום שני "
-        },
-        {
-          "text": "09:00",
-          "ltr": true
-        },
-        {
-          "text": ". בשעון קיץ הריצה מוקדמת בשעה. זו סריקה, לא זרם מחירים."
+          "text": "מתעדכן כשיש קריאה."
         }
       ],
       "freq_en": [
         {
-          "text": "Checks run at 08:00, 12:00, 17:30, 23:00 on a UTC+2 clock, with an Eats window Monday 09:00. In summer the run is an hour earlier. This is a poll, not a price tick."
+          "text": "Updates when a reading is available."
         }
       ]
     }
