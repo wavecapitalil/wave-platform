@@ -23,8 +23,7 @@
     ['correlation','Correlation','Cross-asset relationships'],
     ['btcgold','BTC / Gold','Risk appetite ratio'],
     ['housing','Housing Risk','Housing regime gauge'],
-    ['seasonality','Seasonality','Historical path context'],
-    ['japanica','Japanica · Karmiel',"Restaurant map, Ma'ale Kamon 5"]
+    ['seasonality','Seasonality','Historical path context']
   ];
   var courses=[
     ['Macro & Market Regimes','Rates, liquidity, inflation, growth and credit'],
