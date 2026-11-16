@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css" integrity="sha256-V2sIX92Uh6ZaGSFTKMHghsB85b9toJtmazgG09AI2uk=" crossorigin="">
 <link rel="stylesheet" href="terminal-japanica.css?v=20261110-japanica5">
 
-<script src="i18n.js?v=20261110-japanica1"></script>
+<script src="i18n.js?v=20261116-btcbb1"></script>
   <link rel="stylesheet" href="wave-university-theme.css?v=20261008-depth1">
 <link rel="stylesheet" href="ai-tutor.css">
 <link rel="stylesheet" href="terminal-sources.css?v=20261105-datalog1">
@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="terminal-catalysts.css?v=20261106-dots">
 <link rel="stylesheet" href="terminal-research.css?v=20261014-persistent-statements">
 <link rel="stylesheet" href="terminal-sector-research.css?v=20261105-sector1">
+<link rel="stylesheet" href="terminal-btc-bb.css?v=20261116-btcbb1">
 <link rel="stylesheet" href="terminal-brief.css?v=20261009-brighter-reader1">
 <link rel="stylesheet" href="wave-header.css?v=20261101-1"><script src="wave-header.js?v=20261101-1"></script><style>
 .ratio-comparisons{margin-top:20px;color:#dbe5f1;direction:ltr;text-align:left}.ratio-comparisons h3{font-size:18px;margin:0 0 16px}.ratio-head,.ratio-row{display:grid;grid-template-columns:minmax(100px,.8fr) minmax(110px,1fr) minmax(155px,1.2fr) minmax(180px,1.5fr);gap:16px;padding:16px 8px;border-bottom:1px solid #26364b}.ratio-head{color:#b9c9dc;font-size:12px;background:#101d2d}.ratio-row h4{font-size:13px;margin:0}.ratio-row strong{display:block;font-size:18px;font-variant-numeric:tabular-nums}.ratio-row small{display:block;font-size:11px;line-height:1.6;color:#a8b8cd;overflow-wrap:anywhere}.ratio-row .ratio-mobile{display:none}.ratio-label{display:block;margin-top:10px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#7f93ab}.ratio-earnings{padding:18px 8px;font-size:12px;color:#b9c9dc}
@@ -149,6 +150,9 @@
         </div>
         <div class="nav-item" data-page="sector-research" onclick="navigate('sector-research')">
           <span class="nav-item-icon">🥧</span> <span data-i18n="sidebar.sectorResearch">Sector Research</span>
+        </div>
+        <div class="nav-item" data-page="btc-bb-research" onclick="navigate('btc-bb-research')">
+          <span class="nav-item-icon">📉</span> <span data-i18n="sidebar.btcBbResearch">BTC Bollinger Research</span>
         </div>
         <div class="nav-item" data-page="catalysts" onclick="navigate('catalysts')">
           <span class="nav-item-icon">📍</span> <span data-i18n="sidebar.catalysts">Catalyst Calendar</span>
@@ -982,6 +986,635 @@
       </div>
     </div>
 
+    <div class="page" id="page-btc-bb-research">
+      <div class="bb-wrap" dir="rtl" lang="he">
+
+        <header class="bb-section" id="bb-hero">
+          <div class="bb-kicker"><span class="bb-en" dir="ltr">Research · BTC_BB_LOWER_TOUCH_7D_v1</span></div>
+          <h1>Bitcoin: מה קורה שבוע אחרי נגיעה ברצועת <span class="bb-en" dir="ltr">Bollinger</span> התחתונה?</h1>
+          <div class="bb-badges">
+            <span class="bb-badge"><span class="bb-en" dir="ltr">Backtest Research Standard v2.0</span></span>
+            <span class="bb-badge"><span class="bb-en" dir="ltr">Primary · 7D</span></span>
+            <span class="bb-badge"><span class="bb-en" dir="ltr">BB(20, 2.0)</span></span>
+            <span class="bb-badge"><span class="bb-en" dir="ltr">BTCUSDT 1d · Binance</span></span>
+          </div>
+          <p class="bb-lede">BTC עלה ב־<bdi>217</bdi> מתוך <bdi>415</bdi> מקרים (<bdi>52.3%</bdi>) שבוע אחרי נגיעה ברצועה התחתונה של <span class="bb-en" dir="ltr">BB(20, 2)</span>, תשואה חציונית <bdi>+0.48%</bdi>.</p>
+          <p class="bb-lede">בנגיעה ראשונה באפיזודה: עלה ב־<bdi>44</bdi> מתוך <bdi>88</bdi> מקרים (<bdi>50.0%</bdi>), תשואה חציונית <bdi>+0.11%</bdi>.</p>
+          <p class="bb-lede">בכל יום אקראי BTC עלה תוך שבוע ב־<bdi>52.8%</bdi> מהמקרים, חציון <bdi>+0.48%</bdi> וממוצע <bdi>+1.04%</bdi>. הנגיעה לא נתנה יתרון. הממוצע אחריה נמוך מהבסיס. מבחן כניסה אקראית (<span class="bb-en" dir="ltr">§19</span>): כניסת <span class="bb-en" dir="ltr">LONG</span> אקראית בימי נגיעה ברצועות נתנה ממוצע <bdi>+0.85%</bdi>, מול <bdi>+0.08%</bdi> לכלל (אחוזון <bdi>1.2</bdi>) → <span class="bb-en" dir="ltr">BLOCKER</span>. אצל האפיזודות: <span class="bb-en" dir="ltr">WARNING SUSPECTED RANDOMNESS</span>.</p>
+          <div class="bb-decision">
+            <article><span class="bb-en" dir="ltr">Verdict</span><strong class="bb-en" dir="ltr">NO EDGE FOUND</strong></article>
+            <article><span class="bb-en" dir="ltr">Research Action</span><strong class="bb-en" dir="ltr">STOP</strong></article>
+            <article><span class="bb-en" dir="ltr">Production Confidence</span><strong class="bb-en" dir="ltr">LOW</strong></article>
+          </div>
+          <div class="bb-kpis">
+            <div class="bb-kpi"><div class="lbl">נגיעות / אפיזודות</div><div class="val"><bdi>415</bdi> / <bdi>88</bdi></div></div>
+            <div class="bb-kpi"><div class="lbl">ממוצע <bdi>7</bdi> ימים · נגיעות</div><div class="val"><bdi>+0.08%</bdi></div><div class="sub">בסיס <bdi>+1.04%</bdi> · פער <bdi>-0.97pp</bdi></div></div>
+            <div class="bb-kpi"><div class="lbl">חציון <bdi>7</bdi> ימים · נגיעות</div><div class="val"><bdi>+0.48%</bdi></div><div class="sub">בסיס <bdi>+0.48%</bdi></div></div>
+            <div class="bb-kpi"><div class="lbl"><span class="bb-en" dir="ltr">Hit-rate</span> · נגיעות</div><div class="val"><bdi>52.3%</bdi></div><div class="sub">בסיס <bdi>52.8%</bdi> · <span class="bb-en" dir="ltr">CI</span> <bdi>[45.5% , 59.6%]</bdi></div></div>
+          </div>
+        </header>
+
+        <section class="bb-section" id="bb-defs">
+          <div class="bb-head"><h2>הגדרות שהוקפאו</h2><span class="bb-badge"><span class="bb-en" dir="ltr">Frozen before results</span></span></div>
+          <div class="bb-defs">
+            <div class="bb-en" dir="ltr">Research ID</div><div><span class="bb-en" dir="ltr">BTC_BB_LOWER_TOUCH_7D_v1</span></div>
+            <div>מכשיר</div><div><span class="bb-en" dir="ltr">Binance spot BTCUSDT, 1d</span>, <span class="bb-en" dir="ltr">UTC 00:00–24:00</span></div>
+            <div class="bb-en" dir="ltr">Bollinger</div><div><span class="bb-en" dir="ltr">BB(20, 2.0)</span> על <span class="bb-en" dir="ltr">close</span>. <span class="bb-en" dir="ltr">SMA20 ± 2.0 × population std (ddof=0)</span> של <bdi>20</bdi> הסגירות האחרונות, כולל יום <span class="bb-en" dir="ltr">t</span>.</div>
+            <div>סיגנל ראשי</div><div><span class="bb-en" dir="ltr">low(t) ≤ lower(t)</span>. כניסה ב־<span class="bb-en" dir="ltr">close(t)</span>. תשואה <span class="bb-en" dir="ltr">= close(t+7) / close(t) − 1</span>.</div>
+            <div>אפיזודה</div><div>נגיעה בלי נגיעה ב־<bdi>7</bdi> הימים הקלנדריים שלפני (<span class="bb-en" dir="ltr">t−7…t−1</span>).</div>
+            <div>בסיס</div><div>כל הימים הכשירים (<bdi>3340</bdi>), ובסיס אקראי מותאם לשנה: <bdi>10,000</bdi> הגרלות, <span class="bb-en" dir="ltr">seed 42</span>.</div>
+            <div>כלל הכרעה</div><div><span class="bb-en" dir="ltr">HISTORICAL EDGE CANDIDATE</span> רק אם בשני המדגמים הפער חיובי, <span class="bb-en" dir="ltr">HAC t ≥ 2</span>, הגבול התחתון של <span class="bb-en" dir="ltr">95% CI</span> גדול מ־<bdi>0</bdi>, ואחוזון הבסיס האקראי <bdi>≥ 95</bdi>. אחרת <span class="bb-en" dir="ltr">NO EDGE FOUND</span>.</div>
+            <div class="bb-en" dir="ltr">§19 Variant A</div><div>אחוזון <bdi>≥ 95</bdi> → <span class="bb-en" dir="ltr">PASS</span>. <bdi>5 &lt; percentile &lt; 95</bdi> → <span class="bb-en" dir="ltr">WARNING SUSPECTED RANDOMNESS</span>. אחוזון <bdi>≤ 5</bdi> → <span class="bb-en" dir="ltr">BLOCKER</span>. הסטטוס הכולל הוא הפחות טוב מבין שני המדגמים.</div>
+          </div>
+        </section>
+
+        <section class="bb-section" id="bb-results">
+          <div class="bb-head"><h2>תוצאות ראשיות · <bdi>7</bdi> ימים</h2><span class="bb-badge"><span class="bb-en" dir="ltr">Primary · 7D</span></span></div>
+          <div class="bb-scroll">
+            <table class="bb-table">
+              <thead><tr>
+                <th>מדגם</th><th><span class="bb-en" dir="ltr">N</span></th><th><span class="bb-en" dir="ltr">X/N</span> עלו</th><th>ממוצע <bdi>7d</bdi></th><th>חציון <bdi>7d</bdi></th><th><span class="bb-en" dir="ltr">Hit-rate</span></th><th>פער ממוצע מול בסיס</th><th>אחוזון אקראי (ממוצע / חציון / <span class="bb-en" dir="ltr">Hit</span>)</th>
+              </tr></thead>
+              <tbody>
+                <tr><td>כל הנגיעות</td><td><bdi>415</bdi></td><td><bdi>217/415</bdi></td><td><bdi>+0.08%</bdi></td><td><bdi>+0.48%</bdi></td><td><bdi>52.3%</bdi></td><td class="dn"><bdi>-0.97pp</bdi></td><td><bdi>8.6 / 73.3 / 63.2</bdi></td></tr>
+                <tr><td>אפיזודות</td><td><bdi>88</bdi></td><td><bdi>44/88</bdi></td><td class="dn"><bdi>-0.57%</bdi></td><td><bdi>+0.11%</bdi></td><td><bdi>50.0%</bdi></td><td class="dn"><bdi>-1.61pp</bdi></td><td><bdi>10.6 / 46.1 / 39.9</bdi></td></tr>
+                <tr><td>בסיס: כל הימים</td><td><bdi>3340</bdi></td><td><bdi>1764/3340</bdi></td><td><bdi>+1.04%</bdi></td><td><bdi>+0.48%</bdi></td><td><bdi>52.8%</bdi></td><td>—</td><td>—</td></tr>
+                <tr><td>בסיס אקראי <span class="bb-en" dir="ltr">seed 42</span></td><td><bdi>415</bdi></td><td>—</td><td><bdi>+0.63%</bdi></td><td><bdi>+0.23%</bdi></td><td><bdi>51.5%</bdi></td><td>—</td><td>—</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bb-kpis">
+            <div class="bb-kpi"><div class="lbl">גבול תחתון <bdi>95% CI</bdi> לממוצע</div><div class="val dn"><bdi>-1.46%</bdi></div></div>
+            <div class="bb-kpi"><div class="lbl">פער מול בסיס · <span class="bb-en" dir="ltr">95% CI</span></div><div class="val"><bdi>[-2.35pp , +0.48pp]</bdi></div></div>
+            <div class="bb-kpi"><div class="lbl">ממוצע אפיזודות</div><div class="val dn"><bdi>-0.57%</bdi></div><div class="sub">פער <bdi>-1.61pp</bdi></div></div>
+            <div class="bb-kpi"><div class="lbl"><span class="bb-en" dir="ltr">AR(1) φ</span></div><div class="val"><bdi>0.54</bdi></div><div class="sub">אפיזודות <bdi>0.02</bdi></div></div>
+          </div>
+          <div class="bb-figs">
+            <img src="assets/research/btc-bb/01-hero.png" alt="ממוצע 7 ימים ו-hit-rate מול בסיס">
+            <img src="assets/research/btc-bb/02-distribution.png" alt="התפלגות תשואת 7 ימים">
+          </div>
+
+          <h3>הסקה · <span class="bb-en" dir="ltr">HAC / Newey-West</span></h3>
+          <div class="bb-scroll">
+            <table class="bb-table">
+              <thead><tr><th>מבחן</th><th>אומדן</th><th><span class="bb-en" dir="ltr">t</span></th><th><span class="bb-en" dir="ltr">p</span></th></tr></thead>
+              <tbody>
+                <tr><td>ממוצע נגיעות (<span class="bb-en" dir="ltr">lag 7</span>)</td><td><bdi>+0.08%</bdi></td><td><bdi>0.09</bdi></td><td><bdi>0.92</bdi></td></tr>
+                <tr><td>ממוצע אפיזודות (<span class="bb-en" dir="ltr">lag 7</span>)</td><td><bdi>-0.57%</bdi></td><td><bdi>-0.61</bdi></td><td><bdi>0.54</bdi></td></tr>
+                <tr><td>פער נגיעה מול שאר הימים (<span class="bb-en" dir="ltr">lag 10</span>)</td><td><bdi>-1.11pp</bdi></td><td><bdi>-1.34</bdi></td><td><bdi>0.18</bdi></td></tr>
+                <tr><td>פער אפיזודה מול שאר הימים (<span class="bb-en" dir="ltr">lag 10</span>)</td><td><bdi>-1.65pp</bdi></td><td><bdi>-1.72</bdi></td><td><bdi>0.09</bdi></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bb-kpis">
+            <div class="bb-kpi"><div class="lbl"><span class="bb-en" dir="ltr">Bootstrap 95% CI</span> · ממוצע אפיזודות</div><div class="val"><bdi>[-2.60% , +1.44%]</bdi></div></div>
+            <div class="bb-kpi"><div class="lbl">חציון נגיעות</div><div class="val"><bdi>[-0.55% , +1.54%]</bdi></div></div>
+            <div class="bb-kpi"><div class="lbl"><span class="bb-en" dir="ltr">Hit-rate</span> אפיזודות</div><div class="val"><bdi>[39.8% , 60.5%]</bdi></div></div>
+            <div class="bb-kpi"><div class="lbl">הסתברות שהפער <bdi>≤ 0</bdi></div><div class="val"><bdi>90.9%</bdi></div><div class="sub">אפיזודות <bdi>95.7%</bdi></div></div>
+          </div>
+
+          <h3>פיזור</h3>
+          <div class="bb-scroll">
+            <table class="bb-table">
+              <thead><tr><th></th><th>נגיעות</th><th>אפיזודות</th><th>בסיס</th></tr></thead>
+              <tbody>
+                <tr><td><span class="bb-en" dir="ltr">Std</span></td><td><bdi>10.1%</bdi></td><td><bdi>9.4%</bdi></td><td><bdi>9.4%</bdi></td></tr>
+                <tr><td><span class="bb-en" dir="ltr">P5</span></td><td><bdi>-18.05%</bdi></td><td><bdi>-19.98%</bdi></td><td><bdi>-13.09%</bdi></td></tr>
+                <tr><td><span class="bb-en" dir="ltr">P95</span></td><td><bdi>+15.36%</bdi></td><td><bdi>+11.57%</bdi></td><td><bdi>+17.75%</bdi></td></tr>
+                <tr><td>הגרוע ביותר</td><td><bdi>-36.58%</bdi></td><td><bdi>-33.26%</bdi></td><td><bdi>-46.99%</bdi></td></tr>
+                <tr><td>הטוב ביותר</td><td><bdi>+37.22%</bdi></td><td><bdi>+24.26%</bdi></td><td><bdi>+68.71%</bdi></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bb-figs">
+            <img src="assets/research/btc-bb/04-events.png" alt="תשואת 7 ימים לכל נגיעה">
+            <img src="assets/research/btc-bb/03-random-baseline.png" alt="מיקום הממוצע בבסיס האקראי">
+          </div>
+        </section>
+
+        <section class="bb-section">
+          <h2>יציבות, אופקים ומבחן <span class="bb-en" dir="ltr">§19</span></h2>
+          <div class="bb-scroll">
+            <table class="bb-table">
+              <thead><tr><th>שנה</th><th><span class="bb-en" dir="ltr">N</span> נגיעות</th><th>ממוצע נגיעות</th><th><span class="bb-en" dir="ltr">Hit</span> נגיעות</th><th><span class="bb-en" dir="ltr">N</span> אפיזודות</th><th>ממוצע אפיזודות</th><th>ממוצע בסיס</th><th>פער</th></tr></thead>
+              <tbody>
+                <tr><td><bdi>2017</bdi></td><td><bdi>9</bdi></td><td><bdi>+4.74%</bdi></td><td><bdi>55.6%</bdi></td><td><bdi>2</bdi></td><td><bdi>+1.63%</bdi></td><td><bdi>+9.09%</bdi></td><td><bdi>-4.35pp</bdi></td></tr>
+                <tr><td><bdi>2018</bdi></td><td><bdi>56</bdi></td><td><bdi>-4.37%</bdi></td><td><bdi>30.4%</bdi></td><td><bdi>11</bdi></td><td><bdi>-6.94%</bdi></td><td><bdi>-1.96%</bdi></td><td><bdi>-2.40pp</bdi></td></tr>
+                <tr><td><bdi>2019</bdi></td><td><bdi>39</bdi></td><td><bdi>-1.40%</bdi></td><td><bdi>48.7%</bdi></td><td><bdi>8</bdi></td><td><bdi>-0.12%</bdi></td><td><bdi>+1.71%</bdi></td><td><bdi>-3.11pp</bdi></td></tr>
+                <tr><td><bdi>2020</bdi></td><td><bdi>31</bdi></td><td><bdi>-0.95%</bdi></td><td><bdi>58.1%</bdi></td><td><bdi>5</bdi></td><td><bdi>-6.58%</bdi></td><td><bdi>+3.48%</bdi></td><td><bdi>-4.43pp</bdi></td></tr>
+                <tr><td><bdi>2021</bdi></td><td><bdi>52</bdi></td><td><bdi>+2.23%</bdi></td><td><bdi>61.5%</bdi></td><td><bdi>9</bdi></td><td><bdi>-2.05%</bdi></td><td><bdi>+1.15%</bdi></td><td><bdi>+1.09pp</bdi></td></tr>
+                <tr><td><bdi>2022</bdi></td><td><bdi>49</bdi></td><td><bdi>-1.63%</bdi></td><td><bdi>44.9%</bdi></td><td><bdi>13</bdi></td><td><bdi>-0.24%</bdi></td><td><bdi>-1.51%</bdi></td><td><bdi>-0.12pp</bdi></td></tr>
+                <tr><td><bdi>2023</bdi></td><td><bdi>33</bdi></td><td><bdi>+5.59%</bdi></td><td><bdi>66.7%</bdi></td><td><bdi>8</bdi></td><td><bdi>+2.03%</bdi></td><td><bdi>+2.09%</bdi></td><td><bdi>+3.50pp</bdi></td></tr>
+                <tr><td><bdi>2024</bdi></td><td><bdi>40</bdi></td><td><bdi>+2.34%</bdi></td><td><bdi>65.0%</bdi></td><td><bdi>10</bdi></td><td><bdi>+1.04%</bdi></td><td><bdi>+1.80%</bdi></td><td><bdi>+0.54pp</bdi></td></tr>
+                <tr><td><bdi>2025</bdi></td><td><bdi>59</bdi></td><td><bdi>+1.20%</bdi></td><td><bdi>59.3%</bdi></td><td><bdi>12</bdi></td><td><bdi>+1.72%</bdi></td><td><bdi>-0.00%</bdi></td><td><bdi>+1.20pp</bdi></td></tr>
+                <tr><td><bdi>2026</bdi></td><td><bdi>47</bdi></td><td><bdi>-1.44%</bdi></td><td><bdi>44.7%</bdi></td><td><bdi>10</bdi></td><td><bdi>+3.16%</bdi></td><td><bdi>-0.18%</bdi></td><td><bdi>-1.26pp</bdi></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bb-kpis">
+            <div class="bb-kpi"><div class="lbl">חצי ראשון מול חצי שני · חיתוך <bdi>2022-04-02</bdi></div><div class="val"><bdi>-2.19pp</bdi> / <bdi>+0.20pp</bdi></div><div class="sub">אפיזודות <bdi>-4.37pp</bdi> / <bdi>+0.63pp</bdi></div></div>
+            <div class="bb-kpi"><div class="lbl">דעיכת אפיזודות</div><div class="val"><bdi>+0.95pp</bdi>/year</div><div class="sub"><span class="bb-en" dir="ltr">t</span> <bdi>= 4.46</bdi></div></div>
+          </div>
+          <div class="bb-figs">
+            <img src="assets/research/btc-bb/05-yearly.png" alt="תוצאות לפי שנה">
+            <img src="assets/research/btc-bb/06-rolling.png" alt="חלון מתגלגל">
+          </div>
+
+          <h3>טבלת אופקים · כל הנגיעות</h3>
+          <div class="bb-scroll">
+            <table class="bb-table">
+              <thead><tr><th>אופק</th><th><span class="bb-en" dir="ltr">N</span></th><th><span class="bb-en" dir="ltr">X/N</span></th><th><span class="bb-en" dir="ltr">Hit-rate</span></th><th>חציון</th><th>ממוצע</th><th><span class="bb-en" dir="ltr">Hit</span> בסיס</th><th>חציון בסיס</th><th>אחוזון ממוצע</th><th>אחוזון חציון</th><th>אחוזון <span class="bb-en" dir="ltr">Hit</span></th></tr></thead>
+              <tbody>
+                <tr><td><bdi>1</bdi></td><td><bdi>419</bdi></td><td><bdi>219/419</bdi></td><td><bdi>52.3%</bdi></td><td><bdi>+0.14%</bdi></td><td><bdi>-0.16%</bdi></td><td><bdi>51.1%</bdi></td><td><bdi>+0.05%</bdi></td><td><bdi>5.0</bdi></td><td><bdi>84.1</bdi></td><td><bdi>77.6</bdi></td></tr>
+                <tr><td><bdi>2</bdi></td><td><bdi>418</bdi></td><td><bdi>213/418</bdi></td><td><bdi>51.0%</bdi></td><td><bdi>+0.08%</bdi></td><td><bdi>-0.19%</bdi></td><td><bdi>52.6%</bdi></td><td><bdi>+0.18%</bdi></td><td><bdi>4.5</bdi></td><td><bdi>38.9</bdi></td><td><bdi>36.4</bdi></td></tr>
+                <tr><td><bdi>3</bdi></td><td><bdi>418</bdi></td><td><bdi>214/418</bdi></td><td><bdi>51.2%</bdi></td><td><bdi>+0.08%</bdi></td><td><bdi>-0.35%</bdi></td><td><bdi>53.0%</bdi></td><td><bdi>+0.27%</bdi></td><td><bdi>0.9</bdi></td><td><bdi>29.2</bdi></td><td><bdi>33.8</bdi></td></tr>
+                <tr><td><bdi>5</bdi></td><td><bdi>416</bdi></td><td><bdi>217/416</bdi></td><td><bdi>52.2%</bdi></td><td><bdi>+0.44%</bdi></td><td><bdi>-0.31%</bdi></td><td><bdi>52.8%</bdi></td><td><bdi>+0.31%</bdi></td><td><bdi>1.6</bdi></td><td><bdi>81.5</bdi></td><td><bdi>60.0</bdi></td></tr>
+                <tr><td><bdi>7 ★</bdi></td><td><bdi>415</bdi></td><td><bdi>217/415</bdi></td><td><bdi>52.3%</bdi></td><td><bdi>+0.48%</bdi></td><td><bdi>+0.08%</bdi></td><td><bdi>52.8%</bdi></td><td><bdi>+0.48%</bdi></td><td><bdi>8.6</bdi></td><td><bdi>73.3</bdi></td><td><bdi>62.4</bdi></td></tr>
+                <tr><td><bdi>10</bdi></td><td><bdi>412</bdi></td><td><bdi>210/412</bdi></td><td><bdi>51.0%</bdi></td><td><bdi>+0.08%</bdi></td><td><bdi>+0.13%</bdi></td><td><bdi>54.0%</bdi></td><td><bdi>+0.69%</bdi></td><td><bdi>5.1</bdi></td><td><bdi>21.1</bdi></td><td><bdi>29.0</bdi></td></tr>
+                <tr><td><bdi>14</bdi></td><td><bdi>411</bdi></td><td><bdi>198/411</bdi></td><td><bdi>48.2%</bdi></td><td><bdi>-0.43%</bdi></td><td><bdi>-0.03%</bdi></td><td><bdi>53.7%</bdi></td><td><bdi>+0.80%</bdi></td><td><bdi>1.1</bdi></td><td><bdi>5.7</bdi></td><td><bdi>6.0</bdi></td></tr>
+                <tr><td><bdi>21</bdi></td><td><bdi>409</bdi></td><td><bdi>198/409</bdi></td><td><bdi>48.4%</bdi></td><td><bdi>-0.25%</bdi></td><td><bdi>+0.56%</bdi></td><td><bdi>53.2%</bdi></td><td><bdi>+1.13%</bdi></td><td><bdi>1.5</bdi></td><td><bdi>21.9</bdi></td><td><bdi>14.0</bdi></td></tr>
+                <tr><td><bdi>30</bdi></td><td><bdi>407</bdi></td><td><bdi>190/407</bdi></td><td><bdi>46.7%</bdi></td><td><bdi>-1.82%</bdi></td><td><bdi>+0.94%</bdi></td><td><bdi>54.7%</bdi></td><td><bdi>+1.74%</bdi></td><td><bdi>0.6</bdi></td><td><bdi>0.0</bdi></td><td><bdi>0.8</bdi></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h3>טבלת אופקים · אפיזודות</h3>
+          <div class="bb-scroll">
+            <table class="bb-table">
+              <thead><tr><th>אופק</th><th><span class="bb-en" dir="ltr">N</span></th><th><span class="bb-en" dir="ltr">X/N</span></th><th><span class="bb-en" dir="ltr">Hit-rate</span></th><th>חציון</th><th>ממוצע</th><th><span class="bb-en" dir="ltr">Hit</span> בסיס</th><th>חציון בסיס</th><th>אחוזון ממוצע</th><th>אחוזון חציון</th><th>אחוזון <span class="bb-en" dir="ltr">Hit</span></th></tr></thead>
+              <tbody>
+                <tr><td><bdi>1</bdi></td><td><bdi>88</bdi></td><td><bdi>42/88</bdi></td><td><bdi>47.7%</bdi></td><td><bdi>-0.15%</bdi></td><td><bdi>-0.65%</bdi></td><td><bdi>51.1%</bdi></td><td><bdi>+0.05%</bdi></td><td><bdi>2.2</bdi></td><td><bdi>21.4</bdi></td><td><bdi>30.5</bdi></td></tr>
+                <tr><td><bdi>2</bdi></td><td><bdi>88</bdi></td><td><bdi>42/88</bdi></td><td><bdi>47.7%</bdi></td><td><bdi>-0.20%</bdi></td><td><bdi>-0.44%</bdi></td><td><bdi>52.6%</bdi></td><td><bdi>+0.18%</bdi></td><td><bdi>11.0</bdi></td><td><bdi>17.7</bdi></td><td><bdi>23.4</bdi></td></tr>
+                <tr><td><bdi>3</bdi></td><td><bdi>88</bdi></td><td><bdi>39/88</bdi></td><td><bdi>44.3%</bdi></td><td><bdi>-0.64%</bdi></td><td><bdi>-0.83%</bdi></td><td><bdi>53.0%</bdi></td><td><bdi>+0.27%</bdi></td><td><bdi>3.5</bdi></td><td><bdi>5.5</bdi></td><td><bdi>7.2</bdi></td></tr>
+                <tr><td><bdi>5</bdi></td><td><bdi>88</bdi></td><td><bdi>39/88</bdi></td><td><bdi>44.3%</bdi></td><td><bdi>-0.93%</bdi></td><td><bdi>-1.11%</bdi></td><td><bdi>52.8%</bdi></td><td><bdi>+0.31%</bdi></td><td><bdi>2.3</bdi></td><td><bdi>2.7</bdi></td><td><bdi>8.6</bdi></td></tr>
+                <tr><td><bdi>7 ★</bdi></td><td><bdi>88</bdi></td><td><bdi>44/88</bdi></td><td><bdi>50.0%</bdi></td><td><bdi>+0.11%</bdi></td><td><bdi>-0.57%</bdi></td><td><bdi>52.8%</bdi></td><td><bdi>+0.48%</bdi></td><td><bdi>10.7</bdi></td><td><bdi>46.2</bdi></td><td><bdi>40.1</bdi></td></tr>
+                <tr><td><bdi>10</bdi></td><td><bdi>88</bdi></td><td><bdi>45/88</bdi></td><td><bdi>51.1%</bdi></td><td><bdi>+0.09%</bdi></td><td><bdi>-0.97%</bdi></td><td><bdi>54.0%</bdi></td><td><bdi>+0.69%</bdi></td><td><bdi>5.1</bdi></td><td><bdi>38.4</bdi></td><td><bdi>42.7</bdi></td></tr>
+                <tr><td><bdi>14</bdi></td><td><bdi>87</bdi></td><td><bdi>46/87</bdi></td><td><bdi>52.9%</bdi></td><td><bdi>+0.27%</bdi></td><td><bdi>-0.49%</bdi></td><td><bdi>53.7%</bdi></td><td><bdi>+0.80%</bdi></td><td><bdi>9.0</bdi></td><td><bdi>47.9</bdi></td><td><bdi>60.1</bdi></td></tr>
+                <tr><td><bdi>21</bdi></td><td><bdi>87</bdi></td><td><bdi>45/87</bdi></td><td><bdi>51.7%</bdi></td><td><bdi>+1.56%</bdi></td><td><bdi>+0.37%</bdi></td><td><bdi>53.2%</bdi></td><td><bdi>+1.13%</bdi></td><td><bdi>15.4</bdi></td><td><bdi>78.7</bdi></td><td><bdi>57.3</bdi></td></tr>
+                <tr><td><bdi>30</bdi></td><td><bdi>86</bdi></td><td><bdi>44/86</bdi></td><td><bdi>51.2%</bdi></td><td><bdi>+0.87%</bdi></td><td><bdi>+0.64%</bdi></td><td><bdi>54.7%</bdi></td><td><bdi>+1.74%</bdi></td><td><bdi>11.2</bdi></td><td><bdi>52.0</bdi></td><td><bdi>41.2</bdi></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>מבחן כניסה אקראית · <span class="bb-en" dir="ltr">Standard §19</span></h3>
+          <div class="bb-cards">
+            <article class="bb-card"><h3>כל הנגיעות · <span class="bb-en" dir="ltr">A</span></h3><p><span class="bb-badge blocker"><span class="bb-en" dir="ltr">BLOCKER</span></span></p><p>אחוזון ממוצע <bdi>1.2</bdi> · פער <bdi>-0.77pp</bdi> · <span class="bb-en" dir="ltr">CI</span> <bdi>[-1.43, -0.10]pp</bdi></p></article>
+            <article class="bb-card"><h3>אפיזודות · <span class="bb-en" dir="ltr">A</span></h3><p><span class="bb-badge warning"><span class="bb-en" dir="ltr">WARNING</span></span></p><p>אחוזון ממוצע <bdi>8.7</bdi> · פער <bdi>-0.92pp</bdi> · <span class="bb-en" dir="ltr">CI</span> <bdi>[-2.24, +0.38]pp</bdi></p></article>
+            <article class="bb-card"><h3>כל הנגיעות · <span class="bb-en" dir="ltr">B</span></h3><p><span class="bb-badge warning"><span class="bb-en" dir="ltr">WARNING · TOO CLOSE</span></span></p><p>אחוזון ממוצע <bdi>56.5</bdi> · פער <bdi>+0.08pp</bdi> · <span class="bb-en" dir="ltr">CI</span> <bdi>[-0.89, +1.02]pp</bdi></p></article>
+            <article class="bb-card"><h3>אפיזודות · <span class="bb-en" dir="ltr">B</span></h3><p><span class="bb-badge warning"><span class="bb-en" dir="ltr">WARNING</span></span></p><p>אחוזון ממוצע <bdi>28.1</bdi> · פער <bdi>-0.56pp</bdi> · <span class="bb-en" dir="ltr">CI</span> <bdi>[-2.41, +1.29]pp</bdi></p></article>
+          </div>
+          <p class="bb-lede">כניסת <span class="bb-en" dir="ltr">LONG</span> אקראית ביום נגיעה כלשהו ברצועה נתנה ממוצע <bdi>7d</bdi> חציוני של <bdi>+0.85%</bdi>. אחרי נגיעה בתחתונה הממוצע היה <bdi>+0.08%</bdi> (אחוזון <bdi>1.2</bdi>, <span class="bb-en" dir="ltr">p = 0.023</span>). באפיזודות הכלל לא נבדל מאקראי (אחוזון <bdi>8.7</bdi>). ה־<span class="bb-en" dir="ltr">MAE</span> החציוני של הכלל גרוע יותר מכמעט כל ההגרלות (אחוזון <bdi>≤ 0.2</bdi>).</p>
+          <h3><span class="bb-en" dir="ltr">Variant A</span> · כל הנגיעות (<span class="bb-en" dir="ltr">N=415</span>, מאגר <bdi>912</bdi>)</h3>
+          <div class="bb-scroll">
+            <table class="bb-table">
+              <thead><tr><th>מדד</th><th>הכלל</th><th>אקראי <span class="bb-en" dir="ltr">P5</span></th><th>אקראי <span class="bb-en" dir="ltr">P50</span></th><th>אקראי <span class="bb-en" dir="ltr">P95</span></th><th>ממוצע אקראי</th><th>אחוזון הכלל</th><th><span class="bb-en" dir="ltr">p</span> דו־צדדי</th></tr></thead>
+              <tbody>
+                <tr><td>ממוצע <bdi>7d</bdi></td><td><bdi>+0.08%</bdi></td><td><bdi>+0.28%</bdi></td><td><bdi>+0.85%</bdi></td><td><bdi>+1.40%</bdi></td><td><bdi>+0.84%</bdi></td><td><bdi>1.2</bdi></td><td><bdi>0.023</bdi></td></tr>
+                <tr><td>חציון <bdi>7d</bdi></td><td><bdi>+0.48%</bdi></td><td><bdi>-0.07%</bdi></td><td><bdi>+0.43%</bdi></td><td><bdi>+0.85%</bdi></td><td><bdi>+0.40%</bdi></td><td><bdi>59.4</bdi></td><td><bdi>0.842</bdi></td></tr>
+                <tr><td><span class="bb-en" dir="ltr">Hit-rate</span></td><td><bdi>52.3%</bdi></td><td><bdi>49.9%</bdi></td><td><bdi>52.5%</bdi></td><td><bdi>55.4%</bdi></td><td><bdi>52.6%</bdi></td><td><bdi>41.8</bdi></td><td><bdi>0.885</bdi></td></tr>
+                <tr><td><span class="bb-en" dir="ltr">Sharpe-like</span></td><td><bdi>0.007</bdi></td><td><bdi>0.029</bdi></td><td><bdi>0.086</bdi></td><td><bdi>0.140</bdi></td><td><bdi>0.085</bdi></td><td><bdi>1.1</bdi></td><td><bdi>0.023</bdi></td></tr>
+                <tr><td><span class="bb-en" dir="ltr">MAE</span> חציוני</td><td><bdi>-5.81%</bdi></td><td><bdi>-5.32%</bdi></td><td><bdi>-4.89%</bdi></td><td><bdi>-4.60%</bdi></td><td><bdi>-4.91%</bdi></td><td><bdi>0.0</bdi></td><td><bdi>0.000</bdi></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h3><span class="bb-en" dir="ltr">Variant A</span> · אפיזודות (<span class="bb-en" dir="ltr">N=88</span>, מאגר <bdi>185</bdi>)</h3>
+          <div class="bb-scroll">
+            <table class="bb-table">
+              <thead><tr><th>מדד</th><th>הכלל</th><th>אקראי <span class="bb-en" dir="ltr">P5</span></th><th>אקראי <span class="bb-en" dir="ltr">P50</span></th><th>אקראי <span class="bb-en" dir="ltr">P95</span></th><th>ממוצע אקראי</th><th>אחוזון הכלל</th><th><span class="bb-en" dir="ltr">p</span> דו־צדדי</th></tr></thead>
+              <tbody>
+                <tr><td>ממוצע <bdi>7d</bdi></td><td><bdi>-0.57%</bdi></td><td><bdi>-0.75%</bdi></td><td><bdi>+0.35%</bdi></td><td><bdi>+1.45%</bdi></td><td><bdi>+0.35%</bdi></td><td><bdi>8.7</bdi></td><td><bdi>0.174</bdi></td></tr>
+                <tr><td>חציון <bdi>7d</bdi></td><td><bdi>+0.11%</bdi></td><td><bdi>-1.08%</bdi></td><td><bdi>+0.02%</bdi></td><td><bdi>+0.74%</bdi></td><td><bdi>+0.00%</bdi></td><td><bdi>56.7</bdi></td><td><bdi>0.868</bdi></td></tr>
+                <tr><td><span class="bb-en" dir="ltr">Hit-rate</span></td><td><bdi>50.0%</bdi></td><td><bdi>45.5%</bdi></td><td><bdi>51.1%</bdi></td><td><bdi>58.0%</bdi></td><td><bdi>51.3%</bdi></td><td><bdi>36.8</bdi></td><td><bdi>0.846</bdi></td></tr>
+                <tr><td><span class="bb-en" dir="ltr">Sharpe-like</span></td><td><bdi>-0.060</bdi></td><td><bdi>-0.084</bdi></td><td><bdi>0.039</bdi></td><td><bdi>0.168</bdi></td><td><bdi>0.040</bdi></td><td><bdi>9.7</bdi></td><td><bdi>0.193</bdi></td></tr>
+                <tr><td><span class="bb-en" dir="ltr">MAE</span> חציוני</td><td><bdi>-6.46%</bdi></td><td><bdi>-5.60%</bdi></td><td><bdi>-4.89%</bdi></td><td><bdi>-3.64%</bdi></td><td><bdi>-4.75%</bdi></td><td><bdi>0.1</bdi></td><td><bdi>0.003</bdi></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bb-figs"><img src="assets/research/btc-bb/11-random-entry.png" alt="מבחן כניסה אקראית"></div>
+
+          <h3>רגישות שנרשמה מראש</h3>
+          <div class="bb-scroll">
+            <table class="bb-table">
+              <thead><tr><th>וריאנט</th><th><span class="bb-en" dir="ltr">N</span></th><th>ממוצע</th><th>חציון</th><th><span class="bb-en" dir="ltr">Hit-rate</span></th></tr></thead>
+              <tbody>
+                <tr><td>סגירה ≤ רצועה תחתונה</td><td><bdi>162</bdi></td><td><bdi>+0.19%</bdi></td><td><bdi>+1.17%</bdi></td><td><bdi>55.6%</bdi></td></tr>
+                <tr><td>סגירה ≤ רצועה תחתונה · אפיזודות</td><td><bdi>61</bdi></td><td><bdi>-0.52%</bdi></td><td><bdi>+0.69%</bdi></td><td><bdi>55.7%</bdi></td></tr>
+                <tr><td>נגיעה, כניסה ב־<span class="bb-en" dir="ltr">open</span> של היום הבא</td><td><bdi>415</bdi></td><td><bdi>+0.08%</bdi></td><td><bdi>+0.48%</bdi></td><td><bdi>52.3%</bdi></td></tr>
+                <tr><td>נגיעה, כניסה ב־<span class="bb-en" dir="ltr">open</span> של היום הבא · אפיזודות</td><td><bdi>88</bdi></td><td><bdi>-0.56%</bdi></td><td><bdi>+0.11%</bdi></td><td><bdi>50.0%</bdi></td></tr>
+                <tr><td>בסיס (כניסה ב־<span class="bb-en" dir="ltr">open</span> של היום הבא)</td><td><bdi>3340</bdi></td><td><bdi>+1.04%</bdi></td><td><bdi>+0.48%</bdi></td><td><bdi>52.8%</bdi></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="bb-lede">כל <bdi>54</bdi> התאים ברשת המקומית מראים ממוצע נמוך מהבסיס. טווח הפער אצל כל הנגיעות: <bdi>-1.46pp</bdi> עד <bdi>-0.50pp</bdi>. אצל האפיזודות: <bdi>-3.13pp</bdi> עד <bdi>-0.52pp</bdi>.</p>
+          <div class="bb-figs"><img src="assets/research/btc-bb/07-surface.png" alt="רשת פרמטרים"></div>
+
+          <h3>משטר, ריכוזיות, עלויות ו־<span class="bb-en" dir="ltr">MAE</span></h3>
+          <div class="bb-scroll">
+            <table class="bb-table">
+              <thead><tr><th>משטר</th><th>מדגם</th><th><span class="bb-en" dir="ltr">N</span></th><th>ממוצע</th><th><span class="bb-en" dir="ltr">Hit</span></th><th>ממוצע בסיס במשטר</th><th>פער</th></tr></thead>
+              <tbody>
+                <tr><td><span class="bb-en" dir="ltr">above_SMA200</span></td><td>נגיעות</td><td><bdi>163</bdi></td><td><bdi>+0.45%</bdi></td><td><bdi>54.0%</bdi></td><td><bdi>+1.26%</bdi></td><td><bdi>-0.81pp</bdi></td></tr>
+                <tr><td><span class="bb-en" dir="ltr">above_SMA200</span></td><td>אפיזודות</td><td><bdi>40</bdi></td><td><bdi>-1.18%</bdi></td><td><bdi>47.5%</bdi></td><td><bdi>+1.26%</bdi></td><td><bdi>-2.45pp</bdi></td></tr>
+                <tr><td><span class="bb-en" dir="ltr">below_SMA200</span></td><td>נגיעות</td><td><bdi>232</bdi></td><td><bdi>-0.35%</bdi></td><td><bdi>51.7%</bdi></td><td><bdi>+0.35%</bdi></td><td><bdi>-0.70pp</bdi></td></tr>
+                <tr><td><span class="bb-en" dir="ltr">below_SMA200</span></td><td>אפיזודות</td><td><bdi>44</bdi></td><td><bdi>+0.62%</bdi></td><td><bdi>54.5%</bdi></td><td><bdi>+0.35%</bdi></td><td><bdi>+0.27pp</bdi></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bb-kpis">
+            <div class="bb-kpi"><div class="lbl">בלי <bdi>5%</bdi> התוצאות הטובות</div><div class="val dn"><bdi>-1.22%</bdi></div><div class="sub">אפיזודות <bdi>-1.62%</bdi></div></div>
+            <div class="bb-kpi"><div class="lbl"><span class="bb-en" dir="ltr">Winsorized 5%</span></div><div class="val"><bdi>-0.05%</bdi></div><div class="sub">אפיזודות <bdi>-0.59%</bdi> · בסיס <bdi>+1.03%</bdi></div></div>
+            <div class="bb-kpi"><div class="lbl"><span class="bb-en" dir="ltr">MAE</span> חציוני</div><div class="val dn"><bdi>-5.81%</bdi></div><div class="sub">אפיזודות <bdi>-6.46%</bdi> · בסיס <bdi>-4.37%</bdi></div></div>
+            <div class="bb-kpi"><div class="lbl"><span class="bb-en" dir="ltr">P5</span> נגיעות · <span class="bb-en" dir="ltr">MAE</span></div><div class="val dn"><bdi>-26.96%</bdi></div><div class="sub"><bdi>33%</bdi> מהנגיעות ברווח עברו ירידה של יותר מ־<bdi>5%</bdi></div></div>
+          </div>
+          <div class="bb-scroll">
+            <table class="bb-table">
+              <thead><tr><th>עלות <span class="bb-en" dir="ltr">round trip</span></th><th>נגיעות נטו</th><th>אפיזודות נטו</th></tr></thead>
+              <tbody>
+                <tr><td><bdi>0%</bdi> (<span class="bb-en" dir="ltr">Break-even</span>)</td><td><bdi>+0.08%</bdi></td><td><bdi>-0.57%</bdi></td></tr>
+                <tr><td><bdi>0.1%</bdi></td><td><bdi>-0.02%</bdi></td><td><bdi>-0.67%</bdi></td></tr>
+                <tr><td><bdi>0.2%</bdi></td><td><bdi>-0.12%</bdi></td><td><bdi>-0.77%</bdi></td></tr>
+                <tr><td><bdi>0.5%</bdi></td><td><bdi>-0.42%</bdi></td><td><bdi>-1.07%</bdi></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bb-figs">
+            <img src="assets/research/btc-bb/08-regime.png" alt="משטר וריכוזיות">
+            <img src="assets/research/btc-bb/09-mae.png" alt="MAE">
+            <img src="assets/research/btc-bb/10-price.png" alt="מחיר ונגיעות">
+          </div>
+        </section>
+
+        <section class="bb-section" id="bb-ladder">
+          <h2><span class="bb-en" dir="ltr">Evidence Ladder</span></h2>
+          <div class="bb-scroll">
+            <table class="bb-table">
+              <thead><tr><th>שכבה</th><th>שם</th><th>סטטוס</th><th>הסבר</th></tr></thead>
+              <tbody>
+                <tr><td><span class="bb-en" dir="ltr">E0</span></td><td><span class="bb-en" dir="ltr">Data Integrity</span></td><td><span class="bb-badge warning"><span class="bb-en" dir="ltr">WARNING</span></span></td><td class="wrap">אין כפילויות, אין ימים חסרים (<bdi>3,366</bdi> ימים רציפים), אין הפרות <span class="bb-en" dir="ltr">OHLC</span>, זמני <span class="bb-en" dir="ltr">UTC 00:00</span>. הסתייגות: יום חלקי אחד (<bdi>2018-02-08</bdi>), ומקור יחיד שלא הוצלב מול בורסה אחרת.</td></tr>
+                <tr><td><span class="bb-en" dir="ltr">E1</span></td><td><span class="bb-en" dir="ltr">Historical Statistical</span></td><td><span class="bb-badge blocker"><span class="bb-en" dir="ltr">BLOCKER</span></span></td><td class="wrap">ממוצע <bdi>7d</bdi> אחרי נגיעה לא שונה מאפס (<span class="bb-en" dir="ltr">HAC t = 0.09</span>) ונמוך מה־<span class="bb-en" dir="ltr">baseline</span>. הפער <span class="bb-en" dir="ltr">HAC t = -1.34</span> (כל הנגיעות), <bdi>-1.72</bdi> (אפיזודות). <span class="bb-en" dir="ltr">§19 Variant A</span>: כל הנגיעות באחוזון <bdi>1.2</bdi> → <span class="bb-en" dir="ltr">BLOCKER</span>, אפיזודות באחוזון <bdi>8.7</bdi> → <span class="bb-en" dir="ltr">WARNING (SUSPECTED RANDOMNESS)</span>.</td></tr>
+                <tr><td><span class="bb-en" dir="ltr">E2</span></td><td><span class="bb-en" dir="ltr">Selection-Aware</span></td><td><span class="bb-badge na"><span class="bb-en" dir="ltr">UNVERIFIABLE</span></span></td><td class="wrap">מפרט אחד נרשם מראש, בלי חיפוש. <span class="bb-en" dir="ltr">BB(20, 2)</span> הוא סיגנל עממי שנבחר בידי הקהילה בהיסטוריה לא ידועה. כל <bdi>18</bdi> תאי הרשת המקומית שליליים מול ה־<span class="bb-en" dir="ltr">baseline</span>.</td></tr>
+                <tr><td><span class="bb-en" dir="ltr">E3</span></td><td><span class="bb-en" dir="ltr">Execution-Aware</span></td><td><span class="bb-badge na"><span class="bb-en" dir="ltr">NOT CHECKABLE</span></span></td><td class="wrap">אין עלויות או מילויים אמיתיים. בעלות היפותטית של <bdi>0.1%</bdi> הממוצע כבר שלילי (<span class="bb-en" dir="ltr">Break-even: +0.08%</span> לעסקה).</td></tr>
+                <tr><td><span class="bb-en" dir="ltr">E4</span></td><td><span class="bb-en" dir="ltr">Independent Evidence</span></td><td><span class="bb-badge na"><span class="bb-en" dir="ltr">NOT CHECKABLE</span></span></td><td class="wrap">בדוח הראשי: כל ההיסטוריה (<bdi>2017-08</bdi> → <bdi>2026-11</bdi>) נצפתה. לא הוחזק מדגם <span class="bb-en" dir="ltr">OOS</span> אמיתי, ואין <span class="bb-en" dir="ltr">Forward</span> או <span class="bb-en" dir="ltr">Live</span>. אחרי <span class="bb-en" dir="ltr">PRE-SAMPLE HOLDOUT OOS</span> השכבה עודכנה ל־<span class="bb-en" dir="ltr">BLOCKER</span> (כרטיס ה־<span class="bb-en" dir="ltr">OOS</span>).</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="bb-lede"><span class="bb-en" dir="ltr">Production Confidence: LOW</span>. הדירוג נקבע לפי השכבה החלשה, <span class="bb-en" dir="ltr">E1 = BLOCKER</span>. <span class="bb-en" dir="ltr">Verdict: NO EDGE FOUND · Research Action: STOP</span>.</p>
+          <div class="bb-cards">
+            <article class="bb-card">
+              <h3>מה הוכח</h3>
+              <ul class="bb-list">
+                <li>BTC עלה תוך שבוע אחרי נגיעה ב־<bdi>52.3%</bdi> מהמקרים. בימים רגילים הוא עלה ב־<bdi>52.8%</bdi>.</li>
+                <li>הממוצע אחרי נגיעה (<bdi>+0.08%</bdi>) נמוך מהממוצע הבלתי מותנה (<bdi>+1.04%</bdi>), והחציון כמעט זהה.</li>
+                <li>הכלל לא עדיף על כניסת <span class="bb-en" dir="ltr">LONG</span> אקראית בימי נגיעה ברצועות.</li>
+                <li>התוצאה עקבית ברשת המקומית ובאופקים של <bdi>1–30</bdi> ימים.</li>
+              </ul>
+            </article>
+            <article class="bb-card">
+              <h3>מה לא הוכח</h3>
+              <ul class="bb-list">
+                <li>יתרון כלשהו: <span class="bb-en" dir="ltr">E1 = BLOCKER</span>.</li>
+                <li>עמידות בעלויות ובמילויים אמיתיים (<span class="bb-en" dir="ltr">E3</span>).</li>
+                <li>מדגם עצמאי, <span class="bb-en" dir="ltr">OOS</span> או <span class="bb-en" dir="ltr">Forward</span> (<span class="bb-en" dir="ltr">E4</span> בדוח הראשי).</li>
+                <li>ההיסטוריה המלאה של בחירת <span class="bb-en" dir="ltr">BB(20, 2)</span> (<span class="bb-en" dir="ltr">E2</span>).</li>
+              </ul>
+            </article>
+          </div>
+          <p class="bb-lede"><span class="bb-en" dir="ltr">FUTURE RESEARCH HYPOTHESIS — NOT PART OF CURRENT RESEARCH</span></p>
+          <ul class="bb-list">
+            <li>האם הנגיעה פועלת מאז <bdi>2022</bdi> בלבד, אצל אפיזודות? נצפה בדיעבד.</li>
+            <li>האם וריאנט סגירה מתחת לרצועה (חציון <bdi>+1.17%</bdi>) שונה מהותית? נצפה בדיעבד.</li>
+          </ul>
+        </section>
+
+        <section class="bb-section" id="bb-ten">
+          <div class="bb-head">
+            <h2>סיכום <bdi>10</bdi> ימים</h2>
+            <span class="bb-badge"><span class="bb-en" dir="ltr">Descriptive · 10D, primary = 7D</span></span>
+          </div>
+          <div class="bb-blue">
+            <table>
+              <thead>
+                <tr>
+                  <th>מדגם</th>
+                  <th><span class="bb-en" dir="ltr">N</span></th>
+                  <th><span class="bb-en" dir="ltr">Hit-rate</span></th>
+                  <th><span class="bb-en" dir="ltr">X/N</span></th>
+                  <th>חציון</th>
+                  <th>ממוצע</th>
+                  <th><span class="bb-en" dir="ltr">Random-timing percentile · mean</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="lbl"><span class="bb-en" dir="ltr">All touches</span></td>
+                  <td><bdi>412</bdi></td>
+                  <td><bdi>50.97%</bdi></td>
+                  <td><bdi>210/412</bdi></td>
+                  <td><bdi>+0.08%</bdi></td>
+                  <td><bdi>+0.13%</bdi></td>
+                  <td><bdi>5.07</bdi></td>
+                </tr>
+                <tr>
+                  <td class="lbl"><span class="bb-en" dir="ltr">Episodes</span></td>
+                  <td><bdi>88</bdi></td>
+                  <td><bdi>51.14%</bdi></td>
+                  <td><bdi>45/88</bdi></td>
+                  <td><bdi>+0.09%</bdi></td>
+                  <td class="dn"><bdi>−0.97%</bdi></td>
+                  <td><bdi>5.11</bdi></td>
+                </tr>
+                <tr>
+                  <td class="lbl"><span class="bb-en" dir="ltr">All-days baseline</span></td>
+                  <td><bdi>3,337</bdi></td>
+                  <td><bdi>53.97%</bdi></td>
+                  <td>—</td>
+                  <td><bdi>+0.69%</bdi></td>
+                  <td><bdi>+1.52%</bdi></td>
+                  <td>—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="bb-section" id="bb-trades">
+          <div class="bb-head">
+            <h2>חלון עסקאות · <bdi>10</bdi> ימים</h2>
+            <span class="bb-badge"><bdi>2017-09-05</bdi> → <bdi>2026-11-02</bdi></span>
+          </div>
+          <div class="bb-chips">
+            <button type="button" class="bb-chip" data-bb-filter="all" aria-pressed="true"><span class="bb-en" dir="ltr">All</span> · <bdi>419</bdi></button>
+            <button type="button" class="bb-chip" data-bb-filter="ep" aria-pressed="false"><span class="bb-en" dir="ltr">Episodes</span> · <bdi>88</bdi></button>
+            <button type="button" class="bb-chip" data-bb-filter="range"><span class="bb-en" dir="ltr">Full range</span></button>
+          </div>
+          <div class="bb-trade-layout">
+            <div class="bb-chart-box" dir="ltr"><canvas id="bbPriceChart" aria-label="BTC daily close"></canvas></div>
+            <div class="bb-trade-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th><span class="bb-en" dir="ltr">touch_date</span></th>
+                    <th><span class="bb-en" dir="ltr">Episode</span></th>
+                    <th><span class="bb-en" dir="ltr">low</span></th>
+                    <th><span class="bb-en" dir="ltr">lower_band</span></th>
+                    <th><span class="bb-en" dir="ltr">close_t</span></th>
+                    <th><span class="bb-en" dir="ltr">date_t+10</span></th>
+                    <th><span class="bb-en" dir="ltr">close_t+10</span></th>
+                    <th><span class="bb-en" dir="ltr">ret_10d</span></th>
+                    <th><span class="bb-en" dir="ltr">min close</span></th>
+                    <th><span class="bb-en" dir="ltr">max close</span></th>
+                  </tr>
+                </thead>
+                <tbody id="bbTradesBody"><tr><td colspan="10">טוען</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="bb-section" id="bb-follow">
+          <h2>מעקבים</h2>
+
+          <article class="bb-card" style="margin-bottom:12px">
+            <h3><span class="bb-en" dir="ltr">H1</span> · האם הנגיעה מנבאת חולשה?</h3>
+            <div class="bb-badges">
+              <span class="bb-badge blocker"><span class="bb-en" dir="ltr">NO EDGE FOUND</span></span>
+              <span class="bb-badge blocker"><span class="bb-en" dir="ltr">STOP</span></span>
+              <span class="bb-badge warning"><span class="bb-en" dir="ltr">LOW</span></span>
+              <span class="bb-badge warning"><span class="bb-en" dir="ltr">INCONCLUSIVE</span></span>
+            </div>
+            <p class="bb-lede"><span class="bb-en" dir="ltr">H1</span> נוסחה אחרי שראינו את שני המדגמים, <span class="bb-en" dir="ltr">Binance 2017–2026</span> ו־<span class="bb-en" dir="ltr">Bitstamp 2011–2017</span>. לכן שניהם נתוני פיתוח, ואף חלוקה היסטורית אינה <span class="bb-en" dir="ltr">True OOS</span>. <span class="bb-en" dir="ltr">E4 = NOT CHECKABLE</span>.</p>
+            <p class="bb-lede">ב־<span class="bb-en" dir="ltr">POOLED 2011–2026</span> BTC היה נמוך יותר אחרי <bdi>7</bdi> ימים ב־<bdi>66</bdi> מתוך <bdi>131</bdi> אפיזודות (<bdi>50.4%</bdi>). חציון <bdi>-0.17%</bdi>. בכל הנגיעות: נמוך יותר ב־<bdi>286</bdi> מתוך <bdi>618</bdi> (<bdi>46.3%</bdi>), חציון <bdi>+0.57%</bdi>. ביום רגיל: נמוך יותר ב־<bdi>44.8%</bdi>, חציון <bdi>+0.77%</bdi>, ממוצע <bdi>+1.80%</bdi>.</p>
+            <div class="bb-kpis">
+              <div class="bb-kpi"><div class="lbl">פער אפיזודות <span class="bb-en" dir="ltr">POOLED</span></div><div class="val dn"><bdi>-1.77pp</bdi></div><div class="sub"><span class="bb-en" dir="ltr">CI [-3.45, -0.11]pp</span></div></div>
+              <div class="bb-kpi"><div class="lbl"><span class="bb-en" dir="ltr">NW HAC t / Holm p</span></div><div class="val"><bdi>-2.07</bdi> / <bdi>0.229</bdi></div><div class="sub"><span class="bb-en" dir="ltr">p</span> גולמי <bdi>0.019</bdi></div></div>
+              <div class="bb-kpi"><div class="lbl">אחוזון ימים אקראיים / <span class="bb-en" dir="ltr">SHORT</span> אקראי</div><div class="val"><bdi>16.0</bdi> / <bdi>94.1</bdi></div><div class="sub">נדרש <bdi>≤ 5</bdi> / <bdi>≥ 95</bdi></div></div>
+              <div class="bb-kpi"><div class="lbl"><span class="bb-en" dir="ltr">SHORT</span> נטו (<bdi>0.2%</bdi> + מימון)</div><div class="val dn"><bdi>-0.31%</bdi></div><div class="sub">ברוטו <bdi>-0.04%</bdi> · <span class="bb-en" dir="ltr">Hit 50.4%</span></div></div>
+            </div>
+            <div class="bb-scroll" style="margin-top:12px">
+              <table class="bb-table">
+                <thead><tr><th>#</th><th>קריטריון</th><th>ערך</th><th>עבר?</th></tr></thead>
+                <tbody>
+                  <tr><td><bdi>1</bdi></td><td>פער האפיזודות ב־<span class="bb-en" dir="ltr">POOLED</span> קטן מ־<bdi>0</bdi></td><td><bdi>-1.77pp</bdi></td><td>✔</td></tr>
+                  <tr><td><bdi>2</bdi></td><td>הגבול העליון של <bdi>95% CI</bdi> קטן מ־<bdi>0</bdi></td><td><bdi>-0.11pp</bdi></td><td>✔</td></tr>
+                  <tr><td><bdi>3</bdi></td><td><span class="bb-en" dir="ltr">NW HAC t ≤ −2</span></td><td><bdi>-2.07</bdi></td><td>✔</td></tr>
+                  <tr><td><bdi>4</bdi></td><td>אחוזון בבסיס ימים אקראיים <bdi>≤ 5</bdi></td><td><bdi>16.0</bdi></td><td>✘</td></tr>
+                  <tr><td><bdi>5</bdi></td><td>אחוזון מול <span class="bb-en" dir="ltr">SHORT</span> אקראי <bdi>≥ 95</bdi></td><td><bdi>94.1</bdi></td><td>✘</td></tr>
+                  <tr><td><bdi>6</bdi></td><td><span class="bb-en" dir="ltr">S1</span> ו־<span class="bb-en" dir="ltr">S2</span> שליליים שניהם</td><td><bdi>-1.69pp / -1.61pp</bdi></td><td>✔</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="bb-badges" style="margin-top:12px">
+              <span class="bb-badge warning"><span class="bb-en" dir="ltr">E0 WARNING</span></span>
+              <span class="bb-badge warning"><span class="bb-en" dir="ltr">E1 WARNING</span></span>
+              <span class="bb-badge blocker"><span class="bb-en" dir="ltr">E2 BLOCKER</span></span>
+              <span class="bb-badge blocker"><span class="bb-en" dir="ltr">E3 BLOCKER</span></span>
+              <span class="bb-badge na"><span class="bb-en" dir="ltr">E4 NOT CHECKABLE</span></span>
+            </div>
+            <div class="bb-figs"><img src="assets/research/btc-bb/h1-hero.png" alt="H1 פער, t ואחוזון SHORT"></div>
+            <h3><span class="bb-en" dir="ltr">THE ONE TEST MOST LIKELY TO CHANGE THE VERDICT</span></h3>
+            <div class="bb-one">
+              <div>השערה</div><div><span class="bb-en" dir="ltr">H1</span> כפי שהוקפאה: באפיזודות של נגיעה ב־<span class="bb-en" dir="ltr">BB(20, 2)</span> התחתונה, תשואת <bdi>7</bdi> הימים נמוכה מזו של יום רגיל.</div>
+              <div>נתונים</div><div><span class="bb-en" dir="ltr">Forward</span> קפוא: <span class="bb-en" dir="ltr">Binance BTCUSDT 1d</span> מהבר של <bdi>2026-11-04</bdi> ואילך. המבחן מסתיים ב־<bdi>60</bdi> אפיזודות או ב־<bdi>2031-11-04</bdi>, המוקדם מביניהם.</div>
+              <div>תומך</div><div>פער &lt; <bdi>0</bdi>, גבול עליון של ה־<span class="bb-en" dir="ltr">CI</span> &lt; <bdi>0</bdi>, <span class="bb-en" dir="ltr">t ≤ −2</span>, אחוזון ימים אקראיים <bdi>≤ 5</bdi>, אחוזון <span class="bb-en" dir="ltr">SHORT</span> אקראי <bdi>≥ 95</bdi>, ו־<span class="bb-en" dir="ltr">SHORT</span> נטו אחרי עמלות ומימון &gt; <bdi>0</bdi>.</div>
+              <div>דוחה</div><div>פער <bdi>≥ 0</bdi> ב־<span class="bb-en" dir="ltr">Forward</span>, או <span class="bb-en" dir="ltr">SHORT</span> נטו <bdi>≤ 0</bdi>: סגירה סופית של <span class="bb-en" dir="ltr">H1</span>.</div>
+            </div>
+          </article>
+
+          <article class="bb-card" style="margin-bottom:12px">
+            <h3><span class="bb-en" dir="ltr">PRE-SAMPLE HOLDOUT OOS</span> · <bdi>2011–2017</bdi></h3>
+            <div class="bb-badges">
+              <span class="bb-badge blocker"><span class="bb-en" dir="ltr">NO EDGE FOUND</span></span>
+              <span class="bb-badge blocker"><span class="bb-en" dir="ltr">STOP</span></span>
+              <span class="bb-badge warning"><span class="bb-en" dir="ltr">LOW</span></span>
+              <span class="bb-badge blocker"><span class="bb-en" dir="ltr">E4 BLOCKER</span></span>
+            </div>
+            <p class="bb-lede"><span class="bb-en" dir="ltr">OOS</span>: BTC עלה ב־<bdi>115</bdi> מתוך <bdi>203</bdi> מקרים (<bdi>56.7%</bdi>), חציון <bdi>+0.91%</bdi>. באפיזודה: <bdi>21</bdi> מתוך <bdi>43</bdi> (<bdi>48.8%</bdi>), חציון <bdi>-0.27%</bdi>. בכל יום: <span class="bb-en" dir="ltr">Hit</span> <bdi>58.7%</bdi>, חציון <bdi>+1.39%</bdi>, ממוצע <bdi>+2.96%</bdi>.</p>
+            <p class="bb-lede">כלל <span class="bb-en" dir="ltr">Addendum 2</span> על האפיזודות: פער ממוצע <bdi>-1.69pp</bdi> ✘ · גבול תחתון של ה־<span class="bb-en" dir="ltr">CI</span> <bdi>-4.86pp</bdi> ✘ · אחוזון ימים אקראיים <bdi>43.2</bdi> ✘ · אחוזון <span class="bb-en" dir="ltr">§19 A</span> <bdi>19.9</bdi> ✘. הפער <bdi>≤ 0</bdi>, ולכן <span class="bb-en" dir="ltr">REJECT / confirm STOP</span>.</p>
+            <div class="bb-scroll">
+              <table class="bb-table">
+                <thead><tr><th>מדד <bdi>7d</bdi></th><th><span class="bb-en" dir="ltr">DEV</span> נגיעות</th><th><span class="bb-en" dir="ltr">DEV</span> אפיזודות</th><th><span class="bb-en" dir="ltr">OOS</span> נגיעות</th><th><span class="bb-en" dir="ltr">OOS</span> אפיזודות</th></tr></thead>
+                <tbody>
+                  <tr><td><span class="bb-en" dir="ltr">N</span></td><td><bdi>415</bdi></td><td><bdi>88</bdi></td><td><bdi>203</bdi></td><td><bdi>43</bdi></td></tr>
+                  <tr><td><span class="bb-en" dir="ltr">X/N</span></td><td><bdi>217/415</bdi></td><td><bdi>44/88</bdi></td><td><bdi>115/203</bdi></td><td><bdi>21/43</bdi></td></tr>
+                  <tr><td>ממוצע</td><td><bdi>+0.08%</bdi></td><td><bdi>-0.57%</bdi></td><td><bdi>+3.32%</bdi></td><td><bdi>+1.27%</bdi></td></tr>
+                  <tr><td>חציון</td><td><bdi>+0.48%</bdi></td><td><bdi>+0.11%</bdi></td><td><bdi>+0.91%</bdi></td><td><bdi>-0.27%</bdi></td></tr>
+                  <tr><td><span class="bb-en" dir="ltr">Hit-rate</span></td><td><bdi>52.3%</bdi></td><td><bdi>50.0%</bdi></td><td><bdi>56.7%</bdi></td><td><bdi>48.8%</bdi></td></tr>
+                  <tr><td>ממוצע בסיס</td><td><bdi>+1.04%</bdi></td><td><bdi>+1.04%</bdi></td><td><bdi>+2.96%</bdi></td><td><bdi>+2.96%</bdi></td></tr>
+                  <tr><td>פער</td><td><bdi>-0.97pp</bdi></td><td><bdi>-1.61pp</bdi></td><td><bdi>+0.36pp</bdi></td><td><bdi>-1.69pp</bdi></td></tr>
+                  <tr><td><span class="bb-en" dir="ltr">95% CI</span></td><td><bdi>[-2.35, +0.48]pp</bdi></td><td><bdi>[-3.52, +0.23]pp</bdi></td><td><bdi>[-2.45, +3.63]pp</bdi></td><td><bdi>[-4.86, +1.62]pp</bdi></td></tr>
+                  <tr><td><span class="bb-en" dir="ltr">NW t</span> לפער</td><td><bdi>-1.34</bdi></td><td><bdi>-1.72</bdi></td><td><bdi>0.25</bdi></td><td><bdi>-1.00</bdi></td></tr>
+                  <tr><td>אחוזון ימים אקראיים</td><td><bdi>8.6</bdi></td><td><bdi>10.6</bdi></td><td><bdi>89.6</bdi></td><td><bdi>43.2</bdi></td></tr>
+                  <tr><td><span class="bb-en" dir="ltr">§19 A</span></td><td><bdi>1.2 BLOCKER</bdi></td><td><bdi>8.7 WARNING</bdi></td><td><bdi>6.6 WARNING</bdi></td><td><bdi>19.9 WARNING</bdi></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="bb-badges" style="margin-top:12px">
+              <span class="bb-badge warning"><span class="bb-en" dir="ltr">E0 WARNING</span></span>
+              <span class="bb-badge blocker"><span class="bb-en" dir="ltr">E1 BLOCKER</span></span>
+              <span class="bb-badge na"><span class="bb-en" dir="ltr">E2 UNVERIFIABLE</span></span>
+              <span class="bb-badge na"><span class="bb-en" dir="ltr">E3 NOT CHECKABLE</span></span>
+              <span class="bb-badge blocker"><span class="bb-en" dir="ltr">E4 BLOCKER</span></span>
+            </div>
+            <div class="bb-figs"><img src="assets/research/btc-bb/oos-hero.png" alt="OOS מול DEV"></div>
+            <h3><span class="bb-en" dir="ltr">THE ONE TEST MOST LIKELY TO CHANGE THE VERDICT</span></h3>
+            <div class="bb-one">
+              <div>השערה</div><div>הכלל הקפוא (<span class="bb-en" dir="ltr">BB(20, 2)</span>, אפיזודות, <bdi>7</bdi> ימים) יראה פער חיובי מול הבסיס על נתונים חדשים לגמרי.</div>
+              <div>נתונים</div><div><span class="bb-en" dir="ltr">Forward</span> חי מ־<bdi>2026-11-04</bdi> ואילך (<span class="bb-en" dir="ltr">Binance BTCUSDT 1d</span>), עד <bdi>40</bdi> אפיזודות לפחות, עם מילויים ועלויות אמיתיים.</div>
+              <div>תומך ביתרון</div><div>פער חיובי, גבול תחתון של ה־<span class="bb-en" dir="ltr">CI</span> גדול מ־<bdi>0</bdi>, אחוזון אקראי ו־<span class="bb-en" dir="ltr">§19 A ≥ 95</span>, ונטו אחרי עלויות חיובי.</div>
+              <div>דוחה</div><div>פער <bdi>≤ 0</bdi>. זה יהיה הכישלון השלישי ברציפות, ויצדיק סגירה סופית של הרעיון.</div>
+            </div>
+          </article>
+
+          <article class="bb-card" style="margin-bottom:12px">
+            <h3><span class="bb-en" dir="ltr">ETH</span> · בדיקה משלימה, לא <span class="bb-en" dir="ltr">E4</span></h3>
+            <div class="bb-badges">
+              <span class="bb-badge blocker"><span class="bb-en" dir="ltr">NO EDGE FOUND</span></span>
+              <span class="bb-badge blocker"><span class="bb-en" dir="ltr">STOP</span></span>
+              <span class="bb-badge warning"><span class="bb-en" dir="ltr">LOW</span></span>
+              <span class="bb-badge na"><span class="bb-en" dir="ltr">E4 NOT CHECKABLE</span></span>
+            </div>
+            <p class="bb-lede">בדיקה משלימה על <span class="bb-en" dir="ltr">ETH</span>. זו לא <span class="bb-en" dir="ltr">E4</span> ולא מבחן <span class="bb-en" dir="ltr">OOS</span> של אסטרטגיית ה־<span class="bb-en" dir="ltr">BTC</span>. <span class="bb-en" dir="ltr">ETH OOS</span> נעצר ולא נמסר.</p>
+            <div class="bb-kpis">
+              <div class="bb-kpi"><div class="lbl">כל הנגיעות</div><div class="val"><bdi>219/437</bdi></div><div class="sub"><bdi>50.1%</bdi> · חציון <bdi>+0.01%</bdi> · ממוצע <bdi>-0.22%</bdi></div></div>
+              <div class="bb-kpi"><div class="lbl">אפיזודות</div><div class="val"><bdi>46/93</bdi></div><div class="sub"><bdi>49.5%</bdi> · חציון <bdi>-0.20%</bdi> · ממוצע <bdi>-0.06%</bdi></div></div>
+              <div class="bb-kpi"><div class="lbl">יום רגיל</div><div class="val"><bdi>51.5%</bdi></div><div class="sub">חציון <bdi>+0.31%</bdi> · ממוצע <bdi>+1.14%</bdi></div></div>
+              <div class="bb-kpi"><div class="lbl">פער מול בסיס</div><div class="val dn"><bdi>-1.37pp</bdi></div><div class="sub">אפיזודות <bdi>-1.21pp</bdi> · <span class="bb-en" dir="ltr">§19 A</span> <bdi>0.0 / 3.6 BLOCKER</bdi></div></div>
+            </div>
+            <div class="bb-badges">
+              <span class="bb-badge warning"><span class="bb-en" dir="ltr">E0 WARNING</span></span>
+              <span class="bb-badge blocker"><span class="bb-en" dir="ltr">E1 BLOCKER</span></span>
+              <span class="bb-badge na"><span class="bb-en" dir="ltr">E2 UNVERIFIABLE</span></span>
+              <span class="bb-badge na"><span class="bb-en" dir="ltr">E3 NOT CHECKABLE</span></span>
+              <span class="bb-badge na"><span class="bb-en" dir="ltr">E4 NOT CHECKABLE</span></span>
+            </div>
+            <p class="bb-lede">מתאם יומי מול <span class="bb-en" dir="ltr">BTC</span> <bdi>0.80</bdi>. <bdi>62%</bdi> מנגיעות ה־<span class="bb-en" dir="ltr">ETH</span> חלו באותו יום כמו נגיעה ב־<span class="bb-en" dir="ltr">BTC</span>. אחוזון בבסיס ימים אקראיים: <bdi>6.1 / 24.3</bdi>. <span class="bb-en" dir="ltr">§19 B: 35.1 / 47.3 (WARNING, TOO CLOSE)</span>.</p>
+          </article>
+
+          <article class="bb-card">
+            <h3>סינון <bdi>10</bdi> מטבעות · <span class="bb-en" dir="ltr">70/30</span></h3>
+            <div class="bb-badges">
+              <span class="bb-badge blocker"><span class="bb-en" dir="ltr">NO EDGE FOUND</span></span>
+              <span class="bb-badge blocker"><span class="bb-en" dir="ltr">STOP</span></span>
+              <span class="bb-badge warning"><span class="bb-en" dir="ltr">LOW</span></span>
+              <span class="bb-badge na"><span class="bb-en" dir="ltr">E4 NOT CHECKABLE</span></span>
+            </div>
+            <p class="bb-lede">זה לא <span class="bb-en" dir="ltr">E4</span> של <span class="bb-en" dir="ltr">BTC</span>. <span class="bb-en" dir="ltr">IS: 0/10</span> מועמדי אדג׳. <span class="bb-en" dir="ltr">OOS: SUPPORT 0/10, INCONCLUSIVE 3/10 (BTC, SOL, BNB), REJECT 7/10</span>. שורדים אחרי <span class="bb-en" dir="ltr">Holm: 0/10</span>. שורדים אחרי <span class="bb-en" dir="ltr">Bonferroni: 0/10</span>. <span class="bb-en" dir="ltr">E0: PASS</span> בעשרת המטבעות.</p>
+            <h3>אפיזודות</h3>
+            <div class="bb-scroll">
+              <table class="bb-table">
+                <thead><tr><th>מטבע</th><th>חלק</th><th>טווח</th><th><span class="bb-en" dir="ltr">X/N</span></th><th>ממוצע</th><th>חציון</th><th>פער</th><th><span class="bb-en" dir="ltr">HAC t</span></th><th><span class="bb-en" dir="ltr">95% CI</span></th><th>אחוזון אקראי</th><th><span class="bb-en" dir="ltr">§19A</span></th><th><span class="bb-en" dir="ltr">p / Holm / Bonf</span></th><th>פסיקה</th></tr></thead>
+                <tbody>
+<tr><td>BTCUSDT</td><td>IS</td><td><bdi>2017-09-05..2024-01-29</bdi></td><td><bdi>29/58</bdi></td><td><bdi>-1.78%</bdi></td><td><bdi>+0.06%</bdi></td><td><bdi>-3.00pp</bdi></td><td><bdi>-2.31</bdi></td><td><bdi>[-5.7, -0.5]</bdi></td><td><bdi>3.2</bdi></td><td><bdi>5.9 WARNING (SUSPECTED RANDOMNESS)</bdi></td><td><bdi>0.990/1.000/1.000</bdi></td><td>NO EDGE FOUND</td></tr>
+<tr><td>BTCUSDT</td><td>OOS</td><td><bdi>2024-01-30..2026-10-28</bdi></td><td><bdi>15/30</bdi></td><td><bdi>+1.78%</bdi></td><td><bdi>+0.17%</bdi></td><td><bdi>+1.16pp</bdi></td><td><bdi>1.13</bdi></td><td><bdi>[-0.7, +3.2]</bdi></td><td><bdi>88.1</bdi></td><td><bdi>55.8 WARNING (SUSPECTED RANDOMNESS)</bdi></td><td><bdi>0.128/1.000/1.000</bdi></td><td>INCONCLUSIVE</td></tr>
+<tr><td>ETHUSDT</td><td>IS</td><td><bdi>2017-09-05..2024-01-29</bdi></td><td><bdi>32/64</bdi></td><td><bdi>-0.25%</bdi></td><td><bdi>+0.03%</bdi></td><td><bdi>-1.71pp</bdi></td><td><bdi>-1.17</bdi></td><td><bdi>[-4.4, +0.9]</bdi></td><td><bdi>23.7</bdi></td><td><bdi>3.4 BLOCKER</bdi></td><td><bdi>0.880/1.000/1.000</bdi></td><td>NO EDGE FOUND</td></tr>
+<tr><td>ETHUSDT</td><td>OOS</td><td><bdi>2024-01-30..2026-10-28</bdi></td><td><bdi>14/29</bdi></td><td><bdi>+0.36%</bdi></td><td><bdi>-0.28%</bdi></td><td><bdi>-0.07pp</bdi></td><td><bdi>-0.04</bdi></td><td><bdi>[-3.2, +3.1]</bdi></td><td><bdi>49.3</bdi></td><td><bdi>39.3 WARNING (SUSPECTED RANDOMNESS)</bdi></td><td><bdi>0.517/1.000/1.000</bdi></td><td>REJECT / confirm STOP</td></tr>
+<tr><td>SOLUSDT</td><td>IS</td><td><bdi>2020-08-30..2024-12-21</bdi></td><td><bdi>17/37</bdi></td><td><bdi>-0.51%</bdi></td><td><bdi>-1.95%</bdi></td><td><bdi>-3.81pp</bdi></td><td><bdi>-1.56</bdi></td><td><bdi>[-8.8, +0.9]</bdi></td><td><bdi>16.3</bdi></td><td><bdi>14.5 WARNING (SUSPECTED RANDOMNESS)</bdi></td><td><bdi>0.941/1.000/1.000</bdi></td><td>NO EDGE FOUND</td></tr>
+<tr><td>SOLUSDT</td><td>OOS</td><td><bdi>2024-12-22..2026-10-28</bdi></td><td><bdi>13/22</bdi></td><td><bdi>+3.16%</bdi></td><td><bdi>+0.93%</bdi></td><td><bdi>+3.39pp</bdi></td><td><bdi>1.56</bdi></td><td><bdi>[-0.6, +7.3]</bdi></td><td><bdi>95.3</bdi></td><td><bdi>68.1 WARNING (SUSPECTED RANDOMNESS)</bdi></td><td><bdi>0.060/0.599/0.599</bdi></td><td>INCONCLUSIVE</td></tr>
+<tr><td>ZECUSDT</td><td>IS</td><td><bdi>2019-04-09..2024-07-21</bdi></td><td><bdi>32/61</bdi></td><td><bdi>-0.88%</bdi></td><td><bdi>+0.12%</bdi></td><td><bdi>-1.62pp</bdi></td><td><bdi>-0.95</bdi></td><td><bdi>[-4.9, +1.6]</bdi></td><td><bdi>20.6</bdi></td><td><bdi>6.6 WARNING (SUSPECTED RANDOMNESS)</bdi></td><td><bdi>0.829/1.000/1.000</bdi></td><td>NO EDGE FOUND</td></tr>
+<tr><td>ZECUSDT</td><td>OOS</td><td><bdi>2024-07-22..2026-10-28</bdi></td><td><bdi>9/18</bdi></td><td><bdi>+2.42%</bdi></td><td><bdi>+1.23%</bdi></td><td><bdi>-2.65pp</bdi></td><td><bdi>-0.60</bdi></td><td><bdi>[-11.7, +6.1]</bdi></td><td><bdi>33.8</bdi></td><td><bdi>11.6 WARNING (SUSPECTED RANDOMNESS)</bdi></td><td><bdi>0.727/1.000/1.000</bdi></td><td>REJECT / confirm STOP</td></tr>
+<tr><td>XRPUSDT</td><td>IS</td><td><bdi>2018-05-23..2024-04-16</bdi></td><td><bdi>30/67</bdi></td><td><bdi>-0.70%</bdi></td><td><bdi>-0.93%</bdi></td><td><bdi>-1.71pp</bdi></td><td><bdi>-1.18</bdi></td><td><bdi>[-4.4, +1.0]</bdi></td><td><bdi>19.2</bdi></td><td><bdi>49.6 WARNING (SUSPECTED RANDOMNESS)</bdi></td><td><bdi>0.880/1.000/1.000</bdi></td><td>NO EDGE FOUND</td></tr>
+<tr><td>XRPUSDT</td><td>OOS</td><td><bdi>2024-04-17..2026-10-28</bdi></td><td><bdi>14/31</bdi></td><td><bdi>+1.32%</bdi></td><td><bdi>-0.34%</bdi></td><td><bdi>-0.06pp</bdi></td><td><bdi>-0.04</bdi></td><td><bdi>[-3.4, +2.7]</bdi></td><td><bdi>52.7</bdi></td><td><bdi>23.5 WARNING (SUSPECTED RANDOMNESS)</bdi></td><td><bdi>0.515/1.000/1.000</bdi></td><td>REJECT / confirm STOP</td></tr>
+<tr><td>BNBUSDT</td><td>IS</td><td><bdi>2017-11-25..2024-02-23</bdi></td><td><bdi>33/56</bdi></td><td><bdi>-0.38%</bdi></td><td><bdi>+1.42%</bdi></td><td><bdi>-3.23pp</bdi></td><td><bdi>-1.77</bdi></td><td><bdi>[-7.1, +0.2]</bdi></td><td><bdi>12.1</bdi></td><td><bdi>16.3 WARNING (SUSPECTED RANDOMNESS)</bdi></td><td><bdi>0.962/1.000/1.000</bdi></td><td>NO EDGE FOUND</td></tr>
+<tr><td>BNBUSDT</td><td>OOS</td><td><bdi>2024-02-24..2026-10-28</bdi></td><td><bdi>14/24</bdi></td><td><bdi>+1.11%</bdi></td><td><bdi>+1.55%</bdi></td><td><bdi>+0.45pp</bdi></td><td><bdi>0.49</bdi></td><td><bdi>[-1.6, +2.3]</bdi></td><td><bdi>63.2</bdi></td><td><bdi>77.7 WARNING (SUSPECTED RANDOMNESS)</bdi></td><td><bdi>0.312/1.000/1.000</bdi></td><td>INCONCLUSIVE</td></tr>
+<tr><td>UNIUSDT</td><td>IS</td><td><bdi>2020-10-06..2025-01-01</bdi></td><td><bdi>26/47</bdi></td><td><bdi>-0.27%</bdi></td><td><bdi>+1.47%</bdi></td><td><bdi>-2.07pp</bdi></td><td><bdi>-1.05</bdi></td><td><bdi>[-6.6, +1.8]</bdi></td><td><bdi>18.8</bdi></td><td><bdi>34.2 WARNING (SUSPECTED RANDOMNESS)</bdi></td><td><bdi>0.852/1.000/1.000</bdi></td><td>NO EDGE FOUND</td></tr>
+<tr><td>UNIUSDT</td><td>OOS</td><td><bdi>2025-01-02..2026-10-28</bdi></td><td><bdi>6/16</bdi></td><td><bdi>-1.55%</bdi></td><td><bdi>-3.07%</bdi></td><td><bdi>-1.69pp</bdi></td><td><bdi>-0.52</bdi></td><td><bdi>[-7.4, +5.5]</bdi></td><td><bdi>34.0</bdi></td><td><bdi>52.7 WARNING (SUSPECTED RANDOMNESS)</bdi></td><td><bdi>0.698/1.000/1.000</bdi></td><td>REJECT / confirm STOP</td></tr>
+<tr><td>NEARUSDT</td><td>IS</td><td><bdi>2020-11-02..2025-01-09</bdi></td><td><bdi>13/36</bdi></td><td><bdi>-3.30%</bdi></td><td><bdi>-3.36%</bdi></td><td><bdi>-5.80pp</bdi></td><td><bdi>-2.17</bdi></td><td><bdi>[-10.8, -0.5]</bdi></td><td><bdi>2.0</bdi></td><td><bdi>3.9 BLOCKER</bdi></td><td><bdi>0.985/1.000/1.000</bdi></td><td>NO EDGE FOUND</td></tr>
+<tr><td>NEARUSDT</td><td>OOS</td><td><bdi>2025-01-10..2026-10-28</bdi></td><td><bdi>6/17</bdi></td><td><bdi>-2.63%</bdi></td><td><bdi>-2.42%</bdi></td><td><bdi>-3.44pp</bdi></td><td><bdi>-1.45</bdi></td><td><bdi>[-8.3, +0.8]</bdi></td><td><bdi>20.4</bdi></td><td><bdi>37.5 WARNING (SUSPECTED RANDOMNESS)</bdi></td><td><bdi>0.926/1.000/1.000</bdi></td><td>REJECT / confirm STOP</td></tr>
+<tr><td>PEPEUSDT</td><td>IS</td><td><bdi>2023-05-24..2025-10-16</bdi></td><td><bdi>6/24</bdi></td><td><bdi>-2.37%</bdi></td><td><bdi>-4.18%</bdi></td><td><bdi>-6.39pp</bdi></td><td><bdi>-2.17</bdi></td><td><bdi>[-13.1, -1.0]</bdi></td><td><bdi>12.0</bdi></td><td><bdi>2.5 BLOCKER</bdi></td><td><bdi>0.985/1.000/1.000</bdi></td><td>NO EDGE FOUND</td></tr>
+<tr><td>PEPEUSDT</td><td>OOS</td><td><bdi>2025-10-17..2026-10-28</bdi></td><td><bdi>3/10</bdi></td><td><bdi>-2.44%</bdi></td><td><bdi>-3.45%</bdi></td><td><bdi>-2.71pp</bdi></td><td><bdi>-1.11</bdi></td><td><bdi>[-7.0, +2.0]</bdi></td><td><bdi>29.7</bdi></td><td><bdi>13.1 WARNING (SUSPECTED RANDOMNESS)</bdi></td><td><bdi>0.866/1.000/1.000</bdi></td><td>REJECT / confirm STOP</td></tr>
+<tr><td>DOGEUSDT</td><td>IS</td><td><bdi>2019-07-24..2024-08-22</bdi></td><td><bdi>29/54</bdi></td><td><bdi>+5.37%</bdi></td><td><bdi>+0.38%</bdi></td><td><bdi>+1.41pp</bdi></td><td><bdi>0.24</bdi></td><td><bdi>[-6.6, +13.9]</bdi></td><td><bdi>74.2</bdi></td><td><bdi>57.2 WARNING (SUSPECTED RANDOMNESS)</bdi></td><td><bdi>0.404/1.000/1.000</bdi></td><td>NO EDGE FOUND</td></tr>
+<tr><td>DOGEUSDT</td><td>OOS</td><td><bdi>2024-08-23..2026-10-28</bdi></td><td><bdi>8/24</bdi></td><td><bdi>-1.34%</bdi></td><td><bdi>-2.97%</bdi></td><td><bdi>-1.88pp</bdi></td><td><bdi>-0.92</bdi></td><td><bdi>[-6.4, +2.3]</bdi></td><td><bdi>34.8</bdi></td><td><bdi>56.7 WARNING (SUSPECTED RANDOMNESS)</bdi></td><td><bdi>0.820/1.000/1.000</bdi></td><td>REJECT / confirm STOP</td></tr>
+
+                </tbody>
+              </table>
+            </div>
+            <h3>כל הנגיעות</h3>
+            <div class="bb-scroll">
+              <table class="bb-table">
+                <thead><tr><th>מטבע</th><th>חלק</th><th><span class="bb-en" dir="ltr">X/N</span></th><th>ממוצע</th><th>פער</th><th><span class="bb-en" dir="ltr">t</span></th><th><span class="bb-en" dir="ltr">CI</span></th><th>אחוזון אקראי</th><th><span class="bb-en" dir="ltr">§19A</span></th></tr></thead>
+                <tbody>
+<tr><td>BTCUSDT</td><td>IS</td><td><bdi>139/273</bdi></td><td><bdi>-0.14%</bdi></td><td><bdi>-1.37pp</bdi></td><td><bdi>-1.34</bdi></td><td><bdi>[-3.3, +0.6]</bdi></td><td><bdi>6.5</bdi></td><td><bdi>0.9</bdi></td></tr>
+<tr><td>BTCUSDT</td><td>OOS</td><td><bdi>78/142</bdi></td><td><bdi>+0.49%</bdi></td><td><bdi>-0.12pp</bdi></td><td><bdi>-0.15</bdi></td><td><bdi>[-1.7, +1.5]</bdi></td><td><bdi>53.7</bdi></td><td><bdi>39.2</bdi></td></tr>
+<tr><td>ETHUSDT</td><td>IS</td><td><bdi>150/285</bdi></td><td><bdi>-0.06%</bdi></td><td><bdi>-1.51pp</bdi></td><td><bdi>-1.37</bdi></td><td><bdi>[-3.8, +0.7]</bdi></td><td><bdi>15.1</bdi></td><td><bdi>0.1</bdi></td></tr>
+<tr><td>ETHUSDT</td><td>OOS</td><td><bdi>69/152</bdi></td><td><bdi>-0.53%</bdi></td><td><bdi>-0.95pp</bdi></td><td><bdi>-1.01</bdi></td><td><bdi>[-2.8, +1.0]</bdi></td><td><bdi>9.2</bdi></td><td><bdi>1.7</bdi></td></tr>
+<tr><td>SOLUSDT</td><td>IS</td><td><bdi>97/199</bdi></td><td><bdi>-0.12%</bdi></td><td><bdi>-3.42pp</bdi></td><td><bdi>-2.05</bdi></td><td><bdi>[-6.9, -0.2]</bdi></td><td><bdi>2.2</bdi></td><td><bdi>1.3</bdi></td></tr>
+<tr><td>SOLUSDT</td><td>OOS</td><td><bdi>43/92</bdi></td><td><bdi>-0.58%</bdi></td><td><bdi>-0.35pp</bdi></td><td><bdi>-0.21</bdi></td><td><bdi>[-3.6, +3.0]</bdi></td><td><bdi>34.0</bdi></td><td><bdi>30.2</bdi></td></tr>
+<tr><td>ZECUSDT</td><td>IS</td><td><bdi>149/264</bdi></td><td><bdi>+1.06%</bdi></td><td><bdi>+0.32pp</bdi></td><td><bdi>0.27</bdi></td><td><bdi>[-2.0, +2.7]</bdi></td><td><bdi>85.0</bdi></td><td><bdi>52.8</bdi></td></tr>
+<tr><td>ZECUSDT</td><td>OOS</td><td><bdi>36/62</bdi></td><td><bdi>+3.34%</bdi></td><td><bdi>-1.73pp</bdi></td><td><bdi>-0.55</bdi></td><td><bdi>[-8.2, +4.6]</bdi></td><td><bdi>25.3</bdi></td><td><bdi>3.2</bdi></td></tr>
+<tr><td>XRPUSDT</td><td>IS</td><td><bdi>171/314</bdi></td><td><bdi>+0.48%</bdi></td><td><bdi>-0.53pp</bdi></td><td><bdi>-0.55</bdi></td><td><bdi>[-2.6, +1.3]</bdi></td><td><bdi>38.5</bdi></td><td><bdi>1.3</bdi></td></tr>
+<tr><td>XRPUSDT</td><td>OOS</td><td><bdi>78/139</bdi></td><td><bdi>+2.16%</bdi></td><td><bdi>+0.78pp</bdi></td><td><bdi>0.58</bdi></td><td><bdi>[-2.4, +3.4]</bdi></td><td><bdi>76.4</bdi></td><td><bdi>0.2</bdi></td></tr>
+<tr><td>BNBUSDT</td><td>IS</td><td><bdi>151/268</bdi></td><td><bdi>-0.03%</bdi></td><td><bdi>-2.88pp</bdi></td><td><bdi>-1.96</bdi></td><td><bdi>[-6.0, +0.2]</bdi></td><td><bdi>1.6</bdi></td><td><bdi>0.1</bdi></td></tr>
+<tr><td>BNBUSDT</td><td>OOS</td><td><bdi>68/114</bdi></td><td><bdi>+1.15%</bdi></td><td><bdi>+0.49pp</bdi></td><td><bdi>0.36</bdi></td><td><bdi>[-2.3, +3.0]</bdi></td><td><bdi>80.5</bdi></td><td><bdi>87.0</bdi></td></tr>
+<tr><td>UNIUSDT</td><td>IS</td><td><bdi>116/197</bdi></td><td><bdi>+2.65%</bdi></td><td><bdi>+0.85pp</bdi></td><td><bdi>0.63</bdi></td><td><bdi>[-1.9, +3.5]</bdi></td><td><bdi>81.6</bdi></td><td><bdi>30.6</bdi></td></tr>
+<tr><td>UNIUSDT</td><td>OOS</td><td><bdi>32/87</bdi></td><td><bdi>+0.10%</bdi></td><td><bdi>-0.04pp</bdi></td><td><bdi>-0.02</bdi></td><td><bdi>[-4.5, +5.9]</bdi></td><td><bdi>48.3</bdi></td><td><bdi>39.2</bdi></td></tr>
+<tr><td>NEARUSDT</td><td>IS</td><td><bdi>84/182</bdi></td><td><bdi>+0.50%</bdi></td><td><bdi>-1.99pp</bdi></td><td><bdi>-1.10</bdi></td><td><bdi>[-5.5, +1.5]</bdi></td><td><bdi>10.7</bdi></td><td><bdi>5.4</bdi></td></tr>
+<tr><td>NEARUSDT</td><td>OOS</td><td><bdi>35/82</bdi></td><td><bdi>+0.73%</bdi></td><td><bdi>-0.08pp</bdi></td><td><bdi>-0.03</bdi></td><td><bdi>[-5.0, +5.2]</bdi></td><td><bdi>63.0</bdi></td><td><bdi>53.8</bdi></td></tr>
+<tr><td>PEPEUSDT</td><td>IS</td><td><bdi>47/111</bdi></td><td><bdi>-0.16%</bdi></td><td><bdi>-4.19pp</bdi></td><td><bdi>-1.50</bdi></td><td><bdi>[-10.3, +0.8]</bdi></td><td><bdi>7.0</bdi></td><td><bdi>0.2</bdi></td></tr>
+<tr><td>PEPEUSDT</td><td>OOS</td><td><bdi>27/48</bdi></td><td><bdi>+6.83%</bdi></td><td><bdi>+6.56pp</bdi></td><td><bdi>1.40</bdi></td><td><bdi>[-1.1, +18.2]</bdi></td><td><bdi>99.9</bdi></td><td><bdi>100.0</bdi></td></tr>
+<tr><td>DOGEUSDT</td><td>IS</td><td><bdi>129/238</bdi></td><td><bdi>+5.48%</bdi></td><td><bdi>+1.53pp</bdi></td><td><bdi>0.43</bdi></td><td><bdi>[-4.3, +10.2]</bdi></td><td><bdi>87.9</bdi></td><td><bdi>36.9</bdi></td></tr>
+<tr><td>DOGEUSDT</td><td>OOS</td><td><bdi>48/108</bdi></td><td><bdi>-0.34%</bdi></td><td><bdi>-0.88pp</bdi></td><td><bdi>-0.70</bdi></td><td><bdi>[-4.0, +1.6]</bdi></td><td><bdi>44.9</bdi></td><td><bdi>5.4</bdi></td></tr>
+
+                </tbody>
+              </table>
+            </div>
+            <div class="bb-figs"><img src="assets/research/btc-bb/multi-gap.png" alt="פער 10 מטבעות"></div>
+            <h3><span class="bb-en" dir="ltr">THE ONE TEST MOST LIKELY TO CHANGE THE VERDICT</span></h3>
+            <p class="bb-lede">מעקב ה־<span class="bb-en" dir="ltr">forward</span> האוטומטי של <span class="bb-en" dir="ltr">BTC</span> מ־<bdi>2026-11-04</bdi>, באותו מפרט קפוא. זה ה־<span class="bb-en" dir="ltr">E4</span> האמיתי.</p>
+          </article>
+        </section>
+
+        <section class="bb-section" id="bb-forward">
+          <div class="bb-head">
+            <h2><span class="bb-en" dir="ltr">Forward test</span></h2>
+            <span class="bb-badge"><span class="bb-en" dir="ltr">Snapshot · 16 Nov 2026</span></span>
+          </div>
+          <div class="bb-badges">
+            <span class="bb-badge warning"><span class="bb-en" dir="ltr">INCONCLUSIVE</span></span>
+            <span class="bb-badge na"><span class="bb-en" dir="ltr">Evidence NOT CHECKABLE</span></span>
+            <span class="bb-badge warning"><span class="bb-en" dir="ltr">E0 WARNING</span></span>
+          </div>
+          <p class="bb-lede"><span class="bb-en" dir="ltr">Completed touches=4 but completed episodes=0. Episode Addendum-2 rule not evaluable. Accumulating.</span></p>
+          <div class="bb-kpis">
+            <div class="bb-kpi"><div class="lbl">נגיעות שהושלמו</div><div class="val"><bdi>4</bdi></div><div class="sub">אפיזודות <bdi>0</bdi></div></div>
+            <div class="bb-kpi"><div class="lbl">נגיעות ממתינות</div><div class="val"><bdi>5</bdi></div><div class="sub">יציאה <bdi>17, 19, 20, 21, 22 Nov</bdi></div></div>
+            <div class="bb-kpi"><div class="lbl">ממוצע כל הנגיעות</div><div class="val dn"><bdi>−9.19%</bdi></div></div>
+            <div class="bb-kpi"><div class="lbl">בסיס כל הימים</div><div class="val dn"><bdi>−10.44%</bdi></div><div class="sub"><span class="bb-en" dir="ltr">n=5</span></div></div>
+          </div>
+          <div class="bb-ft-grid" style="margin-top:14px">
+            <div class="bb-ft-chart" dir="ltr"><canvas id="bbFtChart" aria-label="Forward test 7d returns"></canvas></div>
+            <div class="bb-scroll">
+              <table class="bb-table">
+                <thead><tr><th>כניסה</th><th>יציאה</th><th>סטטוס</th><th><span class="bb-en" dir="ltr">Ret 7D</span></th><th><span class="bb-en" dir="ltr">Low</span></th><th><span class="bb-en" dir="ltr">Lower</span></th><th><span class="bb-en" dir="ltr">Close</span></th></tr></thead>
+                <tbody>
+                  <tr><td><bdi>2026-11-04</bdi></td><td><bdi>2026-11-11</bdi></td><td><span class="bb-en" dir="ltr">complete</span></td><td class="dn"><bdi>-8.0602%</bdi></td><td><bdi>75,736.38</bdi></td><td><bdi>76,314.80</bdi></td><td><bdi>80,504.01</bdi></td></tr>
+                  <tr><td><bdi>2026-11-05</bdi></td><td><bdi>2026-11-12</bdi></td><td><span class="bb-en" dir="ltr">complete</span></td><td class="dn"><bdi>-6.0824%</bdi></td><td><bdi>75,208.42</bdi></td><td><bdi>75,686.71</bdi></td><td><bdi>76,088.01</bdi></td></tr>
+                  <tr><td><bdi>2026-11-06</bdi></td><td><bdi>2026-11-13</bdi></td><td><span class="bb-en" dir="ltr">complete</span></td><td class="dn"><bdi>-9.9283%</bdi></td><td><bdi>74,888.00</bdi></td><td><bdi>75,095.17</bdi></td><td><bdi>75,844.00</bdi></td></tr>
+                  <tr><td><bdi>2026-11-08</bdi></td><td><bdi>2026-11-15</bdi></td><td><span class="bb-en" dir="ltr">complete</span></td><td class="dn"><bdi>-12.6923%</bdi></td><td><bdi>73,510.00</bdi></td><td><bdi>74,015.94</bdi></td><td><bdi>74,851.44</bdi></td></tr>
+                  <tr><td><bdi>2026-11-10</bdi></td><td><bdi>2026-11-17</bdi></td><td><span class="bb-pill pending">pending</span></td><td><span class="bb-pill pending">pending</span></td><td><bdi>72,727.27</bdi></td><td><bdi>73,414.61</bdi></td><td><bdi>73,796.06</bdi></td></tr>
+                  <tr><td><bdi>2026-11-12</bdi></td><td><bdi>2026-11-19</bdi></td><td><span class="bb-pill pending">pending</span></td><td><span class="bb-pill pending">pending</span></td><td><bdi>71,113.06</bdi></td><td><bdi>71,988.13</bdi></td><td><bdi>71,460.00</bdi></td></tr>
+                  <tr><td><bdi>2026-11-13</bdi></td><td><bdi>2026-11-20</bdi></td><td><span class="bb-pill pending">pending</span></td><td><span class="bb-pill pending">pending</span></td><td><bdi>67,568.00</bdi></td><td><bdi>70,320.81</bdi></td><td><bdi>68,314.00</bdi></td></tr>
+                  <tr><td><bdi>2026-11-14</bdi></td><td><bdi>2026-11-21</bdi></td><td><span class="bb-pill pending">pending</span></td><td><span class="bb-pill pending">pending</span></td><td><bdi>63,320.00</bdi></td><td><bdi>67,697.40</bdi></td><td><bdi>64,150.00</bdi></td></tr>
+                  <tr><td><bdi>2026-11-15</bdi></td><td><bdi>2026-11-22</bdi></td><td><span class="bb-pill pending">pending</span></td><td><span class="bb-pill pending">pending</span></td><td><bdi>62,006.00</bdi></td><td><bdi>66,006.83</bdi></td><td><bdi>65,351.05</bdi></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="bb-section" id="bb-onetest">
+          <h2><span class="bb-en" dir="ltr">THE ONE TEST MOST LIKELY TO CHANGE THE VERDICT</span></h2>
+          <div class="bb-one">
+            <div>השערה</div><div>באפיזודות, תשואת <bdi>7</bdi> ימים אחרי נגיעה ראשונה ב־<span class="bb-en" dir="ltr">BB(20, 2)</span> גבוהה מהבסיס הבלתי מותנה גם על נתונים שלא נצפו במחקר הזה.</div>
+            <div>נתונים</div><div>היסטוריה יומית עצמאית של <span class="bb-en" dir="ltr">BTC/USD</span> מלפני תחילת המדגם, <span class="bb-en" dir="ltr">Bitstamp 2011-09 → 2017-08</span> (בערך <bdi>6</bdi> שנים, שלא נצפו), ומ־<bdi>2026-11-04</bdi> ואילך: <span class="bb-en" dir="ltr">Forward</span> חי עם מפרט קפוא.</div>
+            <div>שיטה</div><div>אותו קוד בדיוק (<span class="bb-en" dir="ltr">analysis_code.py</span>), אותן הגדרות, בלי שום שינוי. פער ממוצע מול בסיס, <span class="bb-en" dir="ltr">HAC t</span>, <span class="bb-en" dir="ltr">stationary bootstrap CI</span> ובסיס אקראי מותאם, כולם עם <span class="bb-en" dir="ltr">seed 42</span>.</div>
+            <div>תומך ביתרון</div><div>הפער באפיזודות חיובי, הגבול התחתון של <bdi>95% CI</bdi> גדול מ־<bdi>0</bdi>, והאחוזון בבסיס האקראי <bdi>≥ 95</bdi>.</div>
+            <div>דוחה או מחליש</div><div>הפער קטן או שווה ל־<bdi>0</bdi>, או שה־<span class="bb-en" dir="ltr">CI</span> כולל <bdi>0</bdi> עם אומדן שלילי, כמו כאן. זה יאשר <span class="bb-en" dir="ltr">NO EDGE FOUND</span> ויצדיק <span class="bb-en" dir="ltr">STOP</span> סופי.</div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+
     <div class="page" id="page-catalysts">
       <div class="welcome-wrap cc-wrap">
         <div class="page-header" style="margin-bottom:20px">
@@ -1662,10 +2295,11 @@
 </div><!-- end app-body -->
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="terminal-btc-bb.js?v=20261116-btcbb1"></script>
 <script src="terminal-data-log.js?v=20261105-datalog1"></script>
 <script src="terminal-sources.js?v=20261105-datalog1"></script>
 <script src="terminal-brief.js?v=20261106-clean1"></script>
-<script src="terminal.js?v=20261110-japanica1"></script>
+<script src="terminal.js?v=20261116-btcbb1"></script>
 <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js" integrity="sha256-vpYzxNhw4m+zfxz+XFp3GBZnEUAD6hYgeseFDY2ordE=" crossorigin=""></script>
 <script src="terminal-japanica.js?v=20261110-japanica3"></script>
 <script src="terminal-market.js?v=20261106-clean1"></script>

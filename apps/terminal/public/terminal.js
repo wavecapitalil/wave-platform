@@ -77,6 +77,7 @@ function navigate(page){
   }
 
   if(page === 'sector-research' && window.SectorResearch) SectorResearch.open();
+  if(page === 'btc-bb-research' && window.BtcBbResearch) BtcBbResearch.open();
   if(page === 'catalysts' && window.WaveCatalysts) WaveCatalysts.open();
 
   if(page === 'institutions'){
@@ -136,7 +137,8 @@ function navigate(page){
   // Keep the valuation deep link truthful without adding a new history/router model.
   // Other Terminal pages retain their existing in-app navigation behavior.
   if(page==='valuation'&&location.hash!=='#valuation')history.replaceState(null,'','#valuation');
-  else if(page!=='valuation'&&location.hash==='#valuation')history.replaceState(null,'',location.pathname+location.search);
+  else if(page==='btc-bb-research'&&location.hash!=='#page=btc-bb-research')history.replaceState(null,'','#page=btc-bb-research');
+  else if(page!=='valuation'&&page!=='btc-bb-research'&&(location.hash==='#valuation'||location.hash==='#page=btc-bb-research'))history.replaceState(null,'',location.pathname+location.search);
 
   // On phones the menu is an overlay drawer; close it after choosing a page.
   if(window.matchMedia && window.matchMedia('(max-width:800px)').matches){
