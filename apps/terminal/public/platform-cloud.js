@@ -107,14 +107,16 @@
 
   async function applySession(session){
     user=session&&session.user?session.user:null;
+    var appliedUser=user;
     if(unsubLocal){unsubLocal();unsubLocal=null;}
     if(user){
       await pull();
+      if(user!==appliedUser)return;
       unsubLocal=WavePlatform.subscribe(schedulePush);
     }else{
       WavePlatform.setAuthMode('local_preview');
     }
-    emit();
+    if(user===appliedUser)emit();
   }
 
   async function init(){
@@ -125,6 +127,10 @@
       ready=true;
       await applySession(result.data&&result.data.session?result.data.session:null);
       client.auth.onAuthStateChange(function(_event,session){
+        var nextId=session&&session.user?session.user.id:'';
+        if(nextId!==(user&&user.id||'')){
+          window.dispatchEvent(new CustomEvent('wave-cloud-session-changing'));
+        }
         setTimeout(function(){applySession(session);},0);
       });
     }catch(e){
@@ -154,10 +160,11 @@
     signInWithEmail:signInWithEmail,
     signOut:signOut,
     getStatus:function(){return {ready:ready,signedIn:!!user,email:user&&user.email?user.email:'',userId:user&&user.id?user.id:''};},
-    getAccessToken:async function(){
+    getAccessToken:async function(expectedUserId){
       if(!client)return null;
       var result=await client.auth.getSession();
-      return result&&result.data&&result.data.session?result.data.session.access_token:null;
+      var session=result&&result.data&&result.data.session;
+      return session&&(!expectedUserId||session.user&&session.user.id===expectedUserId)?session.access_token:null;
     },
     syncNow:async function(){if(user){await pull();await pushNow();}}
   };
