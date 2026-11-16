@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "scope": "Rendered lesson HTML 1.1–3.5; lexical coverage only, semantic QA requires spot checking",
+  "generated_on": "2026-11-16",
+  "entries": [
+    {
+      "lesson": "1.1",
+      "path": "apps/terminal/public/candlesticks-lesson-01.html",
+      "chars": 6877,
+      "terms_explicit_or_alias": [
+        "Trend",
+        "Downtrend",
+        "Range",
+        "OHLC",
+        "Open",
+        "High",
+        "Low",
+        "Close",
+        "Candlestick",
+        "Gap",
+        "Bid",
+        "Ask",
+        "Spread"
+      ]
+    },
+    {
+      "lesson": "1.2",
+      "path": "apps/terminal/public/candlesticks-lesson-02.html",
+      "chars": 5216,
+      "terms_explicit_or_alias": [
+        "Range",
+        "OHLC",
+        "Open",
+        "High",
+        "Low",
+        "Close",
+        "Candlestick",
+        "Wick / Shadow"
+      ]
+    },
+    {
+      "lesson": "1.3",
+      "path": "apps/terminal/public/candlesticks-lesson-03.html",
+      "chars": 5624,
+      "terms_explicit_or_alias": [
+        "Trend",
+        "OHLC",
+        "Candlestick",
+        "Wick / Shadow"
+      ]
+    },
+    {
+      "lesson": "1.4",
+      "path": "apps/terminal/public/candlesticks-lesson-04.html",
+      "chars": 10399,
+      "terms_explicit_or_alias": [
+        "Bullish",
+        "Bearish",
+        "Neutral",
+        "Trend",
+        "Uptrend",
+        "Downtrend",
+        "Range",
+        "Sideways",
+        "Pullback",
+        "OHLC",
+        "Open",
+        "High",
+        "Low",
+        "Close",
+        "Candlestick",
+        "Real Body",
+        "Wick / Shadow",
+        "Timeframe",
+        "Price Chart",
+        "Support",
+        "Resistance",
+        "Breakout",
+        "Stop Loss",
+        "Risk–Reward",
+        "RSI",
+        "Inside Bar",
+        "Outside Bar",
+        "Take Profit (TP)",
+        "Long Position",
+        "Short Position",
+        "False Breakout",
+        "Trendline",
+        "CCI",
+        "Momentum"
+      ]
+    },
+    {
+      "lesson": "2.1",
+      "path": "apps/terminal/public/candlesticks-lesson-2-1.html",
+      "chars": 6621,
+      "terms_explicit_or_alias": [
+        "Bullish",
+        "Bearish",
+        "Range",
+        "OHLC",
+        "Open",
+        "High",
+        "Low",
+        "Close",
+        "Candlestick",
+        "Real Body",
+        "Wick / Shadow",
+        "Gap"
+      ]
+    },
+    {
+      "lesson": "2.2",
+      "path": "apps/terminal/public/candlesticks-lesson-2-2.html",
+      "chars": 6453,
+      "terms_explicit_or_alias": [
+        "Bullish",
+        "Bearish",
+        "Trend",
+        "Range",
+        "OHLC",
+        "Open",
+        "Low",
+        "Close",
+        "Real Body",
+        "Wick / Shadow",
+        "Gap"
+      ]
+    },
+    {
+      "lesson": "2.3",
+      "path": "apps/terminal/public/candlesticks-lesson-2-3.html",
+      "chars": 3674,
+      "terms_explicit_or_alias": [
+        "Range",
+        "OHLC",
+        "Open",
+        "High",
+        "Low",
+        "Close",
+        "Wick / Shadow",
+        "Timeframe",
+        "Gap"
+      ]
+    },
+    {
+      "lesson": "2.4",
+      "path": "apps/terminal/public/candlesticks-lesson-2-4.html",
+      "chars": 3584,
+      "terms_explicit_or_alias": [
+        "Bullish",
+        "Range",
+        "OHLC",
+        "Open",
+        "High",
+        "Low",
+        "Close",
+        "Real Body",
+        "Wick / Shadow",
+        "Gap"
+      ]
+    },
+    {
+      "lesson": "2.5",
+      "path": "apps/terminal/public/candlesticks-lesson-2-5.html",
+      "chars": 4377,
+      "terms_explicit_or_alias": [
+        "Range",
+        "Wick / Shadow",
+        "Gap",
+        "Spread",
+        "Engulfing"
+      ]
+    },
+    {
+      "lesson": "3.1",
+      "path": "apps/terminal/public/candlesticks-lesson-3-1.html",
+      "chars": 2308,
+      "terms_explicit_or_alias": [
+        "Bullish",
+        "Bearish",
+        "Uptrend",
+        "Range"
+      ]
+    },
+    {
+      "lesson": "3.2",
+      "path": "apps/terminal/public/candlesticks-lesson-3-2.html",
+      "chars": 2315,
+      "terms_explicit_or_alias": [
+        "Bearish",
+        "Range",
+        "Real Body",
+        "Wick / Shadow",
+        "Timeframe"
+      ]
+    },
+    {
+      "lesson": "3.3",
+      "path": "apps/terminal/public/candlesticks-lesson-3-3.html",
+      "chars": 2342,
+      "terms_explicit_or_alias": [
+        "Range",
+        "Wick / Shadow",
+        "Support",
+        "Resistance"
+      ]
+    },
+    {
+      "lesson": "3.4",
+      "path": "apps/terminal/public/candlesticks-lesson-3-4.html",
+      "chars": 2334,
+      "terms_explicit_or_alias": [
+        "Range",
+        "Support",
+        "Resistance",
+        "Breakout",
+        "RSI",
+        "CCI"
+      ]
+    },
+    {
+      "lesson": "3.5",
+      "path": "apps/terminal/public/candlesticks-lesson-3-5.html",
+      "chars": 2419,
+      "terms_explicit_or_alias": [
+        "Range",
+        "Wick / Shadow",
+        "Timeframe",
+        "Support",
+        "Look-Ahead Bias"
+      ]
+    }
+  ]
+}
