@@ -1,0 +1,4159 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-16",
+  "scope": "96 glossary entries x 56 current lesson records; units 4 and 7–9 include review/prepublication content; occurrence matching is lexical and includes explicit aliases, not certification of semantic alignment",
+  "method": "English token and Hebrew aliases; early lessons use separate HTML scan PART_A. Absence does not prove topic is not taught; presence does not prove consistency.",
+  "lesson_roster": [
+    {
+      "lesson": "1.1",
+      "path": "apps/terminal/public/candlesticks-lesson-01.html",
+      "title": null
+    },
+    {
+      "lesson": "1.2",
+      "path": "apps/terminal/public/candlesticks-lesson-02.html",
+      "title": null
+    },
+    {
+      "lesson": "1.3",
+      "path": "apps/terminal/public/candlesticks-lesson-03.html",
+      "title": null
+    },
+    {
+      "lesson": "1.4",
+      "path": "apps/terminal/public/candlesticks-lesson-04.html",
+      "title": null
+    },
+    {
+      "lesson": "2.1",
+      "path": "apps/terminal/public/candlesticks-lesson-2-1.html",
+      "title": null
+    },
+    {
+      "lesson": "2.2",
+      "path": "apps/terminal/public/candlesticks-lesson-2-2.html",
+      "title": null
+    },
+    {
+      "lesson": "2.3",
+      "path": "apps/terminal/public/candlesticks-lesson-2-3.html",
+      "title": null
+    },
+    {
+      "lesson": "2.4",
+      "path": "apps/terminal/public/candlesticks-lesson-2-4.html",
+      "title": null
+    },
+    {
+      "lesson": "2.5",
+      "path": "apps/terminal/public/candlesticks-lesson-2-5.html",
+      "title": null
+    },
+    {
+      "lesson": "3.1",
+      "path": "apps/terminal/public/candlesticks-lesson-3-1.html",
+      "title": null
+    },
+    {
+      "lesson": "3.2",
+      "path": "apps/terminal/public/candlesticks-lesson-3-2.html",
+      "title": null
+    },
+    {
+      "lesson": "3.3",
+      "path": "apps/terminal/public/candlesticks-lesson-3-3.html",
+      "title": null
+    },
+    {
+      "lesson": "3.4",
+      "path": "apps/terminal/public/candlesticks-lesson-3-4.html",
+      "title": null
+    },
+    {
+      "lesson": "3.5",
+      "path": "apps/terminal/public/candlesticks-lesson-3-5.html",
+      "title": null
+    },
+    {
+      "lesson": "4.1",
+      "path": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+      "title": "Doji ומשפחת הדוג׳י"
+    },
+    {
+      "lesson": "4.2",
+      "path": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+      "title": "Spinning Top ו־Marubozu"
+    },
+    {
+      "lesson": "4.3",
+      "path": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+      "title": "Hammer ו־Hanging Man"
+    },
+    {
+      "lesson": "4.4",
+      "path": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+      "title": "Inverted Hammer ו־Shooting Star"
+    },
+    {
+      "lesson": "4.5",
+      "path": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+      "title": "תרגול זיהוי ללא שמות"
+    },
+    {
+      "lesson": "4.6",
+      "path": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+      "title": "Bullish/Bearish Engulfing"
+    },
+    {
+      "lesson": "4.7",
+      "path": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+      "title": "Bullish/Bearish Harami"
+    },
+    {
+      "lesson": "4.8",
+      "path": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+      "title": "Piercing Line"
+    },
+    {
+      "lesson": "4.9",
+      "path": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+      "title": "Dark Cloud Cover"
+    },
+    {
+      "lesson": "4.10",
+      "path": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+      "title": "Tweezer Top/Bottom"
+    },
+    {
+      "lesson": "4.11",
+      "path": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+      "title": "Inside Bar ו־Outside Bar"
+    },
+    {
+      "lesson": "4.12",
+      "path": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+      "title": "השוואות ומקרי גבול"
+    },
+    {
+      "lesson": "5.1",
+      "path": "apps/terminal/public/wave-unit5-lessons.js",
+      "title": "מגמה, טווח ושינוי מבנה"
+    },
+    {
+      "lesson": "5.2",
+      "path": "apps/terminal/public/wave-unit5-lessons.js",
+      "title": "תמיכה והתנגדות"
+    },
+    {
+      "lesson": "5.3",
+      "path": "apps/terminal/public/wave-unit5-lessons.js",
+      "title": "קווי מגמה וערוצים"
+    },
+    {
+      "lesson": "5.4",
+      "path": "apps/terminal/public/wave-unit5-lessons.js",
+      "title": "פריצה, פריצת שווא ו־Retest"
+    },
+    {
+      "lesson": "5.5",
+      "path": "apps/terminal/public/wave-unit5-lessons.js",
+      "title": "קריאת 10–20 נרות ללא שמות תבניות"
+    },
+    {
+      "lesson": "5.6",
+      "path": "apps/terminal/public/wave-unit5-lessons.js",
+      "title": "יסודות ניתוח רב־טווחי (MTF)"
+    },
+    {
+      "lesson": "5.7",
+      "path": "apps/terminal/public/wave-unit5-lessons.js",
+      "title": "ניתוח Top-Down והתאמת מגמות"
+    },
+    {
+      "lesson": "5.8",
+      "path": "apps/terminal/public/wave-unit5-lessons.js",
+      "title": "שילוב תבניות נרות עם MTF ותרגול"
+    },
+    {
+      "lesson": "6.1",
+      "path": "apps/terminal/public/candlesticks-unit6-content.js",
+      "title": "ממוצע נע פשוט — SMA"
+    },
+    {
+      "lesson": "6.2",
+      "path": "apps/terminal/public/candlesticks-unit6-content.js",
+      "title": "נפח מסחר ואיכות הנתונים"
+    },
+    {
+      "lesson": "6.3",
+      "path": "apps/terminal/public/candlesticks-unit6-content.js",
+      "title": "ATR ותנודתיות"
+    },
+    {
+      "lesson": "6.4",
+      "path": "apps/terminal/public/candlesticks-unit6-content.js",
+      "title": "יסודות מתנדי מומנטום"
+    },
+    {
+      "lesson": "6.5",
+      "path": "apps/terminal/public/candlesticks-unit6-content.js",
+      "title": "RSI — שיעור עומק"
+    },
+    {
+      "lesson": "6.6",
+      "path": "apps/terminal/public/candlesticks-unit6-content.js",
+      "title": "Stochastic — שיעור עומק"
+    },
+    {
+      "lesson": "6.7",
+      "path": "apps/terminal/public/candlesticks-unit6-content.js",
+      "title": "CCI — שיעור עומק"
+    },
+    {
+      "lesson": "6.8",
+      "path": "apps/terminal/public/candlesticks-unit6-content.js",
+      "title": "השוואה ואינטגרציה"
+    },
+    {
+      "lesson": "7.1",
+      "path": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+      "title": "מתי תבנית היא רק תצפית"
+    },
+    {
+      "lesson": "7.2",
+      "path": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+      "title": "אישור וביטול של רעיון"
+    },
+    {
+      "lesson": "7.3",
+      "path": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+      "title": "תרחישי עלייה, ירידה ואי־פעולה"
+    },
+    {
+      "lesson": "7.4",
+      "path": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+      "title": "דוגמאות לפי שווקים וטווחי זמן"
+    },
+    {
+      "lesson": "8.1",
+      "path": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+      "title": "סיכון לעסקה וגודל פוזיציה"
+    },
+    {
+      "lesson": "8.2",
+      "path": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+      "title": "סטופ, יעד ויחס סיכוי–סיכון"
+    },
+    {
+      "lesson": "8.3",
+      "path": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+      "title": "אחוז הצלחה ותוחלת"
+    },
+    {
+      "lesson": "8.4",
+      "path": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+      "title": "רצפי הפסד, Drawdown והטיית הישרדות"
+    },
+    {
+      "lesson": "8.5",
+      "path": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+      "title": "מינוף, החלקה, עמלות וסיכון לילה"
+    },
+    {
+      "lesson": "9.1",
+      "path": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+      "title": "תהליך ניתוח נקי"
+    },
+    {
+      "lesson": "9.2",
+      "path": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+      "title": "עבודה ללא מידע עתידי"
+    },
+    {
+      "lesson": "9.3",
+      "path": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+      "title": "יומן תצפיות ועסקאות"
+    },
+    {
+      "lesson": "9.4",
+      "path": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+      "title": "מדדי הצלחה ובדיקת אסטרטגיה"
+    },
+    {
+      "lesson": "9.5",
+      "path": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+      "title": "מבחן מסכם ותיק עבודות"
+    }
+  ],
+  "entries": [
+    {
+      "term": "Bullish",
+      "category": "מגמה ותנועה",
+      "definition": "מצב שבו המחיר עולה, או שהנר נסגר גבוה ממחיר הפתיחה שלו. זהו תיאור של תנועת המחיר, לא הבטחה להמשך עליות.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "שורי"
+        },
+        {
+          "lesson": "4.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "שורי"
+        },
+        {
+          "lesson": "4.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "שורי"
+        },
+        {
+          "lesson": "4.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "שורי"
+        },
+        {
+          "lesson": "4.6",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Bullish"
+        },
+        {
+          "lesson": "4.7",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Bullish"
+        },
+        {
+          "lesson": "4.8",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Bullish"
+        },
+        {
+          "lesson": "4.9",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "שורי"
+        },
+        {
+          "lesson": "4.12",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Bullish"
+        },
+        {
+          "lesson": "5.5",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "שורי"
+        },
+        {
+          "lesson": "5.7",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "שורי"
+        },
+        {
+          "lesson": "5.8",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "שורי"
+        },
+        {
+          "lesson": "6.3",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "שורי"
+        },
+        {
+          "lesson": "6.4",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "שורי"
+        },
+        {
+          "lesson": "6.7",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "שורי"
+        },
+        {
+          "lesson": "7.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "שורי"
+        },
+        {
+          "lesson": "7.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "שורי"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "שורי"
+        }
+      ],
+      "lesson_count": 23,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Bearish",
+      "category": "מגמה ותנועה",
+      "definition": "מצב שבו המחיר יורד, או שהנר נסגר נמוך ממחיר הפתיחה שלו. זהו תיאור של תנועת המחיר, לא הבטחה להמשך ירידות.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "דובי"
+        },
+        {
+          "lesson": "4.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "דובי"
+        },
+        {
+          "lesson": "4.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "דובי"
+        },
+        {
+          "lesson": "4.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "דובי"
+        },
+        {
+          "lesson": "4.6",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Bearish"
+        },
+        {
+          "lesson": "4.7",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Bearish"
+        },
+        {
+          "lesson": "4.8",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "דובי"
+        },
+        {
+          "lesson": "4.9",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Bearish"
+        },
+        {
+          "lesson": "4.12",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "דובי"
+        },
+        {
+          "lesson": "6.3",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "דובי"
+        },
+        {
+          "lesson": "6.5",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "דובי"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "דובי"
+        }
+      ],
+      "lesson_count": 17,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Neutral",
+      "category": "מגמה ותנועה",
+      "definition": "מצב שבו אין כיוון ברור של עלייה או ירידה, או שאין יתרון ברור לקונים או למוכרים.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        }
+      ],
+      "lesson_count": 1,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Trend",
+      "category": "מגמה ותנועה",
+      "definition": "הכיוון הכללי שבו המחיר נע לאורך תקופה מסוימת: למעלה, למטה או הצדה.",
+      "occurrences": [
+        {
+          "lesson": "1.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.3",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "מגמה"
+        },
+        {
+          "lesson": "4.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "מגמה"
+        },
+        {
+          "lesson": "4.7",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "מגמה"
+        },
+        {
+          "lesson": "5.1",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "Trend"
+        },
+        {
+          "lesson": "5.3",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "מגמה"
+        },
+        {
+          "lesson": "5.6",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "מגמה"
+        },
+        {
+          "lesson": "5.7",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "Trend"
+        },
+        {
+          "lesson": "5.8",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "מגמה"
+        },
+        {
+          "lesson": "6.1",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "מגמה"
+        },
+        {
+          "lesson": "6.2",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "מגמה"
+        },
+        {
+          "lesson": "6.4",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "מגמה"
+        },
+        {
+          "lesson": "6.6",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "מגמה"
+        },
+        {
+          "lesson": "7.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "מגמה"
+        },
+        {
+          "lesson": "9.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "מגמה"
+        }
+      ],
+      "lesson_count": 18,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Uptrend",
+      "category": "מגמה ותנועה",
+      "definition": "מגמה שבה המחיר נוטה לעלות לאורך זמן, ולעיתים קרובות יוצר שיאים ושפלים גבוהים יותר.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "5.1",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "Uptrend"
+        },
+        {
+          "lesson": "6.2",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "מגמת עלייה"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "מגמת עלייה"
+        }
+      ],
+      "lesson_count": 5,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Downtrend",
+      "category": "מגמה ותנועה",
+      "definition": "מגמה שבה המחיר נוטה לרדת לאורך זמן, ולעיתים קרובות יוצר שיאים ושפלים נמוכים יותר.",
+      "occurrences": [
+        {
+          "lesson": "1.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.8",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "מגמת ירידה"
+        },
+        {
+          "lesson": "5.1",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "Downtrend"
+        }
+      ],
+      "lesson_count": 4,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Range",
+      "category": "מגמה ותנועה",
+      "definition": "טווח מחירים שבו הנכס נע שוב ושוב בין אזור תחתון לאזור עליון, בלי מגמת עלייה או ירידה ברורה.",
+      "occurrences": [
+        {
+          "lesson": "1.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.3",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.5",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.3",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.5",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "4.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "4.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "4.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "4.6",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "4.7",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "4.10",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "4.11",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "4.12",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "5.1",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "Range"
+        },
+        {
+          "lesson": "5.2",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "Range"
+        },
+        {
+          "lesson": "5.4",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "5.5",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "Range"
+        },
+        {
+          "lesson": "5.6",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "5.7",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "5.8",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "6.2",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "6.3",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "Range"
+        },
+        {
+          "lesson": "6.4",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "6.6",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "6.8",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "7.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "9.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "9.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "9.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "9.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "טווח"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "Range"
+        }
+      ],
+      "lesson_count": 40,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Sideways",
+      "category": "מגמה ותנועה",
+      "definition": "תנועה הצדה: המחיר עולה ויורד בתוך אזור מסוים, בלי כיוון כללי ברור.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "דשדוש"
+        },
+        {
+          "lesson": "4.7",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "דשדוש"
+        }
+      ],
+      "lesson_count": 3,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Pullback",
+      "category": "מגמה ותנועה",
+      "definition": "תנועה זמנית של המחיר נגד הכיוון העיקרי של המגמה. למשל, ירידה קצרה בתוך מגמת עלייה.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "נסיגה"
+        },
+        {
+          "lesson": "5.1",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "נסיגה"
+        },
+        {
+          "lesson": "5.6",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "נסיגה"
+        },
+        {
+          "lesson": "5.7",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "תיקון"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "נסיגה"
+        }
+      ],
+      "lesson_count": 6,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "OHLC",
+      "category": "מבנה הנר",
+      "definition": "ארבעת המחירים שמציג כל נר: פתיחה (Open), הגבוה ביותר (High), הנמוך ביותר (Low) וסגירה (Close).",
+      "occurrences": [
+        {
+          "lesson": "1.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.3",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.3",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "OHLC"
+        },
+        {
+          "lesson": "4.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "OHLC"
+        },
+        {
+          "lesson": "4.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "OHLC"
+        },
+        {
+          "lesson": "4.7",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "OHLC"
+        },
+        {
+          "lesson": "4.12",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "OHLC"
+        },
+        {
+          "lesson": "7.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "OHLC"
+        },
+        {
+          "lesson": "9.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "OHLC"
+        },
+        {
+          "lesson": "9.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "OHLC"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "OHLC"
+        }
+      ],
+      "lesson_count": 17,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Open",
+      "category": "מבנה הנר",
+      "definition": "המחיר שבו התחיל פרק הזמן שהנר מייצג.",
+      "occurrences": [
+        {
+          "lesson": "1.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.3",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Open"
+        },
+        {
+          "lesson": "4.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פתיחה"
+        },
+        {
+          "lesson": "4.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פתיחה"
+        },
+        {
+          "lesson": "4.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פתיחה"
+        },
+        {
+          "lesson": "4.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פתיחה"
+        },
+        {
+          "lesson": "4.6",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פתיחה"
+        },
+        {
+          "lesson": "4.7",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פתיחה"
+        },
+        {
+          "lesson": "4.8",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פתיחה"
+        },
+        {
+          "lesson": "4.9",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פתיחה"
+        },
+        {
+          "lesson": "4.10",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פתיחה"
+        },
+        {
+          "lesson": "4.11",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Open"
+        },
+        {
+          "lesson": "4.12",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Open"
+        },
+        {
+          "lesson": "5.8",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "פתיחה"
+        },
+        {
+          "lesson": "6.3",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "Open"
+        },
+        {
+          "lesson": "7.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "פתיחה"
+        },
+        {
+          "lesson": "7.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "Open"
+        },
+        {
+          "lesson": "8.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "פתיחה"
+        },
+        {
+          "lesson": "9.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "Open"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "פתיחה"
+        }
+      ],
+      "lesson_count": 26,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "High",
+      "category": "מבנה הנר",
+      "definition": "המחיר הגבוה ביותר שאליו הגיע הנכס במהלך פרק הזמן של הנר.",
+      "occurrences": [
+        {
+          "lesson": "1.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.3",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "High"
+        },
+        {
+          "lesson": "4.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "גבוה"
+        },
+        {
+          "lesson": "4.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "גבוה"
+        },
+        {
+          "lesson": "4.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "גבוה"
+        },
+        {
+          "lesson": "4.6",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "גבוה"
+        },
+        {
+          "lesson": "4.7",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "גבוה"
+        },
+        {
+          "lesson": "4.9",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "גבוה"
+        },
+        {
+          "lesson": "4.10",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "גבוה"
+        },
+        {
+          "lesson": "4.11",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "High"
+        },
+        {
+          "lesson": "4.12",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "High"
+        },
+        {
+          "lesson": "5.1",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "High"
+        },
+        {
+          "lesson": "6.2",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "גבוה"
+        },
+        {
+          "lesson": "6.3",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "High"
+        },
+        {
+          "lesson": "6.4",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "גבוה"
+        },
+        {
+          "lesson": "6.5",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "גבוה"
+        },
+        {
+          "lesson": "6.6",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "High"
+        },
+        {
+          "lesson": "6.7",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "High"
+        },
+        {
+          "lesson": "6.8",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "High"
+        },
+        {
+          "lesson": "7.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "גבוה"
+        },
+        {
+          "lesson": "7.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "High"
+        },
+        {
+          "lesson": "7.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "High"
+        },
+        {
+          "lesson": "8.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "גבוה"
+        },
+        {
+          "lesson": "8.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "גבוה"
+        },
+        {
+          "lesson": "8.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "גבוה"
+        },
+        {
+          "lesson": "9.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "High"
+        },
+        {
+          "lesson": "9.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "High"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "High"
+        }
+      ],
+      "lesson_count": 33,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Low",
+      "category": "מבנה הנר",
+      "definition": "המחיר הנמוך ביותר שאליו הגיע הנכס במהלך פרק הזמן של הנר.",
+      "occurrences": [
+        {
+          "lesson": "1.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.3",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Low"
+        },
+        {
+          "lesson": "4.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "נמוך"
+        },
+        {
+          "lesson": "4.6",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "נמוך"
+        },
+        {
+          "lesson": "4.8",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "נמוך"
+        },
+        {
+          "lesson": "4.9",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "נמוך"
+        },
+        {
+          "lesson": "4.11",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Low"
+        },
+        {
+          "lesson": "4.12",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Low"
+        },
+        {
+          "lesson": "5.1",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "Low"
+        },
+        {
+          "lesson": "6.3",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "Low"
+        },
+        {
+          "lesson": "6.4",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "נמוך"
+        },
+        {
+          "lesson": "6.5",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "נמוך"
+        },
+        {
+          "lesson": "6.6",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "Low"
+        },
+        {
+          "lesson": "6.7",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "Low"
+        },
+        {
+          "lesson": "6.8",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "Low"
+        },
+        {
+          "lesson": "7.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "Low"
+        },
+        {
+          "lesson": "7.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "Low"
+        },
+        {
+          "lesson": "8.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "נמוך"
+        },
+        {
+          "lesson": "8.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "נמוך"
+        },
+        {
+          "lesson": "8.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "נמוך"
+        },
+        {
+          "lesson": "8.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "נמוך"
+        },
+        {
+          "lesson": "9.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "Low"
+        },
+        {
+          "lesson": "9.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "Low"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "Low"
+        }
+      ],
+      "lesson_count": 30,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Close",
+      "category": "מבנה הנר",
+      "definition": "המחיר שבו הסתיים פרק הזמן שהנר מייצג. בנר שעדיין מתהווה, מחיר הסגירה עשוי להשתנות.",
+      "occurrences": [
+        {
+          "lesson": "1.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.3",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Close"
+        },
+        {
+          "lesson": "4.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "4.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "4.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "4.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "4.6",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "4.7",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "4.8",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "4.9",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "4.10",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "4.11",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Close"
+        },
+        {
+          "lesson": "4.12",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Close"
+        },
+        {
+          "lesson": "5.4",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "5.5",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "5.8",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "6.1",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "6.3",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "Close"
+        },
+        {
+          "lesson": "6.5",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "6.6",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "Close"
+        },
+        {
+          "lesson": "6.7",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "Close"
+        },
+        {
+          "lesson": "6.8",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "7.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "7.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "Close"
+        },
+        {
+          "lesson": "7.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "7.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "Close"
+        },
+        {
+          "lesson": "8.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "8.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "9.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "Close"
+        },
+        {
+          "lesson": "9.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "9.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "סגירה"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "סגירה"
+        }
+      ],
+      "lesson_count": 38,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Candlestick",
+      "category": "מבנה הנר",
+      "definition": "דרך להציג תנועת מחיר בעזרת נרות. כל נר מציג את מחירי הפתיחה, הסגירה, הגבוה והנמוך בפרק זמן מסוים.",
+      "occurrences": [
+        {
+          "lesson": "1.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.3",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "5.8",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "נרות יפניים"
+        }
+      ],
+      "lesson_count": 6,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Real Body",
+      "category": "מבנה הנר",
+      "definition": "החלק העבה של הנר, שמראה את המרחק בין מחיר הפתיחה למחיר הסגירה.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Real Body"
+        },
+        {
+          "lesson": "4.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "גוף הנר"
+        },
+        {
+          "lesson": "4.6",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "גוף הנר"
+        },
+        {
+          "lesson": "4.7",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "גוף הנר"
+        },
+        {
+          "lesson": "4.8",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "גוף הנר"
+        },
+        {
+          "lesson": "4.9",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "גוף הנר"
+        },
+        {
+          "lesson": "7.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "גוף הנר"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "גוף הנר"
+        }
+      ],
+      "lesson_count": 13,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Wick / Shadow",
+      "category": "מבנה הנר",
+      "definition": "הקווים הדקים שמעל גוף הנר ומתחתיו. הם מציגים עד כמה המחיר עלה או ירד מעבר למחירי הפתיחה והסגירה.",
+      "occurrences": [
+        {
+          "lesson": "1.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.3",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.3",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.5",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.3",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.5",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פתיל"
+        },
+        {
+          "lesson": "4.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פתיל"
+        },
+        {
+          "lesson": "4.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פתיל"
+        },
+        {
+          "lesson": "4.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פתיל"
+        },
+        {
+          "lesson": "4.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פתיל"
+        },
+        {
+          "lesson": "4.6",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פתיל"
+        },
+        {
+          "lesson": "4.7",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פתיל"
+        },
+        {
+          "lesson": "5.1",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "פתיל"
+        },
+        {
+          "lesson": "5.2",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "פתיל"
+        },
+        {
+          "lesson": "5.4",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "פתיל"
+        },
+        {
+          "lesson": "5.5",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "פתיל"
+        },
+        {
+          "lesson": "7.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "פתיל"
+        },
+        {
+          "lesson": "7.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "פתיל"
+        },
+        {
+          "lesson": "9.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "פתיל"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "פתיל"
+        }
+      ],
+      "lesson_count": 26,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Timeframe",
+      "category": "מונחי גרף",
+      "definition": "משך הזמן שכל נר בגרף מייצג. למשל, בגרף של שעה כל נר מתאר שעה אחת.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.3",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.5",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "טווח זמן"
+        },
+        {
+          "lesson": "4.12",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "טווח זמן"
+        },
+        {
+          "lesson": "5.5",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "טווח זמן"
+        },
+        {
+          "lesson": "5.6",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "Timeframe"
+        },
+        {
+          "lesson": "5.8",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "טווחי זמן"
+        },
+        {
+          "lesson": "6.2",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "טווח זמן"
+        },
+        {
+          "lesson": "7.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "טווח זמן"
+        },
+        {
+          "lesson": "9.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "טווח זמן"
+        },
+        {
+          "lesson": "9.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "טווח זמן"
+        }
+      ],
+      "lesson_count": 13,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Price Chart",
+      "category": "מונחי גרף",
+      "definition": "תרשים שמציג כיצד מחירו של נכס השתנה לאורך זמן. אפשר להציגו באמצעות נרות, קווים או עמודות.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "גרף"
+        },
+        {
+          "lesson": "4.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "גרף"
+        },
+        {
+          "lesson": "4.12",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "גרף"
+        },
+        {
+          "lesson": "5.1",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "גרף"
+        },
+        {
+          "lesson": "5.2",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "גרף"
+        },
+        {
+          "lesson": "5.3",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "גרף"
+        },
+        {
+          "lesson": "5.5",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "גרף"
+        },
+        {
+          "lesson": "5.6",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "גרף"
+        },
+        {
+          "lesson": "5.7",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "גרף"
+        },
+        {
+          "lesson": "5.8",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "גרף"
+        },
+        {
+          "lesson": "6.4",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "גרף"
+        },
+        {
+          "lesson": "6.5",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "גרף"
+        },
+        {
+          "lesson": "7.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "גרף"
+        },
+        {
+          "lesson": "7.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "גרף"
+        },
+        {
+          "lesson": "7.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "גרף"
+        },
+        {
+          "lesson": "8.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "גרף"
+        },
+        {
+          "lesson": "9.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "גרף"
+        },
+        {
+          "lesson": "9.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "גרף"
+        },
+        {
+          "lesson": "9.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "גרף"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "גרף"
+        }
+      ],
+      "lesson_count": 21,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Support",
+      "category": "רמות מחיר",
+      "definition": "אזור מחיר שבו קונים התערבו בעבר, והירידה נעצרה או נחלשה. אין הבטחה שהאזור יחזיק שוב.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.3",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.5",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "תמיכה"
+        },
+        {
+          "lesson": "4.10",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "תמיכה"
+        },
+        {
+          "lesson": "5.2",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "Support"
+        },
+        {
+          "lesson": "5.7",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "Support"
+        },
+        {
+          "lesson": "5.8",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "תמיכה"
+        },
+        {
+          "lesson": "6.1",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "תמיכה"
+        },
+        {
+          "lesson": "7.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "תמיכה"
+        },
+        {
+          "lesson": "8.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "תמיכה"
+        },
+        {
+          "lesson": "9.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "תמיכה"
+        },
+        {
+          "lesson": "9.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "תמיכה"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "תמיכה"
+        }
+      ],
+      "lesson_count": 15,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Resistance",
+      "category": "רמות מחיר",
+      "definition": "אזור מחיר שבו מוכרים התערבו בעבר, והעלייה נעצרה או נחלשה. אין הבטחה שהאזור יעצור עלייה נוספת.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.3",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "התנגדות"
+        },
+        {
+          "lesson": "4.6",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "התנגדות"
+        },
+        {
+          "lesson": "4.8",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "התנגדות"
+        },
+        {
+          "lesson": "5.2",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "Resistance"
+        },
+        {
+          "lesson": "5.4",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "התנגדות"
+        },
+        {
+          "lesson": "5.5",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "התנגדות"
+        },
+        {
+          "lesson": "5.6",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "התנגדות"
+        },
+        {
+          "lesson": "5.7",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "התנגדות"
+        },
+        {
+          "lesson": "7.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "התנגדות"
+        },
+        {
+          "lesson": "8.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "התנגדות"
+        },
+        {
+          "lesson": "9.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "התנגדות"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "התנגדות"
+        }
+      ],
+      "lesson_count": 15,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Breakout",
+      "category": "רמות מחיר",
+      "definition": "מצב שבו המחיר חוצה רמת תמיכה, התנגדות או גבול של טווח מסחר. לא כל פריצה נמשכת.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "5.4",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "Breakout"
+        },
+        {
+          "lesson": "5.8",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "Breakout"
+        },
+        {
+          "lesson": "6.2",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "פריצה"
+        },
+        {
+          "lesson": "9.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "פריצה"
+        }
+      ],
+      "lesson_count": 6,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Retest",
+      "category": "רמות מחיר",
+      "definition": "חזרה של המחיר לאזור או לרמה שכבר נפרצו, כדי לבחון כיצד הוא מגיב אליהם.",
+      "occurrences": [
+        {
+          "lesson": "5.2",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "בדיקה חוזרת"
+        },
+        {
+          "lesson": "5.4",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "Retest"
+        }
+      ],
+      "lesson_count": 2,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Gap",
+      "category": "מונחי גרף",
+      "definition": "פער בין מחיר הסגירה של תקופה אחת למחיר הפתיחה של התקופה הבאה, כשאין מסחר או עסקאות ביניהם בגרף.",
+      "occurrences": [
+        {
+          "lesson": "1.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.2",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.3",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.5",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פער"
+        },
+        {
+          "lesson": "4.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Gap"
+        },
+        {
+          "lesson": "4.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פער"
+        },
+        {
+          "lesson": "4.6",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פער"
+        },
+        {
+          "lesson": "4.8",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פער"
+        },
+        {
+          "lesson": "4.9",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פער"
+        },
+        {
+          "lesson": "4.10",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פער"
+        },
+        {
+          "lesson": "4.11",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פער"
+        },
+        {
+          "lesson": "4.12",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "פער"
+        },
+        {
+          "lesson": "6.3",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "פער"
+        },
+        {
+          "lesson": "6.8",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "פער"
+        },
+        {
+          "lesson": "7.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "פער"
+        },
+        {
+          "lesson": "7.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "פער"
+        },
+        {
+          "lesson": "8.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "פער"
+        },
+        {
+          "lesson": "8.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "פער"
+        },
+        {
+          "lesson": "8.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "פער"
+        },
+        {
+          "lesson": "8.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "פער"
+        }
+      ],
+      "lesson_count": 23,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Bid",
+      "category": "מסחר",
+      "definition": "המחיר הגבוה ביותר שקונה מוכן כרגע לשלם עבור הנכס בספר הפקודות. זהו המחיר שבו מוכר יכול בדרך כלל למכור מיד, בכפוף לנזילות.",
+      "occurrences": [
+        {
+          "lesson": "1.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "7.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "Bid"
+        },
+        {
+          "lesson": "8.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "Bid"
+        },
+        {
+          "lesson": "8.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "Bid"
+        }
+      ],
+      "lesson_count": 4,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Ask",
+      "category": "מסחר",
+      "definition": "המחיר הנמוך ביותר שמוכר מוכן כרגע לקבל עבור הנכס בספר הפקודות. זהו המחיר שבו קונה יכול בדרך כלל לקנות מיד, בכפוף לנזילות.",
+      "occurrences": [
+        {
+          "lesson": "1.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "7.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "Ask"
+        },
+        {
+          "lesson": "8.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "Ask"
+        },
+        {
+          "lesson": "8.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "Ask"
+        }
+      ],
+      "lesson_count": 4,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Spread",
+      "category": "מסחר",
+      "definition": "ההפרש בין מחיר הקנייה (Bid) למחיר המכירה (Ask). מרווח גדול יותר עלול לייקר את הכניסה והיציאה מעסקה.",
+      "occurrences": [
+        {
+          "lesson": "1.1",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "2.5",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.10",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "מרווח"
+        },
+        {
+          "lesson": "7.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "מרווח"
+        },
+        {
+          "lesson": "7.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "מרווח"
+        },
+        {
+          "lesson": "8.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "Spread"
+        },
+        {
+          "lesson": "8.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "Spread"
+        }
+      ],
+      "lesson_count": 7,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Stop Loss",
+      "category": "ניהול סיכונים",
+      "definition": "הוראה לסגור פוזיציה אם המחיר מגיע לרמה שנקבעה, כדי לנסות להגביל הפסד. ביצוע הפקודה אינו מבטיח הפסד מדויק.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "6.3",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "סטופ"
+        },
+        {
+          "lesson": "7.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "Stop Loss"
+        },
+        {
+          "lesson": "8.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "סטופ"
+        },
+        {
+          "lesson": "8.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "Stop-Loss"
+        },
+        {
+          "lesson": "8.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "סטופ"
+        },
+        {
+          "lesson": "9.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "סטופ"
+        },
+        {
+          "lesson": "9.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "סטופ"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "סטופ"
+        }
+      ],
+      "lesson_count": 9,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Risk–Reward",
+      "category": "ניהול סיכונים",
+      "definition": "השוואה בין הסכום שמוכנים להפסיד בעסקה לבין הרווח האפשרי. למשל, סיכון של 100 ₪ מול יעד רווח של 200 ₪ הוא יחס סיכון־סיכוי של 1:2.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "8.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "Reward-to-Risk"
+        }
+      ],
+      "lesson_count": 2,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "ATR",
+      "category": "כלים טכניים",
+      "definition": "מדד תנודתיות שמעריך כמה המחיר נע בממוצע לאורך מספר תקופות. הוא אינו מצביע לבדו על כיוון המחיר.",
+      "occurrences": [
+        {
+          "lesson": "6.3",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "ATR"
+        },
+        {
+          "lesson": "7.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "ATR"
+        }
+      ],
+      "lesson_count": 2,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "RSI",
+      "category": "כלים טכניים",
+      "definition": "מדד מומנטום שמציג את עוצמת העליות והירידות האחרונות, לרוב בסולם שבין 0 ל־100. קריאה גבוהה או נמוכה אינה מבטיחה היפוך.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "6.4",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "RSI"
+        },
+        {
+          "lesson": "6.5",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "RSI"
+        },
+        {
+          "lesson": "6.6",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "RSI"
+        },
+        {
+          "lesson": "6.8",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "RSI"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "RSI"
+        }
+      ],
+      "lesson_count": 7,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Doji",
+      "category": "תבניות",
+      "definition": "נר שבו מחיר הפתיחה ומחיר הסגירה כמעט זהים. הוא עשוי להעיד על חוסר הכרעה, אך יש לבדוק את ההקשר בגרף.",
+      "occurrences": [
+        {
+          "lesson": "4.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Doji"
+        },
+        {
+          "lesson": "4.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Doji"
+        },
+        {
+          "lesson": "4.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "דוג׳י"
+        },
+        {
+          "lesson": "4.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Doji"
+        },
+        {
+          "lesson": "4.6",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "דוג׳י"
+        },
+        {
+          "lesson": "4.7",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "דוג׳י"
+        },
+        {
+          "lesson": "4.12",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Doji"
+        },
+        {
+          "lesson": "5.8",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "דוג׳י"
+        }
+      ],
+      "lesson_count": 8,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Inside Bar",
+      "category": "תבניות",
+      "definition": "נר שהמחיר הגבוה והנמוך שלו נמצאים בתוך הטווח של הנר שקדם לו.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.7",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Inside Bar"
+        },
+        {
+          "lesson": "4.11",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Inside Bar"
+        },
+        {
+          "lesson": "4.12",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Inside Bar"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "Inside Bar"
+        }
+      ],
+      "lesson_count": 5,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Outside Bar",
+      "category": "תבניות",
+      "definition": "נר שהמחיר הגבוה שלו גבוה מזה של הנר הקודם, והמחיר הנמוך שלו נמוך מזה של הנר הקודם.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.6",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Outside Bar"
+        },
+        {
+          "lesson": "4.11",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Outside Bar"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "Outside Bar"
+        }
+      ],
+      "lesson_count": 4,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Take Profit (TP)",
+      "category": "ניהול סיכונים",
+      "definition": "פקודה שמטרתה לסגור עסקה כאשר המחיר מגיע ליעד רווח שנקבע מראש. המחיר שבו תבוצע בפועל עשוי להשתנות.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "8.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "יעד רווח"
+        },
+        {
+          "lesson": "8.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "יעד רווח"
+        }
+      ],
+      "lesson_count": 3,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "R / Risk Unit",
+      "category": "ניהול סיכונים",
+      "definition": "יחידת הסיכון שהוגדרה מראש לעסקה. למשל, אם מסכנים 100 ₪, רווח של 200 ₪ שווה ל־2R לפני עלויות.",
+      "occurrences": [
+        {
+          "lesson": "8.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "1R"
+        },
+        {
+          "lesson": "8.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "1R"
+        },
+        {
+          "lesson": "9.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "1R"
+        },
+        {
+          "lesson": "9.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "1R"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "1R"
+        }
+      ],
+      "lesson_count": 5,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "R-Multiple",
+      "category": "ניהול סיכונים",
+      "definition": "דרך למדוד תוצאת עסקה ביחס לסיכון הראשוני שלה: רווח של פי שניים מהסיכון הוא ‎+2R, והפסד בגובה הסיכון הוא ‎−1R.",
+      "occurrences": [
+        {
+          "lesson": "8.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "2R"
+        },
+        {
+          "lesson": "8.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "2R"
+        },
+        {
+          "lesson": "8.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "2R"
+        },
+        {
+          "lesson": "9.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "2R"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "2R"
+        }
+      ],
+      "lesson_count": 5,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Position Sizing",
+      "category": "ניהול סיכונים",
+      "definition": "קביעת הכמות שקונים או מוכרים בעסקה לפי גודל החשבון, מרחק הסטופ והסכום שמוכנים לסכן.",
+      "occurrences": [
+        {
+          "lesson": "8.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "גודל פוזיציה"
+        }
+      ],
+      "lesson_count": 1,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Risk per Trade",
+      "category": "ניהול סיכונים",
+      "definition": "כמות הכסף או אחוז ההון שהסוחר מוכן להפסיד בעסקה אחת בתכנון המקורי. בפועל ההפסד עשוי להיות גדול יותר.",
+      "occurrences": [
+        {
+          "lesson": "8.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "סיכון לעסקה"
+        }
+      ],
+      "lesson_count": 1,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Drawdown",
+      "category": "ניהול סיכונים",
+      "definition": "ירידה בשווי החשבון משיא קודם לנקודה נמוכה יותר. למשל, ירידה מ־10,000 ₪ ל־9,000 ₪ היא Drawdown של 10%.",
+      "occurrences": [
+        {
+          "lesson": "8.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "Drawdown"
+        },
+        {
+          "lesson": "9.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "Drawdown"
+        }
+      ],
+      "lesson_count": 2,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Leverage",
+      "category": "ניהול סיכונים",
+      "definition": "שימוש בהון קטן יחסית כדי להיחשף לעסקה גדולה יותר. מינוף מגדיל גם רווחים וגם הפסדים אפשריים.",
+      "occurrences": [
+        {
+          "lesson": "8.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "מינוף"
+        },
+        {
+          "lesson": "8.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "Leverage"
+        }
+      ],
+      "lesson_count": 2,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Margin",
+      "category": "ניהול סיכונים",
+      "definition": "סכום בטוחה שהברוקר או הבורסה דורשים כדי לפתוח ולהחזיק עסקה ממונפת. Margin אינו בהכרח ההפסד המרבי.",
+      "occurrences": [
+        {
+          "lesson": "4.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "בטוחה"
+        },
+        {
+          "lesson": "8.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "בטוחה"
+        },
+        {
+          "lesson": "8.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "בטוחה"
+        },
+        {
+          "lesson": "9.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "בטוחה"
+        }
+      ],
+      "lesson_count": 4,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Slippage",
+      "category": "ניהול סיכונים",
+      "definition": "ההבדל בין המחיר שבו רצינו או ציפינו לבצע עסקה לבין המחיר שבו העסקה בוצעה בפועל.",
+      "occurrences": [
+        {
+          "lesson": "6.4",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "החלקה"
+        },
+        {
+          "lesson": "6.5",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "החלקה"
+        },
+        {
+          "lesson": "6.6",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "החלקה"
+        },
+        {
+          "lesson": "6.8",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "החלקה"
+        },
+        {
+          "lesson": "8.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "Slippage"
+        },
+        {
+          "lesson": "8.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "Slippage"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "החלקה"
+        }
+      ],
+      "lesson_count": 7,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Trailing Stop",
+      "category": "ניהול סיכונים",
+      "definition": "פקודת עצירת הפסד שהרמה שלה מתעדכנת כשהמחיר נע לטובת העסקה, לפי מרחק או כלל שנקבעו מראש.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Breakeven",
+      "category": "ניהול סיכונים",
+      "definition": "נקודה שבה הרווח וההפסד מהעסקה מתאזנים. כדי להגיע לאיזון נטו צריך להביא בחשבון עמלות ועלויות נוספות.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Risk of Ruin",
+      "category": "ניהול סיכונים",
+      "definition": "הסיכוי שחשבון מסחר יגיע לרמת הפסד שהוגדרה ככישלון, בהתאם לשיטה, לגודל הסיכון ולרצף התוצאות.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Long Position",
+      "category": "פקודות וביצוע",
+      "definition": "עסקה שמרוויחה בדרך כלל כאשר מחיר הנכס עולה, ומפסידה כאשר הוא יורד, לפני עלויות.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "7.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "לונג"
+        },
+        {
+          "lesson": "8.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "לונג"
+        },
+        {
+          "lesson": "8.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "לונג"
+        }
+      ],
+      "lesson_count": 4,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Short Position",
+      "category": "פקודות וביצוע",
+      "definition": "עסקה שמרוויחה בדרך כלל כאשר מחיר הנכס יורד, ומפסידה כאשר הוא עולה, לפני עלויות.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "5.3",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "שורט"
+        },
+        {
+          "lesson": "7.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "שורט"
+        },
+        {
+          "lesson": "7.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "שורט"
+        },
+        {
+          "lesson": "8.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "שורט"
+        },
+        {
+          "lesson": "8.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "שורט"
+        }
+      ],
+      "lesson_count": 6,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Market Order",
+      "category": "פקודות וביצוע",
+      "definition": "פקודה לקנות או למכור בהקדם במחירים הזמינים בשוק. הביצוע אינו מובטח במחיר שמופיע על המסך.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Limit Order",
+      "category": "פקודות וביצוע",
+      "definition": "פקודה לקנות במחיר שנקבע או נמוך ממנו, או למכור במחיר שנקבע או גבוה ממנו. ייתכן שלא תבוצע.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Stop Order",
+      "category": "פקודות וביצוע",
+      "definition": "פקודה שמופעלת כשהמחיר מגיע לרמת טריגר שנקבעה מראש. דרך הביצוע תלויה בסוג הפקודה ובהגדרותיה.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Entry Price",
+      "category": "פקודות וביצוע",
+      "definition": "המחיר הממוצע שבו הפוזיציה נפתחה בפועל. במקרה של כמה ביצועים, המחיר עשוי להיות ממוצע משוקלל.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Commission",
+      "category": "פקודות וביצוע",
+      "definition": "תשלום שנגבה על ביצוע עסקה או שימוש בשירות מסחר. העמלה משפיעה על הרווח או ההפסד נטו.",
+      "occurrences": [
+        {
+          "lesson": "8.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "עמלות"
+        },
+        {
+          "lesson": "8.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "עמלות"
+        },
+        {
+          "lesson": "8.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "עמלות"
+        },
+        {
+          "lesson": "9.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "עמלה"
+        },
+        {
+          "lesson": "9.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "עמלות"
+        }
+      ],
+      "lesson_count": 5,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Liquidity",
+      "category": "פקודות וביצוע",
+      "definition": "היכולת לקנות או למכור נכס בכמות מסוימת במהירות יחסית, בלי לגרום לשינוי גדול במחיר.",
+      "occurrences": [
+        {
+          "lesson": "8.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "נזילות"
+        },
+        {
+          "lesson": "8.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "נזילות"
+        }
+      ],
+      "lesson_count": 2,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Swing High / Swing Low",
+      "category": "מבנה שוק",
+      "definition": "שיא מקומי או שפל מקומי בגרף, בהשוואה לנרות הסמוכים. הם עוזרים לזהות את מבנה תנועת המחיר.",
+      "occurrences": [
+        {
+          "lesson": "5.1",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "Swing High"
+        },
+        {
+          "lesson": "9.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "שיא מקומי"
+        }
+      ],
+      "lesson_count": 2,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Higher High / Higher Low",
+      "category": "מבנה שוק",
+      "definition": "שיא גבוה יותר (Higher High) או שפל גבוה יותר (Higher Low) לעומת שיא או שפל קודמים.",
+      "occurrences": [
+        {
+          "lesson": "4.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "שפלים עולים"
+        },
+        {
+          "lesson": "5.1",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "שיאים עולים"
+        },
+        {
+          "lesson": "5.3",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "שפלים עולים"
+        },
+        {
+          "lesson": "5.6",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "שפלים עולים"
+        },
+        {
+          "lesson": "6.5",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "שפלים עולים"
+        }
+      ],
+      "lesson_count": 5,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Lower High / Lower Low",
+      "category": "מבנה שוק",
+      "definition": "שיא נמוך יותר (Lower High) או שפל נמוך יותר (Lower Low) לעומת שיא או שפל קודמים.",
+      "occurrences": [
+        {
+          "lesson": "5.1",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "שפלים יורדים"
+        },
+        {
+          "lesson": "5.3",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "שיאים יורדים"
+        },
+        {
+          "lesson": "5.6",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "שפלים יורדים"
+        }
+      ],
+      "lesson_count": 3,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Market Structure",
+      "category": "מבנה שוק",
+      "definition": "האופן שבו השיאים והשפלים מסודרים בגרף. המבנה עוזר לזהות מגמה, טווח מסחר ושינוי אפשרי בכיוון.",
+      "occurrences": [
+        {
+          "lesson": "5.1",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "Market Structure"
+        },
+        {
+          "lesson": "6.1",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "מבנה שוק"
+        },
+        {
+          "lesson": "7.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "מבנה המחיר"
+        }
+      ],
+      "lesson_count": 3,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "False Breakout",
+      "category": "מבנה שוק",
+      "definition": "מצב שבו המחיר חוצה רמה חשובה, אך אינו מצליח להישאר מעבר לה וחוזר לצד הקודם שלה.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "5.4",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "פריצת שווא"
+        }
+      ],
+      "lesson_count": 2,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Trendline",
+      "category": "מבנה שוק",
+      "definition": "קו שמציירים על הגרף בין שיאים או שפלים נבחרים כדי להמחיש את כיוון התנועה. הוא כלי עזר, לא גבול מובטח.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "5.3",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "קו מגמה"
+        }
+      ],
+      "lesson_count": 2,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Multiple Timeframe Analysis (MTF)",
+      "category": "מבנה שוק",
+      "definition": "בדיקת אותו נכס בכמה טווחי זמן, למשל יומי ושעתי, כדי להבין גם את המגמה הרחבה וגם את התנועה הקרובה.",
+      "occurrences": [
+        {
+          "lesson": "5.6",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "Multi-Timeframe"
+        }
+      ],
+      "lesson_count": 1,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Volume",
+      "category": "מבנה שוק",
+      "definition": "כמות היחידות או החוזים שנסחרו בפרק זמן מסוים. בחלק משוקי המט״ח מוצג נפח טיקים ולא נפח עסקאות מלא.",
+      "occurrences": [
+        {
+          "lesson": "6.2",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "Volume"
+        },
+        {
+          "lesson": "6.8",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "Volume"
+        }
+      ],
+      "lesson_count": 2,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Hammer",
+      "category": "תבניות נוספות",
+      "definition": "נר בעל גוף קטן יחסית ופתיל תחתון ארוך. אחרי ירידה הוא עשוי להצביע על תגובת קונים, אך אינו מבטיח עלייה.",
+      "occurrences": [
+        {
+          "lesson": "4.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Hammer"
+        },
+        {
+          "lesson": "4.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Hammer"
+        },
+        {
+          "lesson": "4.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Hammer"
+        },
+        {
+          "lesson": "5.6",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "פטיש"
+        },
+        {
+          "lesson": "5.8",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "פטיש"
+        },
+        {
+          "lesson": "6.1",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "פטיש"
+        },
+        {
+          "lesson": "6.8",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "פטיש"
+        },
+        {
+          "lesson": "8.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "פטיש"
+        },
+        {
+          "lesson": "9.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "פטיש"
+        },
+        {
+          "lesson": "9.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "פטיש"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "Hammer"
+        }
+      ],
+      "lesson_count": 11,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Shooting Star",
+      "category": "תבניות נוספות",
+      "definition": "נר בעל גוף קטן יחסית ופתיל עליון ארוך. אחרי עלייה הוא עשוי להצביע על תגובת מוכרים, אך אינו מבטיח ירידה.",
+      "occurrences": [
+        {
+          "lesson": "4.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Shooting Star"
+        },
+        {
+          "lesson": "4.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Shooting Star"
+        }
+      ],
+      "lesson_count": 2,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Marubozu",
+      "category": "תבניות נוספות",
+      "definition": "נר בעל גוף גדול יחסית ופתילים קצרים מאוד או חסרים, שמעיד על תנועה חזקה בכיוון אחד באותה תקופה.",
+      "occurrences": [
+        {
+          "lesson": "4.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Marubozu"
+        },
+        {
+          "lesson": "4.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Marubozu"
+        }
+      ],
+      "lesson_count": 2,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Spinning Top",
+      "category": "תבניות נוספות",
+      "definition": "נר בעל גוף קטן יחסית ופתילים משני הצדדים. הוא עשוי להעיד על מאבק בין קונים למוכרים.",
+      "occurrences": [
+        {
+          "lesson": "4.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Spinning Top"
+        },
+        {
+          "lesson": "4.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Spinning Top"
+        },
+        {
+          "lesson": "4.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Spinning Top"
+        }
+      ],
+      "lesson_count": 3,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Engulfing",
+      "category": "תבניות נוספות",
+      "definition": "תבנית של שני נרות שבה גוף הנר השני מכסה את גוף הנר הראשון. הפרשנות תלויה בכיוון ובהקשר.",
+      "occurrences": [
+        {
+          "lesson": "2.5",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "4.6",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Engulfing"
+        },
+        {
+          "lesson": "4.8",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Engulfing"
+        },
+        {
+          "lesson": "4.9",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Engulfing"
+        },
+        {
+          "lesson": "4.11",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Engulfing"
+        },
+        {
+          "lesson": "4.12",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Engulfing"
+        },
+        {
+          "lesson": "5.8",
+          "source": "apps/terminal/public/wave-unit5-lessons.js",
+          "matched": "בולען"
+        },
+        {
+          "lesson": "7.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "בולען"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "Engulfing"
+        }
+      ],
+      "lesson_count": 9,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Harami",
+      "category": "תבניות נוספות",
+      "definition": "תבנית של שני נרות שבה גוף הנר השני קטן ונמצא בתוך גוף הנר הראשון. היא עשויה להעיד על האטה בתנועה.",
+      "occurrences": [
+        {
+          "lesson": "4.7",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Harami"
+        },
+        {
+          "lesson": "4.11",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Harami"
+        },
+        {
+          "lesson": "4.12",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Harami"
+        }
+      ],
+      "lesson_count": 3,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Long-Legged Doji",
+      "category": "תבניות נוספות",
+      "definition": "נר דוג׳י שמחירי הפתיחה והסגירה שלו קרובים מאוד, אך יש לו פתילים ארוכים משני הצדדים.",
+      "occurrences": [
+        {
+          "lesson": "4.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "Long-Legged Doji"
+        }
+      ],
+      "lesson_count": 1,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "SMA",
+      "category": "ממוצעים ומתנדים",
+      "definition": "ממוצע המחירים של מספר תקופות אחרונות, שבו לכל תקופה משקל שווה. למשל, SMA 20 מחשב את ממוצע 20 התקופות האחרונות.",
+      "occurrences": [
+        {
+          "lesson": "6.1",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "SMA"
+        },
+        {
+          "lesson": "6.6",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "ממוצע נע פשוט"
+        }
+      ],
+      "lesson_count": 2,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Stochastic Oscillator",
+      "category": "ממוצעים ומתנדים",
+      "definition": "מתנד שמראה היכן נמצא מחיר הסגירה ביחס לטווח המחירים האחרון, בדרך כלל בין 0 ל־100.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "CCI",
+      "category": "ממוצעים ומתנדים",
+      "definition": "מתנד שבודק עד כמה המחיר הטיפוסי רחוק מהממוצע שלו. משתמשים בו להערכת עוצמת התנועה וחריגות במחיר.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "3.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "6.4",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "CCI"
+        },
+        {
+          "lesson": "6.7",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "CCI"
+        },
+        {
+          "lesson": "6.8",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "CCI"
+        }
+      ],
+      "lesson_count": 5,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Momentum",
+      "category": "ממוצעים ומתנדים",
+      "definition": "הכוח והקצב של תנועת המחיר. מומנטום חיובי מעיד על תנופה כלפי מעלה, ושלילי על תנופה כלפי מטה.",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "6.4",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "מומנטום"
+        }
+      ],
+      "lesson_count": 2,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Win Rate",
+      "category": "סטטיסטיקה ובדיקות",
+      "definition": "אחוז העסקאות שהסתיימו ברווח מתוך כלל העסקאות שנבדקו. למשל, 6 עסקאות רווחיות מתוך 10 הן Win Rate של 60%.",
+      "occurrences": [
+        {
+          "lesson": "8.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "Win Rate"
+        },
+        {
+          "lesson": "9.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "Win Rate"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "אחוז הצלחה"
+        }
+      ],
+      "lesson_count": 3,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Expectancy",
+      "category": "סטטיסטיקה ובדיקות",
+      "definition": "הרווח או ההפסד הממוצע הצפוי לעסקה לאורך הרבה עסקאות, לפי שיעור ההצלחות וגודל הרווח וההפסד הממוצעים. תוחלת חיובית אינה מבטיחה רווח בכל עסקה.",
+      "occurrences": [
+        {
+          "lesson": "7.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "תוחלת"
+        },
+        {
+          "lesson": "8.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "תוחלת"
+        },
+        {
+          "lesson": "8.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "Expectancy"
+        },
+        {
+          "lesson": "8.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "תוחלת"
+        },
+        {
+          "lesson": "9.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "תוחלת"
+        },
+        {
+          "lesson": "9.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "תוחלת"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "תוחלת"
+        }
+      ],
+      "lesson_count": 7,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Profit Factor",
+      "category": "סטטיסטיקה ובדיקות",
+      "definition": "היחס בין סכום כל הרווחים לסכום כל ההפסדים, בערך מוחלט. למשל, רווחים של 2,000 ₪ והפסדים של 1,000 ₪ נותנים Profit Factor של 2.",
+      "occurrences": [
+        {
+          "lesson": "9.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "Profit Factor"
+        }
+      ],
+      "lesson_count": 1,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Backtest",
+      "category": "סטטיסטיקה ובדיקות",
+      "definition": "בדיקה של כללי מסחר על מחירי עבר, כדי לראות כיצד השיטה הייתה מתנהגת. תוצאות עבר אינן מבטיחות תוצאות עתידיות.",
+      "occurrences": [
+        {
+          "lesson": "4.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "בדיקה היסטורית"
+        },
+        {
+          "lesson": "4.10",
+          "source": "apps/terminal/public/assets/candlesticks-unit4/unit4-editorial-review.json",
+          "matched": "בדיקה היסטורית"
+        },
+        {
+          "lesson": "8.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "Backtest"
+        },
+        {
+          "lesson": "8.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "Backtest"
+        }
+      ],
+      "lesson_count": 4,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Out-of-Sample (OOS)",
+      "category": "סטטיסטיקה ובדיקות",
+      "definition": "נתונים היסטוריים שלא שימשו לבניית האסטרטגיה או לכוונון שלה. משתמשים בהם כדי לבדוק אם השיטה עובדת גם על נתונים חדשים עבורה.",
+      "occurrences": [
+        {
+          "lesson": "9.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "Out-of-Sample"
+        }
+      ],
+      "lesson_count": 1,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Look-Ahead Bias",
+      "category": "סטטיסטיקה ובדיקות",
+      "definition": "שגיאה בבדיקה היסטורית שבה נעשה שימוש במידע שלא היה ידוע בזמן העסקה. כך עלולות להתקבל תוצאות טובות מדי.",
+      "occurrences": [
+        {
+          "lesson": "3.5",
+          "source": "published_html",
+          "match_kind": "term_or_alias"
+        },
+        {
+          "lesson": "8.3",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "מידע עתידי"
+        },
+        {
+          "lesson": "9.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "מידע עתידי"
+        },
+        {
+          "lesson": "9.5",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "מידע עתידי"
+        }
+      ],
+      "lesson_count": 4,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "CPI",
+      "category": "מאקרו־כלכלה",
+      "definition": "מדד שמראה איך המחירים של סל מוצרים ושירותים לצרכן השתנו לאורך זמן. עלייה במדד מעידה בדרך כלל על אינפלציה.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Core CPI",
+      "category": "מאקרו־כלכלה",
+      "definition": "מדד המחירים לצרכן ללא מחירי מזון ואנרגיה, שנוטים להשתנות בחדות. הוא עוזר לבחון מגמות אינפלציה בסיסיות.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "PCE Price Index",
+      "category": "מאקרו־כלכלה",
+      "definition": "מדד אמריקאי שבודק שינוי במחירי המוצרים והשירותים שנצרכים במשקי הבית. הבנק המרכזי בארה״ב עוקב במיוחד אחרי מדד זה.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Federal Reserve (Fed)",
+      "category": "מאקרו־כלכלה",
+      "definition": "הבנק המרכזי של ארצות הברית, שאחראי בין היתר על מדיניות הריבית ועל יציבות המערכת הפיננסית.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "FOMC",
+      "category": "מאקרו־כלכלה",
+      "definition": "הוועדה בבנק המרכזי של ארה״ב שמקבלת החלטות מרכזיות על הריבית ועל המדיניות המוניטרית.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Interest Rate",
+      "category": "מאקרו־כלכלה",
+      "definition": "המחיר שמשלמים על הלוואת כסף, או מקבלים על חיסכון, בדרך כלל באחוזים לשנה. ריבית משפיעה על הלוואות, השקעות והמשק.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Nonfarm Payrolls (NFP)",
+      "category": "מאקרו־כלכלה",
+      "definition": "דוח חודשי בארה״ב שמציג את השינוי במספר המשרות במגזר הלא־חקלאי, למעט קבוצות מסוימות. הוא כלי מרכזי למעקב אחר מצב התעסוקה.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Unemployment Rate",
+      "category": "מאקרו־כלכלה",
+      "definition": "אחוז האנשים בכוח העבודה שאינם מועסקים, זמינים לעבודה ומחפשים עבודה לפי הגדרת הסקר.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "GDP",
+      "category": "מאקרו־כלכלה",
+      "definition": "הערך הכולל של המוצרים והשירותים הסופיים שיוצרו בתוך מדינה בתקופה מסוימת. הוא משמש למדידת היקף הפעילות הכלכלית.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Bond Yield",
+      "category": "מאקרו־כלכלה",
+      "definition": "התשואה הגלומה במחיר איגרת חוב ובתשלומים שהיא צפויה לשלם. יש כמה דרכים למדוד אותה, כמו תשואה שוטפת ותשואה לפדיון.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Yield",
+      "category": "מאקרו־כלכלה",
+      "definition": "הרווח או ההפסד מהשקעה ביחס לסכום שהושקע, בדרך כלל באחוזים. באיגרת חוב התשואה מושפעת גם ממחיר הקנייה ומהתשלומים שמתקבלים. כאשר מחיר אג״ח קבועת־ריבית יורד, התשואה שלה לפדיון בדרך כלל עולה, ולהפך.",
+      "occurrences": [
+        {
+          "lesson": "8.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit8/unit8-learning-content-review.json",
+          "matched": "תשואה"
+        }
+      ],
+      "lesson_count": 1,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Hawkish / Dovish",
+      "category": "מאקרו־כלכלה",
+      "definition": "ניצי (Hawkish): גישה שתומכת בריבית גבוהה או במדיניות שמרסנת אינפלציה. יוני (Dovish): גישה שתומכת במדיניות מקלה יותר לעידוד הפעילות הכלכלית.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Spot Market",
+      "category": "שווקים ומכשירים",
+      "definition": "שוק שבו קונים ומוכרים נכס במחיר הנוכחי, בדרך כלל למסירה או לסליקה בזמן קצר, ולא באמצעות חוזה עתידי.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Futures Contract",
+      "category": "שווקים ומכשירים",
+      "definition": "חוזה לקנייה או מכירה של נכס במועד עתידי לפי תנאים שנקבעו מראש. חוזים עתידיים נסחרים לרוב בבורסה וכוללים דרישות בטוחה.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "ETF",
+      "category": "שווקים ומכשירים",
+      "definition": "קרן השקעה שנסחרת בבורסה בדומה למניה, ובדרך כלל עוקבת אחר מדד או סל נכסים. יש גם קרנות שפועלות לפי אסטרטגיה פעילה.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Forex (FX)",
+      "category": "שווקים ומכשירים",
+      "definition": "שוק שבו קונים ומוכרים מטבעות של מדינות שונות, למשל אירו מול דולר (EUR/USD).",
+      "occurrences": [
+        {
+          "lesson": "6.2",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "מט״ח"
+        },
+        {
+          "lesson": "7.4",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "מט״ח"
+        }
+      ],
+      "lesson_count": 2,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "requires_human_review_of_matches"
+    },
+    {
+      "term": "Market Capitalization",
+      "category": "שווקים ומכשירים",
+      "definition": "שווי השוק הכולל של נכס סחיר. במניה: מחיר מניה כפול מספר המניות שבמחזור; במטבע קריפטו: מחיר מטבע כפול ההיצע שבמחזור.",
+      "occurrences": [],
+      "lesson_count": 0,
+      "scope_status": "not_explicitly_found_in_scanned_materials",
+      "semantic_status": "requires_human_review_of_matches"
+    }
+  ],
+  "known_issues": [
+    {
+      "lesson": "1.4",
+      "type": "punctuation",
+      "fixed_commit": "f0fa23dfeb7931e7b71723c5da2829f75e1fa042"
+    },
+    {
+      "lesson": "8.1",
+      "type": "bid_ask",
+      "fixed_commit": "06f5d507746ae3c29f7a841bcb9f4580e42ae665"
+    },
+    {
+      "lesson": "6.1",
+      "type": "archived_source_ema",
+      "note": "old source 07-01 discusses EMA; current published text uses SMA only"
+    }
+  ]
+}
