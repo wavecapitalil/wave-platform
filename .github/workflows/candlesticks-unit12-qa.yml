@@ -1,0 +1,46 @@
+name: Candlestick Course Unit 1–2 Visual & Exercise QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "apps/terminal/public/candlesticks-lesson-*.html"
+      - "apps/terminal/public/assets/candlesticks-unit2/**"
+      - "docs/course-workspace/reviews/COURSE_56_LESSON_QA_MATRIX_2026-11-11.json"
+      - "scripts/candlesticks_unit12_browser_qa.py"
+      - "scripts/check-candlesticks-unit12-complete-audit.mjs"
+      - ".github/workflows/candlesticks-unit12-qa.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  course-unit12-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Static source, figures and exercise checks
+        run: |
+          node scripts/check-candlesticks-unit12-complete-audit.mjs
+          node scripts/check-candlesticks-unit12-qa.mjs
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Playwright Chromium
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Exercise & illustration browser QA (desktop + mobile)
+        run: python scripts/candlesticks_unit12_browser_qa.py
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: candlesticks-unit12-browser-evidence
+          path: browser_qa/unit12/
+          retention-days: 14
