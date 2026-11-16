@@ -1,6 +1,14 @@
 name: Candlestick Course Unit 1–2 Visual & Exercise QA
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/terminal/public/candlesticks-lesson-*.html"
+      - "apps/terminal/public/assets/candlesticks-unit2/**"
+      - "scripts/candlesticks_unit12_browser_qa.py"
+      - "scripts/check-candlesticks-unit12-complete-audit.mjs"
+      - ".github/workflows/candlesticks-unit12-qa.yml"
   pull_request:
     branches: [main]
     paths:
