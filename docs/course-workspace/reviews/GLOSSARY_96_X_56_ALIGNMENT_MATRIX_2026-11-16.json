@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "date": "2026-11-16",
-  "scope": "96 glossary entries x 56 current lesson records; units 4 and 7–9 include review/prepublication content; occurrence matching is lexical and includes explicit aliases, not certification of semantic alignment",
+  "scope": "98 glossary entries x 56 lesson records (14 HTML; 42 indexed in unit datasets including preview/review sources)",
   "method": "English token and Hebrew aliases; early lessons use separate HTML scan PART_A. Absence does not prove topic is not taught; presence does not prove consistency.",
   "lesson_roster": [
     {
@@ -2692,9 +2692,54 @@
       "semantic_status": "requires_human_review_of_matches"
     },
     {
+      "term": "Confirmation",
+      "definition": "תנאי שהוגדר מראש ובודקים אם התקיים לפני שממשיכים עם תרחיש מסחר. אישור עשוי לחזק רעיון, אך אינו מבטיח את הצלחתו.",
+      "category": "פקודות וביצוע",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "apps/terminal/public/candlesticks-lesson-04.html",
+          "matched": "Confirmation"
+        },
+        {
+          "lesson": "7.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "תנאי אישור"
+        }
+      ],
+      "lesson_count": 2,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "manually_checked_key_meaning"
+    },
+    {
+      "term": "Invalidation",
+      "definition": "תנאי שמגדירים מראש כדי לדעת מתי רעיון המסחר כבר אינו תקף. למשל, ירידה מתחת לשפל שנבחר עשויה לבטל תרחיש של עלייה.",
+      "category": "פקודות וביצוע",
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "apps/terminal/public/candlesticks-lesson-04.html",
+          "matched": "Invalidation"
+        },
+        {
+          "lesson": "7.2",
+          "source": "apps/terminal/public/assets/candlesticks-unit7/unit7-learning-content-expanded-preview.json",
+          "matched": "תנאי ביטול"
+        },
+        {
+          "lesson": "9.1",
+          "source": "apps/terminal/public/assets/candlesticks-unit9/unit9-learning-content-review.json",
+          "matched": "תנאי ביטול"
+        }
+      ],
+      "lesson_count": 3,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "manually_checked_key_meaning"
+    },
+    {
       "term": "Risk–Reward",
       "category": "ניהול סיכונים",
-      "definition": "השוואה בין הסכום שמוכנים להפסיד בעסקה לבין הרווח האפשרי. למשל, סיכון של 100 ₪ מול יעד רווח של 200 ₪ הוא יחס סיכון־סיכוי של 1:2.",
+      "definition": "השוואה בין הרווח האפשרי להפסד המתוכנן בעסקה. למשל, יעד רווח של 200 ₪ מול סיכון של 100 ₪ נותן יחס סיכוי־סיכון (Reward-to-Risk) של 2:1. אם מציגים קודם את הסיכון, אותו מצב נכתב 1:2. חשוב לציין באיזה סדר מציגים את היחס.",
       "occurrences": [
         {
           "lesson": "1.4",
@@ -3748,10 +3793,21 @@
       "term": "Stochastic Oscillator",
       "category": "ממוצעים ומתנדים",
       "definition": "מתנד שמראה היכן נמצא מחיר הסגירה ביחס לטווח המחירים האחרון, בדרך כלל בין 0 ל־100.",
-      "occurrences": [],
-      "lesson_count": 0,
-      "scope_status": "not_explicitly_found_in_scanned_materials",
-      "semantic_status": "requires_human_review_of_matches"
+      "occurrences": [
+        {
+          "lesson": "1.4",
+          "source": "apps/terminal/public/candlesticks-lesson-04.html",
+          "matched": "Stochastic"
+        },
+        {
+          "lesson": "6.3",
+          "source": "apps/terminal/public/candlesticks-unit6-content.js",
+          "matched": "Stochastic"
+        }
+      ],
+      "lesson_count": 2,
+      "scope_status": "found_in_course_or_review_content",
+      "semantic_status": "manually_checked_alias"
     },
     {
       "term": "CCI",
@@ -4155,5 +4211,11 @@
       "type": "archived_source_ema",
       "note": "old source 07-01 discusses EMA; current published text uses SMA only"
     }
+  ],
+  "cautions": [
+    "Lexical matching is a coverage aid, not proof of definitional equivalence or exhaustive semantic review",
+    "Unit 4, 7, 8 and 9 sources include review/pending QA states",
+    "Draft source markdown from PDF is historic, not the approved published text; EMA remains in historic source only",
+    "Glossary includes enrichment concepts not formally taught in this candlestick course"
   ]
 }
