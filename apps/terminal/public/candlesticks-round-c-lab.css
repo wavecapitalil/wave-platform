@@ -1,0 +1,35 @@
+/* WAVE Round C — interactive replay + decision journal; scoped to avoid changing earlier lessons */
+.wave-round-c{border:1px solid #416f94;background:linear-gradient(150deg,#0c2843,#071c31);border-radius:18px;padding:clamp(17px,3vw,29px);margin:22px 0;color:#e8f2ff;direction:rtl}
+.wave-round-c h2{margin:0 0 9px;font-size:clamp(21px,2.3vw,26px);color:#a9d9ff;line-height:1.5}
+.wave-round-c p{line-height:1.85}
+.round-c-intro{max-width:78ch;margin:0 0 18px;color:#d0e4f5}
+.round-c-case-nav{display:flex;flex-wrap:wrap;gap:9px;margin:17px 0}
+.round-c-case{font:inherit;text-align:right;border:1px solid #4c7294;border-radius:10px;background:#123858;color:#e8f2ff;padding:10px 13px;cursor:pointer;font-size:14px}
+.round-c-case[aria-pressed=true]{background:#8bd1f9;color:#071b31;border-color:#bbe9ff;font-weight:700}
+.round-c-surface{min-width:0}
+.round-c-heading h3{font-size:20px;line-height:1.5;margin:20px 0 4px}
+.round-c-heading p{color:#c9dff1;margin:0 0 12px}
+.round-c-figure{background:#071b30;border:1px solid #365c7d;padding:7px;border-radius:14px;overflow:hidden}
+.round-c-figure svg{width:100%;height:auto;display:block}
+.round-c-label{font-size:13px;color:#a9cbe3;margin:8px 0 20px}
+.round-c-form{display:grid;gap:13px}
+.round-c-field{display:grid;gap:7px;font-size:14px;color:#e4f2fc}
+.round-c-field strong{font-size:15px}
+.round-c-input{display:block;box-sizing:border-box;width:100%;min-width:0;border:1px solid #5b85a9;background:#071d34;color:#f5faff;border-radius:10px;padding:12px 14px;font:inherit;font-size:15px;line-height:1.65;resize:vertical}
+.round-c-input::placeholder{color:#9db6cc}
+.round-c-primary,.round-c-secondary{font:inherit;font-weight:700;border-radius:10px;padding:11px 17px;cursor:pointer;max-width:100%;text-align:center}
+.round-c-primary{background:#83caff;color:#071a2e;border:1px solid #b5e7ff}
+.round-c-secondary{background:#194e74;color:#f2faff;border:1px solid #76a7c9}
+.round-c-status{font-size:13px;color:#afddfb}
+.round-c-hint{border-right:3px solid #6db7e9;padding:10px 15px;background:#102e4b;border-radius:8px;margin-top:18px}
+.round-c-review{background:#0c2945;border:1px solid #325e7e;border-radius:12px;padding:17px;margin:20px 0}
+.round-c-review h4,.round-c-feedback h4{margin:0 0 12px;font-size:18px;color:#b9e3ff}
+.round-c-review p{margin:7px 0;padding-bottom:6px;border-bottom:1px solid #244764;overflow-wrap:anywhere}
+.round-c-feedback{background:#0e343c;border:1px solid #48847c;border-radius:12px;padding:18px;margin:20px 0}
+.round-c-entry{border-bottom:1px solid #315876;padding:10px 0}
+.round-c-entry:last-child{border:0}
+.round-c-entry p{margin:3px 0;font-size:13px;color:#bdd5e7}
+.round-c-summary{font-weight:650;color:#b5e7ff}
+.round-c-journal-actions{display:flex;flex-wrap:wrap;gap:10px}
+.wave-round-c button:focus-visible,.wave-round-c textarea:focus-visible,.wave-round-c select:focus-visible{outline:3px solid #e2c987;outline-offset:3px}
+@media(max-width:650px){.round-c-case-nav{display:grid;grid-template-columns:1fr}.wave-round-c{padding:15px}.round-c-field strong{font-size:14px}.round-c-primary,.round-c-secondary{width:100%}}
