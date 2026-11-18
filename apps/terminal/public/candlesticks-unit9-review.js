@@ -94,6 +94,7 @@ function render(i){if(!data)return;active=Math.max(0,Math.min(data.lessons.lengt
  const goals=el('section','goals'),heading=el('h2',null,'מה נלמד בשיעור?'),ul=el('ul');
  lesson.goals.forEach(str=>{const li=el('li');bilingual(li,str);ul.append(li)});goals.append(heading,ul);body.append(goals);
  lesson.sections.forEach(section=>body.append(renderSection(section)));
+ if(window.WAVE_ROUND_C)window.WAVE_ROUND_C.mount(body,active);
  [...nav.querySelectorAll('button')].forEach((b,k)=>{b.classList.toggle('active',k===active);if(k===active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
  $('#prev').disabled=active===0;$('#next').disabled=active===data.lessons.length-1;
  completionUI();
