@@ -88,8 +88,17 @@ function completionUI(){
  button.addEventListener('click',()=>{try{localStorage.setItem(progressKey(active),completed(active)?'':'done')}catch(_){}paint()});
  panel.append(hint,button);document.querySelector('#main').insertBefore(panel,document.querySelector('#main .actions'));paint();
 }
+
+/* WAVE lesson-heading icon family: lightweight white circular SVGs, lessons 9.1–9.5. */
+const unit9TopicPaths=["<path d=\"M11 14H20M11 24H20M11 34H20\"/><path d=\"M9 13L11 15L15 11M9 23L11 25L15 21M9 33L11 35L15 31\"/><path d=\"M24 34L29 29L33 31L39 20M35 20H39V24\"/>","<path d=\"M11 35H39M14 31V24M20 28V18M26 23V11\"/><rect x=\"12\" y=\"25\" width=\"4\" height=\"5\" rx=\"1\"/><rect x=\"18\" y=\"20\" width=\"4\" height=\"7\" rx=\"1\"/><path d=\"M29 11V36\" stroke-dasharray=\"3 3\"/><path d=\"M32 15L38 21M38 15L32 21\"/><path d=\"M33 28H39\" opacity=\".45\"/>","<path d=\"M13 9H34A3 3 0 0 1 37 12V36A3 3 0 0 1 34 39H13A3 3 0 0 1 10 36V12A3 3 0 0 1 13 9Z\"/><path d=\"M15 15H31M15 21H20M15 27H20M15 33H25\"/><path d=\"M23 27L27 23L31 26L35 19\"/>","<path d=\"M10 36H38M13 30V23M20 30V17M27 30V20\"/><path d=\"M11 21L19 15L25 18L34 10\"/><circle cx=\"33\" cy=\"29\" r=\"7\"/><path d=\"M38 34L42 38\"/><path d=\"M30 30L33 26L36 29\"/>","<path d=\"M11 12H32L37 17V35A3 3 0 0 1 34 38H13A3 3 0 0 1 10 35V15A3 3 0 0 1 13 12Z\"/><path d=\"M31 12V19H37M16 23H29M16 28H25\"/><circle cx=\"32\" cy=\"33\" r=\"8\" fill=\"#102b49\"/><path d=\"M28 33L31 36L36 30\"/>"];
+function unit9TopicIcon(i){
+ const node=el('span','unit9-topic-icon');
+ node.setAttribute('aria-hidden','true');
+ node.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="2.5"/><g fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">'+unit9TopicPaths[i]+'</g></svg>';
+ return node;
+}
 function render(i){if(!data)return;active=Math.max(0,Math.min(data.lessons.length-1,i));const lesson=data.lessons[active];
- $('#lesson-title').textContent='9.'+(active+1)+' — '+lesson.title;$('#lesson-intro').textContent=lesson.intro;
+ const titleNode=$('#lesson-title');titleNode.replaceChildren(unit9TopicIcon(active),el('span','', '9.'+(active+1)+' — '+lesson.title));$('#lesson-intro').textContent=lesson.intro;
  body.replaceChildren();
  const goals=el('section','goals'),heading=el('h2',null,'מה נלמד בשיעור?'),ul=el('ul');
  lesson.goals.forEach(str=>{const li=el('li');bilingual(li,str);ul.append(li)});goals.append(heading,ul);body.append(goals);
