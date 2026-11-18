@@ -33,3 +33,10 @@ body{margin:0;background:radial-gradient(circle at 76% 0%,#102c51,#06172c 38%,#0
 .market-data-panel figure[hidden],.round-b-feedback[hidden]{display:none}
 .round-b-option:focus-visible,.round-b-retry:focus-visible,.round-b-fetch:focus-visible{outline:3px solid #b5e7ff;outline-offset:2px}
 @media(max-width:650px){.round-b-question{padding:13px}.round-b-option{width:100%;font-size:14px}.round-b-question h3{font-size:17px}.market-data-panel .market-source{font-size:12px}}
+
+/* Consistent Unit 4 topic icon family: white, circular, 52px heading / 42px mobile. */
+.hero-body h1.unit4-topic-heading{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.unit4-topic-heading .unit4-topic-icon{display:inline-flex;flex:0 0 52px;width:52px;height:52px;align-items:center;justify-content:center;color:#fff}
+.unit4-topic-heading .unit4-topic-icon svg{display:block;width:100%;height:100%}
+.unit4-topic-heading > span:last-child{min-width:0;flex:1 1 220px}
+@media(max-width:520px){.hero-body h1.unit4-topic-heading{gap:10px}.unit4-topic-heading .unit4-topic-icon{width:42px;height:42px;flex-basis:42px}.unit4-topic-heading > span:last-child{flex-basis:180px}}
