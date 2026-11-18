@@ -10,3 +10,26 @@ body{margin:0;background:radial-gradient(circle at 76% 0%,#102c51,#06172c 38%,#0
 
 .figure-pending[hidden]{display:none!important}
 .internal-figure img[hidden]{display:none!important}
+
+
+/* Round B: contextual practice with response-level feedback and verified OHLCV lab */
+.round-b-lab{border-color:#4a789a;background:linear-gradient(155deg,#102b47,#071f37)}
+.round-b-question{border:1px solid #416681;background:#0b243d;padding:19px;border-radius:13px;margin:20px 0}
+.round-b-question h3{font-size:19px;line-height:1.7;margin:0 0 10px;color:#f1f7ff}
+.round-b-options{border:0;padding:0;margin:0;display:grid;gap:10px;min-width:0}
+.round-b-options legend{font-size:13px;color:#9dc5e3;margin-bottom:8px}
+.round-b-option,.round-b-retry,.round-b-fetch{font:inherit;cursor:pointer;background:#16456d;border:1px solid #6495bc;border-radius:10px;color:#edf7ff;padding:10px 15px;text-align:right;transition:background .15s}
+.round-b-option:hover:not(:disabled),.round-b-fetch:hover{background:#245e88}
+.round-b-option.correct-answer{background:#0f4e43;border-color:#69cbb0}
+.round-b-option.incorrect-choice{background:#512f41;border-color:#e7a0aa}
+.round-b-option:disabled{cursor:default;opacity:1}
+.round-b-retry{font-size:13px;margin-top:12px;background:transparent}
+.round-b-feedback{border:1px solid #6a9d9c;background:#10353c;border-radius:11px;padding:13px 17px;margin-top:12px;line-height:1.85}
+.round-b-feedback p{margin:8px 0 0}
+.market-data-panel .market-source{display:inline-block;color:#9cd7ff;overflow-wrap:anywhere;margin-bottom:16px}
+.round-b-fetch{display:block;margin:10px 0 15px}
+.market-status{font-size:14px;color:#c2d9eb}
+.market-candles svg{display:block;width:100%;height:auto}
+.market-data-panel figure[hidden],.round-b-feedback[hidden]{display:none}
+.round-b-option:focus-visible,.round-b-retry:focus-visible,.round-b-fetch:focus-visible{outline:3px solid #b5e7ff;outline-offset:2px}
+@media(max-width:650px){.round-b-question{padding:13px}.round-b-option{width:100%;font-size:14px}.round-b-question h3{font-size:17px}.market-data-panel .market-source{font-size:12px}}
