@@ -88,7 +88,7 @@ function marketFigure(i){
    if(!response.ok)throw Error('HTTP '+response.status);
    const raw=await response.json();if(!Array.isArray(raw))throw Error('תגובה שאינה מערך');
    const min=Date.parse(start)/1000,max=Date.parse(end)/1000;
-   const seen=new Set(),bars=raw.filter(v=>Array.isArray(v)&&v.length>=6).map(v=>({t:Number(v[0]),l:Number(v[1]),h:Number(v[2]),o:Number(v[3]),c:Number(v[4]),volume:Number(v[5])})).filter(v=>[v.t,v.l,v.h,v.o,v.c,v.volume].every(Number.isFinite)&&v.t>=min&&v.t<max&&v.l>0&&v.h>=Math.max(v.o,v.c,v.l)&&v.l<=Math.min(v.o,v.c)&&v.volume>=0&&!(seen.has(v.t)||seen.add(v.t))).sort((a,b)=>a.t-b.t);
+   const seen=new Set(),bars=raw.filter(v=>Array.isArray(v)&&v.length>=6).map(v=>({t:Number(v[0]),l:Number(v[1]),h:Number(v[2]),o:Number(v[3]),c:Number(v[4]),volume:Number(v[5])})).filter(v=>[v.t,v.l,v.h,v.o,v.c,v.volume].every(Number.isFinite)&&v.t>=min&&v.t<max&&v.l>0&&v.h>=Math.max(v.o,v.c,v.l)&&v.l<=Math.min(v.o,v.c)&&v.volume>=0&&(!seen.has(v.t)&&Boolean(seen.add(v.t)))).sort((a,b)=>a.t-b.t);
    if(bars.length<12)throw Error('אין די נרות תקינים לתצוגה');
    const width=860,height=350,left=24,right=90,top=24,bottom=44;
    const lo=Math.min(...bars.map(v=>v.l)),hi=Math.max(...bars.map(v=>v.h)),range=Math.max(1,hi-lo);
