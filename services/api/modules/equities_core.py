@@ -442,39 +442,11 @@ def holders():
 
 
 # ── Sector strength (SPDR ETFs) ───────────────────────────────────────────────
-SECTORS = [
-    {'symbol': 'XLK',  'name': 'Technology'},
-    {'symbol': 'XLC',  'name': 'Comm. Services'},
-    {'symbol': 'XLY',  'name': 'Consumer Disc.'},
-    {'symbol': 'XLF',  'name': 'Financials'},
-    {'symbol': 'XLI',  'name': 'Industrials'},
-    {'symbol': 'XLV',  'name': 'Healthcare'},
-    {'symbol': 'XLP',  'name': 'Consumer Staples'},
-    {'symbol': 'XLB',  'name': 'Materials'},
-    {'symbol': 'XLE',  'name': 'Energy'},
-    {'symbol': 'XLRE', 'name': 'Real Estate'},
-    {'symbol': 'XLU',  'name': 'Utilities'},
-]
-
 @bp.route('/api/sectors')
 def sectors():
     try:
-        symbols = [s['symbol'] for s in SECTORS]
-        tickers = yf.download(symbols, period='5d', interval='1d', progress=False, auto_adjust=True)
-        closes = tickers['Close']
-        result = []
-        for s in SECTORS:
-            sym = s['symbol']
-            try:
-                col = closes[sym].dropna()
-                last = float(col.iloc[-1])
-                prev = float(col.iloc[-2]) if len(col) >= 2 else last
-                pct  = (last - prev) / prev * 100
-                result.append({'symbol': sym, 'name': s['name'], 'price': last, 'pct': pct})
-            except Exception:
-                pass
-        result.sort(key=lambda x: x['pct'], reverse=True)
-        return jsonify({'sectors': result})
+        from services.sector_pulse import collect_sector_rows
+        return jsonify(collect_sector_rows())
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
