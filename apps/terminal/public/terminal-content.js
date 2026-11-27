@@ -103,14 +103,20 @@ async function loadCalendar(){
 
 // ── SIDEBAR: Sector Pulse ─────────────────────────────────────────────────────
 async function loadSectorPulse(){
+  var el = document.getElementById('sectorPulse');
+  if(!el) return;
   try{
-    var r = await fetch(API+'/api/sectors');
+    var r = await fetch(API+'/api/sectors?t='+Date.now(), {cache:'no-store'});
+    if(!r.ok) throw new Error('sectors '+r.status);
     var d = await r.json();
-    var secs = (d.sectors||[]).slice(0,8);
-    var maxAbs = Math.max(...secs.map(function(s){return Math.abs(s.pct||0)}), 0.1);
+    var secs = (d.sectors||[]).filter(function(s){
+      return s && typeof s.pct === 'number' && isFinite(s.pct);
+    }).slice(0,8);
+    if(!secs.length) throw new Error(d.error || 'empty sectors');
+    var maxAbs = Math.max.apply(null, secs.map(function(s){ return Math.abs(s.pct); }).concat([0.1]));
     var SECTOR_NAMES = {XLK:'Technology',XLV:'Healthcare',XLF:'Financials',XLY:'Cons. Discr.',XLP:'Cons. Staples',XLE:'Energy',XLI:'Industrials',XLB:'Materials',XLRE:'Real Estate',XLU:'Utilities',XLC:'Comm. Services'};
-    document.getElementById('sectorPulse').innerHTML = secs.map(function(s){
-      var pct = s.pct||0;
+    el.innerHTML = secs.map(function(s){
+      var pct = s.pct;
       var w   = Math.round(Math.abs(pct)/maxAbs*100);
       var col = pct>=0?'#22c55e':'#ef4444';
       var sym = SECTOR_NAMES[s.symbol] || s.symbol;
@@ -120,7 +126,31 @@ async function loadSectorPulse(){
         +'<div class="sector-bar-pct" style="color:'+col+'">'+(pct>=0?'+':'')+pct.toFixed(1)+'%</div>'
         +'</div>';
     }).join('');
-  }catch(e){}
+    if(window.WaveDataLog){
+      var meta = d.meta || {};
+      WaveDataLog.record('home:sector-pulse', {
+        section: 'Home',
+        metric: 'Sector pulse',
+        source: meta.source || 'Yahoo Finance chart API regular session',
+        pulledAt: meta.source_timestamp || meta.calculated_at || '',
+        coverage: [d.session || '', (d.sectors||[]).map(function(s){ return s.symbol; }).join(' ')].filter(Boolean).join(' · '),
+        notes: 'SPDR sector ETF regular-session price versus the prior completed session close. The home tile shows the eight largest moves. The latest session is kept when the market is closed. No sample values are substituted.',
+        links: [{title: 'Yahoo Finance chart XLK', url: 'https://query1.finance.yahoo.com/v8/finance/chart/XLK?range=10d&interval=1d&includePrePost=false'}],
+        skipSources: true
+      });
+    }
+  }catch(e){
+    if(window.WaveDataLog){
+      WaveDataLog.record('home:sector-pulse', {
+        section: 'Home',
+        metric: 'Sector pulse',
+        source: 'Yahoo Finance chart API regular session',
+        notes: 'Sector request failed. Bars already on screen stay. No sample values are substituted. ' + (e && e.message ? e.message : ''),
+        skipSources: true
+      });
+    }
+    if(!el.querySelector('.sector-bar-row')) el.replaceChildren();
+  }
 }
 
 // ── News Carousel ──────────────────────────────────────────

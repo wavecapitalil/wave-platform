@@ -1507,9 +1507,10 @@ async function loadSectors(){
   document.getElementById('sectorsUpdated').textContent = 'Loading...';
   document.getElementById('sectorBars').innerHTML = '<div style="color:#334155;font-size:12px;padding:20px 0">Fetching sector data...</div>';
   try{
-    var r = await fetch(API + '/api/sectors');
+    var r = await fetch(API + '/api/sectors?t=' + Date.now(), {cache:'no-store'});
+    if(!r.ok) throw new Error('sectors ' + r.status);
     var d = await r.json();
-    if(d.error) throw new Error(d.error);
+    if(d.error || !d.sectors || !d.sectors.length) throw new Error(d.error || 'empty sectors');
     var sectors = d.sectors;
     var maxAbs = Math.max.apply(null, sectors.map(function(s){ return Math.abs(s.pct); }));
     maxAbs = Math.max(maxAbs, 1);
@@ -1535,7 +1536,7 @@ async function loadSectors(){
     });
     document.getElementById('sectorBars').innerHTML = html;
     document.getElementById('sectorsUpdated').textContent = '';
-    if(window.WaveDataLog)WaveDataLog.record('sectors:pull',{section:'Sector Strength',metric:'Sector performance',source:'Sector ETFs',pulledAt:new Date().toISOString(),skipSources:true});
+    if(window.WaveDataLog)WaveDataLog.record('sectors:pull',{section:'Sector Strength',metric:'Sector performance',source:(d.meta&&d.meta.source)||'Yahoo Finance chart API regular session',pulledAt:(d.meta&&(d.meta.source_timestamp||d.meta.calculated_at))||'',coverage:d.session||'',notes:'SPDR sector ETF regular-session price versus the prior completed session close.',links:[{title:'Yahoo Finance chart XLK',url:'https://query1.finance.yahoo.com/v8/finance/chart/XLK?range=10d&interval=1d&includePrePost=false'}],skipSources:true});
   }catch(e){
     document.getElementById('sectorBars').innerHTML = '<div style="color:#ef4444;font-size:12px;padding:20px 0">Error: ' + e.message + '</div>';
     document.getElementById('sectorsUpdated').textContent = 'Failed to load';

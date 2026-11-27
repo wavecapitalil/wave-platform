@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 import math
 import requests
 import pandas as pd
@@ -32,13 +33,6 @@ MARKET_SYMBOLS = {
     "BTC": "BTC-USD",
     "ETH": "ETH-USD",
 }
-
-SECTORS = [
-    ("XLK", "Technology"), ("XLC", "Comm. Services"), ("XLY", "Consumer Disc."),
-    ("XLF", "Financials"), ("XLI", "Industrials"), ("XLV", "Healthcare"),
-    ("XLP", "Consumer Staples"), ("XLB", "Materials"), ("XLE", "Energy"),
-    ("XLRE", "Real Estate"), ("XLU", "Utilities"),
-]
 
 SEASONALITY_SYMBOLS = ["SPY","QQQ","GLD","BTC-USD","IWM","TLT","USO","EEM","DX-Y.NYB","^TNX"]
 
@@ -151,18 +145,17 @@ def collect_risk() -> dict:
 
 
 def collect_sectors() -> dict:
-    symbols=[s for s,_ in SECTORS]
-    raw=yf.download(symbols,period="5d",interval="1d",progress=False,auto_adjust=True)
-    rows=[]
-    for sym,name in SECTORS:
-        try:
-            s=_series(raw,sym)
-            last=float(s.iloc[-1]); prev=float(s.iloc[-2]) if len(s)>1 else last
-            rows.append({"symbol":sym,"name":name,"price":round(last,4),"pct":round((last-prev)/prev*100 if prev else 0,4)})
-        except Exception:
-            pass
-    rows.sort(key=lambda x:x["pct"],reverse=True)
-    return {"data":{"sectors":rows},"source":"Yahoo Finance via yfinance","source_timestamp":_now().isoformat(),"logic_version":"sector_strength_v1.0"}
+    # Load by file path. `services` at the repo root is a different package
+    # from services/api/services, and the data-engine runner puts the repo
+    # root on sys.path first.
+    import importlib.util
+    path = Path(__file__).resolve().parents[1] / "services" / "sector_pulse.py"
+    spec = importlib.util.spec_from_file_location("wave_sector_pulse", path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"sector pulse module missing: {path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.collect_sectors()
 
 
 def collect_rates() -> dict:
