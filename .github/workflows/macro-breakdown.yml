@@ -1,0 +1,42 @@
+name: JOLTS industry breakdown refresh
+
+on:
+  schedule:
+    # JOLTS is released at 10:00 America/New_York. Tuesday covers the usual
+    # release morning; Wednesday is the catch-up if the API is late.
+    # Two BLS v1 calls per week stay inside the keyless daily limit.
+    - cron: "30 15 * * 2"
+    - cron: "30 15 * * 3"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: macro-breakdown-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Fetch BLS JOLTS industry levels and validate the partition
+        run: |
+          node scripts/macro_breakdown.mjs --write
+          node scripts/macro_breakdown.mjs --check
+      - name: Publish a changed public snapshot
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/terminal/public/data/macro-breakdowns/jolts.json apps/terminal/public/data/macro-breakdowns/registry.json
+          if ! git diff --staged --quiet; then
+            git commit -m "data(macro): refresh JOLTS industry breakdown"
+            git push origin HEAD:main
+          fi

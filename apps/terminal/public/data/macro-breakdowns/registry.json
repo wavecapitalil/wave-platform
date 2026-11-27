@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "indicators": {
+    "jolts": {
+      "file": "jolts.json",
+      "kind": "level_change"
+    }
+  }
+}

@@ -102,8 +102,24 @@ async def check(browser,width,lang):
     await page.keyboard.press('Escape')
     await page.locator('#page-macro').evaluate('(e)=>{for(let p=e;p;p=p.parentElement)p.scrollTop=0;window.scrollTo(0,0)}')
     await page.screenshot(path=str(OUT/f'{width}-{lang}-overview.png'),full_page=True)
+    await page.locator('[data-macro-id=jolts]').click()
+    await page.locator('.macro-breakdown tbody tr').nth(10).wait_for()
+    assert await page.locator('.macro-breakdown tbody tr').count()==11
+    assert await page.locator('.macro-breakdown-bars .macro-breakdown-bar').count()==11
+    breakdown=await page.locator('.macro-breakdown').inner_text()
+    assert ('בנייה' in breakdown and 'אלפי משרות פנויות' in breakdown) if lang=='he' else ('Construction' in breakdown and 'Thousands of openings' in breakdown)
+    assert 'residual' not in breakdown.lower() and 'rounding' not in breakdown.lower() and 'fred' not in breakdown.lower()
+    assert await page.locator('.macro-breakdown .macro-breakdown-up').count()>0
+    assert await page.locator('.macro-breakdown .macro-breakdown-down').count()>0
+    assert await page.locator('#macroDialog').evaluate('(e)=>e.scrollWidth<=e.clientWidth+2')
+    await page.locator('.macro-breakdown').scroll_into_view_if_needed()
+    await page.screenshot(path=str(OUT/f'{width}-{lang}-jolts.png'))
+    await page.keyboard.press('Escape')
     await page.evaluate("navigate('sources')")
-    assert 'US Macro' in await page.locator('#sourcesContent').inner_text()
+    sources=await page.locator('#sourcesContent').inner_text()
+    assert 'US Macro' in sources and 'JTS000000000000000JOL' in sources
+    await page.evaluate("navigate('data-log')")
+    assert 'JOLTS' in await page.locator('#dataLogContent').inner_text()
     mode['fail']=True
     await page.evaluate("navigate('macro')")
     await page.locator('#macroDashboard [role=alert]').wait_for()

@@ -1,7 +1,7 @@
 /* US macro overview. Closed cards intentionally contain headline data only. */
 (function(){
   'use strict';
-  var state={series:[],histories:{},components:{},generation:0}, opener=null, selected=null;
+  var state={series:[],histories:{},components:{},breakdownRegistry:null,breakdowns:{},generation:0}, opener=null, selected=null, registryPromise=null;
   function he(){return document.documentElement.lang==='he'||localStorage.getItem('wc_lang')==='he';}
   function t(en,heb){return he()?heb:en;}
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -234,6 +234,7 @@
     registerNotes(s,h);
     html+='<h3>'+t('Current revised history','היסטוריה לפי הנתונים המעודכנים')+'</h3>'+chart(h.points,true,s.unit)+nextRelease(s,h);
     if(h.points.length)html+='<details><summary>'+t('Observation values','ערכי התצפיות')+'</summary>'+table([t('Reference period','תקופת ייחוס'),s.unit],h.points.map(function(p){return [p.period,precise(p.value)];}))+'</details>';
+    html+=breakdownSection(s);
     html+='<h3>'+t('Verified release snapshots','גרסאות פרסום מאומתות')+'</h3>';
     if(r){
       html+='<label for="macroReleaseSelect">'+t('Release / vintage','פרסום / גרסה')+'</label> <select id="macroReleaseSelect">'+s.releases.slice().reverse().map(function(x){return '<option value="'+esc(x.id)+'"'+(x.id===r.id?' selected':'')+'>'+esc(formatDay(x.vintage,false)+' · '+formatPeriod(x.period,s.frequency))+'</option>';}).join('')+'</select>';
@@ -289,9 +290,79 @@
     registerNotes(s,state.histories[id]);
     if(selected===id&&document.getElementById('macroDialog').open)details();
   }
-  function open(id,button){selected=id;opener=button;details();loadComponents(id);document.getElementById('macroDialog').showModal();document.getElementById('macroDialogClose').focus();}
+  function monthLabel(period){return new Intl.DateTimeFormat(he()?'he-IL':'en-US',{timeZone:'UTC',month:'short',year:'numeric'}).format(new Date(period+'T00:00:00Z'));}
+  function signed(n){
+    if(typeof n!=='number'||!Number.isFinite(n))return '—';
+    var body=Math.abs(n).toLocaleString(he()?'he-IL':'en-US',{maximumFractionDigits:0});
+    return n>0?'+'+body:n<0?'−'+body:body;
+  }
+  function changeClass(n){return typeof n!=='number'||!Number.isFinite(n)||n===0?'macro-breakdown-flat':n>0?'macro-breakdown-up':'macro-breakdown-down';}
+  function breakdownRows(period){
+    return period.rows.slice().sort(function(a,b){
+      var ac=typeof a.change==='number'?a.change:Number.NEGATIVE_INFINITY,bc=typeof b.change==='number'?b.change:Number.NEGATIVE_INFINITY;
+      return bc-ac||String(a.name).localeCompare(String(b.name));
+    });
+  }
+  function breakdownBars(rows){
+    var max=Math.max.apply(null,[1].concat(rows.map(function(r){return Math.abs(typeof r.change==='number'?r.change:0);})));
+    return '<div class="macro-breakdown-bars" aria-hidden="true">'+rows.map(function(r){
+      var width=typeof r.change==='number'?Math.abs(r.change)/max*100:0,cls=changeClass(r.change);
+      return '<div class="macro-breakdown-bar"><span>'+esc(he()?r.he:r.name)+'</span><div class="track"><i class="'+cls+'" style="width:'+width.toFixed(1)+'%"></i></div><b class="'+cls+'" dir="ltr">'+esc(signed(r.change))+'</b></div>';
+    }).join('')+'</div>';
+  }
+  function breakdownTable(headers,rows){
+    return '<div class="macro-table-wrap"><table><thead><tr>'+headers.map(function(x){return '<th scope="col">'+esc(x)+'</th>';}).join('')+'</tr></thead><tbody>'+rows.map(function(row){return '<tr>'+row.map(function(cell){return '<td'+(cell.cls?' class="'+esc(cell.cls)+'"':'')+(cell.ltr?' dir="ltr"':'')+'>'+esc(cell.text)+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table></div>';
+  }
+  function breakdownSection(s){
+    var spec=state.breakdownRegistry&&state.breakdownRegistry.indicators&&state.breakdownRegistry.indicators[s.id];
+    if(!spec)return '';
+    var data=state.breakdowns[s.id],title=data&&data.title?t(data.title.en,data.title.he):t('Industry breakdown','פירוק לפי ענף');
+    var html='<section class="macro-breakdown" data-breakdown="'+esc(s.id)+'"><h3>'+esc(title)+'</h3>';
+    if(!data||data.status==='loading')return html+'<p role="status">'+t('Loading','טוען')+'</p></section>';
+    var period=data.periods&&data.periods[data.periods.length-1];
+    if(!period||spec.kind!=='level_change'||data.kind!=='level_change')return html+'<p role="status">'+t('Unavailable','לא זמין')+'</p></section>';
+    var rows=breakdownRows(period);
+    html+='<p class="macro-breakdown-unit">'+esc(t(data.unit.en,data.unit.he))+'</p>';
+    html+=breakdownBars(rows);
+    html+=breakdownTable([t('Industry','ענף'),monthLabel(period.period)+(period.preliminary?' (p)':''),monthLabel(period.prior_period),t('Change','שינוי')],rows.map(function(r){return [{text:he()?r.he:r.name},{text:num(r.value),ltr:true},{text:num(r.prior),ltr:true},{text:signed(r.change),cls:changeClass(r.change),ltr:true}];}));
+    return html+'</section>';
+  }
+  function registerBreakdown(s,data){
+    var last=data.periods&&data.periods[data.periods.length-1];
+    var links=(data.series||[]).filter(function(row){return row&&/^https:\/\//.test(row.url||'');}).map(function(row){return {title:(row.name||row.series)+' · '+row.series,url:row.url};});
+    var notes=[data.table||'',data.unit&&data.unit.en||'','History basis: '+(data.history_basis||'latest_revised')+'.',last?'Latest '+last.period+' headline '+last.headline+' · industry sum '+last.sum+' · residual '+last.residual+' · bound '+data.rounding_bound+'.':'','Fetched '+(data.fetched_at||'unavailable')+'.','Series: '+(data.series||[]).map(function(row){return row.series;}).join(', ')].filter(Boolean).join('\n');
+    if(window.WaveSources)WaveSources.record('macro-breakdown:'+s.id,'US Macro · '+((data.title&&data.title.en)||s.name),notes,links);
+    if(window.WaveDataLog)WaveDataLog.record('macro-breakdown:'+s.id,{section:'US Macro',metric:((data.title&&data.title.en)||s.name)+' · industry breakdown',source:data.source||'BLS',pulledAt:data.fetched_at||'',coverage:last?last.period.slice(0,7)+(last.preliminary?' preliminary':''):'',notes:notes,links:links,skipSources:true});
+  }
+  function ensureRegistry(){
+    if(state.breakdownRegistry)return Promise.resolve(state.breakdownRegistry);
+    if(registryPromise)return registryPromise;
+    var generation=state.generation;
+    registryPromise=fetch('data/macro-breakdowns/registry.json').then(function(response){if(!response.ok)throw Error('Unavailable');return response.json();}).then(function(data){if(!data||typeof data.indicators!=='object'||!data.indicators)throw Error('Invalid registry');if(generation!==state.generation)return {indicators:{}};state.breakdownRegistry=data;return data;}).catch(function(){if(generation!==state.generation)return {indicators:{}};state.breakdownRegistry={indicators:{}};return state.breakdownRegistry;});
+    return registryPromise;
+  }
+  async function loadBreakdown(id){
+    var generation=state.generation,registry=await ensureRegistry();
+    if(generation!==state.generation)return;
+    var spec=registry.indicators&&registry.indicators[id];
+    if(!spec||!/^[a-z0-9_-]+\.json$/.test(spec.file||''))return;
+    var existing=state.breakdowns[id];
+    if(existing&&(existing.status==='loading'||(existing.periods&&existing.periods.length)))return;
+    state.breakdowns[id]={status:'loading'};
+    if(selected===id&&document.getElementById('macroDialog').open)details();
+    var data;
+    try{var response=await fetch('data/macro-breakdowns/'+spec.file);if(!response.ok)throw Error('Unavailable');data=await response.json();if(data.id!==id||data.kind!==spec.kind||!Array.isArray(data.periods))throw Error('Invalid breakdown');}
+    catch(e){data={id:id,status:'unavailable',periods:[]};}
+    if(generation!==state.generation)return;
+    state.breakdowns[id]=data;
+    var s=state.series.find(function(x){return x.id===id;});
+    if(s&&data.periods&&data.periods.length)registerBreakdown(s,data);
+    if(selected===id&&document.getElementById('macroDialog').open)details();
+  }
+  function open(id,button){selected=id;opener=button;details();loadComponents(id);loadBreakdown(id);document.getElementById('macroDialog').showModal();document.getElementById('macroDialogClose').focus();}
   window.loadMacroDashboard=async function(){
     var generation=++state.generation,host=document.getElementById('macroDashboard');
+    state.breakdownRegistry=null;state.breakdowns={};registryPromise=null;ensureRegistry();
     if(document.getElementById('macroDialog').open)document.getElementById('macroDialog').close();
     host.innerHTML='<p role="status">'+t('Loading US indicators…','טוען מדדי ארה״ב…')+'</p>';
     try{

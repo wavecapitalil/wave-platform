@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {MACRO_SERIES,catalogue,parseHistory,validateRelease,releaseSet,history} from '../supabase/functions/wave-data/macro.ts';
+import {BREAKDOWNS,ROUNDING_BOUND,buildBreakdown,checkFiles} from './macro_breakdown.mjs';
 import {MACRO_RELEASES} from '../supabase/functions/wave-data/macro-releases.ts';
 const now=Date.parse('2026-10-14T20:00:00Z');
 const clone=x=>structuredClone(x);
@@ -148,4 +149,49 @@ test('official October CPI missing annual base is not overdue and never changes 
   assert.deepEqual(calendarFreshness(id,'2026-10-01',after).unavailable_periods,[]);
  }
  assert.deepEqual(calendarFreshness('pce','2026-09-01',after).unavailable_periods,[]);
+});
+
+test('JOLTS industry breakdown is a disjoint BLS partition and reconciles within rounding',()=>{
+ const spec=BREAKDOWNS.jolts;
+ assert.deepEqual(Object.keys(BREAKDOWNS),['jolts']);
+ assert.deepEqual(spec.industries.map(row=>row.series),['JTS110099000000000JOL','JTS230000000000000JOL','JTS300000000000000JOL','JTS400000000000000JOL','JTS510000000000000JOL','JTS510099000000000JOL','JTS540099000000000JOL','JTS600000000000000JOL','JTS700000000000000JOL','JTS810000000000000JOL','JTS900000000000000JOL']);
+ assert.equal(spec.headline.series,'JTS000000000000000JOL');
+ assert.equal(spec.headline.fred,'JTSJOL');
+ checkFiles();
+ const base=Array(spec.industries.length).fill(100);
+ function point(period,value,prelim){return {year:period.slice(0,4),period:'M'+period.slice(5,7),value:String(value),footnotes:prelim?[{code:'P',text:'preliminary'}]:[]};}
+ function payload(months){
+  const ids=[spec.headline.series,...spec.industries.map(row=>row.series)];
+  const grouped=Object.fromEntries(ids.map(id=>[id,[]]));
+  for(const month of months){
+   grouped[spec.headline.series].push(point(month.period,month.headline,month.prelim));
+   spec.industries.forEach((row,index)=>grouped[row.series].push(point(month.period,month.values[index])));
+  }
+  return {status:'REQUEST_SUCCEEDED',message:['Unable to get Catalog Data for series '+spec.headline.series],Results:{series:ids.map(id=>({seriesID:id,data:grouped[id]}))}};
+ }
+ const months=[{period:'2026-08-01',headline:1100,values:base},{period:'2026-09-01',headline:1137,values:base.map((value,index)=>index===1?136:value),prelim:true}];
+ const doc=buildBreakdown(spec,payload(months),'2026-11-27T00:00:00.000Z',null);
+ const latest=doc.periods.at(-1);
+ assert.equal(latest.residual,1);assert.equal(latest.sum,1136);assert.equal(latest.rows[1].change,36);assert.equal(latest.preliminary,true);
+ assert.equal(doc.periods[0].rows[0].prior,null);assert.equal(doc.periods[0].rows[0].change,null);
+ assert.equal(doc.headline_crosscheck.status,'unavailable');assert.ok(Math.abs(latest.residual)<=ROUNDING_BOUND);
+ const gap=buildBreakdown(spec,payload([{period:'2026-08-01',headline:1100,values:base},{period:'2026-10-01',headline:1100,values:base}]),'2026-11-27T00:00:00.000Z',null);
+ assert.equal(gap.periods[1].rows[0].prior,null);assert.equal(gap.periods[1].rows[0].change,null);
+ assert.throws(()=>buildBreakdown(spec,payload([{period:'2026-08-01',headline:2000,values:base}]),'2026-11-27T00:00:00.000Z',null),/reconcile/);
+ const missing=payload([{period:'2026-08-01',headline:1100,values:base}]);
+ missing.Results.series=missing.Results.series.filter(series=>series.seriesID!==spec.industries[0].series);
+ assert.throws(()=>buildBreakdown(spec,missing,'2026-11-27T00:00:00.000Z',null),/Missing/);
+ const duplicate=payload([{period:'2026-08-01',headline:1100,values:base}]);
+ duplicate.Results.series[0].data.push(duplicate.Results.series[0].data[0]);
+ assert.throws(()=>buildBreakdown(spec,duplicate,'2026-11-27T00:00:00.000Z',null),/Duplicate/);
+ const decimal=payload([{period:'2026-08-01',headline:1100,values:base}]);
+ decimal.Results.series[1].data[0].value='100.5';
+ assert.throws(()=>buildBreakdown(spec,decimal,'2026-11-27T00:00:00.000Z',null),/Invalid BLS/);
+ const rejected=payload([{period:'2026-08-01',headline:1100,values:base}]);
+ rejected.message=['Series does not exist for Series JTS110099000000000JOL'];
+ assert.throws(()=>buildBreakdown(spec,rejected,'2026-11-27T00:00:00.000Z',null),/rejected/);
+ const fred='DATE,JTSJOL\n2026-08-01,1100\n2026-09-01,1137\n';
+ const matched=buildBreakdown(spec,payload(months),'2026-11-27T00:00:00.000Z',fred);
+ assert.equal(matched.headline_crosscheck.status,'matched');assert.equal(matched.headline_crosscheck.max_abs_difference,0);assert.equal(matched.headline_crosscheck.compared_periods,2);
+ assert.throws(()=>buildBreakdown(spec,payload([{period:'2026-08-01',headline:1100,values:base}]),'2026-11-27T00:00:00.000Z','DATE,JTSJOL\n2026-08-01,1101\n'),/FRED headline/);
 });
