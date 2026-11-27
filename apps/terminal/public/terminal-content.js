@@ -149,7 +149,10 @@ async function loadSectorPulse(){
         skipSources: true
       });
     }
-    if(!el.querySelector('.sector-bar-row')) el.replaceChildren();
+    if(!el.querySelector('.sector-bar-row')){
+      var label = (typeof t==='function') ? t('home.sectorUnavailable','Unavailable') : 'Unavailable';
+      el.innerHTML = '<div style="color:#334155;font-size:11px" data-i18n="home.sectorUnavailable">'+label+'</div>';
+    }
   }
 }
 

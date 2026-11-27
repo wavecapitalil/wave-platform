@@ -137,6 +137,7 @@
     'home.fullBrief':     {en:'Full Brief →',    he:'תדריך מלא ←'},
     'home.calendar':      {en:"📅 Today's Calendar", he:'📅 לוח שנה להיום'},
     'home.sectorPulse':   {en:'📊 Sector Pulse', he:'📊 דופק סקטורים'},
+    'home.sectorUnavailable': {en:'Unavailable', he:'לא זמין'},
     'home.seeAll':        {en:'See all →',       he:'הצג הכל ←'},
 
     'hero.title':      {en:'Wave Capital',    he:'Wave Capital'},
