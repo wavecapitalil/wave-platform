@@ -2,10 +2,10 @@ name: Sector pulse
 
 on:
   schedule:
-    # Every 30 minutes from 13:11 through 21:41 UTC, weekdays.
-    # Covers the NYSE cash session in both EST (14:30–21:00 UTC) and EDT
-    # (13:30–20:00 UTC), including the 13:00 ET early close, and one pass
-    # after the regular close. Outside this window the last session is kept.
+    # Secondary publisher. GitHub drops most scheduled ticks, so the live
+    # refresh is the wave-data /api/sectors read, not this cron. This run
+    # still publishes when a tick arrives: every 30 minutes from 13:11
+    # through 21:41 UTC on weekdays.
     - cron: "11,41 13-21 * * 1-5"
   workflow_dispatch:
 
@@ -34,9 +34,17 @@ jobs:
       - name: Install data dependencies
         run: pip install -r services/api/requirements.txt
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
       - name: Sector session unit tests
         working-directory: services/api/data_engine
         run: python -m unittest -v test_sectors.py
+
+      - name: Sector on-demand refresh tests
+        working-directory: .
+        run: node --experimental-strip-types --test scripts/sector_pulse_test.mjs
 
       - name: Refresh sector snapshot
         run: python services/api/data_engine/run.py --output artifacts/data_snapshots.json --only sectors:sp500 --force

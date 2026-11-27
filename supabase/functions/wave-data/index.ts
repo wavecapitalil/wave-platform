@@ -13,6 +13,7 @@ import {historicalPEWithAvailability} from './historical-pe.ts';
 import {createHistoricalPriceLoader} from './historical-price-cache.ts';
 import {insiderFilingLinks,statementSeries,collectResearchSeasonality,collectDailyTape} from './research-data.ts';
 import {createCompanyFactsLoader} from './company-facts.ts';
+import {SECTOR_DATASET, SECTOR_LOCK, LOCK_MS, LOGIC_VERSION, needsRefresh, collectSectorRows, snapshotRecord, lockRecord} from './sector-pulse.ts';
 
 const SUPABASE_URL=Deno.env.get("SUPABASE_URL")!;
 const ANON=Deno.env.get("SUPABASE_ANON_KEY")!;
@@ -71,6 +72,44 @@ async function snapshotResponse(key:string, transform?:(data:any,row:any)=>any){
   if(!row) return json({error:"snapshot_not_ready",dataset_key:key},503);
   const body=transform?transform(row.data,row):{...row.data,meta:meta(row)};
   return json(body,200,{"x-wave-dataset":key,"x-wave-logic-version":row.logic_version||""});
+}
+
+function sectorJson(row:any, extra:Record<string,string>={}){
+  return json({...(row?.data||{}), meta:meta(row)},200,{
+    "cache-control":"public, max-age=60",
+    "x-wave-dataset":SECTOR_DATASET,
+    "x-wave-logic-version":row?.logic_version||LOGIC_VERSION,
+    ...extra,
+  });
+}
+
+async function claimSectorLock(now:Date){
+  try{
+    const {data,error}=await admin.from("data_snapshots").select("calculated_at").eq("dataset_key",SECTOR_LOCK).maybeSingle();
+    if(!error && data?.calculated_at && now.getTime()-Date.parse(data.calculated_at)<LOCK_MS) return false;
+    await admin.from("data_snapshots").upsert(lockRecord(now),{onConflict:"dataset_key"});
+  }catch{/* A lock miss still allows one refresh. */}
+  return true;
+}
+
+async function sectorResponse(){
+  let row:any=null;
+  try{row=await snapshot(SECTOR_DATASET);}catch{row=null;}
+  const now=new Date();
+  if(row && !needsRefresh(row.calculated_at, now)) return sectorJson(row);
+  if(!(await claimSectorLock(now))){
+    if(row) return sectorJson(row,{"cache-control":"public, max-age=15"});
+    return json({error:"snapshot_not_ready",dataset_key:SECTOR_DATASET},503);
+  }
+  try{
+    const record=snapshotRecord(await collectSectorRows(), now);
+    const {error}=await admin.from("data_snapshots").upsert(record,{onConflict:"dataset_key"});
+    if(error) throw new Error(error.message);
+    return sectorJson(record);
+  }catch{
+    if(row) return sectorJson(row,{"cache-control":"public, max-age=30","x-wave-sector-refresh":"fallback"});
+    return json({error:"sector_refresh_failed"},502);
+  }
 }
 
 async function dataHealthResponse(){
@@ -666,7 +705,7 @@ Deno.serve(async(req:Request)=>{
       return await snapshotResponse("risk:composite");
     }
     if(p.endsWith("/api/sectors")){
-      return await snapshotResponse("sectors:sp500");
+      return await sectorResponse();
     }
     if(p.endsWith("/api/yields")){
       return await snapshotResponse("rates:curve");
