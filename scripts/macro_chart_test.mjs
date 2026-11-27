@@ -7,7 +7,7 @@ const timeSource=fs.readFileSync(new URL('../apps/terminal/public/terminal-time.
 function ui(lang='en',width=375,zone){
  const records=[];const noop=()=>{};const el={id:'',addEventListener:noop,dataset:{}};
  const context={window:{innerWidth:width,addEventListener:noop,dispatchEvent:noop,WaveSources:{record:(...args)=>records.push(args)}},WaveSources:{record:(...args)=>records.push(args)},document:{documentElement:{lang},getElementById:()=>el,addEventListener:noop,readyState:'complete'},localStorage:{getItem:k=>k==='wc-tz'||k==='wc_tz'||k==='wc-timezone'||k==='wc_timezone'?zone||null:lang,setItem:noop,removeItem:noop},Date,Intl,Number,Math,Array,String,Set};
- vm.runInNewContext(timeSource+'\n'+source.replace('  var previousLanguageChange=', '  window.testAPI={chart,chartScale,readable,comparisonPoints,comparison,nextRelease,verifiedConsensus,registerNotes,releaseTime,consensusMarkup,differenceMarkup,releaseMeta,userZone,periodTable}; var previousLanguageChange='),context);
+ vm.runInNewContext(timeSource+'\n'+source.replace('  var previousLanguageChange=', '  window.testAPI={chart,chartScale,readable,comparisonPoints,comparison,nextRelease,verifiedConsensus,registerNotes,releaseTime,consensusMarkup,differenceMarkup,releaseMeta,userZone,periodTable,trailingAverage,averageTone,direction,averageBadge,HIGHER_IS_BETTER}; var previousLanguageChange='),context);
  context.window.testAPI.records=records;return context.window.testAPI;
 }
 const now=Date.now(),past=new Date(now-86400000).toISOString(),future=new Date(now+86400000).toISOString();
@@ -125,4 +125,64 @@ test('detail rows render verified consensus and label a genuine gap',()=>{
  assert.match(meta,/05:30/);
  assert.match(meta,/in /);
  assert.doesNotMatch(meta,/GMT|UTC|EDT|PST|Z</);
+});
+
+function months(start,count,value){
+ return Array.from({length:count},(_,i)=>{
+  const d=new Date(start+'T00:00:00Z');d.setUTCMonth(d.getUTCMonth()+i);
+  return {period:d.toISOString().slice(0,10),value:typeof value==='function'?value(i):value};
+ });
+}
+test('three-year window is selected by date for monthly, quarterly and weekly history',()=>{
+ const api=ui();
+ const monthly=months('2022-10-01',48,i=>i===11?1000:i+1);
+ const m=api.trailingAverage(monthly);
+ assert.equal(m.count,36);assert.equal(m.from,'2023-10-01');assert.equal(m.to,'2026-09-01');
+ assert.equal(m.windowKey,'3Y');assert.equal(m.full,true);assert.equal(m.value,30.5);assert.equal(m.latest,48);
+ const quarterly=[];
+ for(let i=0;i<20;i++){const d=new Date(Date.UTC(2021,9,1));d.setUTCMonth(d.getUTCMonth()+i*3);quarterly.push({period:d.toISOString().slice(0,10),value:i+1});}
+ const q=api.trailingAverage(quarterly);
+ assert.equal(q.count,12);assert.equal(q.from,'2023-10-01');assert.equal(q.to,'2026-07-01');assert.equal(q.windowKey,'3Y');
+ const end=Date.parse('2026-09-05T00:00:00Z'),weekly=[];
+ for(let i=0;i<220;i++)weekly.push({period:new Date(end-(219-i)*7*86400000).toISOString().slice(0,10),value:1});
+ const w=api.trailingAverage(weekly.slice().reverse());
+ assert.equal(w.count,157);assert.equal(w.from,'2023-09-09');assert.equal(w.to,'2026-09-05');assert.equal(w.windowKey,'3Y');assert.equal(w.stdev,0);
+ assert.equal(api.trailingAverage([{period:'2026-09-01',value:1}]),null);
+ assert.equal(api.trailingAverage([{period:'2026-08-01',value:null},{period:'nope',value:4}]),null);
+});
+test('short history keeps every observation and labels the covered span',()=>{
+ const api=ui();
+ const stat=api.trailingAverage(months('2024-10-01',24,10));
+ assert.equal(stat.full,false);assert.equal(stat.windowKey,'2Y');assert.equal(stat.count,24);assert.equal(stat.value,10);assert.equal(stat.from,'2024-10-01');assert.equal(stat.to,'2026-09-01');
+ const tiny=api.trailingAverage([{period:'2026-01-01',value:2},{period:'2026-02-01',value:1},{period:'2026-03-01',value:3}].reverse());
+ assert.equal(tiny.windowKey,'2M');assert.equal(tiny.count,3);assert.equal(tiny.value,2);
+ const oneTwoThree=api.trailingAverage([{period:'2026-01-01',value:1},{period:'2026-02-01',value:2},{period:'2026-03-01',value:3}]);
+ assert.equal(oneTwoThree.stdev,1);
+ const badge=api.averageBadge(stat,false,'%');
+ assert.equal(badge.replace(/<[^>]*>/g,''),'0 vs 2Y avg');
+ assert.match(badge,/macro-avg-neutral/);assert.match(badge,/title="[^"]*Fewer than 3 years/);
+ assert.ok(!badge.replace(/ title="[^"]*"/,'').includes('Fewer than'));
+ const he=ui('he').averageBadge(stat,false,'%');
+ assert.match(he,/ממוצע 2 שנ׳/);assert.match(he,/מול/);assert.match(he,/זמינות פחות מ-3 שנות היסטוריה/);
+});
+test('solid white average line labels the axis and yields that slot to the tag',()=>{
+ const api=ui();
+ const points=months('2022-10-01',48,4);
+ const stat=api.trailingAverage(points);assert.equal(stat.value,4);assert.equal(stat.windowKey,'3Y');
+ const html=api.chart(points,true,'index',false,stat);
+ assert.match(html,/class="macro-avg-line"/);assert.match(html,/stroke="#ffffff"/);assert.ok(!html.includes('stroke-dasharray'));
+ assert.equal(html.match(/class="macro-avg-line"[^>]*y1="([^"]+)"/)[1],html.match(/data-tick="4"[^>]*y1="([^"]+)"/)[1]);
+ assert.equal((html.match(/>4<\/text>/g)||[]).length,1);assert.ok(html.includes('class="macro-axis-tick"'));
+ const box=html.match(/viewBox="0 0 ([0-9.]+) ([0-9.]+)"/).slice(1).map(Number);
+ const rect=html.match(/class="macro-avg-tag">.*?<rect x="([^"]+)" y="([^"]+)" width="([^"]+)" height="([^"]+)"/);
+ const x=+rect[1],y=+rect[2],w=+rect[3],h=+rect[4];
+ assert.ok(x>=0&&y>=0&&x+w<=box[0]+1e-6&&y+h<=box[1]+1e-6);
+ const card=api.chart(points,false,'index',false,stat);
+ assert.match(card,/class="macro-avg-line"/);assert.match(card,/>4<\/text>/);assert.ok(!card.includes('macro-axis-tick'));
+ assert.equal(api.averageTone(0.3,false),'unfavorable');assert.equal(api.averageTone(-0.3,false),'favorable');
+ assert.equal(api.averageTone(0.3,true),'favorable');assert.equal(api.averageTone(0.3,'neutral'),'neutral');assert.equal(api.averageTone(0,true),'neutral');
+ assert.equal(api.direction({id:'unemployment'}),false);assert.equal(api.direction({id:'jolts',higherIsBetter:'neutral'}),'neutral');assert.equal(api.direction({id:'unknown'}),'neutral');
+ const flags={cpi:false,pce:false,core_cpi:false,industrial:true,gdp:true,retail:true,ism_manufacturing:true,ism_services:true,nfp:true,unemployment:false,claims:false,jolts:true,wages:'neutral'};
+ assert.deepEqual(Object.keys(api.HIGHER_IS_BETTER).sort(),Object.keys(flags).sort());
+ for(const id of Object.keys(flags))assert.equal(api.direction({id}),flags[id]);
 });

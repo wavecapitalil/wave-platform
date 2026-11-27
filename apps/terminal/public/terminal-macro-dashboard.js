@@ -26,9 +26,79 @@
     var ticks=Array.from({length:last-first+1},function(_,i){return Number(((first+i)*step).toPrecision(12));});
     return {min:ticks[0],max:ticks[ticks.length-1],ticks:ticks};
   }
-  function chart(points,expanded,unit,comparison){
+  function textWidth(text,font){
+    var w=0;
+    for(var i=0;i<text.length;i++){
+      var ch=text.charAt(i);
+      w+=(ch===','||ch==='.'||ch===' '||ch==='−'||ch==='-'||ch==='+')?font*0.4:font*0.62;
+    }
+    return Math.ceil(w);
+  }
+  var YEAR_MS=365.25*86400000;
+  // Canonical when the catalogue sends higherIsBetter. The local map covers the deployed API until that field is published.
+  var HIGHER_IS_BETTER={cpi:false,pce:false,core_cpi:false,industrial:true,gdp:true,retail:true,ism_manufacturing:true,ism_services:true,nfp:true,unemployment:false,claims:false,jolts:true,wages:'neutral'};
+  function direction(s){
+    var flag=s&&s.higherIsBetter;
+    if(flag===true||flag===false||flag==='neutral')return flag;
+    if(s&&Object.prototype.hasOwnProperty.call(HIGHER_IS_BETTER,s.id))return HIGHER_IS_BETTER[s.id];
+    return 'neutral';
+  }
+  function averageTone(delta,higherIsBetter){
+    if(higherIsBetter!==true&&higherIsBetter!==false)return 'neutral';
+    if(typeof delta!=='number'||!Number.isFinite(delta)||delta===0)return 'neutral';
+    return (higherIsBetter===true?delta>0:delta<0)?'favorable':'unfavorable';
+  }
+  function trailingAverage(points,years){
+    years=years||3;
+    var rows=(points||[]).filter(function(p){return p&&typeof p.value==='number'&&Number.isFinite(p.value)&&Number.isFinite(Date.parse(p.period));}).slice().sort(function(a,b){return a.period<b.period?-1:a.period>b.period?1:0;});
+    if(rows.length<2)return null;
+    var latestMs=Date.parse(rows[rows.length-1].period),start=new Date(latestMs);
+    start.setUTCFullYear(start.getUTCFullYear()-years);
+    var startMs=start.getTime(),reaches=rows.some(function(p){return Date.parse(p.period)<=startMs;});
+    var windowRows=rows.filter(function(p){var ms=Date.parse(p.period);return ms>startMs&&ms<=latestMs;});
+    if(windowRows.length<2){windowRows=rows;reaches=false;}
+    var sum=0;windowRows.forEach(function(p){sum+=p.value;});
+    var mean=sum/windowRows.length,sq=0;
+    windowRows.forEach(function(p){var d=p.value-mean;sq+=d*d;});
+    var earliestMs=Date.parse(windowRows[0].period),spanYears=(latestMs-earliestMs)/YEAR_MS,full=reaches||spanYears>=years-0.3,windowKey;
+    if(full)windowKey=years+'Y';
+    else if(spanYears<0.75)windowKey=Math.max(1,Math.round(spanYears*12))+'M';
+    else windowKey=Math.max(1,Math.round(spanYears))+'Y';
+    return {value:mean,stdev:Math.sqrt(sq/(windowRows.length-1)),latest:rows[rows.length-1].value,count:windowRows.length,from:windowRows[0].period,to:rows[rows.length-1].period,full:full,windowKey:windowKey,spanYears:spanYears};
+  }
+  function phrase(key,en,heb,vars){
+    var template;
+    if(typeof window.t==='function'){var got=window.t(key,en);template=(he()&&(got===en||got===key))?heb:got;}
+    else template=he()?heb:en;
+    if(vars)Object.keys(vars).forEach(function(k){template=template.split('{'+k+'}').join(String(vars[k]));});
+    return template;
+  }
+  function windowPhrase(stat){
+    var m=String(stat.windowKey||'').match(/^(\d+)([YM])$/);
+    if(!m)return stat.windowKey||'';
+    if(m[2]==='M')return phrase('macro.avgWindowM','{n}M avg','ממוצע {n} ח׳',{n:m[1]});
+    return phrase('macro.avgWindowY','{n}Y avg','ממוצע {n} שנ׳',{n:m[1]});
+  }
+  function signed(n,unit){var text=readable(n,unit);return typeof n==='number'&&n>0?'+'+text:text;}
+  function averageTooltip(stat){
+    var vars={n:stat.count,from:stat.from,to:stat.to};
+    return stat.full
+      ? phrase('macro.avgTip','Arithmetic mean of {n} observations from {from} to {to}. The latest observation is included.','ממוצע חשבוני של {n} תצפיות מ-{from} עד {to}. הנתון האחרון כלול.',vars)
+      : phrase('macro.avgTipShort','Fewer than 3 years of history are available. Arithmetic mean of {n} observations from {from} to {to}.','זמינות פחות מ-3 שנות היסטוריה. ממוצע חשבוני של {n} תצפיות מ-{from} עד {to}.',vars);
+  }
+  function averageBadge(stat,higherIsBetter,unit){
+    if(!stat)return '';
+    var delta=stat.latest-stat.value,tone=averageTone(delta,higherIsBetter);
+    var text=phrase('macro.avgBadge','{delta} vs {window}','{delta} מול {window}',{delta:signed(delta,unit),window:windowPhrase(stat)});
+    return '<span class="macro-avg-badge macro-avg-'+tone+'" dir="ltr" title="'+esc(averageTooltip(stat))+'">'+esc(text)+'</span>';
+  }
+  function chart(points,expanded,unit,comparison,stat){
     if(!points.length)return '<div class="macro-empty">—</div>';
-    var w=expanded?Math.max(280,Math.min(760,window.innerWidth<600?window.innerWidth-24:window.innerWidth*.94-48)):210,h=expanded?280:58,left=expanded?92:5,right=expanded?25:5,top=expanded?28:5,bottom=expanded?60:5;
+    var mark=stat&&typeof stat.value==='number'&&Number.isFinite(stat.value)?stat:null;
+    var tagFont=expanded?11:8,tagH=expanded?16:12,tagPadX=expanded?5:3;
+    var markLabel=mark?readable(mark.value,unit):'';
+    var tagW=mark?textWidth(markLabel,tagFont)+tagPadX*2:0;
+    var w=expanded?Math.max(280,Math.min(760,window.innerWidth<600?window.innerWidth-24:window.innerWidth*.94-48)):210,h=expanded?280:58,left=expanded?Math.max(92,tagW+12):mark?Math.max(tagW+8,28):5,right=expanded?25:5,top=expanded?28:5,bottom=expanded?60:5;
     var values=points.flatMap(function(p){return [p.value,p.consensus].filter(function(v){return typeof v==='number'&&Number.isFinite(v);});});
     if(!values.length)return '<div class="macro-empty">—</div>';
     var scale=chartScale(values),min=scale.min,max=scale.max;
@@ -40,9 +110,11 @@
     function y(v){return top+(max-v)/(max-min)*(h-top-bottom);}
     function value(v){return String(v).replace('-', '−');}
     function period(p){return p.replace(/-/g,'/');}
+    var ay=mark?y(mark.value):0,tagCenter=mark?Math.max(tagH/2+1,Math.min(h-tagH/2-1,ay)):0,tagTop=tagCenter-tagH/2,tagBottom=tagCenter+tagH/2;
+    function hideTick(v){if(!mark||!expanded)return false;var ty=y(v);return ty+6>tagTop-2&&ty-8<tagBottom+2;}
     var axes='';
     if(expanded){
-      scale.ticks.forEach(function(v){axes+='<line data-tick="'+v+'" x1="'+left+'" x2="'+(w-right)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="#334155"/><text x="'+(left-8)+'" y="'+(y(v)+4)+'" text-anchor="end">'+esc(value(v))+'</text>';});
+      scale.ticks.forEach(function(v){var ty=y(v);axes+='<line data-tick="'+v+'" x1="'+left+'" x2="'+(w-right)+'" y1="'+ty+'" y2="'+ty+'" stroke="#334155"/>'+(hideTick(v)?'':'<text class="macro-axis-tick" x="'+(left-8)+'" y="'+(ty+4)+'" text-anchor="end">'+esc(value(v))+'</text>');});
       var tickCount=Math.min(points.length,5,Math.max(2,Math.floor((w-left-right)*(end-start)/span/(comparison?120:100))+1));
       Array.from({length:tickCount},function(_,i){return tickCount===1?0:Math.round(i*(points.length-1)/(tickCount-1));}).forEach(function(i){axes+='<text class="macro-axis-period" x="'+x(points[i])+'" y="'+(h-36)+'" text-anchor="'+(i===0?'start':i===points.length-1?'end':'middle')+'">'+period(points[i].period.slice(0,comparison?10:7))+'</text>';});
       axes+='<text x="'+left+'" y="14" text-anchor="start">'+esc(unit)+'</text><text x="'+(w/2)+'" y="'+(h-8)+'" text-anchor="middle">'+(comparison?t('Release date (YYYY/MM/DD)','תאריך פרסום (YYYY/MM/DD)'):t('Reference period (YYYY/MM)','תקופת ייחוס (YYYY/MM)'))+'</text>';
@@ -50,10 +122,16 @@
     var baseline='<line class="macro-zero" x1="'+left+'" x2="'+(w-right)+'" y1="'+y(0)+'" y2="'+y(0)+'" stroke="#cbd5e1" stroke-width="1.5"/>';
     var bars=points.filter(function(p){return typeof p.value==='number'&&Number.isFinite(p.value);}).map(function(p){var height=Math.abs(y(p.value)-y(0));return '<rect class="macro-column '+(p.value<0?'negative':'positive')+'" data-value="'+p.value+'" x="'+(x(p)-barWidth/2)+'" y="'+(p.value<0?y(0):y(p.value))+'" width="'+barWidth+'" height="'+height+'" fill="'+(p.value<0?'#fbbf24':'#67e8f9')+'"><title>'+esc(p.tooltip||period(p.period)+' · '+readable(p.value,unit)+' '+unit)+'</title></rect>';}).join('');
     var dots=points.filter(function(p){return typeof p.consensus==='number'&&Number.isFinite(p.consensus);}).map(function(p){return '<circle class="macro-consensus-dot" aria-label="'+esc(p.tooltip)+'" cx="'+x(p)+'" cy="'+y(p.consensus)+'" r="'+(expanded?5:3)+'" fill="#f472b6" stroke="#0b1526" stroke-width="1.5"><title>'+esc(p.tooltip)+'</title></circle>';}).join('');
+    var avg='';
+    if(mark){
+      var tagRight=left-4,tagX=tagRight-tagW,tip=esc(windowPhrase(mark)+' '+markLabel+'. '+averageTooltip(mark));
+      avg='<line class="macro-avg-line" data-avg="'+mark.value+'" data-window="'+esc(mark.windowKey)+'" x1="'+tagRight+'" x2="'+(w-right)+'" y1="'+ay+'" y2="'+ay+'" stroke="#ffffff" stroke-width="2" fill="none"><title>'+tip+'</title></line><g class="macro-avg-tag"><title>'+tip+'</title><rect x="'+tagX+'" y="'+tagTop+'" width="'+tagW+'" height="'+tagH+'" rx="2" fill="#ffffff"/><text x="'+(tagRight-tagPadX)+'" y="'+tagCenter+'" text-anchor="end" dominant-baseline="middle" fill="#0b1526" font-size="'+tagFont+'" font-weight="700">'+esc(markLabel)+'</text></g>';
+    }
     var id='macro-chart-readout-'+(++chartId);
     var readings=points.map(function(p){return {x:x(p),tip:p.tooltip||period(p.period)+' · '+readable(p.value,unit)+' '+unit};});
     var hint=t('Hover or tap to inspect. Focus and use arrow keys for observations.','עברו עם העכבר או הקישו להצגת נתון. במיקוד השתמשו בחצים למעבר בין תצפיות.');
-    return '<div class="macro-chart'+(expanded?' expanded':'')+'"><svg dir="ltr" style="direction:ltr" viewBox="0 0 '+w+' '+h+'" role="group" '+(expanded?'tabindex="0" ':'')+'data-readings="'+esc(JSON.stringify(readings))+'" aria-describedby="'+id+'" aria-label="'+esc(t('Column chart','גרף עמודות')+' · '+unit+' · '+hint)+'">'+axes+baseline+bars+dots+'</svg><div id="'+id+'" class="macro-chart-readout" role="status" aria-live="polite" aria-atomic="true" data-hint="'+esc(hint)+'"></div></div>';
+    var avgNote=mark?' · '+windowPhrase(mark)+' '+markLabel:'';
+    return '<div class="macro-chart'+(expanded?' expanded':'')+'"><svg dir="ltr" style="direction:ltr" viewBox="0 0 '+w+' '+h+'" role="group" '+(expanded?'tabindex="0" ':'')+'data-readings="'+esc(JSON.stringify(readings))+'" aria-describedby="'+id+'" aria-label="'+esc(t('Column chart','גרף עמודות')+' · '+unit+avgNote+' · '+hint)+'">'+axes+baseline+bars+dots+avg+'</svg><div id="'+id+'" class="macro-chart-readout" role="status" aria-live="polite" aria-atomic="true" data-hint="'+esc(hint)+'"></div></div>';
   }
   function bindCharts(host){
     host.querySelectorAll('.macro-chart svg').forEach(function(svg){
@@ -185,6 +263,8 @@
       'Missing verified consensus is not plotted. A comparison and its legend require verified pre-release consensus.',
       'Chart controls: hover or tap for values; focus and use arrow keys, Home or End. Escape dismisses the readout.',
       'Next release: '+(next?releaseTime(next.scheduled_at):'Schedule unavailable')];
+    var avgStat=trailingAverage(h.points);
+    if(avgStat)notes.push('Trailing average '+avgStat.windowKey+': arithmetic mean of '+avgStat.count+' revised observations from '+avgStat.from+' to '+avgStat.to+' = '+avgStat.value+'. The window keeps observations strictly after the latest date minus 3 calendar years, or the whole available span when history is shorter. The latest observation is included. Sample standard deviation divides by n−1. Direction coloring uses higherIsBetter='+direction(s)+'.');
     if(h.error)notes.push('History retrieval error: '+(typeof h.error==='string'?h.error:h.error.message));
     (h.unavailable_periods||[]).forEach(function(r){notes.push('Official unavailable period '+r.period+': '+r.reason+' | '+r.source+' | verified '+r.verified_at);});
     if(h.fetched_at)notes.push('History retrieved: '+h.fetched_at);
@@ -204,8 +284,8 @@
     var h=state.histories[s.id]||{status:s.status==='license_unverified'?s.status:'loading',points:[]},r=latest(s),p=h.points.length?h.points[h.points.length-1]:null;
     var useHistory=p&&(!r||p.period>r.period);
     var value=useHistory?p.value:r?r.actual:null,period=useHistory?p.period:r?r.period:null;
-    var points=h.points;
-    return '<button type="button" class="macro-indicator" data-macro-id="'+s.id+'" aria-haspopup="dialog"><span class="macro-indicator-name">'+esc(he()?s.he:s.name)+'</span><strong dir="ltr">'+num(value)+'</strong><span class="macro-unit" dir="ltr">'+esc(s.unit)+'</span>'+chart(points,false,s.unit)+(events(s).length?comparison(s,false):'')+nextRelease(s,h)+'<span class="macro-period" dir="ltr">'+esc(period?period.slice(0,s.frequency==='weekly'?10:7):'—')+'</span></button>';
+    var points=h.points,stat=trailingAverage(points);
+    return '<button type="button" class="macro-indicator" data-macro-id="'+s.id+'" aria-haspopup="dialog"><span class="macro-indicator-name">'+esc(he()?s.he:s.name)+'</span><strong dir="ltr">'+num(value)+'</strong><span class="macro-unit" dir="ltr">'+esc(s.unit)+'</span>'+averageBadge(stat,direction(s),s.unit)+chart(points,false,s.unit,false,stat)+(events(s).length?comparison(s,false):'')+nextRelease(s,h)+'<span class="macro-period" dir="ltr">'+esc(period?period.slice(0,s.frequency==='weekly'?10:7):'—')+'</span></button>';
   }
   function render(){
     var host=document.getElementById('macroDashboard');if(!host)return;
@@ -232,7 +312,8 @@
     var r=s.releases.find(function(x){return x.id===releaseId;})||latest(s);
     var html='<p class="macro-measure" dir="ltr">'+esc(s.unit+' · '+s.sa+' · '+s.frequency)+'</p>';
     registerNotes(s,h);
-    html+='<h3>'+t('Current revised history','היסטוריה לפי הנתונים המעודכנים')+'</h3>'+chart(h.points,true,s.unit)+nextRelease(s,h);
+    var stat=trailingAverage(h.points);
+    html+='<h3>'+t('Current revised history','היסטוריה לפי הנתונים המעודכנים')+'</h3>'+averageBadge(stat,direction(s),s.unit)+chart(h.points,true,s.unit,false,stat)+nextRelease(s,h);
     if(h.points.length)html+='<details><summary>'+t('Observation values','ערכי התצפיות')+'</summary>'+table([t('Reference period','תקופת ייחוס'),s.unit],h.points.map(function(p){return [p.period,precise(p.value)];}))+'</details>';
     html+='<h3>'+t('Verified release snapshots','גרסאות פרסום מאומתות')+'</h3>';
     if(r){
