@@ -4,10 +4,11 @@ import vm from 'node:vm';
 import fs from 'node:fs';
 const source=fs.readFileSync(new URL('../apps/terminal/public/terminal-macro-dashboard.js',import.meta.url),'utf8');
 const timeSource=fs.readFileSync(new URL('../apps/terminal/public/terminal-time.js',import.meta.url),'utf8');
-function ui(lang='en',width=375,zone){
+function ui(lang='en',width=375,zone,translate){
  const records=[];const noop=()=>{};const el={id:'',addEventListener:noop,dataset:{}};
  const context={window:{innerWidth:width,addEventListener:noop,dispatchEvent:noop,WaveSources:{record:(...args)=>records.push(args)}},WaveSources:{record:(...args)=>records.push(args)},document:{documentElement:{lang},getElementById:()=>el,addEventListener:noop,readyState:'complete'},localStorage:{getItem:k=>k==='wc-tz'||k==='wc_tz'||k==='wc-timezone'||k==='wc_timezone'?zone||null:lang,setItem:noop,removeItem:noop},Date,Intl,Number,Math,Array,String,Set};
- vm.runInNewContext(timeSource+'\n'+source.replace('  var previousLanguageChange=', '  window.testAPI={chart,chartScale,readable,comparisonPoints,comparison,nextRelease,verifiedConsensus,registerNotes,releaseTime,consensusMarkup,differenceMarkup,releaseMeta,userZone,periodTable}; var previousLanguageChange='),context);
+ if(translate)context.window.t=translate;
+ vm.runInNewContext(timeSource+'\n'+source.replace('  var previousLanguageChange=', '  window.testAPI={chart,chartScale,readable,comparisonPoints,comparison,nextRelease,verifiedConsensus,registerNotes,releaseTime,consensusMarkup,differenceMarkup,releaseMeta,userZone,periodTable,shownNumber,shownUnit,chartView}; var previousLanguageChange='),context);
  context.window.testAPI.records=records;return context.window.testAPI;
 }
 const now=Date.now(),past=new Date(now-86400000).toISOString(),future=new Date(now+86400000).toISOString();
@@ -71,6 +72,49 @@ test('visible values trim tails, preserve tiny signs and do not rescale units',(
  assert.equal(f(-.000000123456,'% MoM'),'−0.000000123');
  assert.equal(f(120000,'jobs'),'120,000');assert.equal(f(103.45678,'Index'),'103.457');
  assert.equal(f(12.3,'USD billions'),'12.3');assert.equal(f(-0,'%'),'0');assert.equal(f(null,'%'),'—');
+ assert.equal(f(7523,'thousand openings'),'7,523');
+});
+
+test('JOLTS openings display in millions at one decimal without changing stored points or other indicators',()=>{
+ const i18n=fs.readFileSync(new URL('../apps/terminal/public/i18n.js',import.meta.url),'utf8');
+ assert.match(i18n,/macro\.unit\.million':\s*\{en:'million',\s*he:'מיליון'\}/);
+ const en=ui('en'),he=ui('he');
+ assert.equal(en.shownNumber(7523,{id:'jolts',unit:'thousand openings'}),'7.5');
+ assert.equal(en.shownNumber(7190,{id:'jolts'}),'7.2');
+ assert.equal(en.shownNumber(-100,{id:'jolts'}),'−0.1');
+ assert.equal(en.shownNumber(0,{id:'jolts'}),'0.0');
+ assert.equal(en.shownNumber(null,{id:'jolts'}),'—');
+ assert.equal(en.shownUnit({id:'jolts',unit:'thousand openings'}),'million');
+ assert.equal(he.shownUnit({id:'jolts',unit:'thousand openings'}),'מיליון');
+ assert.equal(en.shownNumber(165,{id:'nfp',unit:'thousand jobs MoM'}),'165');
+ assert.equal(en.shownUnit({id:'nfp',unit:'thousand jobs MoM'}),'thousand jobs MoM');
+ assert.equal(en.shownNumber(189000,{id:'claims',unit:'claims'}),'189,000');
+ assert.equal(en.shownUnit({id:'claims',unit:'claims'}),'claims');
+ const keys=[];
+ const via=ui('he',375,null,key=>{keys.push(key);return key==='macro.unit.million'?'מיליון':key;});
+ assert.equal(via.shownUnit({id:'jolts'}),'מיליון');
+ assert.ok(keys.includes('macro.unit.million'));
+ const consensus={value:7623,unit:'thousand openings',sa:'SA',period:'2026-09-01',access_verified:true,source:'https://example.org/verified-test-only',captured_at:new Date(now-172800000).toISOString()};
+ const s={id:'jolts',unit:'thousand openings',sa:'SA',releases:[{period:'2026-09-01',actual:7523,prior:7623,revised_prior:7533,released_at:past,consensus,revisions:[{period:'2026-08-01',before:7623,after:7533}]}],calendar:[]};
+ const points=en.comparisonPoints(s);
+ assert.equal(points[0].value,7523);assert.equal(points[0].consensus,7623);
+ assert.match(points[0].tooltip,/Actual: 7\.5 million/);
+ assert.match(points[0].tooltip,/Consensus: 7\.6 million/);
+ assert.match(points[0].tooltip,/Difference: −0\.1 million/);
+ const html=en.comparison(s,true);
+ assert.ok(html.includes('data-value="7523"'));
+ assert.ok(html.includes('7.5 million'));
+ assert.ok(html.includes('8.0'));
+ assert.ok(!html.includes('7,523'));
+ assert.ok(!html.includes('thousand'));
+ const history=he.chart([{period:'2026-08-01',value:7190},{period:'2026-09-01',value:7523}],true,'thousand openings',false,he.chartView({id:'jolts'}));
+ assert.ok(history.includes('7.5 מיליון'));
+ assert.ok(history.includes('data-value="7190"'));
+ assert.ok(history.includes('data-value="7523"'));
+ assert.ok(!history.includes('thousand'));
+ const unchanged=en.chart([{period:'2026-09-01',value:165}],true,'thousand jobs MoM');
+ assert.ok(unchanged.includes('165 thousand jobs MoM'));
+ assert.ok(!unchanged.includes('million'));
 });
 
 test('chart explanations move to indicator-associated Sources without losing availability caveats',()=>{

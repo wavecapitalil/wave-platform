@@ -48,6 +48,7 @@
     'sidebar.home':       {en:'Home',            he:'בית'},
     'sidebar.brief':      {en:'Morning Brief',   he:'תדריך בוקר'},
     'sidebar.macro':      {en:'Macro',           he:'מאקרו'},
+    'macro.unit.million': {en:'million',         he:'מיליון'},
     'sidebar.riskMeter':  {en:'Risk Meter',      he:'מד סיכון'},
     'sidebar.macroScanner': {en:'Macro', he:'מקרו'},
     'sidebar.fx':         {en:'FX Monitor',      he:'מוניטור מט"ח'},
