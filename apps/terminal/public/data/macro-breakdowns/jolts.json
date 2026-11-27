@@ -1,0 +1,3757 @@
+{
+  "id": "jolts",
+  "kind": "level_change",
+  "title": {
+    "en": "Job openings by industry",
+    "he": "משרות פנויות לפי ענף"
+  },
+  "unit": {
+    "en": "Thousands of openings, seasonally adjusted",
+    "he": "אלפי משרות פנויות, מנוכה עונתיות"
+  },
+  "source": "U.S. Bureau of Labor Statistics · JOLTS",
+  "table": "JOLTS Table 1 · job openings level by industry · seasonally adjusted · thousands",
+  "history_basis": "latest_revised",
+  "api": "https://api.bls.gov/publicAPI/v1/timeseries/data/",
+  "fetched_at": "2026-11-27T14:48:54.016Z",
+  "rounding_bound": 5,
+  "max_abs_residual": 3,
+  "headline_series": "JTS000000000000000JOL",
+  "fred_series": "JTSJOL",
+  "headline_crosscheck": {
+    "fred": "JTSJOL",
+    "status": "matched",
+    "compared_periods": 33,
+    "max_abs_difference": 0
+  },
+  "series": [
+    {
+      "role": "headline",
+      "series": "JTS000000000000000JOL",
+      "fred": "JTSJOL",
+      "name": "Total nonfarm",
+      "he": "סך כל המשק הלא-חקלאי",
+      "url": "https://data.bls.gov/timeseries/JTS000000000000000JOL"
+    },
+    {
+      "role": "industry",
+      "key": "mining",
+      "series": "JTS110099000000000JOL",
+      "name": "Mining and logging",
+      "he": "כרייה וכריתת עצים",
+      "url": "https://data.bls.gov/timeseries/JTS110099000000000JOL"
+    },
+    {
+      "role": "industry",
+      "key": "construction",
+      "series": "JTS230000000000000JOL",
+      "name": "Construction",
+      "he": "בנייה",
+      "url": "https://data.bls.gov/timeseries/JTS230000000000000JOL"
+    },
+    {
+      "role": "industry",
+      "key": "manufacturing",
+      "series": "JTS300000000000000JOL",
+      "name": "Manufacturing",
+      "he": "תעשייה",
+      "url": "https://data.bls.gov/timeseries/JTS300000000000000JOL"
+    },
+    {
+      "role": "industry",
+      "key": "trade",
+      "series": "JTS400000000000000JOL",
+      "name": "Trade, transportation, and utilities",
+      "he": "מסחר, תחבורה ותשתיות",
+      "url": "https://data.bls.gov/timeseries/JTS400000000000000JOL"
+    },
+    {
+      "role": "industry",
+      "key": "information",
+      "series": "JTS510000000000000JOL",
+      "name": "Information",
+      "he": "מידע",
+      "url": "https://data.bls.gov/timeseries/JTS510000000000000JOL"
+    },
+    {
+      "role": "industry",
+      "key": "financial",
+      "series": "JTS510099000000000JOL",
+      "name": "Financial activities",
+      "he": "פעילות פיננסית",
+      "url": "https://data.bls.gov/timeseries/JTS510099000000000JOL"
+    },
+    {
+      "role": "industry",
+      "key": "professional",
+      "series": "JTS540099000000000JOL",
+      "name": "Professional and business services",
+      "he": "שירותים מקצועיים ועסקיים",
+      "url": "https://data.bls.gov/timeseries/JTS540099000000000JOL"
+    },
+    {
+      "role": "industry",
+      "key": "education",
+      "series": "JTS600000000000000JOL",
+      "name": "Private education and health services",
+      "he": "חינוך ובריאות פרטיים",
+      "url": "https://data.bls.gov/timeseries/JTS600000000000000JOL"
+    },
+    {
+      "role": "industry",
+      "key": "leisure",
+      "series": "JTS700000000000000JOL",
+      "name": "Leisure and hospitality",
+      "he": "פנאי ואירוח",
+      "url": "https://data.bls.gov/timeseries/JTS700000000000000JOL"
+    },
+    {
+      "role": "industry",
+      "key": "other",
+      "series": "JTS810000000000000JOL",
+      "name": "Other services",
+      "he": "שירותים אחרים",
+      "url": "https://data.bls.gov/timeseries/JTS810000000000000JOL"
+    },
+    {
+      "role": "industry",
+      "key": "government",
+      "series": "JTS900000000000000JOL",
+      "name": "Government",
+      "he": "ממשלה",
+      "url": "https://data.bls.gov/timeseries/JTS900000000000000JOL"
+    }
+  ],
+  "periods": [
+    {
+      "period": "2024-01-01",
+      "prior_period": "2023-12-01",
+      "preliminary": false,
+      "headline": 8378,
+      "sum": 8376,
+      "residual": 2,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 26,
+          "prior": null,
+          "change": null
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 413,
+          "prior": null,
+          "change": null
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 557,
+          "prior": null,
+          "change": null
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 999,
+          "prior": null,
+          "change": null
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 160,
+          "prior": null,
+          "change": null
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 480,
+          "prior": null,
+          "change": null
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1438,
+          "prior": null,
+          "change": null
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 2002,
+          "prior": null,
+          "change": null
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 1106,
+          "prior": null,
+          "change": null
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 303,
+          "prior": null,
+          "change": null
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 892,
+          "prior": null,
+          "change": null
+        }
+      ]
+    },
+    {
+      "period": "2024-02-01",
+      "prior_period": "2024-01-01",
+      "preliminary": false,
+      "headline": 8440,
+      "sum": 8440,
+      "residual": 0,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 29,
+          "prior": 26,
+          "change": 3
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 394,
+          "prior": 413,
+          "change": -19
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 551,
+          "prior": 557,
+          "change": -6
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1038,
+          "prior": 999,
+          "change": 39
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 129,
+          "prior": 160,
+          "change": -31
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 624,
+          "prior": 480,
+          "change": 144
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1424,
+          "prior": 1438,
+          "change": -14
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1928,
+          "prior": 2002,
+          "change": -74
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 1105,
+          "prior": 1106,
+          "change": -1
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 309,
+          "prior": 303,
+          "change": 6
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 909,
+          "prior": 892,
+          "change": 17
+        }
+      ]
+    },
+    {
+      "period": "2024-03-01",
+      "prior_period": "2024-02-01",
+      "preliminary": false,
+      "headline": 8206,
+      "sum": 8206,
+      "residual": 0,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 33,
+          "prior": 29,
+          "change": 4
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 342,
+          "prior": 394,
+          "change": -52
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 517,
+          "prior": 551,
+          "change": -34
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1021,
+          "prior": 1038,
+          "change": -17
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 144,
+          "prior": 129,
+          "change": 15
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 459,
+          "prior": 624,
+          "change": -165
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1311,
+          "prior": 1424,
+          "change": -113
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1889,
+          "prior": 1928,
+          "change": -39
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 1211,
+          "prior": 1105,
+          "change": 106
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 287,
+          "prior": 309,
+          "change": -22
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 992,
+          "prior": 909,
+          "change": 83
+        }
+      ]
+    },
+    {
+      "period": "2024-04-01",
+      "prior_period": "2024-03-01",
+      "preliminary": false,
+      "headline": 7529,
+      "sum": 7529,
+      "residual": 0,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 18,
+          "prior": 33,
+          "change": -15
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 329,
+          "prior": 342,
+          "change": -13
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 491,
+          "prior": 517,
+          "change": -26
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 993,
+          "prior": 1021,
+          "change": -28
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 87,
+          "prior": 144,
+          "change": -57
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 444,
+          "prior": 459,
+          "change": -15
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1232,
+          "prior": 1311,
+          "change": -79
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1709,
+          "prior": 1889,
+          "change": -180
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 1060,
+          "prior": 1211,
+          "change": -151
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 297,
+          "prior": 287,
+          "change": 10
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 869,
+          "prior": 992,
+          "change": -123
+        }
+      ]
+    },
+    {
+      "period": "2024-05-01",
+      "prior_period": "2024-04-01",
+      "preliminary": false,
+      "headline": 7782,
+      "sum": 7782,
+      "residual": 0,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 25,
+          "prior": 18,
+          "change": 7
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 389,
+          "prior": 329,
+          "change": 60
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 541,
+          "prior": 491,
+          "change": 50
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1006,
+          "prior": 993,
+          "change": 13
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 120,
+          "prior": 87,
+          "change": 33
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 427,
+          "prior": 444,
+          "change": -17
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1325,
+          "prior": 1232,
+          "change": 93
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1833,
+          "prior": 1709,
+          "change": 124
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 825,
+          "prior": 1060,
+          "change": -235
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 264,
+          "prior": 297,
+          "change": -33
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 1027,
+          "prior": 869,
+          "change": 158
+        }
+      ]
+    },
+    {
+      "period": "2024-06-01",
+      "prior_period": "2024-05-01",
+      "preliminary": false,
+      "headline": 7416,
+      "sum": 7415,
+      "residual": 1,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 16,
+          "prior": 25,
+          "change": -9
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 288,
+          "prior": 389,
+          "change": -101
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 471,
+          "prior": 541,
+          "change": -70
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1055,
+          "prior": 1006,
+          "change": 49
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 108,
+          "prior": 120,
+          "change": -12
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 424,
+          "prior": 427,
+          "change": -3
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1097,
+          "prior": 1325,
+          "change": -228
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1796,
+          "prior": 1833,
+          "change": -37
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 906,
+          "prior": 825,
+          "change": 81
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 286,
+          "prior": 264,
+          "change": 22
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 968,
+          "prior": 1027,
+          "change": -59
+        }
+      ]
+    },
+    {
+      "period": "2024-07-01",
+      "prior_period": "2024-06-01",
+      "preliminary": false,
+      "headline": 7426,
+      "sum": 7427,
+      "residual": -1,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 24,
+          "prior": 16,
+          "change": 8
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 249,
+          "prior": 288,
+          "change": -39
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 481,
+          "prior": 471,
+          "change": 10
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 961,
+          "prior": 1055,
+          "change": -94
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 105,
+          "prior": 108,
+          "change": -3
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 381,
+          "prior": 424,
+          "change": -43
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1302,
+          "prior": 1097,
+          "change": 205
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1703,
+          "prior": 1796,
+          "change": -93
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 961,
+          "prior": 906,
+          "change": 55
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 327,
+          "prior": 286,
+          "change": 41
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 933,
+          "prior": 968,
+          "change": -35
+        }
+      ]
+    },
+    {
+      "period": "2024-08-01",
+      "prior_period": "2024-07-01",
+      "preliminary": false,
+      "headline": 7520,
+      "sum": 7521,
+      "residual": -1,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 23,
+          "prior": 24,
+          "change": -1
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 342,
+          "prior": 249,
+          "change": 93
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 461,
+          "prior": 481,
+          "change": -20
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1067,
+          "prior": 961,
+          "change": 106
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 105,
+          "prior": 105,
+          "change": 0
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 375,
+          "prior": 381,
+          "change": -6
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1308,
+          "prior": 1302,
+          "change": 6
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1668,
+          "prior": 1703,
+          "change": -35
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 939,
+          "prior": 961,
+          "change": -22
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 281,
+          "prior": 327,
+          "change": -46
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 952,
+          "prior": 933,
+          "change": 19
+        }
+      ]
+    },
+    {
+      "period": "2024-09-01",
+      "prior_period": "2024-08-01",
+      "preliminary": false,
+      "headline": 6943,
+      "sum": 6944,
+      "residual": -1,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 22,
+          "prior": 23,
+          "change": -1
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 246,
+          "prior": 342,
+          "change": -96
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 466,
+          "prior": 461,
+          "change": 5
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 964,
+          "prior": 1067,
+          "change": -103
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 114,
+          "prior": 105,
+          "change": 9
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 365,
+          "prior": 375,
+          "change": -10
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1230,
+          "prior": 1308,
+          "change": -78
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1470,
+          "prior": 1668,
+          "change": -198
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 887,
+          "prior": 939,
+          "change": -52
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 308,
+          "prior": 281,
+          "change": 27
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 872,
+          "prior": 952,
+          "change": -80
+        }
+      ]
+    },
+    {
+      "period": "2024-10-01",
+      "prior_period": "2024-09-01",
+      "preliminary": false,
+      "headline": 7379,
+      "sum": 7379,
+      "residual": 0,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 24,
+          "prior": 22,
+          "change": 2
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 241,
+          "prior": 246,
+          "change": -5
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 437,
+          "prior": 466,
+          "change": -29
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 961,
+          "prior": 964,
+          "change": -3
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 178,
+          "prior": 114,
+          "change": 64
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 432,
+          "prior": 365,
+          "change": 67
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1253,
+          "prior": 1230,
+          "change": 23
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1633,
+          "prior": 1470,
+          "change": 163
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 1007,
+          "prior": 887,
+          "change": 120
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 304,
+          "prior": 308,
+          "change": -4
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 909,
+          "prior": 872,
+          "change": 37
+        }
+      ]
+    },
+    {
+      "period": "2024-11-01",
+      "prior_period": "2024-10-01",
+      "preliminary": false,
+      "headline": 7566,
+      "sum": 7566,
+      "residual": 0,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 22,
+          "prior": 24,
+          "change": -2
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 233,
+          "prior": 241,
+          "change": -8
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 415,
+          "prior": 437,
+          "change": -22
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 936,
+          "prior": 961,
+          "change": -25
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 119,
+          "prior": 178,
+          "change": -59
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 441,
+          "prior": 432,
+          "change": 9
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1508,
+          "prior": 1253,
+          "change": 255
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1704,
+          "prior": 1633,
+          "change": 71
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 1012,
+          "prior": 1007,
+          "change": 5
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 292,
+          "prior": 304,
+          "change": -12
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 884,
+          "prior": 909,
+          "change": -25
+        }
+      ]
+    },
+    {
+      "period": "2024-12-01",
+      "prior_period": "2024-11-01",
+      "preliminary": false,
+      "headline": 7295,
+      "sum": 7297,
+      "residual": -2,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 21,
+          "prior": 22,
+          "change": -1
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 135,
+          "prior": 233,
+          "change": -98
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 401,
+          "prior": 415,
+          "change": -14
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1007,
+          "prior": 936,
+          "change": 71
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 105,
+          "prior": 119,
+          "change": -14
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 389,
+          "prior": 441,
+          "change": -52
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1295,
+          "prior": 1508,
+          "change": -213
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1573,
+          "prior": 1704,
+          "change": -131
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 1222,
+          "prior": 1012,
+          "change": 210
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 260,
+          "prior": 292,
+          "change": -32
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 889,
+          "prior": 884,
+          "change": 5
+        }
+      ]
+    },
+    {
+      "period": "2025-01-01",
+      "prior_period": "2024-12-01",
+      "preliminary": false,
+      "headline": 7431,
+      "sum": 7432,
+      "residual": -1,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 17,
+          "prior": 21,
+          "change": -4
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 232,
+          "prior": 135,
+          "change": 97
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 447,
+          "prior": 401,
+          "change": 46
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1065,
+          "prior": 1007,
+          "change": 58
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 101,
+          "prior": 105,
+          "change": -4
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 506,
+          "prior": 389,
+          "change": 117
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1253,
+          "prior": 1295,
+          "change": -42
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1628,
+          "prior": 1573,
+          "change": 55
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 1009,
+          "prior": 1222,
+          "change": -213
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 295,
+          "prior": 260,
+          "change": 35
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 879,
+          "prior": 889,
+          "change": -10
+        }
+      ]
+    },
+    {
+      "period": "2025-02-01",
+      "prior_period": "2025-01-01",
+      "preliminary": false,
+      "headline": 7242,
+      "sum": 7242,
+      "residual": 0,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 19,
+          "prior": 17,
+          "change": 2
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 255,
+          "prior": 232,
+          "change": 23
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 400,
+          "prior": 447,
+          "change": -47
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1008,
+          "prior": 1065,
+          "change": -57
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 125,
+          "prior": 101,
+          "change": 24
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 438,
+          "prior": 506,
+          "change": -68
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1222,
+          "prior": 1253,
+          "change": -31
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1625,
+          "prior": 1628,
+          "change": -3
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 994,
+          "prior": 1009,
+          "change": -15
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 281,
+          "prior": 295,
+          "change": -14
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 875,
+          "prior": 879,
+          "change": -4
+        }
+      ]
+    },
+    {
+      "period": "2025-03-01",
+      "prior_period": "2025-02-01",
+      "preliminary": false,
+      "headline": 6952,
+      "sum": 6952,
+      "residual": 0,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 12,
+          "prior": 19,
+          "change": -7
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 278,
+          "prior": 255,
+          "change": 23
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 389,
+          "prior": 400,
+          "change": -11
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 949,
+          "prior": 1008,
+          "change": -59
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 115,
+          "prior": 125,
+          "change": -10
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 418,
+          "prior": 438,
+          "change": -20
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1211,
+          "prior": 1222,
+          "change": -11
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1454,
+          "prior": 1625,
+          "change": -171
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 946,
+          "prior": 994,
+          "change": -48
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 346,
+          "prior": 281,
+          "change": 65
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 834,
+          "prior": 875,
+          "change": -41
+        }
+      ]
+    },
+    {
+      "period": "2025-04-01",
+      "prior_period": "2025-03-01",
+      "preliminary": false,
+      "headline": 7098,
+      "sum": 7096,
+      "residual": 2,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 23,
+          "prior": 12,
+          "change": 11
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 207,
+          "prior": 278,
+          "change": -71
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 376,
+          "prior": 389,
+          "change": -13
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1012,
+          "prior": 949,
+          "change": 63
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 134,
+          "prior": 115,
+          "change": 19
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 424,
+          "prior": 418,
+          "change": 6
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1339,
+          "prior": 1211,
+          "change": 128
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1683,
+          "prior": 1454,
+          "change": 229
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 827,
+          "prior": 946,
+          "change": -119
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 254,
+          "prior": 346,
+          "change": -92
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 817,
+          "prior": 834,
+          "change": -17
+        }
+      ]
+    },
+    {
+      "period": "2025-05-01",
+      "prior_period": "2025-04-01",
+      "preliminary": false,
+      "headline": 7310,
+      "sum": 7310,
+      "residual": 0,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 20,
+          "prior": 23,
+          "change": -3
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 222,
+          "prior": 207,
+          "change": 15
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 401,
+          "prior": 376,
+          "change": 25
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 915,
+          "prior": 1012,
+          "change": -97
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 109,
+          "prior": 134,
+          "change": -25
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 499,
+          "prior": 424,
+          "change": 75
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1224,
+          "prior": 1339,
+          "change": -115
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1761,
+          "prior": 1683,
+          "change": 78
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 1076,
+          "prior": 827,
+          "change": 249
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 290,
+          "prior": 254,
+          "change": 36
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 793,
+          "prior": 817,
+          "change": -24
+        }
+      ]
+    },
+    {
+      "period": "2025-06-01",
+      "prior_period": "2025-05-01",
+      "preliminary": false,
+      "headline": 7204,
+      "sum": 7205,
+      "residual": -1,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 25,
+          "prior": 20,
+          "change": 5
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 224,
+          "prior": 222,
+          "change": 2
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 391,
+          "prior": 401,
+          "change": -10
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1054,
+          "prior": 915,
+          "change": 139
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 123,
+          "prior": 109,
+          "change": 14
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 356,
+          "prior": 499,
+          "change": -143
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1332,
+          "prior": 1224,
+          "change": 108
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1603,
+          "prior": 1761,
+          "change": -158
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 999,
+          "prior": 1076,
+          "change": -77
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 239,
+          "prior": 290,
+          "change": -51
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 859,
+          "prior": 793,
+          "change": 66
+        }
+      ]
+    },
+    {
+      "period": "2025-07-01",
+      "prior_period": "2025-06-01",
+      "preliminary": false,
+      "headline": 7089,
+      "sum": 7087,
+      "residual": 2,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 12,
+          "prior": 25,
+          "change": -13
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 305,
+          "prior": 224,
+          "change": 81
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 428,
+          "prior": 391,
+          "change": 37
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1099,
+          "prior": 1054,
+          "change": 45
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 157,
+          "prior": 123,
+          "change": 34
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 396,
+          "prior": 356,
+          "change": 40
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1240,
+          "prior": 1332,
+          "change": -92
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1429,
+          "prior": 1603,
+          "change": -174
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 970,
+          "prior": 999,
+          "change": -29
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 270,
+          "prior": 239,
+          "change": 31
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 781,
+          "prior": 859,
+          "change": -78
+        }
+      ]
+    },
+    {
+      "period": "2025-08-01",
+      "prior_period": "2025-07-01",
+      "preliminary": false,
+      "headline": 6919,
+      "sum": 6919,
+      "residual": 0,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 21,
+          "prior": 12,
+          "change": 9
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 213,
+          "prior": 305,
+          "change": -92
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 416,
+          "prior": 428,
+          "change": -12
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1140,
+          "prior": 1099,
+          "change": 41
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 141,
+          "prior": 157,
+          "change": -16
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 334,
+          "prior": 396,
+          "change": -62
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1095,
+          "prior": 1240,
+          "change": -145
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1512,
+          "prior": 1429,
+          "change": 83
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 1050,
+          "prior": 970,
+          "change": 80
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 277,
+          "prior": 270,
+          "change": 7
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 720,
+          "prior": 781,
+          "change": -61
+        }
+      ]
+    },
+    {
+      "period": "2025-09-01",
+      "prior_period": "2025-08-01",
+      "preliminary": false,
+      "headline": 7169,
+      "sum": 7169,
+      "residual": 0,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 22,
+          "prior": 21,
+          "change": 1
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 206,
+          "prior": 213,
+          "change": -7
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 389,
+          "prior": 416,
+          "change": -27
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1054,
+          "prior": 1140,
+          "change": -86
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 119,
+          "prior": 141,
+          "change": -22
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 390,
+          "prior": 334,
+          "change": 56
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1267,
+          "prior": 1095,
+          "change": 172
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1548,
+          "prior": 1512,
+          "change": 36
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 1152,
+          "prior": 1050,
+          "change": 102
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 258,
+          "prior": 277,
+          "change": -19
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 764,
+          "prior": 720,
+          "change": 44
+        }
+      ]
+    },
+    {
+      "period": "2025-10-01",
+      "prior_period": "2025-09-01",
+      "preliminary": false,
+      "headline": 7170,
+      "sum": 7172,
+      "residual": -2,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 19,
+          "prior": 22,
+          "change": -3
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 196,
+          "prior": 206,
+          "change": -10
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 426,
+          "prior": 389,
+          "change": 37
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1257,
+          "prior": 1054,
+          "change": 203
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 117,
+          "prior": 119,
+          "change": -2
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 307,
+          "prior": 390,
+          "change": -83
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1268,
+          "prior": 1267,
+          "change": 1
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1476,
+          "prior": 1548,
+          "change": -72
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 1081,
+          "prior": 1152,
+          "change": -71
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 239,
+          "prior": 258,
+          "change": -19
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 786,
+          "prior": 764,
+          "change": 22
+        }
+      ]
+    },
+    {
+      "period": "2025-11-01",
+      "prior_period": "2025-10-01",
+      "preliminary": false,
+      "headline": 6846,
+      "sum": 6845,
+      "residual": 1,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 18,
+          "prior": 19,
+          "change": -1
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 292,
+          "prior": 196,
+          "change": 96
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 389,
+          "prior": 426,
+          "change": -37
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1115,
+          "prior": 1257,
+          "change": -142
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 88,
+          "prior": 117,
+          "change": -29
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 353,
+          "prior": 307,
+          "change": 46
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1309,
+          "prior": 1268,
+          "change": 41
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1490,
+          "prior": 1476,
+          "change": 14
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 873,
+          "prior": 1081,
+          "change": -208
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 260,
+          "prior": 239,
+          "change": 21
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 658,
+          "prior": 786,
+          "change": -128
+        }
+      ]
+    },
+    {
+      "period": "2025-12-01",
+      "prior_period": "2025-11-01",
+      "preliminary": false,
+      "headline": 6550,
+      "sum": 6549,
+      "residual": 1,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 21,
+          "prior": 18,
+          "change": 3
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 245,
+          "prior": 292,
+          "change": -47
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 426,
+          "prior": 389,
+          "change": 37
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 976,
+          "prior": 1115,
+          "change": -139
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 112,
+          "prior": 88,
+          "change": 24
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 237,
+          "prior": 353,
+          "change": -116
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1167,
+          "prior": 1309,
+          "change": -142
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1416,
+          "prior": 1490,
+          "change": -74
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 956,
+          "prior": 873,
+          "change": 83
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 271,
+          "prior": 260,
+          "change": 11
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 722,
+          "prior": 658,
+          "change": 64
+        }
+      ]
+    },
+    {
+      "period": "2026-01-01",
+      "prior_period": "2025-12-01",
+      "preliminary": false,
+      "headline": 7240,
+      "sum": 7238,
+      "residual": 2,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 29,
+          "prior": 21,
+          "change": 8
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 230,
+          "prior": 245,
+          "change": -15
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 510,
+          "prior": 426,
+          "change": 84
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1157,
+          "prior": 976,
+          "change": 181
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 100,
+          "prior": 112,
+          "change": -12
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 429,
+          "prior": 237,
+          "change": 192
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1196,
+          "prior": 1167,
+          "change": 29
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1453,
+          "prior": 1416,
+          "change": 37
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 1119,
+          "prior": 956,
+          "change": 163
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 263,
+          "prior": 271,
+          "change": -8
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 752,
+          "prior": 722,
+          "change": 30
+        }
+      ]
+    },
+    {
+      "period": "2026-02-01",
+      "prior_period": "2026-01-01",
+      "preliminary": false,
+      "headline": 6922,
+      "sum": 6923,
+      "residual": -1,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 17,
+          "prior": 29,
+          "change": -12
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 201,
+          "prior": 230,
+          "change": -29
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 443,
+          "prior": 510,
+          "change": -67
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1136,
+          "prior": 1157,
+          "change": -21
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 80,
+          "prior": 100,
+          "change": -20
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 391,
+          "prior": 429,
+          "change": -38
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1303,
+          "prior": 1196,
+          "change": 107
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1360,
+          "prior": 1453,
+          "change": -93
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 952,
+          "prior": 1119,
+          "change": -167
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 315,
+          "prior": 263,
+          "change": 52
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 725,
+          "prior": 752,
+          "change": -27
+        }
+      ]
+    },
+    {
+      "period": "2026-03-01",
+      "prior_period": "2026-02-01",
+      "preliminary": false,
+      "headline": 6887,
+      "sum": 6887,
+      "residual": 0,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 20,
+          "prior": 17,
+          "change": 3
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 234,
+          "prior": 201,
+          "change": 33
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 450,
+          "prior": 443,
+          "change": 7
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1160,
+          "prior": 1136,
+          "change": 24
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 83,
+          "prior": 80,
+          "change": 3
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 501,
+          "prior": 391,
+          "change": 110
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1047,
+          "prior": 1303,
+          "change": -256
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1486,
+          "prior": 1360,
+          "change": 126
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 882,
+          "prior": 952,
+          "change": -70
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 294,
+          "prior": 315,
+          "change": -21
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 730,
+          "prior": 725,
+          "change": 5
+        }
+      ]
+    },
+    {
+      "period": "2026-04-01",
+      "prior_period": "2026-03-01",
+      "preliminary": false,
+      "headline": 7585,
+      "sum": 7586,
+      "residual": -1,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 27,
+          "prior": 20,
+          "change": 7
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 266,
+          "prior": 234,
+          "change": 32
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 496,
+          "prior": 450,
+          "change": 46
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1197,
+          "prior": 1160,
+          "change": 37
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 82,
+          "prior": 83,
+          "change": -1
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 405,
+          "prior": 501,
+          "change": -96
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1473,
+          "prior": 1047,
+          "change": 426
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1658,
+          "prior": 1486,
+          "change": 172
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 846,
+          "prior": 882,
+          "change": -36
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 343,
+          "prior": 294,
+          "change": 49
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 793,
+          "prior": 730,
+          "change": 63
+        }
+      ]
+    },
+    {
+      "period": "2026-05-01",
+      "prior_period": "2026-04-01",
+      "preliminary": false,
+      "headline": 7537,
+      "sum": 7534,
+      "residual": 3,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 29,
+          "prior": 27,
+          "change": 2
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 291,
+          "prior": 266,
+          "change": 25
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 517,
+          "prior": 496,
+          "change": 21
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1259,
+          "prior": 1197,
+          "change": 62
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 72,
+          "prior": 82,
+          "change": -10
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 361,
+          "prior": 405,
+          "change": -44
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1375,
+          "prior": 1473,
+          "change": -98
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1608,
+          "prior": 1658,
+          "change": -50
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 916,
+          "prior": 846,
+          "change": 70
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 293,
+          "prior": 343,
+          "change": -50
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 813,
+          "prior": 793,
+          "change": 20
+        }
+      ]
+    },
+    {
+      "period": "2026-06-01",
+      "prior_period": "2026-05-01",
+      "preliminary": false,
+      "headline": 7182,
+      "sum": 7181,
+      "residual": 1,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 23,
+          "prior": 29,
+          "change": -6
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 298,
+          "prior": 291,
+          "change": 7
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 501,
+          "prior": 517,
+          "change": -16
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1286,
+          "prior": 1259,
+          "change": 27
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 89,
+          "prior": 72,
+          "change": 17
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 390,
+          "prior": 361,
+          "change": 29
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1203,
+          "prior": 1375,
+          "change": -172
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1501,
+          "prior": 1608,
+          "change": -107
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 825,
+          "prior": 916,
+          "change": -91
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 303,
+          "prior": 293,
+          "change": 10
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 762,
+          "prior": 813,
+          "change": -51
+        }
+      ]
+    },
+    {
+      "period": "2026-07-01",
+      "prior_period": "2026-06-01",
+      "preliminary": false,
+      "headline": 7335,
+      "sum": 7334,
+      "residual": 1,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 24,
+          "prior": 23,
+          "change": 1
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 299,
+          "prior": 298,
+          "change": 1
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 576,
+          "prior": 501,
+          "change": 75
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1244,
+          "prior": 1286,
+          "change": -42
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 78,
+          "prior": 89,
+          "change": -11
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 399,
+          "prior": 390,
+          "change": 9
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1305,
+          "prior": 1203,
+          "change": 102
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1585,
+          "prior": 1501,
+          "change": 84
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 768,
+          "prior": 825,
+          "change": -57
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 283,
+          "prior": 303,
+          "change": -20
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 773,
+          "prior": 762,
+          "change": 11
+        }
+      ]
+    },
+    {
+      "period": "2026-08-01",
+      "prior_period": "2026-07-01",
+      "preliminary": false,
+      "headline": 7190,
+      "sum": 7191,
+      "residual": -1,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 26,
+          "prior": 24,
+          "change": 2
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 262,
+          "prior": 299,
+          "change": -37
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 530,
+          "prior": 576,
+          "change": -46
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1238,
+          "prior": 1244,
+          "change": -6
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 91,
+          "prior": 78,
+          "change": 13
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 383,
+          "prior": 399,
+          "change": -16
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1204,
+          "prior": 1305,
+          "change": -101
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1634,
+          "prior": 1585,
+          "change": 49
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 797,
+          "prior": 768,
+          "change": 29
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 244,
+          "prior": 283,
+          "change": -39
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 782,
+          "prior": 773,
+          "change": 9
+        }
+      ]
+    },
+    {
+      "period": "2026-09-01",
+      "prior_period": "2026-08-01",
+      "preliminary": true,
+      "headline": 7523,
+      "sum": 7524,
+      "residual": -1,
+      "reconciled": true,
+      "rows": [
+        {
+          "key": "mining",
+          "series": "JTS110099000000000JOL",
+          "name": "Mining and logging",
+          "he": "כרייה וכריתת עצים",
+          "value": 26,
+          "prior": 26,
+          "change": 0
+        },
+        {
+          "key": "construction",
+          "series": "JTS230000000000000JOL",
+          "name": "Construction",
+          "he": "בנייה",
+          "value": 298,
+          "prior": 262,
+          "change": 36
+        },
+        {
+          "key": "manufacturing",
+          "series": "JTS300000000000000JOL",
+          "name": "Manufacturing",
+          "he": "תעשייה",
+          "value": 584,
+          "prior": 530,
+          "change": 54
+        },
+        {
+          "key": "trade",
+          "series": "JTS400000000000000JOL",
+          "name": "Trade, transportation, and utilities",
+          "he": "מסחר, תחבורה ותשתיות",
+          "value": 1283,
+          "prior": 1238,
+          "change": 45
+        },
+        {
+          "key": "information",
+          "series": "JTS510000000000000JOL",
+          "name": "Information",
+          "he": "מידע",
+          "value": 116,
+          "prior": 91,
+          "change": 25
+        },
+        {
+          "key": "financial",
+          "series": "JTS510099000000000JOL",
+          "name": "Financial activities",
+          "he": "פעילות פיננסית",
+          "value": 364,
+          "prior": 383,
+          "change": -19
+        },
+        {
+          "key": "professional",
+          "series": "JTS540099000000000JOL",
+          "name": "Professional and business services",
+          "he": "שירותים מקצועיים ועסקיים",
+          "value": 1310,
+          "prior": 1204,
+          "change": 106
+        },
+        {
+          "key": "education",
+          "series": "JTS600000000000000JOL",
+          "name": "Private education and health services",
+          "he": "חינוך ובריאות פרטיים",
+          "value": 1614,
+          "prior": 1634,
+          "change": -20
+        },
+        {
+          "key": "leisure",
+          "series": "JTS700000000000000JOL",
+          "name": "Leisure and hospitality",
+          "he": "פנאי ואירוח",
+          "value": 779,
+          "prior": 797,
+          "change": -18
+        },
+        {
+          "key": "other",
+          "series": "JTS810000000000000JOL",
+          "name": "Other services",
+          "he": "שירותים אחרים",
+          "value": 270,
+          "prior": 244,
+          "change": 26
+        },
+        {
+          "key": "government",
+          "series": "JTS900000000000000JOL",
+          "name": "Government",
+          "he": "ממשלה",
+          "value": 880,
+          "prior": 782,
+          "change": 98
+        }
+      ]
+    }
+  ]
+}

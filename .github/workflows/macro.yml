@@ -26,6 +26,7 @@ jobs:
       - name: Static and syntax checks
         run: |
           node --check apps/terminal/public/terminal-macro-dashboard.js
+          node scripts/macro_breakdown.mjs --check
           python -m py_compile services/api/modules/macro.py scripts/macro_browser_qa.py
           python scripts/static_contract_check.py
       - name: Browser dependencies
