@@ -4,6 +4,11 @@ import {MACRO_SERIES,catalogue,parseHistory,validateRelease,releaseSet,history} 
 import {MACRO_RELEASES} from '../supabase/functions/wave-data/macro-releases.ts';
 const now=Date.parse('2026-10-14T20:00:00Z');
 const clone=x=>structuredClone(x);
+test('higherIsBetter is declared for every indicator and published on the catalogue',()=>{
+ const expected={cpi:false,pce:false,core_cpi:false,industrial:true,gdp:true,retail:true,ism_manufacturing:true,ism_services:true,nfp:true,unemployment:false,claims:false,jolts:true,wages:'neutral'};
+ assert.deepEqual(Object.fromEntries(MACRO_SERIES.map(s=>[s.id,s.higherIsBetter])),expected);
+ assert.deepEqual(Object.fromEntries(catalogue(now).series.map(s=>[s.id,s.higherIsBetter])),expected);
+});
 test('13 requested slots, separate licensed ISM, no automation or consensus claim',()=>{
  const c=catalogue(now);assert.equal(c.series.length,13);assert.equal(c.country,'US');assert.equal(c.automation,'not_connected');assert.equal(c.series.filter(s=>s.status==='license_unverified').length,2);assert.equal(c.series.filter(s=>s.group==='inflation').length,3);
  assert.ok(c.series.flatMap(s=>s.releases).every(r=>r.consensus===null));

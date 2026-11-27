@@ -191,6 +191,12 @@
     'datalog.col.pulled':  {en:'Last pull', he:'משיכה אחרונה'},
     'datalog.col.coverage':{en:'Coverage', he:'כיסוי'},
     'datalog.col.notes':   {en:'Notes', he:'הערות'},
+
+    'macro.avgWindowY': {en:'{n}Y avg', he:'ממוצע {n} שנ׳'},
+    'macro.avgWindowM': {en:'{n}M avg', he:'ממוצע {n} ח׳'},
+    'macro.avgBadge':   {en:'{delta} vs {window}', he:'{delta} מול {window}'},
+    'macro.avgTip':     {en:'Arithmetic mean of {n} observations from {from} to {to}. The latest observation is included.', he:'ממוצע חשבוני של {n} תצפיות מ-{from} עד {to}. הנתון האחרון כלול.'},
+    'macro.avgTipShort':{en:'Fewer than 3 years of history are available. Arithmetic mean of {n} observations from {from} to {to}.', he:'זמינות פחות מ-3 שנות היסטוריה. ממוצע חשבוני של {n} תצפיות מ-{from} עד {to}.'},
   };
 
   function getLang(){
