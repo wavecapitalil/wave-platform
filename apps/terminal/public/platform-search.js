@@ -55,8 +55,8 @@
       (st.watchlist||[]).forEach(function(sym){entries.push({type:'Watchlist',title:sym,sub:'Open catalyst research',slug:'mover',symbol:sym});});
       (st.saved||[]).forEach(function(x){entries.push({type:'Saved',title:x.title||x.id,sub:x.type||'Saved research',href:x.href||'account.html'});});
     }
-    document.querySelectorAll('.card[href], .news-sec-card').forEach(function(el){
-      var title=(el.querySelector('.card-title,.news-sec-headline')||{}).textContent;
+    document.querySelectorAll('.card[href]').forEach(function(el){
+      var title=(el.querySelector('.card-title')||{}).textContent;
       if(title)entries.push({type:'On page',title:title.trim(),sub:'Current page result',href:el.getAttribute('href')||''});
     });
   }

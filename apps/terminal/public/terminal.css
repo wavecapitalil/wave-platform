@@ -237,19 +237,6 @@ body{background:#0a0a0f;color:#e2e8f0;font-family:'Inter',-apple-system,BlinkMac
 .greeting span{color:var(--blue)}
 .greeting-sub{font-size:13px;color:var(--gray)}
 
-.regime-pill{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  background:var(--surface2);
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:10px 16px;
-}
-.regime-dot{width:8px;height:8px;border-radius:50%}
-.regime-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray)}
-.regime-val{font-size:13px;font-weight:800;letter-spacing:1px}
-
 /* Top catalyst hero */
 .catalyst-card{
   background:var(--surface2);
@@ -394,6 +381,13 @@ body{background:#0a0a0f;color:#e2e8f0;font-family:'Inter',-apple-system,BlinkMac
 .sc-chg.dn{color:var(--red)}
 .sc-chg.warn{color:var(--yellow)}
 .sc-spark{width:100%;height:28px;display:block;margin-top:10px;overflow:visible}
+
+/* Homepage market strip only — shorter cards, same 8-up / 2-up layout. */
+#page-welcome .summary-grid{gap:8px}
+#page-welcome .summary-card{padding:10px 12px}
+#page-welcome .sc-label{margin-bottom:4px}
+#page-welcome .sc-val{margin-bottom:2px}
+#page-welcome .sc-spark{height:24px;margin-top:6px}
 
 /* ── Macro Scanner ────────────────────────────────────────── */
 .macro-topic-pill{
@@ -875,18 +869,6 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
 .car-progress{height:2px;background:rgba(255,255,255,0.07);border-radius:1px;margin-top:14px;overflow:hidden}
 .car-progress-fill{height:100%;border-radius:1px;background:linear-gradient(90deg,#4a9eff,#8b5cf6);width:0}
 
-/* Secondary news grid */
-.news-secondary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
-.news-sec-card{
-  padding:14px 15px;border-radius:12px;cursor:pointer;
-  background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.055);
-  transition:all .15s;
-}
-.news-sec-card:hover{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.09);transform:translateY(-1px)}
-.news-sec-meta{display:flex;align-items:center;gap:6px;margin-bottom:7px}
-.news-sec-headline{font-size:12px;font-weight:700;color:#94a3b8;line-height:1.45;
-  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-
 /* Sidebar drivers (glass) */
 .side-drivers{background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.07);border-radius:10px;overflow:hidden}
 .side-driver{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;gap:10px}
@@ -1091,7 +1073,6 @@ iframe{width:100%;height:calc(100vh - 200px);border:none}
   }
   .car-headline{font-size:clamp(20px,6.5vw,28px)}
   .car-excerpt{font-size:12px;line-height:1.55}
-  .news-secondary-grid{grid-template-columns:1fr}
   .sidebar-widget,.side-drivers{width:100%;min-width:0}
 
   /* Risk Meter: mobile-first vertical composition. */

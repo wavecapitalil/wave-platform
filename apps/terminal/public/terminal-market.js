@@ -14,9 +14,9 @@ function chgHtml(pct){
 }
 function chgSummHtml(pct){
   if(pct === null || pct === undefined) return '—';
-  var sign = pct >= 0 ? '▲ +' : '▼ ';
+  var sign = pct > 0 ? '+' : '';
   var cls  = pct >= 0 ? 'up' : 'dn';
-  return '<span class="sc-chg ' + cls + '">' + sign + Math.abs(pct).toFixed(2) + '%</span>';
+  return '<span class="sc-chg ' + cls + '">' + sign + pct.toFixed(2) + '%</span>';
 }
 
 // ── PYTHON API (localhost:5001) ───────────────────────────
@@ -309,7 +309,7 @@ async function loadTickerData(){
   var tickers = [
     {id:'spy',   sym:'SPY',      pre:'',  card:'sp',  fmt2:fmt,    special:null},
     {id:'qqq',   sym:'QQQ',      pre:'',  card:'qqq', fmt2:fmt,    special:null},
-    {id:'vix',   sym:'^VIX',   pre:'',  card:'vix', fmt2:fmt,    special:'vix'},
+    {id:'vix',   sym:'^VIX',   pre:'',  card:'vix', fmt2:fmt,    special:null},
     {id:'gold',  sym:'GC=F',     pre:'$', card:'gold',fmt2:function(v){return fmt(v,'$');}, special:null, sparkSym:'GLD'},
     {id:'dxy',   sym:'DX-Y.NYB', pre:'',  card:null,  fmt2:fmt,    special:null},
     {id:'10y',   sym:'^TNX',   pre:'',  card:'10y', fmt2:function(v){return v.toFixed(3)+'%';}, special:null},
@@ -332,16 +332,7 @@ async function loadTickerData(){
         var sv = document.getElementById('s-' + t.card);
         var sc = document.getElementById('sc-' + t.card);
         if(sv) sv.textContent = t.fmt2(q.price);
-        if(t.special === 'vix'){
-          if(sc) sc.innerHTML = q.price > 30 ? '<span class="sc-chg warn">⚡ ELEVATED</span>' : q.price > 20 ? '<span class="sc-chg warn">🟡 CAUTION</span>' : '<span class="sc-chg up">🟢 CALM</span>';
-          var regime = q.price > 30 ? 'RISK-OFF' : q.price > 22 ? 'FRAGILE' : 'NEUTRAL';
-          var rc = q.price > 30 ? '#ef4444' : q.price > 22 ? '#f59e0b' : '#22c55e';
-          document.getElementById('regimeVal').textContent = regime;
-          document.getElementById('regimeVal').style.color = rc;
-          document.getElementById('regimeDot').style.background = rc;
-        } else {
-          if(sc) sc.innerHTML = chgSummHtml(q.pct);
-        }
+        if(sc) sc.innerHTML = chgSummHtml(q.pct);
         // Sparkline
         (function(tid, tcardId, tpct){
           fetchIntraday(tid).then(function(prices){

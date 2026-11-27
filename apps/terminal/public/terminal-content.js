@@ -199,24 +199,13 @@ async function loadNews(){
     }
     var stories=d.stories||[];
     if(!stories.length)return;
-    // Keep all 9 (carousel only cycles the first 5 — see goCarousel's
-    // Math.min(...,5) — but the secondary grid below opens stories at
-    // indices 5-8 via openArticleReader, which reads this same array).
-    _carouselStories=stories.slice(0,9);
+    // The homepage carousel cycles the first five stories.
+    _carouselStories=stories.slice(0,5);
     _carouselIdx=0;
     var el=document.getElementById('newsList');
     if(!el)return;
-    el.innerHTML='<div id="newsCarousel"></div><div class="news-secondary-grid" id="newsSecondary"></div>';
+    el.innerHTML='<div id="newsCarousel"></div>';
     goCarousel(0);
-    var sec=stories.slice(5,9);
-    document.getElementById('newsSecondary').innerHTML=sec.map(function(s,i){
-      var cat=s.category||'MARKETS',t=s.pub?_newsTimeAgo(s.pub):'';
-      var realIdx=i+5;
-      return '<div class="news-sec-card" onclick="openArticleReader('+realIdx+')">'
-        +'<div class="news-sec-meta"><span class="wsj-cat wsj-cat-'+cat+'">'+cat+'</span>'+(t?'<span class="wsj-dot"></span><span class="wsj-time">'+t+'</span>':'')+'</div>'
-        +'<div class="news-sec-headline">'+s.title+'</div>'
-        +'</div>';
-    }).join('');
   }catch(e){console.error('loadNews:',e);}
 }
 

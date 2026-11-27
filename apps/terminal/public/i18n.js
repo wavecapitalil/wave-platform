@@ -133,7 +133,6 @@
     'home.greetingMorning': {en:'Good morning',   he:'בוקר טוב'},
     'home.greetingAfternoon': {en:'Good afternoon', he:'צהריים טובים'},
     'home.greetingEvening': {en:'Good evening',   he:'ערב טוב'},
-    'home.regime':        {en:'Market Regime',   he:'משטר שוק'},
     'home.marketsIntel':  {en:'Markets Intelligence', he:'מודיעין שוקים'},
     'home.fullBrief':     {en:'Full Brief →',    he:'תדריך מלא ←'},
     'home.calendar':      {en:"📅 Today's Calendar", he:'📅 לוח שנה להיום'},
