@@ -17,6 +17,26 @@
     var options=Math.abs(n)<.001?{maximumSignificantDigits:3}:{maximumFractionDigits:3};
     return n.toLocaleString('en-US',options).replace('-', '−');
   }
+  // Readout figures always use a dot decimal and no grouping, including in Hebrew.
+  function readoutNumber(n){
+    if(typeof n!=='number'||!Number.isFinite(n))return '—';
+    if(n===0)return '0';
+    var options=Math.abs(n)<.001?{maximumSignificantDigits:3,useGrouping:false}:{maximumFractionDigits:3,useGrouping:false};
+    return n.toLocaleString('en-US',options).replace('-','−');
+  }
+  function readoutWhen(iso,frequency){
+    var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(iso||''));
+    if(!m)return '—';
+    return frequency==='weekly'?m[3]+'/'+m[2]+'/'+m[1]:m[1]+'/'+m[2];
+  }
+  function shown(n,unit){
+    var u=unit||'',v=n;
+    if(u==='thousand openings'){
+      u='million';
+      if(typeof n==='number'&&Number.isFinite(n))v=n/1000;
+    }
+    return {number:readoutNumber(v),unit:u};
+  }
   function chartScale(values){
     var low=Math.min(0,...values),high=Math.max(0,...values),span=high-low||1;
     var rough=span/4,power=Math.pow(10,Math.floor(Math.log10(rough)));
@@ -26,7 +46,8 @@
     var ticks=Array.from({length:last-first+1},function(_,i){return Number(((first+i)*step).toPrecision(12));});
     return {min:ticks[0],max:ticks[ticks.length-1],ticks:ticks};
   }
-  function chart(points,expanded,unit,comparison){
+  function chart(points,expanded,unit,comparison,frequency){
+    frequency=frequency||'monthly';
     if(!points.length)return '<div class="macro-empty">—</div>';
     var w=expanded?Math.max(280,Math.min(760,window.innerWidth<600?window.innerWidth-24:window.innerWidth*.94-48)):210,h=expanded?280:58,left=expanded?92:5,right=expanded?25:5,top=expanded?28:5,bottom=expanded?60:5;
     var values=points.flatMap(function(p){return [p.value,p.consensus].filter(function(v){return typeof v==='number'&&Number.isFinite(v);});});
@@ -47,30 +68,67 @@
       Array.from({length:tickCount},function(_,i){return tickCount===1?0:Math.round(i*(points.length-1)/(tickCount-1));}).forEach(function(i){axes+='<text class="macro-axis-period" x="'+x(points[i])+'" y="'+(h-36)+'" text-anchor="'+(i===0?'start':i===points.length-1?'end':'middle')+'">'+period(points[i].period.slice(0,comparison?10:7))+'</text>';});
       axes+='<text x="'+left+'" y="14" text-anchor="start">'+esc(unit)+'</text><text x="'+(w/2)+'" y="'+(h-8)+'" text-anchor="middle">'+(comparison?t('Release date (YYYY/MM/DD)','תאריך פרסום (YYYY/MM/DD)'):t('Reference period (YYYY/MM)','תקופת ייחוס (YYYY/MM)'))+'</text>';
     }
+    function label(p){
+      var fig=shown(p.value,unit);
+      return readoutWhen(p.reference_period||p.period,frequency)+' · '+fig.number+(fig.unit?' '+fig.unit:'');
+    }
     var baseline='<line class="macro-zero" x1="'+left+'" x2="'+(w-right)+'" y1="'+y(0)+'" y2="'+y(0)+'" stroke="#cbd5e1" stroke-width="1.5"/>';
-    var bars=points.filter(function(p){return typeof p.value==='number'&&Number.isFinite(p.value);}).map(function(p){var height=Math.abs(y(p.value)-y(0));return '<rect class="macro-column '+(p.value<0?'negative':'positive')+'" data-value="'+p.value+'" x="'+(x(p)-barWidth/2)+'" y="'+(p.value<0?y(0):y(p.value))+'" width="'+barWidth+'" height="'+height+'" fill="'+(p.value<0?'#fbbf24':'#67e8f9')+'"><title>'+esc(p.tooltip||period(p.period)+' · '+readable(p.value,unit)+' '+unit)+'</title></rect>';}).join('');
+    var bars=points.map(function(p,i){if(typeof p.value!=='number'||!Number.isFinite(p.value))return '';var height=Math.abs(y(p.value)-y(0));return '<rect class="macro-column '+(p.value<0?'negative':'positive')+'" data-index="'+i+'" data-value="'+p.value+'" x="'+(x(p)-barWidth/2)+'" y="'+(p.value<0?y(0):y(p.value))+'" width="'+barWidth+'" height="'+height+'" fill="'+(p.value<0?'#fbbf24':'#67e8f9')+'"><title>'+esc(p.tooltip||label(p))+'</title></rect>';}).join('');
     var dots=points.filter(function(p){return typeof p.consensus==='number'&&Number.isFinite(p.consensus);}).map(function(p){return '<circle class="macro-consensus-dot" aria-label="'+esc(p.tooltip)+'" cx="'+x(p)+'" cy="'+y(p.consensus)+'" r="'+(expanded?5:3)+'" fill="#f472b6" stroke="#0b1526" stroke-width="1.5"><title>'+esc(p.tooltip)+'</title></circle>';}).join('');
     var id='macro-chart-readout-'+(++chartId);
-    var readings=points.map(function(p){return {x:x(p),tip:p.tooltip||period(p.period)+' · '+readable(p.value,unit)+' '+unit};});
-    var hint=t('Hover or tap to inspect. Focus and use arrow keys for observations.','עברו עם העכבר או הקישו להצגת נתון. במיקוד השתמשו בחצים למעבר בין תצפיות.');
-    return '<div class="macro-chart'+(expanded?' expanded':'')+'"><svg dir="ltr" style="direction:ltr" viewBox="0 0 '+w+' '+h+'" role="group" '+(expanded?'tabindex="0" ':'')+'data-readings="'+esc(JSON.stringify(readings))+'" aria-describedby="'+id+'" aria-label="'+esc(t('Column chart','גרף עמודות')+' · '+unit+' · '+hint)+'">'+axes+baseline+bars+dots+'</svg><div id="'+id+'" class="macro-chart-readout" role="status" aria-live="polite" aria-atomic="true" data-hint="'+esc(hint)+'"></div></div>';
+    var readings=points.map(function(p){return {x:x(p),w:barWidth,value:typeof p.value==='number'&&Number.isFinite(p.value)?p.value:null,label:label(p)};});
+    var latestLabel=readings.reduce(function(carry,p){return p.value!==null?p.label:carry;},readings.length?readings[0].label:'');
+    var hint=t('Click or tap a bar to pin its period and value. Click it again or empty chart space to clear.','הקישו על עמודה כדי להציג תקופה וערך. הקישו שוב או על שטח ריק כדי לנקות.');
+    return '<div class="macro-chart'+(expanded?' expanded':'')+'"><svg dir="ltr" style="direction:ltr" viewBox="0 0 '+w+' '+h+'" role="group" '+(expanded?'tabindex="0" ':'')+'data-readings="'+esc(JSON.stringify(readings))+'" aria-describedby="'+id+'" aria-label="'+esc(t('Column chart','גרף עמודות')+' · '+unit+' · '+hint)+'">'+axes+baseline+bars+dots+'</svg><div id="'+id+'" class="macro-chart-readout" dir="ltr" role="status" aria-live="polite" aria-atomic="true" data-hint="'+esc(hint)+'">'+esc(latestLabel)+'</div></div>';
   }
   function bindCharts(host){
     host.querySelectorAll('.macro-chart svg').forEach(function(svg){
-      var readings=JSON.parse(svg.dataset.readings),index=0,output=svg.nextElementSibling;
-      function show(i){index=Math.max(0,Math.min(readings.length-1,i));output.textContent=readings[index].tip;svg.parentElement.classList.add('inspecting');}
-      function clear(){output.textContent='';svg.parentElement.classList.remove('inspecting');}
-      function inspect(e){var box=svg.getBoundingClientRect(),x=(e.clientX-box.left)/box.width*svg.viewBox.baseVal.width;var nearest=0;readings.forEach(function(p,i){if(Math.abs(p.x-x)<Math.abs(readings[nearest].x-x))nearest=i;});show(nearest);}
-      svg.addEventListener('pointermove',inspect);
-      svg.addEventListener('pointerdown',inspect);
-      svg.addEventListener('pointerleave',function(e){if(e.pointerType!=='touch'&&document.activeElement!==svg)clear();});
-      svg.addEventListener('focus',function(){show(index);});
-      svg.addEventListener('blur',clear);
-      svg.addEventListener('keydown',function(e){
-        if(e.key==='Escape'&&svg.parentElement.classList.contains('inspecting')){e.preventDefault();clear();e.stopPropagation();return;}
-        if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;
-        e.preventDefault();show(e.key==='Home'?0:e.key==='End'?readings.length-1:index+(e.key==='ArrowLeft'?-1:1));
+      var readings=JSON.parse(svg.dataset.readings),selected=null,output=svg.nextElementSibling;
+      function latest(){for(var i=readings.length-1;i>=0;i--)if(readings[i].value!==null)return i;return readings.length?readings.length-1:0;}
+      function paint(){
+        var i=selected==null?latest():selected;
+        if(output)output.textContent=readings[i]?readings[i].label:'';
+        svg.querySelectorAll('.macro-column').forEach(function(bar){bar.classList.toggle('is-selected',selected!==null&&Number(bar.dataset.index)===selected);});
+        svg.parentElement.classList.toggle('inspecting',selected!==null);
+      }
+      function hit(e){
+        var t=e.target&&e.target.closest?e.target:null;
+        if(t){
+          var column=t.closest('.macro-column');
+          if(column)return Number(column.dataset.index);
+          var dot=t.closest('.macro-consensus-dot');
+          if(dot){
+            var cx=Number(dot.getAttribute('cx')),nearest=0;
+            readings.forEach(function(p,i){if(Math.abs(p.x-cx)<Math.abs(readings[nearest].x-cx))nearest=i;});
+            return nearest;
+          }
+        }
+        var box=svg.getBoundingClientRect();
+        if(!box.width)return null;
+        var x=(e.clientX-box.left)/box.width*svg.viewBox.baseVal.width,best=null,dist=Infinity;
+        readings.forEach(function(p,i){
+          if(p.value===null)return;
+          var d=Math.abs(p.x-x);
+          if(d<=(p.w||0)/2+3&&d<dist){best=i;dist=d;}
+        });
+        return best;
+      }
+      svg.addEventListener('click',function(e){
+        var index=hit(e);
+        if(index==null){selected=null;paint();return;}
+        e.preventDefault();e.stopPropagation();
+        selected=selected===index?null:index;
+        paint();
       });
+      svg.addEventListener('keydown',function(e){
+        if(e.key==='Escape'&&selected!==null){e.preventDefault();e.stopPropagation();selected=null;paint();return;}
+        if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;
+        e.preventDefault();
+        var i=selected==null?latest():selected;
+        selected=e.key==='Home'?0:e.key==='End'?readings.length-1:Math.max(0,Math.min(readings.length-1,i+(e.key==='ArrowLeft'?-1:1)));
+        paint();
+      });
+      paint();
     });
   }
 
@@ -100,7 +158,7 @@
   }
   function comparison(s,expanded){
     var points=comparisonPoints(s);
-    return '<div class="macro-comparison"><div class="macro-legend"><span>▰ '+t('Actual','בפועל')+'</span>'+(points.some(function(p){return p.consensus!==null;})?'<span class="macro-consensus-key">● '+t('Consensus','צפי')+'</span>':'')+'</div>'+chart(points,expanded,s.unit,true)+'</div>';
+    return '<div class="macro-comparison"><div class="macro-legend"><span>▰ '+t('Actual','בפועל')+'</span>'+(points.some(function(p){return p.consensus!==null;})?'<span class="macro-consensus-key">● '+t('Consensus','צפי')+'</span>':'')+'</div>'+chart(points,expanded,s.unit,true,s.frequency)+'</div>';
   }
   function register(s,h){
     if(!window.WaveSources)return;
@@ -120,7 +178,7 @@
       'History status: '+status(h.status),
       'Revised history is not first-release history. Missing values remain unavailable (—), never zero.',
       'Missing verified consensus is not plotted. A comparison and its legend require verified pre-release consensus.',
-      'Chart controls: hover or tap for values; focus and use arrow keys, Home or End. Escape dismisses the readout.',
+      'Chart controls: click or tap a bar to pin its reference period and actual value. Click the same bar or empty chart space to clear. Focus the expanded chart and use arrow keys, Home or End. Escape clears the selection.',
       'Next release: '+(next?releaseTime(next.scheduled_at):'Schedule unavailable')];
     if(h.error)notes.push('History retrieval error: '+(typeof h.error==='string'?h.error:h.error.message));
     (h.unavailable_periods||[]).forEach(function(r){notes.push('Official unavailable period '+r.period+': '+r.reason+' | '+r.source+' | verified '+r.verified_at);});
@@ -142,7 +200,8 @@
     var useHistory=p&&(!r||p.period>r.period);
     var value=useHistory?p.value:r?r.actual:null,period=useHistory?p.period:r?r.period:null;
     var points=h.points;
-    return '<button type="button" class="macro-indicator" data-macro-id="'+s.id+'" aria-haspopup="dialog"><span class="macro-indicator-name">'+esc(he()?s.he:s.name)+'</span><strong dir="ltr">'+num(value)+'</strong><span class="macro-unit" dir="ltr">'+esc(s.unit)+'</span>'+chart(points,false,s.unit)+(events(s).length?comparison(s,false):'')+nextRelease(s,h)+'<span class="macro-period" dir="ltr">'+esc(period?period.slice(0,s.frequency==='weekly'?10:7):'—')+'</span></button>';
+    var fig=shown(value,s.unit),jolts=s.unit==='thousand openings';
+    return '<button type="button" class="macro-indicator" data-macro-id="'+s.id+'" aria-haspopup="dialog"><span class="macro-indicator-name">'+esc(he()?s.he:s.name)+'</span><strong dir="ltr">'+esc(jolts?fig.number:num(value))+'</strong><span class="macro-unit" dir="ltr">'+esc(jolts?fig.unit:s.unit)+'</span>'+chart(points,false,s.unit,false,s.frequency)+(events(s).length?comparison(s,false):'')+nextRelease(s,h)+'<span class="macro-period" dir="ltr">'+esc(period?period.slice(0,s.frequency==='weekly'?10:7):'—')+'</span></button>';
   }
   function render(){
     var host=document.getElementById('macroDashboard');if(!host)return;
@@ -161,7 +220,7 @@
     var r=s.releases.find(function(x){return x.id===releaseId;})||latest(s);
     var html='<p class="macro-measure" dir="ltr">'+esc(s.unit+' · '+s.sa+' · '+s.frequency)+'</p>';
     registerNotes(s,h);
-    html+='<h3>'+t('Current revised history','היסטוריה לפי הנתונים המעודכנים')+'</h3>'+chart(h.points,true,s.unit)+nextRelease(s,h);
+    html+='<h3>'+t('Current revised history','היסטוריה לפי הנתונים המעודכנים')+'</h3>'+chart(h.points,true,s.unit,false,s.frequency)+nextRelease(s,h);
     if(h.points.length)html+='<details><summary>'+t('Observation values','ערכי התצפיות')+'</summary>'+table([t('Reference period','תקופת ייחוס'),s.unit],h.points.map(function(p){return [p.period,precise(p.value)];}))+'</details>';
     html+='<h3>'+t('Verified release snapshots','גרסאות פרסום מאומתות')+'</h3>';
     if(r){

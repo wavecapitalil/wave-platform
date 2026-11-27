@@ -47,7 +47,7 @@ test('round ticks include exact zero for mixed, one-sided, constant and tiny ser
 test('readouts preserve observation precision and missing values; empty consensus legend is hidden',()=>{
  const api=ui('he',320);
  const html=api.chart([{period:'2026-07-01',value:-0.015123456789},{period:'2026-08-01',value:null}],true,'% MoM');
- assert.ok(html.includes('−0.015 % MoM'));assert.ok(html.includes('2026/08/01 · — % MoM'));
+  assert.ok(html.includes('−0.015 % MoM'));assert.ok(html.includes('2026/08 · — % MoM'));assert.ok(!html.includes('2026/08/01'));
  assert.ok(html.includes('tabindex="0"'));assert.ok(html.includes('aria-live="polite"'));
  const comparison=api.comparison({unit:'%',sa:'SA',releases:[{...base,actual:0,released_at:past}],calendar:[]},true);
  assert.ok(!comparison.includes('macro-consensus-key'));assert.ok(!comparison.includes('צפי מאומת חסר'));
@@ -62,6 +62,23 @@ test('zero and tiny signed bars share the exact baseline without minimum-height 
   if(v<0)assert.equal(y,zero);else assert.ok(Math.abs(y+h-zero)<1e-8);
   if(v===0)assert.equal(h,0);
  }
+});
+
+test('readouts pair frequency dates with dot-decimal actuals in Hebrew and English',()=>{
+  const he=ui('he');
+  const monthly=he.chart([{period:'2026-09-01',value:7.5}],true,'% YoY',false,'monthly');
+  assert.ok(monthly.includes('2026/09 · 7.5 % YoY'));
+  assert.ok(!monthly.includes('7,5'));assert.ok(!monthly.includes('2026-09'));
+  const weekly=he.chart([{period:'2026-11-27',value:215432.5}],true,'claims',false,'weekly');
+  assert.ok(weekly.includes('27/11/2026 · 215432.5 claims'));
+  assert.ok(!weekly.includes('215,432'));assert.ok(!weekly.includes('2026-11-27'));
+  assert.ok(!/T\d|UTC|GMT|:\d\d/.test(weekly.match(/27\/11\/2026 · 215432\.5 claims/)[0]));
+  const jolts=he.chart([{period:'2026-09-01',value:7500}],true,'thousand openings',false,'monthly');
+  assert.ok(jolts.includes('2026/09 · 7.5 million'));
+  assert.ok(!jolts.includes('7.5 thousand'));assert.ok(!jolts.includes('7,500'));assert.ok(!jolts.includes('7,5'));
+  const quarter=ui('en').chart([{period:'2026-07-01',value:-1.37}],true,'% QoQ annualized',false,'quarterly');
+  assert.ok(quarter.includes('2026/07 · −1.37 % QoQ annualized'));
+  assert.ok(!quarter.includes('2026-07'));
 });
 
 test('visible values trim tails, preserve tiny signs and do not rescale units',()=>{

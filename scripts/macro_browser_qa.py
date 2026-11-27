@@ -77,14 +77,24 @@ async def check(browser,width,lang):
     assert await page.locator('.macro-contribution').count()==0
     await page.keyboard.press('Escape')
     assert await page.locator('[data-macro-id=nfp]').evaluate('(e)=>document.activeElement===e')
-    await page.locator('[data-macro-id=cpi]').click()
+    bar=page.locator('[data-macro-id=cpi] .macro-chart').first.locator('.macro-column').nth(3)
+    if width<600: await bar.tap()
+    else: await bar.click()
+    assert not await page.locator('#macroDialog').evaluate('(e)=>e.open')
+    pinned=await page.locator('[data-macro-id=cpi] .macro-chart-readout').first.inner_text()
+    assert '·' in pinned and '/' in pinned and ',' not in pinned and 'T' not in pinned.split('·')[0]
+    assert await page.locator('[data-macro-id=cpi] .macro-column.is-selected').count()==1
+    if width<600: await bar.tap()
+    else: await bar.click()
+    assert await page.locator('[data-macro-id=cpi] .macro-column.is-selected').count()==0
+    await page.locator('[data-macro-id=cpi] .macro-indicator-name').click()
     assert await page.locator('.macro-contribution').count()==3
     assert '-0.037' in await page.locator('#macroDetail').inner_text()
     await page.locator('#macroDialog').evaluate('(e)=>e.scrollTop=0')
     await page.screenshot(path=str(OUT/f'{width}-{lang}-cpi.png'),full_page=True)
     await page.locator('#macroDialogClose').click()
     for sid in ['gdp','pce']:
-        await page.locator('[data-macro-id='+sid+']').click()
+        await page.locator('[data-macro-id='+sid+'] .macro-indicator-name').click()
         await page.locator('#macroComponentPeriod').wait_for()
         if sid=='gdp':
             assert await page.locator('#macroDialog .macro-column.negative').count()>0
@@ -96,7 +106,7 @@ async def check(browser,width,lang):
         assert await page.locator('.macro-component-section .macro-table-wrap').evaluate('(e)=>e.scrollWidth<=e.clientWidth+2')
         await page.screenshot(path=str(OUT/f'{width}-{lang}-{sid}.png'),full_page=True)
         await page.keyboard.press('Escape')
-    await page.locator('[data-macro-id=ism_services]').click()
+    await page.locator('[data-macro-id=ism_services] .macro-indicator-name').click()
     assert await page.locator('.macro-contribution').count()==0
     assert await page.locator('#macroDetail svg').count()==0
     await page.keyboard.press('Escape')
