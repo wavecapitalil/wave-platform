@@ -88,7 +88,7 @@
     {id:'home-btc',he:'בית · ביטקוין',en:'Home · Bitcoin',provider:'Binance Spot',endpoint:'GET /api/crypto-market/quote?symbol=BTCUSDT · https://data-api.binance.vision/api/v3/ticker/24hr · snapshot crypto:market',frequency:'Browser every 5 min · '+ENGINE,mode:'datasets',match:'one',keys:['crypto:market']},
     {id:'home-spark',he:'בית · קווי מגמה',en:'Home · Sparklines',provider:'Binance klines and Yahoo intraday',endpoint:'GET /api/crypto-market/klines?symbol=BTCUSDT&interval=5m · GET /api/intraday?symbol=SPY|QQQ|GLD|USO|^VIX|^TNX|FXE',frequency:'With the 5 min ticker poll · live wave-core, not a snapshot',mode:'probe',probes:['/api/crypto-market/klines?symbol=BTCUSDT&interval=5m&limit=5','/api/intraday?symbol=SPY']},
     {id:'home-news',he:'בית · כתבות',en:'Home · Articles',provider:'Top stories, then Bloomberg, CNBC, FT, MarketWatch, Yahoo Finance RSS',endpoint:'GET /api/top-stories, else GET /api/news · opening a story calls GET /api/blog/article/{id} or GET /api/article',frequency:'Browser every 10 min · route TTL 15m, engine minimum 60m',mode:'datasets',match:'ok',keys:['api:/api/top-stories','api:/api/news'],notes:'Homepage carousel, first five stories.'},
-    {id:'home-sectors',he:'פעימת סקטורים וחוזק סקטורים',en:'Home sector pulse and Sector Strength',provider:'Yahoo Finance sector ETFs',endpoint:'GET /api/sectors · snapshot sectors:sp500 · XLK XLC XLY XLF XLI XLV XLP XLB XLE XLRE XLU',frequency:'Browser every 5 min, and when the Sectors page opens · '+ENGINE,mode:'datasets',match:'one',keys:['sectors:sp500'],notes:'Same payload for loadSectorPulse and loadSectors. Source is Yahoo Finance via yfinance.'},
+    {id:'home-sectors',he:'פעימת סקטורים וחוזק סקטורים',en:'Home sector pulse and Sector Strength',provider:'Yahoo Finance chart API regular session',endpoint:'GET /api/sectors · https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?range=10d&interval=1d&includePrePost=false · snapshot sectors:sp500 · XLK XLC XLY XLF XLI XLV XLP XLB XLE XLRE XLU · .github/workflows/sector-pulse.yml',frequency:'Browser every 5 min, and when the Sectors page opens. Refresh when the snapshot is older than 30 min during the NYSE session, or older than the last close outside it. sector-pulse.yml cron 11,41 13-21 * * 1-5 is a secondary publisher.',mode:'probe',probes:['/api/sectors'],notes:'SPDR sector ETF regular-session price versus the prior completed session close. Same payload for the home pulse and Sector Strength.'},
     {id:'home-calendar',he:'בית · לוח כלכלי',en:'Home · Economic calendar',provider:'Fair Economy',endpoint:'GET /api/econ-calendar · https://nfs.faireconomy.media/ff_calendar_thisweek.json · snapshot macro:calendar',frequency:'On load and when returning Home · '+ENGINE,mode:'datasets',match:'one',keys:['macro:calendar']},
     {id:'breadth',he:'רוחב שוק',en:'Market breadth',provider:'Yahoo Finance',endpoint:'GET /api/quote?symbol=SPY|QQQ|IWM|RSP|MDY',frequency:'When the Breadth page opens',mode:'blend'},
     {id:'crypto-scanner',he:'סורק קריפטו',en:'Crypto scanner',provider:'Crypto scanner route',endpoint:'GET /api/crypto-scanner',frequency:'Browser every 10 min · route TTL 15m, engine minimum 60m',mode:'datasets',match:'one',keys:['api:/api/crypto-scanner']},
@@ -296,6 +296,13 @@
       if(!klines.ok||!intra.ok)return {status:'partial',pulledAt:last,note:note+' '+(klines.error||intra.error||'')};
       return {status:last?'current':'unstamped',pulledAt:last,note:note};
     }
+    if(id==='home-sectors'){
+      var sectors=jsonProbe(ctx,feed.probes[0]);
+      if(!sectors.ok||!sectors.json||sectors.json.error)return {status:'broken',pulledAt:'',note:sectors.error||(sectors.json&&sectors.json.error)||'Sector pulse unavailable'};
+      var sectorMeta=sectors.json.meta||{};
+      var sectorStamp=sectorMeta.source_timestamp||sectorMeta.calculated_at||sectorMeta.fetched_at||'';
+      return {status:sectorStamp?(sectorMeta.stale?'stale':'current'):'unstamped',pulledAt:sectorStamp,note:[sectorMeta.source||'', sectors.json.session?('session '+sectors.json.session):'', sectorMeta.freshness||''].filter(Boolean).join(' · ')};
+    }
     if(id==='housing'){
       var fred=ctx.probes[feed.probes[0]]||{};
       var hist=jsonProbe(ctx,feed.probes[1]);
@@ -435,7 +442,7 @@
     return Object.keys(paths);
   }
   function loadProbe(path){
-    var timeout=withTimeout(22000);
+    var timeout=withTimeout(path.indexOf('/api/sectors')===0?50000:22000);
     return fetch(apiBase()+path,{cache:'no-store',signal:timeout.signal}).then(function(response){
       return response.text().then(function(text){
         var json=null;
