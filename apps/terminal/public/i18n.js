@@ -139,6 +139,7 @@
     'home.sectorPulse':   {en:'📊 Sector Pulse', he:'📊 דופק סקטורים'},
     'home.sectorUnavailable': {en:'Unavailable', he:'לא זמין'},
     'home.seeAll':        {en:'See all →',       he:'הצג הכל ←'},
+    'home.timezone':      {en:'Timezone',        he:'אזור זמן'},
 
     'hero.title':      {en:'Wave Capital',    he:'Wave Capital'},
     'hero.subtitle':   {en:'Follow the Next Wave', he:'עקבו אחרי הגל הבא'},

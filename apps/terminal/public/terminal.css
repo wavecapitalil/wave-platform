@@ -236,6 +236,9 @@ body{background:#0a0a0f;color:#e2e8f0;font-family:'Inter',-apple-system,BlinkMac
 }
 .greeting span{color:var(--blue)}
 .greeting-sub{font-size:13px;color:var(--gray)}
+.greeting-tz{display:flex;flex-direction:column;gap:6px;min-width:min(220px,100%)}
+.greeting-tz label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#c5d2e4}
+.greeting-tz select{min-height:44px;border:1px solid #526785;border-radius:8px;background:#17253b;color:#f8fafc;padding:8px 12px;font:inherit}
 
 /* Top catalyst hero */
 .catalyst-card{

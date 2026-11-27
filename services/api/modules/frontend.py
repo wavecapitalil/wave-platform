@@ -78,6 +78,7 @@ PUBLIC_FILES = HOME_PUBLIC_FILES | {
     "wave-university-theme.css",
     "terminal.css",
     "terminal.js",
+    "terminal-time.js",
     "terminal-brief.js",
     "terminal-brief.css",
     "terminal-sources.js",

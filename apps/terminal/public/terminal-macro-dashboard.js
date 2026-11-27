@@ -74,9 +74,70 @@
     });
   }
 
+  var TZ_KEYS=['wc-tz','wc_tz','wc-timezone','wc_timezone'];
+  function validZone(zone){try{new Intl.DateTimeFormat('en',{timeZone:zone});return true;}catch(e){return false;}}
+  function userZone(){
+    if(window.WaveTime&&typeof window.WaveTime.zone==='function')return window.WaveTime.zone();
+    try{for(var i=0;i<TZ_KEYS.length;i++){var zone=localStorage.getItem(TZ_KEYS[i]);if(zone&&validZone(zone))return zone;}}catch(e){}
+    try{var browser=Intl.DateTimeFormat().resolvedOptions().timeZone;if(validZone(browser))return browser;}catch(e){}
+    return 'UTC';
+  }
   function releaseTime(stamp){
     if(!stamp||!Number.isFinite(Date.parse(stamp)))return t('Unavailable','לא זמין');
-    return new Intl.DateTimeFormat(he()?'he-IL':'en-GB',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23',timeZoneName:'short'}).format(new Date(stamp));
+    if(window.WaveTime&&typeof window.WaveTime.format==='function')return window.WaveTime.format(stamp,{locale:he()?'he-IL':'en-GB'});
+    return new Intl.DateTimeFormat(he()?'he-IL':'en-GB',{timeZone:userZone(),year:'numeric',month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date(stamp));
+  }
+  function formatDay(iso,monthOnly){
+    var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso||''));
+    if(!m)return String(iso||'');
+    var opts={timeZone:'UTC',year:'numeric',month:'short'};
+    if(!monthOnly)opts.day='2-digit';
+    return new Intl.DateTimeFormat(he()?'he-IL':'en-GB',opts).format(new Date(Date.UTC(+m[1],+m[2]-1,+m[3],12)));
+  }
+  function formatPeriod(period,frequency){
+    var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(period||''));
+    if(!m)return String(period||'—');
+    if(frequency==='quarterly'&&m[3]==='01'&&['01','04','07','10'].indexOf(m[2])>=0)return 'Q'+((Number(m[2])-1)/3+1)+' '+m[1];
+    if(frequency!=='weekly'&&m[3]==='01')return formatDay(period,true);
+    return formatDay(period,false);
+  }
+  function countdown(stamp){
+    var ms=Date.parse(stamp)-Date.now();
+    if(!Number.isFinite(ms)||ms<=0)return '';
+    var mins=Math.round(ms/60000),days=Math.floor(mins/1440),hours=Math.floor((mins%1440)/60),minutes=mins%60;
+    if(he()){
+      if(days>=2)return 'בעוד '+days+' ימים'+(hours?' '+hours+' שע׳':'');
+      if(hours>=1)return 'בעוד '+(days?days+' ימים ':'')+hours+' שע׳'+(days<1&&minutes?' '+minutes+' דק׳':'');
+      return 'בעוד '+Math.max(1,minutes)+' דק׳';
+    }
+    if(days>=2)return 'in '+days+'d'+(hours?' '+hours+'h':'');
+    if(hours>=1)return 'in '+(days?days+'d ':'')+hours+'h'+(days<1&&minutes?' '+minutes+'m':'');
+    return 'in '+Math.max(1,minutes)+'m';
+  }
+  function consensusMarkup(c,prominent){
+    if(c&&typeof c.value==='number'&&Number.isFinite(c.value)){
+      var tag=prominent?'strong':'span';
+      return '<'+tag+' class="macro-consensus-value" dir="ltr">'+esc(num(c.value))+'</'+tag+'>';
+    }
+    return '<span class="macro-consensus-missing">'+esc(t('Consensus unavailable','תחזית לא זמינה'))+'</span>';
+  }
+  function differenceMarkup(actual,c){
+    if(actual!==null&&c&&typeof c.value==='number'&&Number.isFinite(c.value))return '<span class="macro-diff-value" dir="ltr">'+esc(num(actual-c.value))+'</span>';
+    return '<span class="macro-diff-neutral" dir="ltr" aria-label="'+esc(t('Difference unavailable','הפרש לא זמין'))+'">—</span>';
+  }
+  function releaseMeta(r,s,h){
+    var next=(h&&h.next_release)||(s&&s.next_release);
+    if(next&&Date.parse(next.scheduled_at)<=Date.now())next=null;
+    function item(label,html){return '<div><dt>'+esc(label)+'</dt><dd>'+html+'</dd></div>';}
+    var html='<dl class="macro-release-meta">';
+    html+=item(t('Reference period','תקופת ייחוס'),'<bdi dir="ltr">'+esc(formatPeriod(r.period,s&&s.frequency))+'</bdi>');
+    html+=item(t('Released at','מועד פרסום'),'<bdi dir="ltr">'+esc(releaseTime(r.released_at))+'</bdi>');
+    html+=item(t('Vintage','גרסת פרסום'),'<bdi dir="ltr">'+esc(formatDay(r.vintage,false))+'</bdi>');
+    if(next){
+      var left=countdown(next.scheduled_at);
+      html+=item(t('Next release','הפרסום הבא'),'<bdi dir="ltr">'+esc(releaseTime(next.scheduled_at))+'</bdi>'+(left?'<span class="macro-countdown">'+esc(left)+'</span>':''));
+    }
+    return html+'</dl>';
   }
   function verifiedConsensus(r,s){
     var c=r.consensus,stamp=r.released_at||r.scheduled_at;
@@ -90,7 +151,9 @@
   function comparisonPoints(s){return events(s).map(function(r){
     var c=verifiedConsensus(r,s),actual=Date.parse(r.scheduled_at)<=Date.now()&&typeof r.actual==='number'?r.actual:null;
     var difference=actual!==null&&c?actual-c.value:null;
-    var tip=t('Actual','בפועל')+': '+readable(actual,s.unit)+' '+s.unit+' · '+t('Consensus','צפי')+': '+readable(c&&c.value,s.unit)+' '+s.unit+' · '+t('Difference','הפרש')+': '+num(difference)+' '+s.unit;
+    var consensusLabel=c?readable(c.value,s.unit)+' '+s.unit:t('Consensus unavailable','תחזית לא זמינה');
+    var differenceLabel=difference===null?'—':num(difference)+' '+s.unit;
+    var tip=t('Actual','בפועל')+': '+readable(actual,s.unit)+' '+s.unit+' · '+t('Consensus','צפי')+': '+consensusLabel+' · '+t('Difference','הפרש')+': '+differenceLabel;
     return {period:r.scheduled_at.slice(0,10),value:actual,consensus:c?c.value:null,tooltip:tip,reference_period:r.period};
   });}
   function nextRelease(s,h){
@@ -151,7 +214,15 @@
     bindCharts(host);
     host.querySelectorAll('[data-macro-id]').forEach(function(button){button.onclick=function(){open(button.dataset.macroId,button);};});
   }
-  function table(headers,rows){return '<div class="macro-table-wrap"><table><thead><tr>'+headers.map(function(x){return '<th scope="col">'+esc(x)+'</th>';}).join('')+'</tr></thead><tbody>'+rows.map(function(row){return '<tr>'+row.map(function(x){return '<td>'+esc(x)+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table></div>';}
+  function cell(x){return x&&typeof x==='object'&&Object.prototype.hasOwnProperty.call(x,'html')?'<td'+(x.cls?' class="'+esc(x.cls)+'"':'')+'>'+x.html+'</td>':'<td>'+esc(x)+'</td>';}
+  function table(headers,rows){return '<div class="macro-table-wrap"><table><thead><tr>'+headers.map(function(x){return '<th scope="col">'+esc(x)+'</th>';}).join('')+'</tr></thead><tbody>'+rows.map(function(row){return '<tr>'+row.map(cell).join('')+'</tr>';}).join('')+'</tbody></table></div>';}
+  function periodTable(s){
+    if(!events(s).length)return '';
+    return table([t('Reference period','תקופת ייחוס'),t('Release','פרסום'),t('Actual','בפועל'),t('Consensus','צפי'),t('Difference','הפרש')],events(s).map(function(x){
+      var c=verifiedConsensus(x,s),a=Date.parse(x.scheduled_at)<=Date.now()&&typeof x.actual==='number'?x.actual:null;
+      return [formatPeriod(x.period,s.frequency),releaseTime(x.scheduled_at),num(a),{html:consensusMarkup(c),cls:'macro-cell-note'},{html:differenceMarkup(a,c),cls:'macro-cell-note'}];
+    }));
+  }
   function details(){
     var s=state.series.find(function(x){return x.id===selected;});if(!s)return;
     var focusId=document.activeElement&&document.activeElement.id;
@@ -165,11 +236,11 @@
     if(h.points.length)html+='<details><summary>'+t('Observation values','ערכי התצפיות')+'</summary>'+table([t('Reference period','תקופת ייחוס'),s.unit],h.points.map(function(p){return [p.period,precise(p.value)];}))+'</details>';
     html+='<h3>'+t('Verified release snapshots','גרסאות פרסום מאומתות')+'</h3>';
     if(r){
-      html+='<label for="macroReleaseSelect">'+t('Release / vintage','פרסום / גרסה')+'</label> <select id="macroReleaseSelect">'+s.releases.slice().reverse().map(function(x){return '<option value="'+x.id+'"'+(x.id===r.id?' selected':'')+'>'+x.vintage+' · '+x.period.slice(0,7)+'</option>';}).join('')+'</select>';
-      html+='<div class="macro-release-metrics">'+[[t('Actual','בפועל'),r.actual],[t('Consensus','קונצנזוס'),verifiedConsensus(r,s)?r.consensus.value:null],[t('Prior reported','קודם שדווח'),r.prior],[t('Prior revised','קודם מתוקן'),r.revised_prior]].map(function(x){return '<div><span>'+x[0]+'</span><strong dir="ltr">'+num(x[1])+'</strong></div>';}).join('')+'</div>';
-      html+='<p>'+t('Reference period','תקופת ייחוס')+': <bdi>'+r.period+'</bdi> · '+t('Released','פורסם')+': <bdi>'+r.released_at.replace('T',' ').replace('Z',' UTC')+'</bdi></p>';
+      html+='<label for="macroReleaseSelect">'+t('Release / vintage','פרסום / גרסה')+'</label> <select id="macroReleaseSelect">'+s.releases.slice().reverse().map(function(x){return '<option value="'+esc(x.id)+'"'+(x.id===r.id?' selected':'')+'>'+esc(formatDay(x.vintage,false)+' · '+formatPeriod(x.period,s.frequency))+'</option>';}).join('')+'</select>';
+      html+='<div class="macro-release-metrics">'+[[t('Actual','בפועל'),'<strong dir="ltr">'+num(r.actual)+'</strong>'],[t('Consensus','קונצנזוס'),consensusMarkup(verifiedConsensus(r,s),true)],[t('Prior reported','קודם שדווח'),'<strong dir="ltr">'+num(r.prior)+'</strong>'],[t('Prior revised','קודם מתוקן'),'<strong dir="ltr">'+num(r.revised_prior)+'</strong>']].map(function(x){return '<div><span>'+esc(x[0])+'</span>'+x[1]+'</div>';}).join('')+'</div>';
+      html+=releaseMeta(r,s,h);
       if(comparisonPoints(s).some(function(p){return p.consensus!==null;}))html+='<h3>'+t('Release actual vs consensus','פרסום בפועל מול צפי')+'</h3>'+comparison(s,true)+nextRelease(s,h);
-      html+=table([t('Reference period','תקופת ייחוס'),t('Release','פרסום'),t('Actual','בפועל'),t('Consensus','צפי'),t('Difference','הפרש')],events(s).map(function(x){var c=verifiedConsensus(x,s),a=Date.parse(x.scheduled_at)<=Date.now()&&typeof x.actual==='number'?x.actual:null;return [x.period,releaseTime(x.scheduled_at),num(a),num(c&&c.value),num(a!==null&&c?a-c.value:null)];}));
+      html+=periodTable(s);
       if(r.revisions.length)html+='<h3>'+t('Revisions in this release','תיקונים בפרסום זה')+'</h3>'+table([t('Period','תקופה'),t('Previously reported','דווח קודם'),t('Revised','מתוקן')],r.revisions.map(function(x){return [x.period,num(x.before),num(x.after)];}));
       if(r.components.length){
         var units=s.id==='nfp'?t('Thousand jobs · net monthly change','אלפי משרות · שינוי חודשי נטו'):s.id==='gdp'?t('Percentage points · annual GDP growth','נקודות אחוז · צמיחת תוצר שנתית'):t('Percentage-point effects · annual CPI','השפעה בנקודות אחוז · CPI שנתי');
@@ -179,7 +250,10 @@
         if(s.id==='nfp')html+='<p>'+t('Positive industry changes','שינויים חיוביים בענפים')+': +'+num(r.components.reduce(function(a,x){return a+Math.max(0,x[1]);},0))+' · '+t('Negative industry changes','שינויים שליליים בענפים')+': '+num(r.components.reduce(function(a,x){return a+Math.min(0,x[1]);},0))+'</p>';
         html+='<p>'+t('Component sum','סכום רכיבים')+': '+num(r.components.reduce(function(a,x){return a+x[1];},0))+' · '+t('Rounding residual to headline','הפרש עיגול לכותרת')+': '+num(r.residual)+'</p>';
       }
-    }else if(comparisonPoints(s).some(function(p){return p.consensus!==null;}))html+=comparison(s,true)+nextRelease(s,h);
+    }else{
+      if(comparisonPoints(s).some(function(p){return p.consensus!==null;}))html+=comparison(s,true)+nextRelease(s,h);
+      html+=periodTable(s);
+    }
     html+=componentDetails(s);
     // Methodology/source details stay in the central registry per AGENTS.md.
     body.innerHTML=html;bindCharts(body);var select=document.getElementById('macroReleaseSelect');if(select)select.onchange=details;var periodSelect=document.getElementById('macroComponentPeriod');if(periodSelect)periodSelect.onchange=details;if(focusId&&body.querySelector('#'+focusId))body.querySelector('#'+focusId).focus();
@@ -232,6 +306,7 @@
     }catch(e){if(generation===state.generation)host.innerHTML='<p role="alert">'+t('Macro data unavailable. Try Refresh.','נתוני מקרו אינם זמינים. נסו לרענן.')+'</p>';}
   };
   var previousLanguageChange=window.onLangChange;window.onLangChange=function(lang){if(previousLanguageChange)previousLanguageChange(lang);if(state.series.length)render();if(selected)details();};
+  if(window.addEventListener)window.addEventListener('wc-tz',function(){if(state.series.length)render();var dialog=document.getElementById('macroDialog');if(selected&&dialog&&dialog.open)details();});
   document.getElementById('macroDialog').addEventListener('keydown',function(e){
     if(e.key!=='Tab')return;
     var controls=Array.from(this.querySelectorAll('button,select,summary,a[href],[tabindex="0"]')).filter(function(x){return x.getClientRects().length;});

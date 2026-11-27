@@ -3,10 +3,11 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import fs from 'node:fs';
 const source=fs.readFileSync(new URL('../apps/terminal/public/terminal-macro-dashboard.js',import.meta.url),'utf8');
-function ui(lang='en',width=375){
- const records=[];const noop=()=>{};const el={addEventListener:noop};
- const context={window:{innerWidth:width,WaveSources:{record:(...args)=>records.push(args)}},WaveSources:{record:(...args)=>records.push(args)},document:{documentElement:{lang},getElementById:()=>el},localStorage:{getItem:()=>lang},Date,Intl,Number,Math,Array,String,Set};
- vm.runInNewContext(source.replace('  var previousLanguageChange=', '  window.testAPI={chart,chartScale,readable,comparisonPoints,comparison,nextRelease,verifiedConsensus,registerNotes}; var previousLanguageChange='),context);
+const timeSource=fs.readFileSync(new URL('../apps/terminal/public/terminal-time.js',import.meta.url),'utf8');
+function ui(lang='en',width=375,zone){
+ const records=[];const noop=()=>{};const el={id:'',addEventListener:noop,dataset:{}};
+ const context={window:{innerWidth:width,addEventListener:noop,dispatchEvent:noop,WaveSources:{record:(...args)=>records.push(args)}},WaveSources:{record:(...args)=>records.push(args)},document:{documentElement:{lang},getElementById:()=>el,addEventListener:noop,readyState:'complete'},localStorage:{getItem:k=>k==='wc-tz'||k==='wc_tz'||k==='wc-timezone'||k==='wc_timezone'?zone||null:lang,setItem:noop,removeItem:noop},Date,Intl,Number,Math,Array,String,Set};
+ vm.runInNewContext(timeSource+'\n'+source.replace('  var previousLanguageChange=', '  window.testAPI={chart,chartScale,readable,comparisonPoints,comparison,nextRelease,verifiedConsensus,registerNotes,releaseTime,consensusMarkup,differenceMarkup,releaseMeta,userZone,periodTable}; var previousLanguageChange='),context);
  context.window.testAPI.records=records;return context.window.testAPI;
 }
 const now=Date.now(),past=new Date(now-86400000).toISOString(),future=new Date(now+86400000).toISOString();
@@ -84,4 +85,44 @@ test('official unpublished period remains explained in Sources, not substituted 
  const api=ui();
  api.registerNotes({id:'cpi',name:'CPI',he:'CPI',releases:[]},{status:'publication_unavailable',points:[],unavailable_periods:[{period:'2026-10-01',reason:'Missing October 2025 base',source:'https://www.bls.gov/news.release/archives/cpi_11102026.htm',verified_at:'2026-11-10T14:32:00Z'}]});
  assert.ok(api.records.some(r=>r[2].includes('Official unavailable period 2026-10-01: Missing October 2025 base')));
+});
+
+test('release times follow wc-tz and never print a GMT offset',()=>{
+ const ny=ui('en',1440,'America/New_York');
+ assert.equal(ny.userZone(),'America/New_York');
+ assert.equal(ny.releaseTime('2026-10-14T12:30:00Z'),'14 Oct 2026, 08:30');
+ assert.equal(ui('en',1440,'Asia/Jerusalem').releaseTime('2026-10-14T12:30:00Z'),'14 Oct 2026, 15:30');
+ assert.equal(ui('en',1440,'America/Los_Angeles').releaseTime('2026-10-14T12:30:00Z'),'14 Oct 2026, 05:30');
+ const fallback=ui();
+ assert.equal(fallback.userZone(),Intl.DateTimeFormat().resolvedOptions().timeZone);
+ assert.doesNotMatch(fallback.releaseTime('2026-10-14T12:30:00Z'),/GMT|EDT|EST|UTC[+-]/);
+ const he=ui('he',1440,'America/New_York').releaseTime('2026-10-14T12:30:00Z');
+ assert.match(he,/08:30/);assert.doesNotMatch(he,/GMT/);
+});
+
+test('detail rows render verified consensus and label a genuine gap',()=>{
+ const api=ui();
+ const present={...base,id:'with',actual:3.4,released_at:past,consensus};
+ const missing={...base,id:'without',period:'2026-07-01',actual:3.1,released_at:past,consensus:null};
+ const s={id:'cpi',unit:'% YoY',sa:'SA',frequency:'monthly',releases:[present,missing],calendar:[]};
+ const html=api.periodTable(s);
+ assert.match(html,/3\.2/);
+ assert.match(html,/0\.2/);
+ assert.match(html,/Consensus unavailable/);
+ assert.match(html,/macro-diff-neutral/);
+ assert.match(html,/aria-label="Difference unavailable"/);
+ const he=ui('he').periodTable({...s,releases:[missing]});
+ assert.match(he,/תחזית לא זמינה/);
+ assert.match(he,/הפרש לא זמין/);
+ const meta=ui('en',1440,'America/Los_Angeles').releaseMeta(
+  {period:'2026-09-01',released_at:'2026-10-14T12:30:00Z',vintage:'2026-10-14'},
+  {frequency:'monthly',next_release:{scheduled_at:new Date(Date.now()+36*3600000).toISOString()}},
+  null);
+ assert.match(meta,/Reference period/);
+ assert.match(meta,/Released at/);
+ assert.match(meta,/Vintage/);
+ assert.match(meta,/Next release/);
+ assert.match(meta,/05:30/);
+ assert.match(meta,/in /);
+ assert.doesNotMatch(meta,/GMT|UTC|EDT|PST|Z</);
 });

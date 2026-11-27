@@ -17,13 +17,17 @@
 // ── CLOCK ─────────────────────────────────────────────────
 function updateClock(){
   var now = new Date();
-  var h = String(now.getHours()).padStart(2,'0');
-  var m = String(now.getMinutes()).padStart(2,'0');
-  var s = String(now.getSeconds()).padStart(2,'0');
-  document.getElementById('tickerTime').textContent = '🕐 ' + now.toLocaleTimeString('en-GB',{timeZone:'Asia/Jerusalem',hour12:false}) + ' IL';
+  var el = document.getElementById('tickerTime');
+  if(!el)return;
+  var zone;
+  try{ zone = window.WaveTime ? window.WaveTime.zone() : Intl.DateTimeFormat().resolvedOptions().timeZone; }catch(e){ zone = undefined; }
+  var opts = {hour12:false};
+  if(zone) opts.timeZone = zone;
+  el.textContent = '🕐 ' + now.toLocaleTimeString('en-GB', opts);
 }
 setInterval(updateClock, 1000);
 updateClock();
+window.addEventListener('wc-tz', updateClock);
 
 // ── NAVIGATION ────────────────────────────────────────────
 var currentPage = 'welcome';
